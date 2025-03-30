@@ -1,0 +1,18 @@
+{
+  "name": "website",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "",
+    "build": "tsc",
+    "start": "",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@utilities/structures": "workspace:*"
+  },
+  "devDependencies": {
+    "@utilities/typescript-config": "workspace:*",
+    "typescript": "latest"
+  }
+}

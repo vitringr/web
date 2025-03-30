@@ -12,7 +12,29 @@ importers:
         specifier: ^2.4.4
         version: 2.4.4
       typescript:
-        specifier: 5.8.2
+        specifier: latest
+        version: 5.8.2
+
+  apps/website:
+    dependencies:
+      '@utilities/structures':
+        specifier: workspace:*
+        version: link:../../utilities/structures
+    devDependencies:
+      '@utilities/typescript-config':
+        specifier: workspace:*
+        version: link:../../utilities/typescript-config
+      typescript:
+        specifier: latest
+        version: 5.8.2
+
+  utilities/structures:
+    devDependencies:
+      '@utilities/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: latest
         version: 5.8.2
 
   utilities/typescript-config: {}

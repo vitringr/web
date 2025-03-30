@@ -1,0 +1,16 @@
+{
+  "name": "@utilities/structures",
+  "type": "module",
+  "private": true,
+  "exports": {
+    "./vector2": "./src/vector2.ts",
+    "./vector3": "./src/vector3.ts"
+  },
+  "scripts": {
+    "check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@utilities/typescript-config": "workspace:*",
+    "typescript": "latest"
+  }
+}
