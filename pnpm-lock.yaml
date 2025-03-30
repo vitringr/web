@@ -17,6 +17,9 @@ importers:
 
   apps/website:
     dependencies:
+      '@utilities/random':
+        specifier: workspace:*
+        version: link:../../utilities/random
       '@utilities/structures':
         specifier: workspace:*
         version: link:../../utilities/structures
@@ -24,6 +27,15 @@ importers:
       '@utilities/typescript-config':
         specifier: workspace:*
         version: link:../../utilities/typescript-config
+      typescript:
+        specifier: latest
+        version: 5.8.2
+
+  utilities/random:
+    devDependencies:
+      '@utilities/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       typescript:
         specifier: latest
         version: 5.8.2
