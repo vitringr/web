@@ -1,19 +1,22 @@
 {
   "name": "website",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "",
-    "build": "tsc",
-    "start": "",
-    "check": "tsc --noEmit"
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
+    "@utilities/random": "workspace:*",
     "@utilities/structures": "workspace:*",
-    "@utilities/random": "workspace:*"
+    "@solidjs/router": "^0.15.3",
+    "solid-js": "^1.9.5"
   },
   "devDependencies": {
-    "@utilities/typescript-config": "workspace:*",
-    "typescript": "latest"
+    "typescript": "~5.7.2",
+    "vite": "^6.2.0",
+    "vite-plugin-glsl": "^1.4.0",
+    "vite-plugin-solid": "^2.11.2"
   }
 }

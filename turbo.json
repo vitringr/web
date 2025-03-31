@@ -4,7 +4,7 @@
   "tasks": {
     "build": {
       "dependsOn": [],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*", "vite.config.ts"],
       "outputs": ["dist/**"]
     },
     "check": {
