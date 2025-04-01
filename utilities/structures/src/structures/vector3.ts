@@ -27,7 +27,9 @@ export class Vector3 {
     const xDistance = v1.x - v2.x;
     const yDistance = v1.y - v2.y;
     const zDistance = v1.z - v2.z;
-    return Math.sqrt(xDistance * xDistance + yDistance * yDistance + zDistance * zDistance);
+    return Math.sqrt(
+      xDistance * xDistance + yDistance * yDistance + zDistance * zDistance,
+    );
   }
 
   static dot(v1: Vector3, v2: Vector3) {
@@ -38,7 +40,7 @@ export class Vector3 {
     public x: number,
     public y: number,
     public z: number,
-  ) { }
+  ) {}
 
   get r() {
     return this.x;

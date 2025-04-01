@@ -55,6 +55,15 @@ importers:
         specifier: latest
         version: 5.8.2
 
+  utilities/math:
+    devDependencies:
+      '@utilities/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: latest
+        version: 5.8.2
+
   utilities/random:
     devDependencies:
       '@utilities/typescript-config':
