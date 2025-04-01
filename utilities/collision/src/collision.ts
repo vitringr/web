@@ -36,3 +36,37 @@ export function circle_circle(
 
   return distanceSquared <= totalRadius * totalRadius;
 }
+
+export function point_rectangle(
+  px: number,
+  py: number,
+  rx: number,
+  ry: number,
+  rw: number,
+  rh: number,
+): boolean {
+  return (
+    px >= rx &&      // Right of the left edge
+    px <= rx + rw && // Left of the right edge
+    py >= ry &&      // Below the top
+    py <= ry + rh    // Above the bottom
+  );
+}
+
+export function rectangle_rectangle(
+  r1x: number,
+  r1y: number,
+  r1w: number,
+  r1h: number,
+  r2x: number,
+  r2y: number,
+  r2w: number,
+  r2h: number,
+): boolean {
+  return (
+    r1x + r1w >= r2x && // Is the RIGHT edge of r1 to the RIGHT of the LEFT edge of r2?
+    r1x <= r2x + r2w && // Is the LEFT edge of r1 to the LEFT of the RIGHT edge of r2?
+    r1y + r1h >= r2y && // Is the BOTTOM edge of r1 BELOW the TOP edge of r2?
+    r1y <= r2y + r2h    // Is the TOP edge of r1 ABOVE the BOTTOM edge of r2?
+  );
+}
