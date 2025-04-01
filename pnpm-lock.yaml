@@ -26,6 +26,9 @@ importers:
       '@utilities/structures':
         specifier: workspace:*
         version: link:../../utilities/structures
+      '@utilities/webgl':
+        specifier: workspace:*
+        version: link:../../utilities/webgl
       solid-js:
         specifier: ^1.9.5
         version: 1.9.5
@@ -62,6 +65,15 @@ importers:
         version: 5.8.2
 
   utilities/typescript-config: {}
+
+  utilities/webgl:
+    devDependencies:
+      '@utilities/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: latest
+        version: 5.8.2
 
 packages:
 
