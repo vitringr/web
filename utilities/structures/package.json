@@ -2,10 +2,8 @@
   "name": "@utilities/structures",
   "type": "module",
   "private": true,
-  "exports": {
-    "./vector2": "./src/vector2.ts",
-    "./vector3": "./src/vector3.ts"
-  },
+  "exports": "./src/index.ts",
+  "types": "./src/index.ts",
   "scripts": {
     "check": "tsc --noEmit"
   },
