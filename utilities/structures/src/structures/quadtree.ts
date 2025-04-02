@@ -114,22 +114,24 @@ export class Quadtree<T extends IPoint> {
 
     this.divided = true;
 
-    for (const p of this.container) {
-      this.northeast.insert(p) ||
-        this.southeast.insert(p) ||
-        this.southwest.insert(p) ||
-        this.northwest.insert(p);
+    for (let i = 0; i < this.container.length; i++) {
+      const item = this.container[i];
+
+      this.northeast.insert(item) ||
+        this.southeast.insert(item) ||
+        this.southwest.insert(item) ||
+        this.northwest.insert(item);
     }
 
     this.container = [];
   }
 
   private intersects(range: IRectangle): boolean {
-    return !(
-      range.x > this.bounds.x + this.bounds.width ||
-      range.x + range.width < this.bounds.x ||
-      range.y > this.bounds.y + this.bounds.height ||
-      range.y + range.height < this.bounds.y
+    return (
+      this.bounds.x + this.bounds.width >= range.x &&
+      this.bounds.x <= range.x + range.width &&
+      this.bounds.y + this.bounds.height >= range.y &&
+      this.bounds.y <= range.y + range.height
     );
   }
 

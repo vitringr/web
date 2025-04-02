@@ -6,10 +6,10 @@ export default {
     backgroundColor: "#111111",
 
     nodeColor: "#999999",
-    nodeSize: 3,
+    nodeSize: 4,
 
     linkColor: "#444444",
-    linkWidth: 0.5,
+    linkWidth: 0.4,
   },
 
   quadtree: {
@@ -17,13 +17,13 @@ export default {
   },
 
   nodes: {
-    count: 300,
+    count: 500,
 
     randomConnections: {
       chance: 50,
       count: {
         min: 1,
-        max: 10,
+        max: 5,
       },
     },
   },

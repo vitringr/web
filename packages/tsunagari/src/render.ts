@@ -44,6 +44,8 @@ export namespace Render {
     const fromNodeCenter = Structures.Vector2.zero();
     const toNodeCenter = Structures.Vector2.zero();
 
+    let linksCount = 0;
+
     for (let i = 0; i < nodes.length; i++) {
       const current = nodes[i];
 
@@ -54,8 +56,11 @@ export namespace Render {
         toNodeCenter.x = link.x + nodeHalfSize;
         toNodeCenter.y = link.y + nodeHalfSize;
         drawLink(context, fromNodeCenter, toNodeCenter);
+        linksCount++;
       });
     }
+
+    console.log(`CONNECTIONS: ${linksCount}`);
 
     for (let i = 0; i < nodes.length; i++) {
       const current = nodes[i];
