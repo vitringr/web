@@ -1,4 +1,6 @@
 export default {
+  FPS: 60,
+
   width: 800,
   height: 800,
 

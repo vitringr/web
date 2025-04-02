@@ -2,8 +2,6 @@ import { Structures } from "@utilities/structures";
 import Config from "./config";
 import { Node } from "./node";
 
-Structures.Vector2;
-
 export namespace Render {
   const nodeHalfSize = Config.render.nodeSize * 0.5;
 
@@ -24,6 +22,27 @@ export namespace Render {
     context.stroke();
   }
 
+  function drawAllLinks(context: CanvasRenderingContext2D, nodes: Node[]) {
+    context.strokeStyle = Config.render.linkColor;
+    context.lineWidth = Config.render.linkWidth;
+
+    const fromNodeCenter = Structures.Vector2.zero();
+    const toNodeCenter = Structures.Vector2.zero();
+
+    for (let i = 0; i < nodes.length; i++) {
+      const current = nodes[i];
+
+      fromNodeCenter.x = current.x + nodeHalfSize;
+      fromNodeCenter.y = current.y + nodeHalfSize;
+
+      current.links.forEach((link: Node) => {
+        toNodeCenter.x = link.x + nodeHalfSize;
+        toNodeCenter.y = link.y + nodeHalfSize;
+        drawLink(context, fromNodeCenter, toNodeCenter);
+      });
+    }
+  }
+
   function drawNode(context: CanvasRenderingContext2D, node: Node) {
     context.fillRect(
       node.x,
@@ -33,38 +52,16 @@ export namespace Render {
     );
   }
 
-  export function main(context: CanvasRenderingContext2D, nodes: Node[]) {
-    drawBackground(context);
-
-    context.strokeStyle = Config.render.linkColor;
-    context.lineWidth = Config.render.linkWidth;
-
+  function drawAllNodes(context: CanvasRenderingContext2D, nodes: Node[]) {
     context.fillStyle = Config.render.nodeColor;
-
-    const fromNodeCenter = Structures.Vector2.zero();
-    const toNodeCenter = Structures.Vector2.zero();
-
-    let linksCount = 0;
-
     for (let i = 0; i < nodes.length; i++) {
-      const current = nodes[i];
-
-      fromNodeCenter.x = current.x + nodeHalfSize;
-      fromNodeCenter.y = current.y + nodeHalfSize;
-
-      current.getLinks.forEach((link: Node) => {
-        toNodeCenter.x = link.x + nodeHalfSize;
-        toNodeCenter.y = link.y + nodeHalfSize;
-        drawLink(context, fromNodeCenter, toNodeCenter);
-        linksCount++;
-      });
+      drawNode(context, nodes[i]);
     }
+  }
 
-    console.log(`CONNECTIONS: ${linksCount}`);
-
-    for (let i = 0; i < nodes.length; i++) {
-      const current = nodes[i];
-      drawNode(context, current);
-    }
+  export function frame(context: CanvasRenderingContext2D, nodes: Node[]) {
+    drawBackground(context);
+    drawAllLinks(context, nodes);
+    drawAllNodes(context, nodes);
   }
 }
