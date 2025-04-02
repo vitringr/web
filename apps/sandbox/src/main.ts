@@ -3,11 +3,13 @@ import { Random } from "@utilities/random";
 
 // CONFIG
 
+const FPS = 60;
+
 const width = 800;
 const height = 800;
 
-const particleSize = 5;
-const particleCount = 600;
+const particleSize = 1;
+const particleCount = 3000;
 const particleColor = "#905000";
 
 const quadtreeCapacity = 4;
@@ -89,3 +91,28 @@ for (let i = 0; i < particleCount; i++) {
 quadtree.deepCallback((quadtree) => {
   drawQuadtreeBounds(context, quadtree);
 });
+
+// LOOP
+
+const loop = setInterval(() => {
+  quadtree.clear();
+
+  context.fillStyle = "#111111";
+  context.fillRect(0, 0, width, height);
+
+  context.fillStyle = particleColor;
+  for (let i = 0; i < particleCount; i++) {
+    const particle = particles[i];
+
+    particle.x += Random.range(-1, 1);
+    particle.y += Random.range(-1, 1);
+
+    drawParticle(context, particle);
+
+    quadtree.insert(particles[i]);
+  }
+
+  quadtree.deepCallback((quadtree) => {
+    drawQuadtreeBounds(context, quadtree);
+  });
+}, 1000 / FPS);

@@ -45,6 +45,7 @@ export function point_rectangle(
   rw: number,
   rh: number,
 ): boolean {
+  //prettier-ignore
   return (
     px >= rx &&      // Right of the left edge
     px <= rx + rw && // Left of the right edge
@@ -63,6 +64,7 @@ export function rectangle_rectangle(
   r2w: number,
   r2h: number,
 ): boolean {
+  //prettier-ignore
   return (
     r1x + r1w >= r2x && // Is the RIGHT edge of r1 to the RIGHT of the LEFT edge of r2?
     r1x <= r2x + r2w && // Is the LEFT edge of r1 to the LEFT of the RIGHT edge of r2?
