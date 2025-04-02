@@ -1,0 +1,4 @@
+{
+  "extends": "@utilities/typescript-config/base.json",
+  "include": ["src"]
+}

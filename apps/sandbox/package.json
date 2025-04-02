@@ -8,10 +8,12 @@
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
+  "dependencies": {
+    "@packages/tsunagari": "workspace:*",
+    "@packages/quadtree-simulation": "workspace:*"
+  },
   "devDependencies": {
     "@utilities/typescript-config": "workspace:*",
-    "@utilities/structures": "workspace:*",
-    "@utilities/random": "workspace:*",
     "typescript": "~5.7.2",
     "vite": "^6.2.0"
   }

@@ -1,0 +1,18 @@
+{
+  "name": "@packages/quadtree-simulation",
+  "type": "module",
+  "private": true,
+  "exports": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@utilities/structures": "workspace:*",
+    "@utilities/random": "workspace:*"
+  },
+  "devDependencies": {
+    "@utilities/typescript-config": "workspace:*",
+    "typescript": "latest"
+  }
+}
