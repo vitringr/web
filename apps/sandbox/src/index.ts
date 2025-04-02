@@ -1,3 +1,7 @@
-import { QuadtreeSimulation } from "@packages/quadtree-simulation";
+import { Tsunagari } from "@packages/tsunagari";
 
-QuadtreeSimulation.main();
+const canvasID = "mainCanvas";
+const canvas = document.getElementById(canvasID) as HTMLCanvasElement;
+if (!canvas) throw `Cannot get #${canvasID}`;
+
+Tsunagari.main(canvas);

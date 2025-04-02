@@ -89,6 +89,9 @@ importers:
       '@utilities/math':
         specifier: workspace:*
         version: link:../../utilities/math
+      '@utilities/random':
+        specifier: workspace:*
+        version: link:../../utilities/random
       '@utilities/structures':
         specifier: workspace:*
         version: link:../../utilities/structures
