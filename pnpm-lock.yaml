@@ -17,6 +17,12 @@ importers:
 
   apps/sandbox:
     devDependencies:
+      '@utilities/random':
+        specifier: workspace:*
+        version: link:../../utilities/random
+      '@utilities/structures':
+        specifier: workspace:*
+        version: link:../../utilities/structures
       '@utilities/typescript-config':
         specifier: workspace:*
         version: link:../../utilities/typescript-config

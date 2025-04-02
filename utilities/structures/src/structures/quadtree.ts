@@ -26,6 +26,10 @@ export class Quadtree<T extends IPoint> {
     this.capacity = capacity;
   }
 
+  public get getBounds() {
+    return this.bounds;
+  }
+
   insert(item: T): boolean {
     if (!this.isPointInRectangle(item, this.bounds)) {
       return false;
@@ -69,6 +73,17 @@ export class Quadtree<T extends IPoint> {
     }
 
     return found;
+  }
+
+  deepCallback(callback: (quadtree: Quadtree<T>) => void) {
+    callback(this);
+
+    if (this.divided) {
+      this.northeast?.deepCallback(callback);
+      this.southeast?.deepCallback(callback);
+      this.southwest?.deepCallback(callback);
+      this.northwest?.deepCallback(callback);
+    }
   }
 
   private subdivide(): void {

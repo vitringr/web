@@ -1,24 +1,91 @@
-import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
+import { Structures } from "@utilities/structures";
+import { Random } from "@utilities/random";
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
-  </div>
-`
+// CONFIG
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+const width = 800;
+const height = 800;
+
+const particleSize = 5;
+const particleCount = 600;
+const particleColor = "#905000";
+
+const quadtreeCapacity = 4;
+const quadtreeLineWidth = 0.5;
+const quadtreeColor = "#005020";
+
+// SETUP
+
+type Particle = {
+  x: number;
+  y: number;
+};
+
+const canvas = document.getElementById("mainCanvas") as HTMLCanvasElement;
+if (!canvas) throw "Invalid #mainCanvas HTML element!";
+
+const context = canvas.getContext("2d");
+if (!context) throw "Cannot get 2d context";
+
+canvas.width = width;
+canvas.height = height;
+
+context.fillStyle = "#111111";
+context.fillRect(0, 0, width, height);
+
+context.fillStyle = particleColor;
+context.lineWidth = quadtreeLineWidth;
+context.strokeStyle = quadtreeColor;
+
+// MAIN
+
+function drawQuadtreeBounds(
+  context: CanvasRenderingContext2D,
+  qt: Structures.Quadtree<any>,
+) {
+  const bounds = qt.getBounds;
+
+  context.beginPath();
+  context.lineTo(bounds.x, bounds.y);
+  context.lineTo(bounds.x + bounds.width, bounds.y);
+  context.lineTo(bounds.x + bounds.width, bounds.y + bounds.height);
+  context.lineTo(bounds.x, bounds.y + bounds.height);
+  context.lineTo(bounds.x, bounds.y);
+  context.closePath();
+  context.stroke();
+}
+
+function drawParticle(context: CanvasRenderingContext2D, particle: Particle) {
+  context.fillRect(particle.x, particle.y, particleSize, particleSize);
+}
+
+const quadtree = new Structures.Quadtree<Particle>(
+  {
+    x: 0,
+    y: 0,
+    width: width,
+    height: height,
+  },
+  quadtreeCapacity,
+);
+
+const particles: Particle[] = [];
+
+for (let i = 0; i < particleCount; i++) {
+  particles.push({
+    x: Random.range(0, width),
+    y: Random.range(0, height),
+  });
+}
+
+for (let i = 0; i < particleCount; i++) {
+  drawParticle(context, particles[i]);
+}
+
+for (let i = 0; i < particleCount; i++) {
+  quadtree.insert(particles[i]);
+}
+
+quadtree.deepCallback((quadtree) => {
+  drawQuadtreeBounds(context, quadtree);
+});
