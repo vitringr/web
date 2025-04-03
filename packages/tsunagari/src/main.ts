@@ -33,7 +33,7 @@ export function main(canvas: HTMLCanvasElement) {
     for (let i = 0; i < nodes.length; i++) {
       const current = nodes[i];
       Force.main(current, Quadtree.quadtree);
-      Force.linkAttraction(current);
+      // Force.linkAttraction(current);
       Force.centerPull(current);
     }
 

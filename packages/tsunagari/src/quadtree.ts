@@ -15,7 +15,7 @@ export namespace Quadtree {
   );
 
   function setWeights() {
-    quadtree.leafDeepCallback((qt) => {
+    quadtree.leafRecursion((qt) => {
       const sum: Weight = { x: 0, y: 0, mass: 0 };
 
       qt.container.forEach((item) => {

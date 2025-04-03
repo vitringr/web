@@ -1,38 +1,39 @@
-interface IPoint {
-  x: number;
-  y: number;
-}
+import { IRectangle } from "./rectangle";
+import { IPoint } from "./point";
 
-interface IRectangle {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
+const SUBDIVISIONS: number = 4;
 
 export class Quadtree<Item extends IPoint, Data> {
-  readonly bounds: IRectangle;
+  readonly rectangle: IRectangle;
   readonly capacity: number;
 
   container: Item[] = [];
   data?: Data;
 
   divided: boolean = false;
-
-  northeast?: Quadtree<Item, Data>;
-  southeast?: Quadtree<Item, Data>;
-  southwest?: Quadtree<Item, Data>;
-  northwest?: Quadtree<Item, Data>;
-
+  children: Quadtree<Item, Data>[] = [];
   parent?: Quadtree<Item, Data>;
 
   constructor(bounds: IRectangle, capacity: number = 4) {
-    this.bounds = bounds;
+    this.rectangle = bounds;
     this.capacity = capacity;
   }
 
+  get northeast() {
+    return this.children[0];
+  }
+  get southeast() {
+    return this.children[1];
+  }
+  get southwest() {
+    return this.children[2];
+  }
+  get northwest() {
+    return this.children[3];
+  }
+
   insert(item: Item): boolean {
-    if (!this.isPointInRectangle(item, this.bounds)) {
+    if (!this.isPointInRectangle(item, this.rectangle)) {
       return false;
     }
 
@@ -45,13 +46,11 @@ export class Quadtree<Item extends IPoint, Data> {
       this.subdivide();
     }
 
-    if (!this.divided) throw "Quadtree not subdivided";
-
     return (
-      this.northeast!.insert(item) ||
-      this.southeast!.insert(item) ||
-      this.southwest!.insert(item) ||
-      this.northwest!.insert(item)
+      this.children[0].insert(item) ||
+      this.children[1].insert(item) ||
+      this.children[2].insert(item) ||
+      this.children[3].insert(item)
     );
   }
 
@@ -68,77 +67,80 @@ export class Quadtree<Item extends IPoint, Data> {
     }
 
     if (this.divided) {
-      this.northeast!.query(range, found);
-      this.southeast!.query(range, found);
-      this.southwest!.query(range, found);
-      this.northwest!.query(range, found);
+      for (let i = 0; i < SUBDIVISIONS; i++) {
+        this.children[i]!.query(range, found);
+      }
     }
 
     return found;
   }
 
-  deepCallback(callback: (quadtree: Quadtree<Item, Data>) => void) {
+  rootRecursion(callback: (quadtree: Quadtree<Item, Data>) => void) {
     callback(this);
 
     if (this.divided) {
-      this.northeast?.deepCallback(callback);
-      this.southeast?.deepCallback(callback);
-      this.southwest?.deepCallback(callback);
-      this.northwest?.deepCallback(callback);
+      for (let i = 0; i < SUBDIVISIONS; i++) {
+        this.children[i]?.rootRecursion(callback);
+      }
     }
   }
 
-  leafDeepCallback(callback: (quadtree: Quadtree<Item, Data>) => void) {
+  leafRecursion(callback: (quadtree: Quadtree<Item, Data>) => void) {
     if (this.divided) {
-      this.northeast?.leafDeepCallback(callback);
-      this.southeast?.leafDeepCallback(callback);
-      this.southwest?.leafDeepCallback(callback);
-      this.northwest?.leafDeepCallback(callback);
+      for (let i = 0; i < SUBDIVISIONS; i++) {
+        this.children[i]?.leafRecursion(callback);
+      }
     }
 
     callback(this);
+  }
+
+  clear(): void {
+    this.container = [];
+    this.data = undefined;
+    this.divided = false;
+    this.children = [];
+    this.parent = undefined;
   }
 
   private subdivide(): void {
-    const x = this.bounds.x;
-    const y = this.bounds.y;
-    const w = this.bounds.width / 2;
-    const h = this.bounds.height / 2;
+    const x = this.rectangle.x;
+    const y = this.rectangle.y;
+    const w = this.rectangle.width * 0.5;
+    const h = this.rectangle.height * 0.5;
 
-    this.northeast = new Quadtree(
+    this.divided = true;
+
+    this.children[0] = new Quadtree(
       { x: x + w, y: y, width: w, height: h },
       this.capacity,
     );
 
-    this.southeast = new Quadtree(
+    this.children[1] = new Quadtree(
       { x: x + w, y: y + h, width: w, height: h },
       this.capacity,
     );
 
-    this.southwest = new Quadtree(
+    this.children[2] = new Quadtree(
       { x: x, y: y + h, width: w, height: h },
       this.capacity,
     );
 
-    this.northwest = new Quadtree(
+    this.children[3] = new Quadtree(
       { x: x, y: y, width: w, height: h },
       this.capacity,
     );
 
-    this.northeast.parent = this;
-    this.southeast.parent = this;
-    this.southwest.parent = this;
-    this.northwest.parent = this;
-
-    this.divided = true;
+    for (let i = 0; i < SUBDIVISIONS; i++) {
+      this.children[i].parent = this;
+    }
 
     for (let i = 0; i < this.container.length; i++) {
       const item = this.container[i];
 
-      this.northeast.insert(item) ||
-        this.southeast.insert(item) ||
-        this.southwest.insert(item) ||
-        this.northwest.insert(item);
+      for (let i = 0; i < SUBDIVISIONS; i++) {
+        if (this.children[i].insert(item)) break;
+      }
     }
 
     this.container = [];
@@ -146,30 +148,19 @@ export class Quadtree<Item extends IPoint, Data> {
 
   private intersects(range: IRectangle): boolean {
     return (
-      this.bounds.x + this.bounds.width >= range.x &&
-      this.bounds.x <= range.x + range.width &&
-      this.bounds.y + this.bounds.height >= range.y &&
-      this.bounds.y <= range.y + range.height
+      this.rectangle.x + this.rectangle.width >= range.x &&
+      this.rectangle.x <= range.x + range.width &&
+      this.rectangle.y + this.rectangle.height >= range.y &&
+      this.rectangle.y <= range.y + range.height
     );
   }
 
   private isPointInRectangle(point: IPoint, rectangle: IRectangle): boolean {
     return (
       point.x >= rectangle.x &&
-      point.x <= rectangle.x + rectangle.width &&
+      point.x < rectangle.x + rectangle.width &&
       point.y >= rectangle.y &&
-      point.y <= rectangle.y + rectangle.height
+      point.y < rectangle.y + rectangle.height
     );
-  }
-
-  clear(): void {
-    this.container = [];
-    this.data = undefined;
-    this.divided = false;
-    this.northeast = undefined;
-    this.northwest = undefined;
-    this.southeast = undefined;
-    this.southwest = undefined;
-    this.parent = undefined;
   }
 }

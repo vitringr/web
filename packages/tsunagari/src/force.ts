@@ -4,23 +4,23 @@ import { Quadtree } from "./quadtree";
 import { Node } from "./node";
 
 export namespace Force {
-  export function linkAttraction(
-    node: Node,
-    springConstant: number = 0,
-    idealLength: number = 0,
-  ) {
-    for (const linkedNode of node.links) {
-      const direction = linkedNode.getPosition().subtract(node.getPosition());
-      const distance = direction.length();
-
-      // Hooke's Law: F = k * (distance - idealLength)
-      const forceMagnitude = springConstant * (distance - idealLength);
-
-      node.move(direction.normalize().scale(forceMagnitude));
-
-      console.log("direction: " + direction)
-    }
-  }
+  // export function linkAttraction(
+  //   node: Node,
+  //   springConstant: number = 0,
+  //   idealLength: number = 0,
+  // ) {
+  //   for (const linkedNode of node.connections) {
+  //     const direction = linkedNode.getPosition().subtract(node.getPosition());
+  //     const distance = direction.length();
+  //
+  //     // Hooke's Law: F = k * (distance - idealLength)
+  //     const forceMagnitude = springConstant * (distance - idealLength);
+  //
+  //     node.addVelocity(direction.normalize().scale(forceMagnitude));
+  //
+  //     console.log("direction: " + direction)
+  //   }
+  // }
 
   export function centerPull(node: Node) {
     const canvasCenter = new Structures.Vector2(
@@ -38,7 +38,7 @@ export namespace Force {
     // Gentle force that increases with distance
     const force = 1 * normalizedDistance;
 
-    node.move(direction.normalize().scale(force));
+    node.addVelocity(direction.normalize().scale(force));
   }
 
   export function main(
@@ -56,7 +56,7 @@ export namespace Force {
     // Skip if too close to avoid extreme forces
     if (distance < 1) distance = 1;
 
-    const theta = quadtree.bounds.width / distance;
+    const theta = quadtree.rectangle.width / distance;
     const isLongRange = theta < 1;
 
     if (isLongRange) {
@@ -69,7 +69,7 @@ export namespace Force {
       // Enhanced force calculation with better scaling
       const force = (qtData.mass) / (distance * distance) * repulsionScale;
 
-      node.move(direction.scale(force));
+      node.addVelocity(direction.scale(force));
     } else if (quadtree.divided) {
       // Recurse into subtrees
       quadtree.northeast && main(node, quadtree.northeast, repulsionScale);

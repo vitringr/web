@@ -3,7 +3,7 @@ import { Random } from "@utilities/random";
 import Config from "./config";
 
 export class Node {
-  readonly links = new Set<Node>();
+  readonly connections = new Set<Node>();
 
   private position: Structures.Vector2;
 
@@ -23,12 +23,12 @@ export class Node {
     return this.position;
   }
 
-  link(node: Node) {
-    this.links.add(node);
+  addVelocity(velocity: Structures.Vector2) {
+    this.position.add(velocity);
   }
 
-  move(velocity: Structures.Vector2) {
-    this.position.add(velocity);
+  connect(node: Node) {
+    this.connections.add(node);
   }
 }
 
@@ -66,7 +66,7 @@ export namespace Node {
         const randomNode = nodes[Random.rangeInt(0, nodes.length - 1)];
         if (randomNode === current) continue;
 
-        current.link(randomNode);
+        current.connect(randomNode);
       }
     }
   }
@@ -80,7 +80,7 @@ export namespace Node {
       randomVelocity.x = Random.range(-1, 1);
       randomVelocity.y = Random.range(-1, 1);
 
-      current.move(randomVelocity);
+      current.addVelocity(randomVelocity);
     }
   }
 }
