@@ -1,17 +1,24 @@
 export default {
-  FPS: 60,
-
   width: 800,
   height: 800,
 
   render: {
     backgroundColor: "#111111",
 
-    nodeColor: "#999999",
-    nodeSize: 4,
+    node: {
+      color: "#999999",
+      size: 4,
+    },
 
-    linkColor: "#444444",
-    linkWidth: 0.4,
+    link: {
+      color: "#444444",
+      width: 0.4,
+    },
+
+    quadtree: {
+      color: "#006020",
+      width: 1,
+    },
   },
 
   quadtree: {
@@ -19,7 +26,7 @@ export default {
   },
 
   nodes: {
-    count: 500,
+    count: 300,
 
     randomConnections: {
       chance: 50,

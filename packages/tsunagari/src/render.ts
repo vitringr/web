@@ -3,7 +3,7 @@ import Config from "./config";
 import { Node } from "./node";
 
 export namespace Render {
-  const nodeHalfSize = Config.render.nodeSize * 0.5;
+  const nodeHalfSize = Config.render.node.size * 0.5;
 
   function drawBackground(context: CanvasRenderingContext2D) {
     context.fillStyle = Config.render.backgroundColor;
@@ -23,8 +23,8 @@ export namespace Render {
   }
 
   function drawAllLinks(context: CanvasRenderingContext2D, nodes: Node[]) {
-    context.strokeStyle = Config.render.linkColor;
-    context.lineWidth = Config.render.linkWidth;
+    context.strokeStyle = Config.render.link.color;
+    context.lineWidth = Config.render.link.width;
 
     const fromNodeCenter = Structures.Vector2.zero();
     const toNodeCenter = Structures.Vector2.zero();
@@ -47,20 +47,46 @@ export namespace Render {
     context.fillRect(
       node.x,
       node.y,
-      Config.render.nodeSize,
-      Config.render.nodeSize,
+      Config.render.node.size,
+      Config.render.node.size,
     );
   }
 
   function drawAllNodes(context: CanvasRenderingContext2D, nodes: Node[]) {
-    context.fillStyle = Config.render.nodeColor;
+    context.fillStyle = Config.render.node.color;
     for (let i = 0; i < nodes.length; i++) {
       drawNode(context, nodes[i]);
     }
   }
 
-  export function frame(context: CanvasRenderingContext2D, nodes: Node[]) {
+  function drawQuadtree(
+    context: CanvasRenderingContext2D,
+    quadtree: Structures.Quadtree<any>,
+  ) {
+    context.strokeStyle = Config.render.quadtree.color;
+    context.lineWidth = Config.render.quadtree.width;
+
+    const bounds = quadtree.getBounds;
+
+    context.beginPath();
+    context.lineTo(bounds.x, bounds.y);
+    context.lineTo(bounds.x + bounds.width, bounds.y);
+    context.lineTo(bounds.x + bounds.width, bounds.y + bounds.height);
+    context.lineTo(bounds.x, bounds.y + bounds.height);
+    context.lineTo(bounds.x, bounds.y);
+    context.closePath();
+    context.stroke();
+  }
+
+  export function frame(
+    context: CanvasRenderingContext2D,
+    nodes: Node[],
+    quadtree: Structures.Quadtree<any>,
+  ) {
     drawBackground(context);
+    quadtree.deepCallback((quadtree) => {
+      drawQuadtree(context, quadtree);
+    });
     drawAllLinks(context, nodes);
     drawAllNodes(context, nodes);
   }

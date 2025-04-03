@@ -29,11 +29,15 @@ export function main(canvas: HTMLCanvasElement) {
     Config.quadtree.capacity,
   );
 
-  console.log(quadtree);
-
   const loop = () => {
-    Render.frame(context, nodes);
     Node.addRandomVelocities(nodes);
+
+    quadtree.clear();
+    for (let i = 0; i < nodes.length; i++) {
+      quadtree.insert(nodes[i]);
+    }
+
+    Render.frame(context, nodes, quadtree);
 
     requestAnimationFrame(loop);
   };

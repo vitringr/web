@@ -3,7 +3,7 @@ import { Random } from "@utilities/random";
 import Config from "./config";
 
 export class Node {
-  links = new Set<Node>();
+  readonly links = new Set<Node>();
 
   private position: Structures.Vector2;
 
