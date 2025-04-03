@@ -10,11 +10,15 @@ export namespace Quadtree {
   };
 
   export const quadtree = new Structures.Quadtree<Node, Weight>(
-    { x: 0, y: 0, width: Config.width, height: Config.height },
+    { x: 0, y: 0, w: Config.width, h: Config.height },
     Config.quadtree.capacity,
   );
 
-  function setWeights() {
+  export function insertNodes(nodes: Node[]) {
+    nodes.forEach((node) => quadtree.insert(node));
+  }
+
+  export function setWeights() {
     quadtree.leafRecursion((qt) => {
       const sum: Weight = { x: 0, y: 0, mass: 0 };
 
@@ -26,15 +30,13 @@ export namespace Quadtree {
 
       // Add weight sums from children (if any)
       if (qt.divided) {
-        [qt.northeast, qt.southeast, qt.southwest, qt.northwest].forEach(
-          (child) => {
-            if (child?.data) {
-              sum.x += child.data.x * child.data.mass;
-              sum.y += child.data.y * child.data.mass;
-              sum.mass += child.data.mass;
-            }
-          },
-        );
+        qt.children.forEach((child) => {
+          if (child?.data) {
+            sum.x += child.data.x * child.data.mass;
+            sum.y += child.data.y * child.data.mass;
+            sum.mass += child.data.mass;
+          }
+        });
       }
 
       // Average
@@ -43,13 +45,5 @@ export namespace Quadtree {
 
       qt.data = sum;
     });
-  }
-
-  export function processQuadtree(nodes: Node[]) {
-    quadtree.clear();
-
-    nodes.forEach((node) => quadtree.insert(node));
-
-    setWeights();
   }
 }

@@ -1,5 +1,4 @@
-import { IRectangle } from "./rectangle";
-import { IPoint } from "./point";
+import { IPoint, IRectangle } from "./shapes";
 
 const SUBDIVISIONS: number = 4;
 
@@ -14,8 +13,8 @@ export class Quadtree<Item extends IPoint, Data> {
   children: Quadtree<Item, Data>[] = [];
   parent?: Quadtree<Item, Data>;
 
-  constructor(bounds: IRectangle, capacity: number = 4) {
-    this.rectangle = bounds;
+  constructor(rectangle: IRectangle, capacity: number = 4) {
+    this.rectangle = rectangle;
     this.capacity = capacity;
   }
 
@@ -106,28 +105,28 @@ export class Quadtree<Item extends IPoint, Data> {
   private subdivide(): void {
     const x = this.rectangle.x;
     const y = this.rectangle.y;
-    const w = this.rectangle.width * 0.5;
-    const h = this.rectangle.height * 0.5;
+    const w = this.rectangle.w * 0.5;
+    const h = this.rectangle.h * 0.5;
 
     this.divided = true;
 
     this.children[0] = new Quadtree(
-      { x: x + w, y: y, width: w, height: h },
+      { x: x + w, y: y, w: w, h: h },
       this.capacity,
     );
 
     this.children[1] = new Quadtree(
-      { x: x + w, y: y + h, width: w, height: h },
+      { x: x + w, y: y + h, w: w, h: h },
       this.capacity,
     );
 
     this.children[2] = new Quadtree(
-      { x: x, y: y + h, width: w, height: h },
+      { x: x, y: y + h, w: w, h: h },
       this.capacity,
     );
 
     this.children[3] = new Quadtree(
-      { x: x, y: y, width: w, height: h },
+      { x: x, y: y, w: w, h: h },
       this.capacity,
     );
 
@@ -148,19 +147,19 @@ export class Quadtree<Item extends IPoint, Data> {
 
   private intersects(range: IRectangle): boolean {
     return (
-      this.rectangle.x + this.rectangle.width >= range.x &&
-      this.rectangle.x <= range.x + range.width &&
-      this.rectangle.y + this.rectangle.height >= range.y &&
-      this.rectangle.y <= range.y + range.height
+      this.rectangle.x + this.rectangle.w >= range.x &&
+      this.rectangle.x <= range.x + range.w &&
+      this.rectangle.y + this.rectangle.h >= range.y &&
+      this.rectangle.y <= range.y + range.h
     );
   }
 
   private isPointInRectangle(point: IPoint, rectangle: IRectangle): boolean {
     return (
       point.x >= rectangle.x &&
-      point.x < rectangle.x + rectangle.width &&
+      point.x < rectangle.x + rectangle.w &&
       point.y >= rectangle.y &&
-      point.y < rectangle.y + rectangle.height
+      point.y < rectangle.y + rectangle.h
     );
   }
 }

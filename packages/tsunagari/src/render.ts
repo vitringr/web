@@ -62,8 +62,8 @@ export namespace Render {
     context: CanvasRenderingContext2D,
     quadtree: Structures.Quadtree<any, any>,
   ) {
-    const bounds = quadtree.rectangle;
-    context.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
+    const r = quadtree.rectangle;
+    context.strokeRect(r.x, r.y, r.w, r.h);
   }
 
   function drawFirstLevelQuadtreeWeight(
@@ -72,17 +72,12 @@ export namespace Render {
   ) {
     context.fillStyle = "#FF000060";
 
-    const ne = quadtree.northeast?.data;
-    if (ne) context.fillRect(ne.x, ne.y, ne.mass * 0.5, ne.mass * 0.5);
+    for (let i = 0; i < quadtree.children.length; i++) {
+      const data = quadtree.children[i].data;
+      if (!data) continue;
 
-    const se = quadtree.southeast?.data;
-    if (se) context.fillRect(se.x, se.y, se.mass * 0.5, se.mass * 0.5);
-
-    const sw = quadtree.southwest?.data;
-    if (sw) context.fillRect(sw.x, sw.y, sw.mass * 0.5, sw.mass * 0.5);
-
-    const nw = quadtree.northwest?.data;
-    if (nw) context.fillRect(nw.x, nw.y, nw.mass * 0.5, nw.mass * 0.5);
+      context.fillRect(data.x, data.y, data.mass * 0.5, data.mass * 0.5);
+    }
   }
 
   export function frame(

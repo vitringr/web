@@ -33,17 +33,13 @@ export class Node {
 }
 
 export namespace Node {
-  export function create(
-    count: number,
-    x: { from: number; to: number },
-    y: { from: number; to: number },
-  ): Node[] {
+  export function generate(count: number): Node[] {
     const nodes: Node[] = [];
 
     for (let i = 0; i < count; i++) {
       const node = new Node(
-        Random.range(x.from, x.to),
-        Random.range(y.from, y.to),
+        Random.range(0, Config.width),
+        Random.range(0, Config.height),
       );
 
       nodes.push(node);
