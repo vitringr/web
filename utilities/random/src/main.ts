@@ -2,8 +2,8 @@ export function bool(): boolean {
   return Math.random() >= 0.5;
 }
 
-export function percent(percentage: number): boolean {
-  return Math.random() <= percentage * 0.01;
+export function chance(zeroToOne: number): boolean {
+  return Math.random() <= zeroToOne;
 }
 
 export function range(from: number, to: number): number {

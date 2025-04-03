@@ -2,22 +2,31 @@ export default {
   width: 800,
   height: 800,
 
+  force: {
+    attraction: 0.01,
+    repulsion: 1,
+    center: 1,
+  },
+
   render: {
     backgroundColor: "#111111",
 
     node: {
-      color: "#999999",
-      size: 4,
+      display: true,
+      color: "#A0A0A0",
+      size: 7,
     },
 
     link: {
-      color: "#444444",
-      width: 0.4,
+      display: true,
+      color: "#555555",
+      width: 0.5,
     },
 
     quadtree: {
+      display: false,
       color: "#006020",
-      width: 1,
+      width: 0.5,
     },
   },
 
@@ -26,13 +35,13 @@ export default {
   },
 
   nodes: {
-    count: 500,
+    count: 100,
 
     randomConnections: {
-      chance: 50,
+      chance: 0.3,
       count: {
         min: 1,
-        max: 5,
+        max: 4,
       },
     },
   },

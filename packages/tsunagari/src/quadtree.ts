@@ -33,7 +33,6 @@ export namespace Quadtree {
         sum.mass += 1;
       });
 
-      // Add weight sums from children (if any)
       if (qt.divided) {
         qt.children.forEach((child) => {
           if (child?.data) {
@@ -44,7 +43,6 @@ export namespace Quadtree {
         });
       }
 
-      // Average
       sum.x = sum.mass > 0 ? sum.x / sum.mass : 0;
       sum.y = sum.mass > 0 ? sum.y / sum.mass : 0;
 

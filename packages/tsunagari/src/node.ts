@@ -50,7 +50,7 @@ export namespace Node {
 
   export function connectRandomly(nodes: Node[]) {
     for (let i = 0; i < nodes.length; i++) {
-      if (Random.percent(Config.nodes.randomConnections.chance)) continue;
+      if (Random.chance(1 - Config.nodes.randomConnections.chance)) continue;
 
       const node = nodes[i];
 

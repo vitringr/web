@@ -2,6 +2,7 @@ import Config from "./config";
 import { Quadtree } from "./quadtree";
 import { Render } from "./render";
 import { Node } from "./node";
+import { Force } from "./force";
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = Config.width;
@@ -27,16 +28,21 @@ export function main(canvas: HTMLCanvasElement) {
     Quadtree.setWeights(quadtree);
 
     for (let i = 0; i < nodes.length; i++) {
-      // const current = nodes[i];
-      // Force.main(current, Quadtree.quadtree);
-      // Force.linkAttraction(current);
-      // Force.centerPull(current);
+      const node = nodes[i];
+      Force.attractConnections(node);
     }
 
     Render.drawBackground(context);
-    Render.drawAllLinks(context, nodes);
-    Render.drawAllNodes(context, nodes);
-    Render.drawAllQuadtreeBounds(context, quadtree);
+
+    if (Config.render.link.display) {
+      Render.drawAllLinks(context, nodes);
+    }
+    if (Config.render.node.display) {
+      Render.drawAllNodes(context, nodes);
+    }
+    if (Config.render.quadtree.display) {
+      Render.drawAllQuadtreeBounds(context, quadtree);
+    }
 
     requestAnimationFrame(loop);
   };
