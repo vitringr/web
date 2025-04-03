@@ -29,20 +29,17 @@ export function main(canvas: HTMLCanvasElement) {
 
     for (let i = 0; i < nodes.length; i++) {
       const node = nodes[i];
-      Force.attractConnections(node);
+      Config.force.center.active && Force.centerPull(node);
+      Config.force.attraction.active && Force.attractConnections(node);
+      Config.force.repulsion.active && Force.repulsion(node, quadtree);
     }
 
     Render.drawBackground(context);
 
-    if (Config.render.link.display) {
-      Render.drawAllLinks(context, nodes);
-    }
-    if (Config.render.node.display) {
-      Render.drawAllNodes(context, nodes);
-    }
-    if (Config.render.quadtree.display) {
+    Config.render.link.display && Render.drawAllLinks(context, nodes);
+    Config.render.node.display && Render.drawAllNodes(context, nodes);
+    Config.render.quadtree.display &&
       Render.drawAllQuadtreeBounds(context, quadtree);
-    }
 
     requestAnimationFrame(loop);
   };
