@@ -1,1 +1,1 @@
-export * as Random from "./random"
+export * as Random from "./main";

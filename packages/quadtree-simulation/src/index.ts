@@ -1,1 +1,1 @@
-export * as QuadtreeSimulation from "./quadtree-simulation";
+export * as QuadtreeSimulation from "./main";

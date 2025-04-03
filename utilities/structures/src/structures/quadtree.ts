@@ -10,27 +10,28 @@ interface IRectangle {
   height: number;
 }
 
-export class Quadtree<T extends IPoint> {
-  private readonly bounds: IRectangle;
-  private readonly capacity: number;
-  private container: T[] = [];
-  private divided: boolean = false;
+export class Quadtree<Item extends IPoint, Data> {
+  readonly bounds: IRectangle;
+  readonly capacity: number;
 
-  private northeast?: Quadtree<T>;
-  private southeast?: Quadtree<T>;
-  private southwest?: Quadtree<T>;
-  private northwest?: Quadtree<T>;
+  container: Item[] = [];
+  data?: Data;
+
+  divided: boolean = false;
+
+  northeast?: Quadtree<Item, Data>;
+  southeast?: Quadtree<Item, Data>;
+  southwest?: Quadtree<Item, Data>;
+  northwest?: Quadtree<Item, Data>;
+
+  parent?: Quadtree<Item, Data>;
 
   constructor(bounds: IRectangle, capacity: number = 4) {
     this.bounds = bounds;
     this.capacity = capacity;
   }
 
-  public get getBounds() {
-    return this.bounds;
-  }
-
-  insert(item: T): boolean {
+  insert(item: Item): boolean {
     if (!this.isPointInRectangle(item, this.bounds)) {
       return false;
     }
@@ -54,12 +55,13 @@ export class Quadtree<T extends IPoint> {
     );
   }
 
-  query(range: IRectangle, found: T[] = []): T[] {
+  query(range: IRectangle, found: Item[] = []): Item[] {
     if (!this.intersects(range)) {
       return found;
     }
 
-    for (const item of this.container) {
+    for (let i = 0; i < this.container.length; i++) {
+      const item = this.container[i];
       if (this.isPointInRectangle(item, range)) {
         found.push(item);
       }
@@ -75,7 +77,7 @@ export class Quadtree<T extends IPoint> {
     return found;
   }
 
-  deepCallback(callback: (quadtree: Quadtree<T>) => void) {
+  deepCallback(callback: (quadtree: Quadtree<Item, Data>) => void) {
     callback(this);
 
     if (this.divided) {
@@ -84,6 +86,17 @@ export class Quadtree<T extends IPoint> {
       this.southwest?.deepCallback(callback);
       this.northwest?.deepCallback(callback);
     }
+  }
+
+  leafDeepCallback(callback: (quadtree: Quadtree<Item, Data>) => void) {
+    if (this.divided) {
+      this.northeast?.leafDeepCallback(callback);
+      this.southeast?.leafDeepCallback(callback);
+      this.southwest?.leafDeepCallback(callback);
+      this.northwest?.leafDeepCallback(callback);
+    }
+
+    callback(this);
   }
 
   private subdivide(): void {
@@ -111,6 +124,11 @@ export class Quadtree<T extends IPoint> {
       { x: x, y: y, width: w, height: h },
       this.capacity,
     );
+
+    this.northeast.parent = this;
+    this.southeast.parent = this;
+    this.southwest.parent = this;
+    this.northwest.parent = this;
 
     this.divided = true;
 
@@ -146,10 +164,12 @@ export class Quadtree<T extends IPoint> {
 
   clear(): void {
     this.container = [];
+    this.data = undefined;
     this.divided = false;
     this.northeast = undefined;
     this.northwest = undefined;
     this.southeast = undefined;
     this.southwest = undefined;
+    this.parent = undefined;
   }
 }

@@ -1,1 +1,1 @@
-export * as Math from "./math";
+export * as Math from "./main";

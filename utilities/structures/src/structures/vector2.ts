@@ -23,10 +23,14 @@ export class Vector2 {
     return new Vector2(v1.x / v2.x, v1.y / v2.y);
   }
 
-  static distance(v1: Vector2, v2: Vector2) {
+  static distanceSquared(v1: Vector2, v2: Vector2) {
     const xDistance = v1.x - v2.x;
     const yDistance = v1.y - v2.y;
-    return Math.sqrt(xDistance * xDistance + yDistance * yDistance);
+    return xDistance * xDistance + yDistance * yDistance;
+  }
+
+  static distance(v1: Vector2, v2: Vector2) {
+    return Math.sqrt(Vector2.distanceSquared(v1, v2));
   }
 
   static dot(v1: Vector2, v2: Vector2) {

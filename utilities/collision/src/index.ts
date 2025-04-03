@@ -1,1 +1,1 @@
-export * as Collision from "./collision";
+export * as Collision from "./main";

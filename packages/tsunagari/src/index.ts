@@ -1,1 +1,1 @@
-export * as Tsunagari from "./main"
+export * as Tsunagari from "./main";

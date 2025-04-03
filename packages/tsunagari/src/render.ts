@@ -1,6 +1,7 @@
 import { Structures } from "@utilities/structures";
 import Config from "./config";
 import { Node } from "./node";
+import { Quadtree } from "./quadtree";
 
 export namespace Render {
   const nodeHalfSize = Config.render.node.size * 0.5;
@@ -61,12 +62,9 @@ export namespace Render {
 
   function drawQuadtree(
     context: CanvasRenderingContext2D,
-    quadtree: Structures.Quadtree<any>,
+    quadtree: Structures.Quadtree<any, any>,
   ) {
-    context.strokeStyle = Config.render.quadtree.color;
-    context.lineWidth = Config.render.quadtree.width;
-
-    const bounds = quadtree.getBounds;
+    const bounds = quadtree.bounds;
 
     context.beginPath();
     context.lineTo(bounds.x, bounds.y);
@@ -78,16 +76,42 @@ export namespace Render {
     context.stroke();
   }
 
+  function drawFirstLevelQuadtreeWeight(
+    context: CanvasRenderingContext2D,
+    quadtree: Structures.Quadtree<any, any>,
+  ) {
+    context.fillStyle = "#FF000060";
+
+    const ne = quadtree.northeast?.data as Quadtree.Weight;
+    if (ne) context.fillRect(ne.x, ne.y, ne.mass * 0.5, ne.mass * 0.5);
+
+    const se = quadtree.southeast?.data as Quadtree.Weight;
+    if (se) context.fillRect(se.x, se.y, se.mass * 0.5, se.mass * 0.5);
+
+    const sw = quadtree.southwest?.data as Quadtree.Weight;
+    if (sw) context.fillRect(sw.x, sw.y, sw.mass * 0.5, sw.mass * 0.5);
+
+    const nw = quadtree.northwest?.data as Quadtree.Weight;
+    if (nw) context.fillRect(nw.x, nw.y, nw.mass * 0.5, nw.mass * 0.5);
+  }
+
   export function frame(
     context: CanvasRenderingContext2D,
     nodes: Node[],
-    quadtree: Structures.Quadtree<any>,
+    quadtree: Structures.Quadtree<any, any>,
   ) {
     drawBackground(context);
+
+    context.strokeStyle = Config.render.quadtree.color;
+    context.lineWidth = Config.render.quadtree.width;
     quadtree.deepCallback((quadtree) => {
       drawQuadtree(context, quadtree);
     });
+
+    drawFirstLevelQuadtreeWeight(context, quadtree);
+
     drawAllLinks(context, nodes);
+
     drawAllNodes(context, nodes);
   }
 }

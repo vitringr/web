@@ -1,6 +1,7 @@
-import { Structures } from "@utilities/structures";
 import Config from "./config";
+import { Force } from "./force";
 import { Node } from "./node";
+import { Quadtree } from "./quadtree";
 import { Render } from "./render";
 
 function setupContext(canvas: HTMLCanvasElement) {
@@ -24,20 +25,19 @@ export function main(canvas: HTMLCanvasElement) {
 
   Node.connectRandomly(nodes);
 
-  const quadtree = new Structures.Quadtree<Node>(
-    { x: 0, y: 0, width: Config.width, height: Config.height },
-    Config.quadtree.capacity,
-  );
-
   const loop = () => {
-    Node.addRandomVelocities(nodes);
+    // Node.addRandomVelocities(nodes);
 
-    quadtree.clear();
+    Quadtree.processQuadtree(nodes);
+
     for (let i = 0; i < nodes.length; i++) {
-      quadtree.insert(nodes[i]);
+      const current = nodes[i];
+      Force.main(current, Quadtree.quadtree);
+      Force.linkAttraction(current);
+      Force.centerPull(current);
     }
 
-    Render.frame(context, nodes, quadtree);
+    Render.frame(context, nodes, Quadtree.quadtree);
 
     requestAnimationFrame(loop);
   };

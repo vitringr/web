@@ -22,11 +22,11 @@ export default {
   },
 
   quadtree: {
-    capacity: 4,
+    capacity: 1,
   },
 
   nodes: {
-    count: 300,
+    count: 500,
 
     randomConnections: {
       chance: 50,

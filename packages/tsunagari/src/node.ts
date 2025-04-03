@@ -19,6 +19,10 @@ export class Node {
     return this.position.y;
   }
 
+  getPosition() {
+    return this.position;
+  }
+
   link(node: Node) {
     this.links.add(node);
   }
