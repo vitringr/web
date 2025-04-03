@@ -7,6 +7,10 @@ export class Vector3 {
     return new Vector3(1, 1, 1);
   }
 
+  static clone(vector3: Vector3) {
+    return new Vector3(vector3.x, vector3.y, vector3.z);
+  }
+
   static add(v1: Vector3, v2: Vector3) {
     return new Vector3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
   }
@@ -23,13 +27,17 @@ export class Vector3 {
     return new Vector3(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z);
   }
 
-  static distance(v1: Vector3, v2: Vector3) {
+  static distanceSquared(v1: Vector3, v2: Vector3) {
     const xDistance = v1.x - v2.x;
     const yDistance = v1.y - v2.y;
     const zDistance = v1.z - v2.z;
-    return Math.sqrt(
-      xDistance * xDistance + yDistance * yDistance + zDistance * zDistance,
+    return (
+      xDistance * xDistance + yDistance * yDistance + zDistance * zDistance
     );
+  }
+
+  static distance(v1: Vector3, v2: Vector3) {
+    return Math.sqrt(this.distanceSquared(v1, v2));
   }
 
   static dot(v1: Vector3, v2: Vector3) {
@@ -98,16 +106,16 @@ export class Vector3 {
     return this;
   }
 
-  length() {
-    return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
-  }
-
-  lengthSquared() {
+  magnitudeSquared() {
     return this.x * this.x + this.y * this.y + this.z * this.z;
   }
 
+  magnitude() {
+    return Math.sqrt(this.magnitudeSquared());
+  }
+
   normalize() {
-    const length = this.length();
+    const length = this.magnitude();
     if (length > 0) {
       this.x /= length;
       this.y /= length;

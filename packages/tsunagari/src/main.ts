@@ -17,15 +17,14 @@ export function main(canvas: HTMLCanvasElement) {
   const context = setupContext(canvas);
 
   const nodes = Node.generate(Config.nodes.count);
-
   Node.connectRandomly(nodes);
 
-  const loop = () => {
-    // Node.addRandomVelocities(nodes);
+  const quadtree = Quadtree.create();
 
-    Quadtree.quadtree.clear();
-    Quadtree.insertNodes(nodes);
-    Quadtree.setWeights();
+  const loop = () => {
+    quadtree.clear();
+    Quadtree.insertNodes(quadtree, nodes);
+    Quadtree.setWeights(quadtree);
 
     for (let i = 0; i < nodes.length; i++) {
       // const current = nodes[i];
@@ -34,7 +33,10 @@ export function main(canvas: HTMLCanvasElement) {
       // Force.centerPull(current);
     }
 
-    Render.frame(context, nodes, Quadtree.quadtree);
+    Render.drawBackground(context);
+    Render.drawAllLinks(context, nodes);
+    Render.drawAllNodes(context, nodes);
+    Render.drawAllQuadtreeBounds(context, quadtree);
 
     requestAnimationFrame(loop);
   };

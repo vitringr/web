@@ -9,16 +9,21 @@ export namespace Quadtree {
     mass: number;
   };
 
-  export const quadtree = new Structures.Quadtree<Node, Weight>(
-    { x: 0, y: 0, w: Config.width, h: Config.height },
-    Config.quadtree.capacity,
-  );
+  export function create() {
+    return new Structures.Quadtree<Node, Weight>(
+      { x: 0, y: 0, w: Config.width, h: Config.height },
+      Config.quadtree.capacity,
+    );
+  }
 
-  export function insertNodes(nodes: Node[]) {
+  export function insertNodes(
+    quadtree: Structures.Quadtree<Node, any>,
+    nodes: Node[],
+  ) {
     nodes.forEach((node) => quadtree.insert(node));
   }
 
-  export function setWeights() {
+  export function setWeights(quadtree: Structures.Quadtree<Node, Weight>) {
     quadtree.leafRecursion((qt) => {
       const sum: Weight = { x: 0, y: 0, mass: 0 };
 

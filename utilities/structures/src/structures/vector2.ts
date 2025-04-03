@@ -7,6 +7,10 @@ export class Vector2 {
     return new Vector2(1, 1);
   }
 
+  static clone(vector2: Vector2) {
+    return new Vector2(vector2.x, vector2.y);
+  }
+
   static add(v1: Vector2, v2: Vector2) {
     return new Vector2(v1.x + v2.x, v1.y + v2.y);
   }
@@ -86,16 +90,16 @@ export class Vector2 {
     return this;
   }
 
-  length() {
-    return Math.sqrt(this.x * this.x + this.y * this.y);
-  }
-
-  lengthSquared() {
+  magnitudeSquared() {
     return this.x * this.x + this.y * this.y;
   }
 
+  magnitude() {
+    return Math.sqrt(this.magnitudeSquared());
+  }
+
   normalize() {
-    const length = this.length();
+    const length = this.magnitude();
     if (length > 0) {
       this.x /= length;
       this.y /= length;

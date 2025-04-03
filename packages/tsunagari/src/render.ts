@@ -4,7 +4,7 @@ import { Node } from "./node";
 import { Quadtree } from "./quadtree";
 
 export namespace Render {
-  function drawBackground(context: CanvasRenderingContext2D) {
+  export function drawBackground(context: CanvasRenderingContext2D) {
     context.fillStyle = Config.render.backgroundColor;
     context.fillRect(0, 0, Config.width, Config.height);
   }
@@ -21,7 +21,10 @@ export namespace Render {
     context.stroke();
   }
 
-  function drawAllLinks(context: CanvasRenderingContext2D, nodes: Node[]) {
+  export function drawAllLinks(
+    context: CanvasRenderingContext2D,
+    nodes: Node[],
+  ) {
     context.strokeStyle = Config.render.link.color;
     context.lineWidth = Config.render.link.width;
 
@@ -44,7 +47,10 @@ export namespace Render {
     }
   }
 
-  function drawAllNodes(context: CanvasRenderingContext2D, nodes: Node[]) {
+  export function drawAllNodes(
+    context: CanvasRenderingContext2D,
+    nodes: Node[],
+  ) {
     context.fillStyle = Config.render.node.color;
 
     for (let i = 0; i < nodes.length; i++) {
@@ -58,15 +64,7 @@ export namespace Render {
     }
   }
 
-  function drawQuadtreeBounds(
-    context: CanvasRenderingContext2D,
-    quadtree: Structures.Quadtree<any, any>,
-  ) {
-    const r = quadtree.rectangle;
-    context.strokeRect(r.x, r.y, r.w, r.h);
-  }
-
-  function drawFirstLevelQuadtreeWeight(
+  export function drawFirstLevelQuadtreeWeight(
     context: CanvasRenderingContext2D,
     quadtree: Structures.Quadtree<any, Quadtree.Weight>,
   ) {
@@ -80,23 +78,22 @@ export namespace Render {
     }
   }
 
-  export function frame(
+  function drawQuadtreeBounds(
     context: CanvasRenderingContext2D,
-    nodes: Node[],
     quadtree: Structures.Quadtree<any, any>,
   ) {
-    drawBackground(context);
+    const r = quadtree.rectangle;
+    context.strokeRect(r.x, r.y, r.w, r.h);
+  }
 
+  export function drawAllQuadtreeBounds(
+    context: CanvasRenderingContext2D,
+    quadtree: Structures.Quadtree<any, Quadtree.Weight>,
+  ) {
     context.strokeStyle = Config.render.quadtree.color;
     context.lineWidth = Config.render.quadtree.width;
     quadtree.rootRecursion((quadtree) => {
       drawQuadtreeBounds(context, quadtree);
     });
-
-    drawFirstLevelQuadtreeWeight(context, quadtree);
-
-    drawAllLinks(context, nodes);
-
-    drawAllNodes(context, nodes);
   }
 }

@@ -2,7 +2,7 @@ import { Structures } from "@utilities/structures";
 import { Random } from "@utilities/random";
 import Config from "./config";
 
-export class Node {
+export class Node implements Structures.Shapes.IPoint {
   readonly connections = new Set<Node>();
 
   private position: Structures.Vector2;
@@ -51,7 +51,8 @@ export namespace Node {
   export function connectRandomly(nodes: Node[]) {
     for (let i = 0; i < nodes.length; i++) {
       if (Random.percent(Config.nodes.randomConnections.chance)) continue;
-      const current = nodes[i];
+
+      const node = nodes[i];
 
       const connectionsCount = Random.rangeInt(
         Config.nodes.randomConnections.count.min,
@@ -60,9 +61,9 @@ export namespace Node {
 
       for (let c = 0; c < connectionsCount; c++) {
         const randomNode = nodes[Random.rangeInt(0, nodes.length - 1)];
-        if (randomNode === current) continue;
+        if (randomNode === node) continue;
 
-        current.connect(randomNode);
+        node.connect(randomNode);
       }
     }
   }
@@ -71,12 +72,12 @@ export namespace Node {
     const randomVelocity = Structures.Vector2.zero();
 
     for (let i = 0; i < nodes.length; i++) {
-      const current = nodes[i];
+      const node = nodes[i];
 
       randomVelocity.x = Random.range(-1, 1);
       randomVelocity.y = Random.range(-1, 1);
 
-      current.addVelocity(randomVelocity);
+      node.addVelocity(randomVelocity);
     }
   }
 }
