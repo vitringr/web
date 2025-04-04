@@ -8,6 +8,10 @@ import { Quadtree } from "./quadtree";
 export namespace Force {
   const center = new Structures.Vector2(Config.width, Config.height).scale(0.5);
 
+  export function drag(node: Node) {
+    node.velocity.scale(Config.force.drag.scalar);
+  }
+
   export function attractConnections(node: Node) {
     const connections = node.connections;
     if (connections.size <= 0) return;

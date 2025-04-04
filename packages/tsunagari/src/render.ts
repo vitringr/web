@@ -68,8 +68,8 @@ export class Renderer {
 
     for (let i = 0; i < nodes.length; i++) {
       const node = nodes[i];
-      arrow.add(node.velocity).scale(Config.render.velocity.scalar);
-      target.add(node.position).add(arrow);
+      arrow.scale(0).add(node.velocity).scale(Config.render.velocity.scalar);
+      target.scale(0).add(node.position).add(arrow);
       this.line(node.position, target);
     }
   }
