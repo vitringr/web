@@ -3,7 +3,7 @@ export default {
   height: 800,
 
   logger: {
-    quadtrees: true,
+    quadtrees: false,
   },
 
   force: {

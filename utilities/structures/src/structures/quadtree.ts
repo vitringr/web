@@ -18,18 +18,10 @@ export class Quadtree<Item extends IPoint, Data> {
     this.capacity = capacity;
   }
 
-  get northeast() {
-    return this.children[0];
-  }
-  get southeast() {
-    return this.children[1];
-  }
-  get southwest() {
-    return this.children[2];
-  }
-  get northwest() {
-    return this.children[3];
-  }
+  get northeast() { return this.children[0]; }
+  get southeast() { return this.children[1]; }
+  get southwest() { return this.children[2]; }
+  get northwest() { return this.children[3]; }
 
   insert(item: Item): boolean {
     if (!this.isPointInRectangle(item, this.rectangle)) {
@@ -103,32 +95,17 @@ export class Quadtree<Item extends IPoint, Data> {
   }
 
   private subdivide(): void {
+    this.divided = true;
+
     const x = this.rectangle.x;
     const y = this.rectangle.y;
     const w = this.rectangle.w * 0.5;
     const h = this.rectangle.h * 0.5;
 
-    this.divided = true;
-
-    this.children[0] = new Quadtree(
-      { x: x + w, y: y, w: w, h: h },
-      this.capacity,
-    );
-
-    this.children[1] = new Quadtree(
-      { x: x + w, y: y + h, w: w, h: h },
-      this.capacity,
-    );
-
-    this.children[2] = new Quadtree(
-      { x: x, y: y + h, w: w, h: h },
-      this.capacity,
-    );
-
-    this.children[3] = new Quadtree(
-      { x: x, y: y, w: w, h: h },
-      this.capacity,
-    );
+    this.children[0] = new Quadtree({ x: x + w, y: y,     w: w, h: h }, this.capacity);
+    this.children[1] = new Quadtree({ x: x + w, y: y + h, w: w, h: h }, this.capacity);
+    this.children[2] = new Quadtree({ x: x,     y: y + h, w: w, h: h }, this.capacity);
+    this.children[3] = new Quadtree({ x: x,     y: y,     w: w, h: h }, this.capacity);
 
     for (let i = 0; i < SUBDIVISIONS; i++) {
       this.children[i].parent = this;
@@ -147,19 +124,19 @@ export class Quadtree<Item extends IPoint, Data> {
 
   private intersects(range: IRectangle): boolean {
     return (
-      this.rectangle.x + this.rectangle.w >= range.x &&
-      this.rectangle.x <= range.x + range.w &&
-      this.rectangle.y + this.rectangle.h >= range.y &&
-      this.rectangle.y <= range.y + range.h
+      this.rectangle.x + this.rectangle.w >= range.x           &&
+      this.rectangle.x                    <= range.x + range.w &&
+      this.rectangle.y + this.rectangle.h >= range.y           &&
+      this.rectangle.y                    <= range.y + range.h
     );
   }
 
   private isPointInRectangle(point: IPoint, rectangle: IRectangle): boolean {
     return (
-      point.x >= rectangle.x &&
-      point.x < rectangle.x + rectangle.w &&
-      point.y >= rectangle.y &&
-      point.y < rectangle.y + rectangle.h
+      point.x >= rectangle.x               &&
+      point.x <  rectangle.x + rectangle.w &&
+      point.y >= rectangle.y               &&
+      point.y <  rectangle.y + rectangle.h
     );
   }
 }

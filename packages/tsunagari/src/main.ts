@@ -39,25 +39,30 @@ function inputControl(input: Input, nodes: Node[], probe: Node) {
 
 export function main(canvas: HTMLCanvasElement) {
   const context = setupContext(canvas);
-
   const renderer = new Renderer(context);
-
+  const quadtree = Quadtree.create();
   const input = new Input(canvas);
-
   const probe = new Node(50, 50);
-
   const nodes: Node[] = [];
+
   nodes.push(...Node.spawnMany(Config.nodes.count));
   Node.connectRandomly(nodes);
-
-  const quadtree = Quadtree.create();
 
   const loop = () => {
     inputControl(input, nodes, probe);
 
+    // QUADTREE
+
     quadtree.clear();
     Quadtree.insertNodes(quadtree, nodes);
     Quadtree.setWeights(quadtree);
+
+    // FORCE
+
+    Config.force.probe.center && Force.centerPull(probe);
+    // Force.attractConnections(probe);
+    // Force.repulsion(probe, quadtree);
+    probe.move();
 
     nodes.forEach((node) => {
       Config.force.center.active     && Force.centerPull(node);
@@ -67,11 +72,7 @@ export function main(canvas: HTMLCanvasElement) {
       node.move();
     });
 
-    Config.force.probe.center && Force.centerPull(probe);
-    probe.move();
-
-    // Force.attractConnections(probe);
-    // Force.repulsion(probe, quadtree);
+    // RENDER
 
     renderer.background();
     Config.render.probe.display    && renderer.probe(probe);
@@ -80,6 +81,8 @@ export function main(canvas: HTMLCanvasElement) {
     Config.render.node.display     && renderer.allNodes(nodes);
     Config.render.velocity.display && renderer.allVelocities(nodes);
     Config.render.quadtree.display && renderer.allQuadtrees(quadtree);
+
+    // MISC
 
     Config.logger.quadtrees && Logger.quadtrees(quadtree);
 
