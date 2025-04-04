@@ -4,6 +4,9 @@ import Config from "./config";
 
 export class Node implements Structures.Shapes.IPoint {
   readonly position: Structures.Vector2;
+  readonly velocity: Structures.Vector2 = Structures.Vector2.zero();
+  readonly acceleration: Structures.Vector2 = Structures.Vector2.zero();
+
   readonly connections = new Set<Node>();
 
   constructor(x: number, y: number) {
@@ -19,7 +22,11 @@ export class Node implements Structures.Shapes.IPoint {
   }
 
   addVelocity(velocity: Structures.Vector2) {
-    this.position.add(velocity);
+    this.velocity.add(velocity);
+  }
+
+  move() {
+    this.position.add(this.velocity);
   }
 
   connect(node: Node) {

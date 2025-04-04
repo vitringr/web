@@ -14,7 +14,7 @@ export default {
     },
     center: {
       active: false,
-      scalar: 0.005,
+      scalar: 0.001,
     },
   },
 
@@ -22,13 +22,13 @@ export default {
     backgroundColor: "#111111",
     probe: {
       display: true,
-      color: "#FF00FF",
-      size: 2,
+      color: "#FFFF00",
+      size: 3,
     },
     node: {
       display: true,
       color: "#A0A0A0",
-      size: 2,
+      size: 3,
     },
     link: {
       display: false,
@@ -39,6 +39,12 @@ export default {
       display: true,
       color: "#006020",
       width: 1.0,
+    },
+    velocity: {
+      display: true,
+      color: "#FF00FF",
+      width: 1.5,
+      scalar: 3,
     },
   },
 

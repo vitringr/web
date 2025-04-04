@@ -18,7 +18,7 @@ function setupContext(canvas: HTMLCanvasElement) {
 function inputControl(input: Input, nodes: Node[], probe: Node) {
   const position = input.position;
 
-  probe.position.set(position);
+  // probe.position.set(position);
 
   if (input.isClicked) {
     input.isClicked = false;
@@ -38,16 +38,16 @@ function inputControl(input: Input, nodes: Node[], probe: Node) {
 
 export function main(canvas: HTMLCanvasElement) {
   const context = setupContext(canvas);
+
   const renderer = new Renderer(context);
 
-  const input = new Input();
-  input.setup(canvas);
+  const input = new Input(canvas);
 
   const probe = new Node(50, 50);
 
   const nodes: Node[] = [];
   // nodes.push(...Node.spawnMany(Config.nodes.count));
-  Node.connectRandomly(nodes);
+  // Node.connectRandomly(nodes);
 
   const quadtree = Quadtree.create();
 
@@ -58,18 +58,23 @@ export function main(canvas: HTMLCanvasElement) {
     Quadtree.insertNodes(quadtree, nodes);
     Quadtree.setWeights(quadtree);
 
-    for (let i = 0; i < nodes.length; i++) {
-      const node = nodes[i];
-      Config.force.center.active && Force.centerPull(node);
-      Config.force.attraction.active && Force.attractConnections(node);
-      Config.force.repulsion.active && Force.repulsion(node, quadtree);
-    }
+    // for (let i = 0; i < nodes.length; i++) {
+    //   const node = nodes[i];
+    //   Config.force.center.active && Force.centerPull(node);
+    //   Config.force.attraction.active && Force.attractConnections(node);
+    //   Config.force.repulsion.active && Force.repulsion(node, quadtree);
+    // }
 
     Force.centerPull(probe);
-    Force.attractConnections(probe);
-    Force.repulsion(probe, quadtree);
+    probe.move();
+
+    // Force.attractConnections(probe);
+    // Force.repulsion(probe, quadtree);
 
     renderer.background();
+
+    renderer.velocity(probe);
+
     Config.render.probe.display && renderer.probe(probe);
     Config.render.link.display && renderer.allLinks(nodes);
     Config.render.node.display && renderer.allNodes(nodes);

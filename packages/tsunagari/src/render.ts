@@ -12,11 +12,11 @@ export class Renderer {
     this.context.fillRect(0, 0, Config.width, Config.height);
   }
 
-  private link(from: Structures.Vector2, to: Structures.Vector2) {
+  private line(from: Structures.Vector2, to: Structures.Vector2) {
     this.context.beginPath();
     this.context.lineTo(from.x, from.y);
     this.context.lineTo(to.x, to.y);
-    this.context.closePath();
+    // this.context.closePath();
     this.context.stroke();
   }
 
@@ -38,7 +38,7 @@ export class Renderer {
       current.connections.forEach((link: Node) => {
         bCenter.x = link.x + nodeHalfSize;
         bCenter.y = link.y + nodeHalfSize;
-        this.link(aCenter, bCenter);
+        this.line(aCenter, bCenter);
       });
     }
   }
@@ -47,6 +47,31 @@ export class Renderer {
     this.context.beginPath();
     this.context.arc(x, y, r, 0, Mathematics.TAU);
     this.context.fill();
+  }
+
+  velocity(node: Node) {
+    this.context.strokeStyle = Config.render.velocity.color;
+    this.context.lineWidth = Config.render.velocity.width;
+
+    const arrow = node.velocity.clone().scale(Config.render.velocity.scalar);
+    const target = node.position.clone().add(arrow);
+
+    this.line(node.position, target);
+  }
+
+  allVelocities(nodes: Node[]) {
+    this.context.strokeStyle = Config.render.velocity.color;
+    this.context.lineWidth = Config.render.velocity.width;
+
+    const arrow = Structures.Vector2.zero();
+    const target = Structures.Vector2.zero();
+
+    for (let i = 0; i < nodes.length; i++) {
+      const node = nodes[i];
+      arrow.add(node.velocity).scale(Config.render.velocity.scalar);
+      target.add(node.position).add(arrow);
+      this.line(node.position, target);
+    }
   }
 
   probe(probe: Node) {

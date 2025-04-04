@@ -28,7 +28,7 @@ export namespace Force {
         .normalize()
         .scale(
           Config.force.attraction.scalar *
-          (distance - Config.force.attraction.idealDistance),
+            (distance - Config.force.attraction.idealDistance),
         );
 
       node.addVelocity(velocity);
@@ -37,10 +37,9 @@ export namespace Force {
   }
 
   export function centerPull(node: Node) {
-    const velocity = Structures.Vector2.subtract(
-      center,
-      node.position,
-    ).scale(Config.force.center.scalar);
+    const velocity = Structures.Vector2.subtract(center, node.position).scale(
+      Config.force.center.scalar,
+    );
 
     node.addVelocity(velocity);
   }
@@ -55,10 +54,7 @@ export namespace Force {
     const centerOfMass = new Structures.Vector2(quadtreeData.x, quadtreeData.y);
 
     // TODO: probably remove sqrt().
-    let distance = Structures.Vector2.distance(
-      node.position,
-      centerOfMass,
-    );
+    let distance = Structures.Vector2.distance(node.position, centerOfMass);
 
     const theta = quadtree.rectangle.w / distance;
 
