@@ -48,7 +48,7 @@ export class Vector3 {
     public x: number,
     public y: number,
     public z: number,
-  ) {}
+  ) { }
 
   get r() {
     return this.x;
@@ -122,5 +122,9 @@ export class Vector3 {
       this.z /= length;
     }
     return this;
+  }
+
+  toString() {
+    return `(${this.x}, ${this.y}, ${this.z})`;
   }
 }

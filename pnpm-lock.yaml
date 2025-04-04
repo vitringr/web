@@ -86,7 +86,7 @@ importers:
 
   packages/tsunagari:
     dependencies:
-      '@utilities/math':
+      '@utilities/mathematics':
         specifier: workspace:*
         version: link:../../utilities/math
       '@utilities/random':

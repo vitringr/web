@@ -1,7 +1,8 @@
+import { Mathematics } from "@utilities/mathematics";
 import { Structures } from "@utilities/structures";
 import Config from "./config";
-import { Node } from "./node";
 import { Quadtree } from "./quadtree";
+import { Node } from "./node";
 
 export namespace Render {
   export function drawBackground(context: CanvasRenderingContext2D) {
@@ -47,20 +48,31 @@ export namespace Render {
     }
   }
 
+  function drawCircle(
+    context: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    r: number,
+  ) {
+    context.beginPath();
+    context.arc(x, y, r, 0, Mathematics.TAU);
+    context.fill();
+  }
+
+  export function drawProbe(context: CanvasRenderingContext2D, probe: Node) {
+    context.fillStyle = Config.render.probe.color;
+    drawCircle(context, probe.x, probe.y, Config.render.probe.size);
+  }
+
   export function drawAllNodes(
     context: CanvasRenderingContext2D,
     nodes: Node[],
   ) {
     context.fillStyle = Config.render.node.color;
 
-    for (let i = 0; i < nodes.length; i++) {
+    for (let i = 1; i < nodes.length; i++) {
       const node = nodes[i];
-      context.fillRect(
-        node.x,
-        node.y,
-        Config.render.node.size,
-        Config.render.node.size,
-      );
+      drawCircle(context, node.x, node.y, Config.render.node.size);
     }
   }
 

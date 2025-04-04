@@ -1,5 +1,5 @@
 {
-  "name": "@utilities/math",
+  "name": "@utilities/mathematics",
   "type": "module",
   "private": true,
   "exports": "./src/index.ts",

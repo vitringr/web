@@ -9,7 +9,7 @@ export default {
       idealDistance: 100,
     },
     repulsion: {
-      active: true,
+      active: false,
       scalar: 1,
     },
     center: {
@@ -20,10 +20,15 @@ export default {
 
   render: {
     backgroundColor: "#111111",
+    probe: {
+      display: true,
+      color: "#FF00FF",
+      size: 6,
+    },
     node: {
       display: true,
       color: "#A0A0A0",
-      size: 7,
+      size: 6,
     },
     link: {
       display: true,

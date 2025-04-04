@@ -44,7 +44,7 @@ export class Vector2 {
   constructor(
     public x: number,
     public y: number,
-  ) {}
+  ) { }
 
   get r() {
     return this.x;
@@ -105,5 +105,9 @@ export class Vector2 {
       this.y /= length;
     }
     return this;
+  }
+
+  toString() {
+    return `(${this.x}, ${this.y})`;
   }
 }

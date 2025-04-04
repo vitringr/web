@@ -1,7 +1,7 @@
-export class Input {
-  x: number = Infinity;
-  y: number = Infinity;
+import { Structures } from "@utilities/structures";
 
+export class Input {
+  position = Structures.Vector2.one().scale(Infinity);
   isClicked: boolean = false;
 
   private isInitialized: boolean = false;
@@ -21,8 +21,10 @@ export class Input {
     });
 
     target.addEventListener("pointermove", (event: PointerEvent) => {
-      this.x = event.clientX - bounds.left;
-      this.y = event.clientY - bounds.top;
+      this.position.set(
+        event.clientX - bounds.left,
+        event.clientY - bounds.top,
+      );
     });
 
     window.addEventListener("blur", () => {

@@ -33,23 +33,27 @@ export class Node implements Structures.Shapes.IPoint {
 }
 
 export namespace Node {
-  export function generate(count: number): Node[] {
+  export function spawnAt(position: Structures.Vector2): Node {
+    return new Node(position.x, position.y);
+  }
+
+  export function spawnRandom(): Node {
+    return new Node(
+      Random.range(0, Config.width),
+      Random.range(0, Config.height),
+    );
+  }
+
+  export function spawnMany(count: number): Node[] {
     const nodes: Node[] = [];
-
     for (let i = 0; i < count; i++) {
-      const node = new Node(
-        Random.range(0, Config.width),
-        Random.range(0, Config.height),
-      );
-
-      nodes.push(node);
+      nodes.push(spawnRandom());
     }
-
     return nodes;
   }
 
   export function connectRandomly(nodes: Node[]) {
-    for (let i = 0; i < nodes.length; i++) {
+    for (let i = 1; i < nodes.length; i++) {
       if (Random.chance(1 - Config.nodes.randomConnections.chance)) continue;
 
       const node = nodes[i];
@@ -71,7 +75,7 @@ export namespace Node {
   export function addRandomVelocities(nodes: Node[]) {
     const randomVelocity = Structures.Vector2.zero();
 
-    for (let i = 0; i < nodes.length; i++) {
+    for (let i = 1; i < nodes.length; i++) {
       const node = nodes[i];
 
       randomVelocity.x = Random.range(-1, 1);

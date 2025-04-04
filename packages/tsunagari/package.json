@@ -8,9 +8,9 @@
     "check": "tsc --noEmit"
   },
   "dependencies": {
+    "@utilities/mathematics": "workspace:*",
     "@utilities/structures": "workspace:*",
-    "@utilities/random": "workspace:*",
-    "@utilities/math": "workspace:*"
+    "@utilities/random": "workspace:*"
   },
   "devDependencies": {
     "@utilities/typescript-config": "workspace:*",

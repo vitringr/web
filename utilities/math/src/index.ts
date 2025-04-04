@@ -1,1 +1,1 @@
-export * as Math from "./main";
+export * as Mathematics from "./main";
