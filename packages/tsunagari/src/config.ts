@@ -10,52 +10,52 @@ export default {
     attraction: {
       active: true,
       scalar: 0.01,
-      idealDistance: 100,
+      idealDistance: 40,
     },
     repulsion: {
-      active: false,
-      scalar: 0.01,
+      active: true,
+      scalar: 1.0,
     },
     center: {
-      active: false,
-      scalar: 0.01,
+      active: true,
+      scalar: 0.0001,
     },
     drag: {
       active: true,
       scalar: 0.98,
     },
-
-    probe: {
-      center: false,
-    },
   },
 
   render: {
-    backgroundColor: "#111111",
-
+    background: {
+      active: true,
+      color: "#111111",
+    },
     node: {
       display: true,
       color: "#A0A0A0",
-      size: 3,
+      size: 2,
     },
     link: {
       display: true,
       color: "#666666",
-      width: 0.5,
+      width: 1.0,
     },
     quadtree: {
       display: true,
-      color: "#006020",
-      width: 0.2,
+      color: "#008000",
+      width: 0.1,
     },
     velocity: {
       display: true,
       color: "#FF00FF",
-      width: 1.5,
+      width: 1.0,
       scalar: 6,
     },
+  },
 
-    probe: {
+  probe: {
+    render: {
       display: true,
       color: "#FFFF00",
       size: 3,
@@ -72,6 +72,11 @@ export default {
         scalar: 5,
       },
     },
+    force: {
+      center: false,
+      attract: false,
+      repulsion: false,
+    },
   },
 
   quadtree: {
@@ -79,8 +84,12 @@ export default {
   },
 
   nodes: {
-    count: 1000,
-    randomConnections: {
+    spawn: {
+      active: true,
+      count: 2000,
+    },
+    connect: {
+      active: true,
       chance: 0.3,
       count: {
         min: 1,

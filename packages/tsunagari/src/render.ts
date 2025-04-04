@@ -5,10 +5,10 @@ import { Quadtree } from "./quadtree";
 import { Node } from "./node";
 
 export class Renderer {
-  constructor(private context: CanvasRenderingContext2D) {}
+  constructor(private context: CanvasRenderingContext2D) { }
 
   background() {
-    this.context.fillStyle = Config.render.backgroundColor;
+    this.context.fillStyle = Config.render.background.color;
     this.context.fillRect(0, 0, Config.width, Config.height);
   }
 
@@ -68,6 +68,8 @@ export class Renderer {
 
     for (let i = 0; i < nodes.length; i++) {
       const node = nodes[i];
+      if (!node.inQuadtree) continue;
+
       arrow.scale(0).add(node.velocity).scale(Config.render.velocity.scalar);
       target.scale(0).add(node.position).add(arrow);
       this.line(node.position, target);
@@ -75,8 +77,8 @@ export class Renderer {
   }
 
   probe(probe: Node) {
-    this.context.fillStyle = Config.render.probe.color;
-    this.circle(probe.x, probe.y, Config.render.probe.size);
+    this.context.fillStyle = Config.probe.render.color;
+    this.circle(probe.x, probe.y, Config.probe.render.size);
   }
 
   allNodes(nodes: Node[]) {
@@ -84,7 +86,10 @@ export class Renderer {
 
     for (let i = 0; i < nodes.length; i++) {
       const node = nodes[i];
-      this.circle(node.x, node.y, Config.render.node.size);
+      if (!node.inQuadtree) continue;
+
+      const position = node.position;
+      this.circle(position.x, position.y, Config.render.node.size);
     }
   }
 

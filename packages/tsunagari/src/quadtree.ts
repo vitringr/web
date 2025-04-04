@@ -20,7 +20,10 @@ export namespace Quadtree {
     quadtree: Structures.Quadtree<Node, any>,
     nodes: Node[],
   ) {
-    nodes.forEach((node) => quadtree.insert(node));
+    nodes.forEach((node) => {
+      const isInserted = quadtree.insert(node);
+      node.inQuadtree = isInserted;
+    });
   }
 
   export function setWeights(quadtree: Structures.Quadtree<Node, Weight>) {

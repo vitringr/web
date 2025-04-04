@@ -10,6 +10,7 @@
   "dependencies": {
     "@utilities/mathematics": "workspace:*",
     "@utilities/structures": "workspace:*",
+    "@utilities/collision": "workspace:*",
     "@utilities/random": "workspace:*"
   },
   "devDependencies": {

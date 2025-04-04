@@ -1,4 +1,5 @@
 import Config from "./config";
+import { Collision } from "@utilities/collision";
 import { Renderer } from "./render";
 import { Quadtree } from "./quadtree";
 import { Node } from "./node";
@@ -45,8 +46,8 @@ export function main(canvas: HTMLCanvasElement) {
   const probe = new Node(50, 50);
   const nodes: Node[] = [];
 
-  nodes.push(...Node.spawnMany(Config.nodes.count));
-  Node.connectRandomly(nodes);
+  Config.nodes.spawn.active   && nodes.push(...Node.spawnMany());
+  Config.nodes.connect.active && Node.connectRandomly(nodes);
 
   const loop = () => {
     inputControl(input, nodes, probe);
@@ -57,12 +58,17 @@ export function main(canvas: HTMLCanvasElement) {
     Quadtree.insertNodes(quadtree, nodes);
     Quadtree.setWeights(quadtree);
 
-    // FORCE
+    // PROBE
 
-    Config.force.probe.center && Force.centerPull(probe);
-    // Force.attractConnections(probe);
-    // Force.repulsion(probe, quadtree);
+    Config.probe.force.center    && Force.centerPull(probe);
+    Config.probe.force.attract   && Force.attractConnections(probe);
+    Config.probe.force.repulsion && Force.repulsion(probe, quadtree);
     probe.move();
+
+    Config.probe.render.display  && renderer.probe(probe);
+    Config.probe.render.velocity && renderer.velocity(probe);
+
+    // FORCE
 
     nodes.forEach((node) => {
       Config.force.center.active     && Force.centerPull(node);
@@ -74,17 +80,17 @@ export function main(canvas: HTMLCanvasElement) {
 
     // RENDER
 
-    renderer.background();
-    Config.render.probe.display    && renderer.probe(probe);
-    Config.render.probe.velocity   && renderer.velocity(probe);
-    Config.render.link.display     && renderer.allLinks(nodes);
-    Config.render.node.display     && renderer.allNodes(nodes);
-    Config.render.velocity.display && renderer.allVelocities(nodes);
-    Config.render.quadtree.display && renderer.allQuadtrees(quadtree);
+    Config.render.background.active && renderer.background();
+    Config.render.link.display      && renderer.allLinks(nodes);
+    Config.render.node.display      && renderer.allNodes(nodes);
+    Config.render.velocity.display  && renderer.allVelocities(nodes);
+    Config.render.quadtree.display  && renderer.allQuadtrees(quadtree);
 
     // MISC
 
     Config.logger.quadtrees && Logger.quadtrees(quadtree);
+
+    // PROBE
 
     requestAnimationFrame(loop);
   };

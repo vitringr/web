@@ -1,6 +1,7 @@
 import { Structures } from "@utilities/structures";
 import { Random } from "@utilities/random";
 import Config from "./config";
+import { Collision } from "@utilities/collision";
 
 export class Node implements Structures.Shapes.IPoint {
   readonly position: Structures.Vector2;
@@ -8,6 +9,8 @@ export class Node implements Structures.Shapes.IPoint {
   readonly acceleration: Structures.Vector2 = Structures.Vector2.zero();
 
   readonly connections = new Set<Node>();
+
+  inQuadtree: boolean = false;
 
   constructor(x: number, y: number) {
     this.position = new Structures.Vector2(x, y);
@@ -46,9 +49,9 @@ export namespace Node {
     );
   }
 
-  export function spawnMany(count: number): Node[] {
+  export function spawnMany(): Node[] {
     const nodes: Node[] = [];
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < Config.nodes.spawn.count; i++) {
       nodes.push(spawnRandom());
     }
     return nodes;
@@ -56,13 +59,13 @@ export namespace Node {
 
   export function connectRandomly(nodes: Node[]) {
     for (let i = 0; i < nodes.length; i++) {
-      if (Random.chance(1 - Config.nodes.randomConnections.chance)) continue;
+      if (Random.chance(1 - Config.nodes.connect.chance)) continue;
 
       const node = nodes[i];
 
       const connectionsCount = Random.rangeInt(
-        Config.nodes.randomConnections.count.min,
-        Config.nodes.randomConnections.count.max,
+        Config.nodes.connect.count.min,
+        Config.nodes.connect.count.max,
       );
 
       for (let c = 0; c < connectionsCount; c++) {
