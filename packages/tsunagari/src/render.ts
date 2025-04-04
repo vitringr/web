@@ -5,7 +5,7 @@ import { Quadtree } from "./quadtree";
 import { Node } from "./node";
 
 export class Renderer {
-  constructor(private context: CanvasRenderingContext2D) { }
+  constructor(private context: CanvasRenderingContext2D) {}
 
   background() {
     this.context.fillStyle = Config.render.background.color;
@@ -16,7 +16,6 @@ export class Renderer {
     this.context.beginPath();
     this.context.lineTo(from.x, from.y);
     this.context.lineTo(to.x, to.y);
-    // this.context.closePath();
     this.context.stroke();
   }
 
@@ -111,11 +110,25 @@ export class Renderer {
     this.context.strokeRect(r.x, r.y, r.w, r.h);
   }
 
-  allQuadtrees(quadtree: Structures.Quadtree<any, Quadtree.Weight>) {
+  allQuadtrees(quadtree: Structures.Quadtree<any, any>) {
     this.context.strokeStyle = Config.render.quadtree.color;
     this.context.lineWidth = Config.render.quadtree.width;
     quadtree.rootRecursion((quadtree) => {
       this.quadtree(quadtree);
     });
+  }
+
+  test(w: Quadtree.Weight) {
+    this.context.fillStyle = "#FF5500";
+    this.circle(w.x, w.y, w.mass);
+  }
+
+  qtWeight(quadtree: Structures.Quadtree<any, Quadtree.Weight>) {
+    const data = quadtree.data;
+
+    if (data && data.mass > 0) {
+      this.context.fillStyle = "#FF0000";
+      this.circle(data.x, data.y, data.mass);
+    }
   }
 }

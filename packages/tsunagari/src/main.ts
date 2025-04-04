@@ -1,11 +1,11 @@
 import Config from "./config";
 import { Collision } from "@utilities/collision";
-import { Renderer } from "./render";
 import { Quadtree } from "./quadtree";
-import { Node } from "./node";
+import { Renderer } from "./render";
+import { Logger } from "./logger";
 import { Force } from "./force";
 import { Input } from "./input";
-import { Logger } from "./logger";
+import { Node } from "./node";
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = Config.width;
@@ -20,16 +20,20 @@ function setupContext(canvas: HTMLCanvasElement) {
 function inputControl(input: Input, nodes: Node[], probe: Node) {
   const position = input.position;
 
-  probe.position.set(position);
+  const inCanvas = Collision.point_rectangle(
+    position.x,
+    position.y,
+    0,
+    0,
+    Config.width,
+    Config.height,
+  );
+
+  inCanvas && probe.position.set(position);
 
   if (input.isClicked) {
     input.isClicked = false;
-    if (
-      position.x < 0 ||
-      position.x > Config.width ||
-      position.y < 0 ||
-      position.y > Config.height
-    ) {
+    if (!inCanvas) {
       console.log("Out of bounds");
     } else {
       console.log(`Spawn at: ${input.position}`);
@@ -58,16 +62,6 @@ export function main(canvas: HTMLCanvasElement) {
     Quadtree.insertNodes(quadtree, nodes);
     Quadtree.setWeights(quadtree);
 
-    // PROBE
-
-    Config.probe.force.center    && Force.centerPull(probe);
-    Config.probe.force.attract   && Force.attractConnections(probe);
-    Config.probe.force.repulsion && Force.repulsion(probe, quadtree);
-    probe.move();
-
-    Config.probe.render.display  && renderer.probe(probe);
-    Config.probe.render.velocity && renderer.velocity(probe);
-
     // FORCE
 
     nodes.forEach((node) => {
@@ -86,11 +80,24 @@ export function main(canvas: HTMLCanvasElement) {
     Config.render.velocity.display  && renderer.allVelocities(nodes);
     Config.render.quadtree.display  && renderer.allQuadtrees(quadtree);
 
+    // PROBE
+
+
+    // quadtree.rootRecursion(renderer.qtWeight.bind(renderer))
+
+
+    // Config.probe.force.center    && Force.centerPull(probe);
+    // Config.probe.force.attract   && Force.attractConnections(probe);
+    // Config.probe.force.repulsion && Force.repulsion(probe, quadtree);
+    // Config.probe.force.drag      && Force.drag(probe);
+    // probe.move();
+
+    Config.probe.render.display  && renderer.probe(probe);
+    Config.probe.render.velocity && renderer.velocity(probe);
+
     // MISC
 
     Config.logger.quadtrees && Logger.quadtrees(quadtree);
-
-    // PROBE
 
     requestAnimationFrame(loop);
   };

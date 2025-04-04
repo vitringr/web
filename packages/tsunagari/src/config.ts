@@ -1,6 +1,6 @@
 export default {
-  width: 800,
-  height: 800,
+  width: 700,
+  height: 700,
 
   logger: {
     quadtrees: false,
@@ -9,12 +9,12 @@ export default {
   force: {
     attraction: {
       active: true,
-      scalar: 0.01,
-      idealDistance: 40,
+      scalar: 0.001,
+      idealDistance: 10,
     },
     repulsion: {
       active: true,
-      scalar: 1.0,
+      scalar: 0.01,
     },
     center: {
       active: true,
@@ -37,8 +37,7 @@ export default {
       size: 2,
     },
     link: {
-      display: true,
-      color: "#666666",
+      display: true, color: "#666666",
       width: 1.0,
     },
     quadtree: {
@@ -51,6 +50,8 @@ export default {
       color: "#FF00FF",
       width: 1.0,
       scalar: 6,
+      // width: 2.0,
+      // scalar: 10,
     },
   },
 
@@ -58,35 +59,28 @@ export default {
     render: {
       display: true,
       color: "#FFFF00",
-      size: 3,
+      size: 4,
 
-      link: {
-        display: true,
-        color: "#555555",
-        width: 0.5,
-      },
-      velocity: {
-        display: true,
-        color: "#FF00FF",
-        width: 1.5,
-        scalar: 5,
-      },
+      link: true,
+      velocity: true,
     },
     force: {
-      center: false,
-      attract: false,
-      repulsion: false,
+      center: true,
+      attract: true,
+      repulsion: true,
+      drag: true,
     },
   },
 
   quadtree: {
     capacity: 8,
+    // capacity: 1,
   },
 
   nodes: {
     spawn: {
       active: true,
-      count: 2000,
+      count: 1000,
     },
     connect: {
       active: true,

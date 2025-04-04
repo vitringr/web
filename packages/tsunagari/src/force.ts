@@ -73,15 +73,40 @@ export namespace Force {
       const velocity = difference
         .normalize()
         .scale(1 / distance)
+        .scale(quadtreeData.mass)
         .scale(Config.force.repulsion.scalar);
 
       node.addVelocity(velocity);
-    } else {
-      if (!quadtree.divided) return;
+      return;
+    }
 
+    if (quadtree.divided) {
       quadtree.children.forEach((child) => {
         repulsion(node, child);
       });
+      return;
     }
+
+    quadtree.container.forEach((neighbor) => {
+      let nDistance = Structures.Vector2.distance(
+        node.position,
+        neighbor.position,
+      );
+
+      if(nDistance <= 1) nDistance = 1;
+
+      const nDifference = Structures.Vector2.subtract(
+        node.position,
+        neighbor.position,
+      );
+
+      const nVelocity = nDifference
+        .normalize()
+        .scale(1/ nDistance)
+        .scale(Config.force.repulsion.scalar);
+
+      node.addVelocity(nVelocity);
+    });
+
   }
 }
