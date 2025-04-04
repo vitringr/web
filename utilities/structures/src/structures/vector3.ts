@@ -7,6 +7,10 @@ export class Vector3 {
     return new Vector3(1, 1, 1);
   }
 
+  static infinity() {
+    return new Vector3(Infinity, Infinity, Infinity);
+  }
+
   static clone(vector3: Vector3) {
     return new Vector3(vector3.x, vector3.y, vector3.z);
   }
@@ -48,7 +52,7 @@ export class Vector3 {
     public x: number,
     public y: number,
     public z: number,
-  ) { }
+  ) {}
 
   get r() {
     return this.x;
@@ -78,10 +82,10 @@ export class Vector3 {
     return new Vector3(this.x, this.y, this.z);
   }
 
-  set(x: number, y: number, z: number) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
+  set(vector3: Vector3) {
+    this.x = vector3.x;
+    this.y = vector3.y;
+    this.z = vector3.z;
     return this;
   }
 

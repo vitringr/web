@@ -7,6 +7,10 @@ export class Vector2 {
     return new Vector2(1, 1);
   }
 
+  static infinity() {
+    return new Vector2(Infinity, Infinity);
+  }
+
   static clone(vector2: Vector2) {
     return new Vector2(vector2.x, vector2.y);
   }
@@ -44,7 +48,7 @@ export class Vector2 {
   constructor(
     public x: number,
     public y: number,
-  ) { }
+  ) {}
 
   get r() {
     return this.x;
@@ -66,9 +70,9 @@ export class Vector2 {
     return new Vector2(this.x, this.y);
   }
 
-  set(x: number, y: number) {
-    this.x = x;
-    this.y = y;
+  set(vector2: Vector2) {
+    this.x = vector2.x;
+    this.y = vector2.y;
     return this;
   }
 

@@ -15,13 +15,13 @@ export namespace Force {
     connections.forEach((link) => {
       // NOTE: Can optimize sqrt().
       const distance = Structures.Vector2.distance(
-        link.getPosition(),
-        node.getPosition(),
+        link.position,
+        node.position,
       );
 
       const difference = Structures.Vector2.subtract(
-        link.getPosition(),
-        node.getPosition(),
+        link.position,
+        node.position,
       );
 
       const velocity = difference
@@ -39,7 +39,7 @@ export namespace Force {
   export function centerPull(node: Node) {
     const velocity = Structures.Vector2.subtract(
       center,
-      node.getPosition(),
+      node.position,
     ).scale(Config.force.center.scalar);
 
     node.addVelocity(velocity);
@@ -56,7 +56,7 @@ export namespace Force {
 
     // TODO: probably remove sqrt().
     let distance = Structures.Vector2.distance(
-      node.getPosition(),
+      node.position,
       centerOfMass,
     );
 
@@ -66,7 +66,7 @@ export namespace Force {
 
     if (isDistant) {
       const difference = Structures.Vector2.subtract(
-        node.getPosition(),
+        node.position,
         centerOfMass,
       );
 

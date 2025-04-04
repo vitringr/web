@@ -4,30 +4,25 @@ import Config from "./config";
 import { Quadtree } from "./quadtree";
 import { Node } from "./node";
 
-export namespace Render {
-  export function drawBackground(context: CanvasRenderingContext2D) {
-    context.fillStyle = Config.render.backgroundColor;
-    context.fillRect(0, 0, Config.width, Config.height);
+export class Renderer {
+  constructor(private context: CanvasRenderingContext2D) {}
+
+  background() {
+    this.context.fillStyle = Config.render.backgroundColor;
+    this.context.fillRect(0, 0, Config.width, Config.height);
   }
 
-  function drawLink(
-    context: CanvasRenderingContext2D,
-    from: Structures.Vector2,
-    to: Structures.Vector2,
-  ) {
-    context.beginPath();
-    context.lineTo(from.x, from.y);
-    context.lineTo(to.x, to.y);
-    context.closePath();
-    context.stroke();
+  private link(from: Structures.Vector2, to: Structures.Vector2) {
+    this.context.beginPath();
+    this.context.lineTo(from.x, from.y);
+    this.context.lineTo(to.x, to.y);
+    this.context.closePath();
+    this.context.stroke();
   }
 
-  export function drawAllLinks(
-    context: CanvasRenderingContext2D,
-    nodes: Node[],
-  ) {
-    context.strokeStyle = Config.render.link.color;
-    context.lineWidth = Config.render.link.width;
+  allLinks(nodes: Node[]) {
+    this.context.strokeStyle = Config.render.link.color;
+    this.context.lineWidth = Config.render.link.width;
 
     const aCenter = Structures.Vector2.zero();
     const bCenter = Structures.Vector2.zero();
@@ -43,69 +38,54 @@ export namespace Render {
       current.connections.forEach((link: Node) => {
         bCenter.x = link.x + nodeHalfSize;
         bCenter.y = link.y + nodeHalfSize;
-        drawLink(context, aCenter, bCenter);
+        this.link(aCenter, bCenter);
       });
     }
   }
 
-  function drawCircle(
-    context: CanvasRenderingContext2D,
-    x: number,
-    y: number,
-    r: number,
-  ) {
-    context.beginPath();
-    context.arc(x, y, r, 0, Mathematics.TAU);
-    context.fill();
+  private circle(x: number, y: number, r: number) {
+    this.context.beginPath();
+    this.context.arc(x, y, r, 0, Mathematics.TAU);
+    this.context.fill();
   }
 
-  export function drawProbe(context: CanvasRenderingContext2D, probe: Node) {
-    context.fillStyle = Config.render.probe.color;
-    drawCircle(context, probe.x, probe.y, Config.render.probe.size);
+  probe(probe: Node) {
+    this.context.fillStyle = Config.render.probe.color;
+    this.circle(probe.x, probe.y, Config.render.probe.size);
   }
 
-  export function drawAllNodes(
-    context: CanvasRenderingContext2D,
-    nodes: Node[],
-  ) {
-    context.fillStyle = Config.render.node.color;
+  allNodes(nodes: Node[]) {
+    this.context.fillStyle = Config.render.node.color;
 
-    for (let i = 1; i < nodes.length; i++) {
+    for (let i = 0; i < nodes.length; i++) {
       const node = nodes[i];
-      drawCircle(context, node.x, node.y, Config.render.node.size);
+      this.circle(node.x, node.y, Config.render.node.size);
     }
   }
 
-  export function drawFirstLevelQuadtreeWeight(
-    context: CanvasRenderingContext2D,
+  firstLevelQuadtreeWeight(
     quadtree: Structures.Quadtree<any, Quadtree.Weight>,
   ) {
-    context.fillStyle = "#FF000060";
+    this.context.fillStyle = "#FF000060";
 
     for (let i = 0; i < quadtree.children.length; i++) {
       const data = quadtree.children[i].data;
       if (!data) continue;
 
-      context.fillRect(data.x, data.y, data.mass * 0.5, data.mass * 0.5);
+      this.context.fillRect(data.x, data.y, data.mass * 0.5, data.mass * 0.5);
     }
   }
 
-  function drawQuadtreeBounds(
-    context: CanvasRenderingContext2D,
-    quadtree: Structures.Quadtree<any, any>,
-  ) {
+  private quadtree(quadtree: Structures.Quadtree<any, any>) {
     const r = quadtree.rectangle;
-    context.strokeRect(r.x, r.y, r.w, r.h);
+    this.context.strokeRect(r.x, r.y, r.w, r.h);
   }
 
-  export function drawAllQuadtreeBounds(
-    context: CanvasRenderingContext2D,
-    quadtree: Structures.Quadtree<any, Quadtree.Weight>,
-  ) {
-    context.strokeStyle = Config.render.quadtree.color;
-    context.lineWidth = Config.render.quadtree.width;
+  allQuadtrees(quadtree: Structures.Quadtree<any, Quadtree.Weight>) {
+    this.context.strokeStyle = Config.render.quadtree.color;
+    this.context.lineWidth = Config.render.quadtree.width;
     quadtree.rootRecursion((quadtree) => {
-      drawQuadtreeBounds(context, quadtree);
+      this.quadtree(quadtree);
     });
   }
 }

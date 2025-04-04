@@ -1,15 +1,10 @@
 import { Structures } from "@utilities/structures";
 
 export class Input {
-  position = Structures.Vector2.one().scale(Infinity);
+  position = Structures.Vector2.infinity();
   isClicked: boolean = false;
 
-  private isInitialized: boolean = false;
-
-  setup(target: HTMLElement) {
-    if (this.isInitialized) throw "Input already initialized";
-    this.isInitialized = true;
-
+  constructor(target: HTMLElement) {
     const bounds = target.getBoundingClientRect();
 
     target.addEventListener("pointerdown", () => {
@@ -21,10 +16,8 @@ export class Input {
     });
 
     target.addEventListener("pointermove", (event: PointerEvent) => {
-      this.position.set(
-        event.clientX - bounds.left,
-        event.clientY - bounds.top,
-      );
+      this.position.x = event.clientX - bounds.left;
+      this.position.y = event.clientY - bounds.top;
     });
 
     window.addEventListener("blur", () => {

@@ -1,11 +1,11 @@
 export default {
-  width: 600,
-  height: 600,
+  width: 800,
+  height: 800,
 
   force: {
     attraction: {
       active: false,
-      scalar: 0.1,
+      scalar: 0.01,
       idealDistance: 100,
     },
     repulsion: {
@@ -23,22 +23,22 @@ export default {
     probe: {
       display: true,
       color: "#FF00FF",
-      size: 6,
+      size: 2,
     },
     node: {
       display: true,
       color: "#A0A0A0",
-      size: 6,
+      size: 2,
     },
     link: {
-      display: true,
+      display: false,
       color: "#555555",
       width: 0.5,
     },
     quadtree: {
       display: true,
       color: "#006020",
-      width: 0.5,
+      width: 1.0,
     },
   },
 
@@ -47,7 +47,7 @@ export default {
   },
 
   nodes: {
-    count: 100,
+    count: 300,
     randomConnections: {
       chance: 0.3,
       count: {

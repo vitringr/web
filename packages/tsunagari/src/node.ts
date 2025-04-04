@@ -3,9 +3,8 @@ import { Random } from "@utilities/random";
 import Config from "./config";
 
 export class Node implements Structures.Shapes.IPoint {
+  readonly position: Structures.Vector2;
   readonly connections = new Set<Node>();
-
-  private position: Structures.Vector2;
 
   constructor(x: number, y: number) {
     this.position = new Structures.Vector2(x, y);
@@ -17,10 +16,6 @@ export class Node implements Structures.Shapes.IPoint {
 
   get y() {
     return this.position.y;
-  }
-
-  getPosition() {
-    return this.position;
   }
 
   addVelocity(velocity: Structures.Vector2) {
@@ -53,7 +48,7 @@ export namespace Node {
   }
 
   export function connectRandomly(nodes: Node[]) {
-    for (let i = 1; i < nodes.length; i++) {
+    for (let i = 0; i < nodes.length; i++) {
       if (Random.chance(1 - Config.nodes.randomConnections.chance)) continue;
 
       const node = nodes[i];
@@ -75,7 +70,7 @@ export namespace Node {
   export function addRandomVelocities(nodes: Node[]) {
     const randomVelocity = Structures.Vector2.zero();
 
-    for (let i = 1; i < nodes.length; i++) {
+    for (let i = 0; i < nodes.length; i++) {
       const node = nodes[i];
 
       randomVelocity.x = Random.range(-1, 1);
