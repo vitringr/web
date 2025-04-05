@@ -3,13 +3,16 @@ import { Random } from "@utilities/random";
 import Config from "./config";
 
 export class Node implements Structures.Shapes.IPoint {
+  readonly id: number;
+
   readonly position = Structures.Vector2.zero();
   readonly velocity = Structures.Vector2.zero();
   readonly connections = new Set<Node>();
 
   inQuadtree: boolean = false;
 
-  constructor(position: Structures.Vector2) {
+  constructor(id: number, position: Structures.Vector2) {
+    this.id = id;
     this.position.copy(position);
   }
 
@@ -37,7 +40,7 @@ export namespace Node {
         Random.range(0, Config.height),
       );
 
-      nodes.push(new Node(randomPosition));
+      nodes.push(new Node(i, randomPosition));
     }
     return nodes;
   }

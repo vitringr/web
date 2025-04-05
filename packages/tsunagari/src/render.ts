@@ -23,16 +23,29 @@ export class Renderer {
     this.context.strokeStyle = Config.render.link.color;
     this.context.lineWidth = Config.render.link.width;
 
-    const aCenter = Structures.Vector2.zero();
-    const bCenter = Structures.Vector2.zero();
+    const from = Structures.Vector2.zero();
+    const to = Structures.Vector2.zero();
 
     for (const node of nodes) {
-      aCenter.copy(node.position).increase(nodeHalfSize, nodeHalfSize);
+      from.copy(node.position).increase(nodeHalfSize, nodeHalfSize);
 
       for (const link of node.connections) {
-        bCenter.copy(link.position).increase(nodeHalfSize, nodeHalfSize);
-        this.line(aCenter, bCenter);
+        to.copy(link.position).increase(nodeHalfSize, nodeHalfSize);
+        this.line(from, to);
       }
+    }
+  }
+
+  targetLinks(node: Node) {
+    this.context.strokeStyle = Config.render.link.targetColor;
+    this.context.lineWidth = Config.render.link.width;
+
+    const from = node.position.clone().increase(nodeHalfSize, nodeHalfSize);
+    const to = Structures.Vector2.zero();
+
+    for (const link of node.connections) {
+      to.copy(link.position).increase(nodeHalfSize, nodeHalfSize);
+      this.line(from, to);
     }
   }
 
@@ -74,6 +87,16 @@ export class Renderer {
     }
 
     Config.log.displayedNodes && console.log(count);
+  }
+
+  targetNode(node: Node) {
+    this.context.fillStyle = Config.render.node.targetColor;
+    this.context.fillRect(
+      node.position.x,
+      node.position.y,
+      Config.render.node.size,
+      Config.render.node.size,
+    );
   }
 
   private quadtree(quadtree: Structures.Quadtree<any, any>) {

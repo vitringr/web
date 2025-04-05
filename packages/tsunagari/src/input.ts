@@ -4,6 +4,8 @@ export class Input {
   position = Structures.Vector2.infinity();
   isClicked: boolean = false;
 
+  targetedNodeID: number | null = null;
+
   constructor(target: HTMLElement) {
     const bounds = target.getBoundingClientRect();
 

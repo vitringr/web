@@ -25,7 +25,9 @@ function logQuadtrees(rootQuadtree: Structures.Quadtree<any, any>) {
   console.log("QUADTREES: " + count);
 }
 
-function inputControl(input: Input, nodes: Node[]) {
+function inputControl(input: Input, quadtree: Structures.Quadtree<Node, any>) {
+  input.targetedNodeID = null;
+
   const position = input.position;
 
   const inCanvas = Collision.point_rectangle(
@@ -37,14 +39,17 @@ function inputControl(input: Input, nodes: Node[]) {
     Config.height,
   );
 
-  if (input.isClicked) {
-    input.isClicked = false;
-    inCanvas && nodes.push(new Node(input.position));
-  }
+  if (!inCanvas) return;
 
-  if(!inCanvas) return;
+  const targetRange: Structures.Shapes.Rectangle = {
+    x: position.x - Config.render.node.size,
+    y: position.y - Config.render.node.size,
+    w: Config.render.node.size,
+    h: Config.render.node.size,
+  };
 
-
+  const targetNode = quadtree.query(targetRange)[0] || null;
+  if (targetNode) input.targetedNodeID = targetNode.id;
 }
 
 export function main(canvas: HTMLCanvasElement) {
@@ -54,29 +59,34 @@ export function main(canvas: HTMLCanvasElement) {
   const input = new Input(canvas);
   const nodes: Node[] = [];
 
-  Config.nodes.spawn.active   && nodes.push(...Node.spawnRandom());
+  Config.nodes.spawn.active && nodes.push(...Node.spawnRandom());
   Config.nodes.connect.active && Node.connectRandom(nodes);
 
   const loop = () => {
-    inputControl(input, nodes);
+    inputControl(input, quadtree);
 
     quadtree.reset();
     Quadtree.insertNodes(quadtree, nodes);
     Quadtree.setWeights(quadtree);
 
     for (const node of nodes) {
-      Config.force.center.active     && Force.centerPull(node);
+      Config.force.center.active && Force.centerPull(node);
       Config.force.attraction.active && Force.attractConnections(node);
-      Config.force.repulsion.active  && Force.repulsion(node, quadtree);
-      Config.force.drag.active       && Force.drag(node);
+      Config.force.repulsion.active && Force.repulsion(node, quadtree);
+      Config.force.drag.active && Force.drag(node);
       node.move();
     }
 
     Config.render.background.active && renderer.background();
-    Config.render.link.display      && renderer.allLinks(nodes);
-    Config.render.node.display      && renderer.allNodes(nodes);
-    Config.render.velocity.display  && renderer.allVelocities(nodes);
-    Config.render.quadtree.display  && renderer.allQuadtrees(quadtree);
+    Config.render.link.display && renderer.allLinks(nodes);
+    Config.render.node.display && renderer.allNodes(nodes);
+    Config.render.velocity.display && renderer.allVelocities(nodes);
+    Config.render.quadtree.display && renderer.allQuadtrees(quadtree);
+
+    if (input.targetedNodeID) {
+      renderer.targetNode(nodes[input.targetedNodeID]);
+      renderer.targetLinks(nodes[input.targetedNodeID]);
+    }
 
     Config.log.quadtrees && logQuadtrees(quadtree);
 

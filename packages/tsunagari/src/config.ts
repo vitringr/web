@@ -14,7 +14,7 @@ export default {
     },
     repulsion: {
       active: true,
-      scalar: 0.02,
+      scalar: 0.04,
     },
     attraction: {
       active: true,
@@ -35,17 +35,19 @@ export default {
     node: {
       display: true,
       color: "#A0A0A0",
-      size: 4,
+      targetColor: "#FFFF00",
+      size: 12,
     },
     link: {
       display: true,
       color: "#666666",
-      width: 2.0,
+      targetColor: "#FFFF00",
+      width: 4.0,
     },
     quadtree: {
       display: true,
       color: "#008000",
-      width: 0.1,
+      width: 0.5,
     },
     velocity: {
       display: true,
@@ -62,7 +64,7 @@ export default {
   nodes: {
     spawn: {
       active: true,
-      count: 500,
+      count: 200,
     },
     connect: {
       active: true,
