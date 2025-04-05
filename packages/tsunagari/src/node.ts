@@ -7,7 +7,8 @@ export class Node implements Structures.Shapes.IPoint {
 
   readonly position = Structures.Vector2.zero();
   readonly velocity = Structures.Vector2.zero();
-  readonly connections = new Set<Node>();
+  readonly connectionsOut = new Set<Node>();
+  readonly connectionsIn = new Set<Node>();
 
   inQuadtree: boolean = false;
 
@@ -25,6 +26,11 @@ export class Node implements Structures.Shapes.IPoint {
 
   move() {
     this.position.add(this.velocity);
+  }
+
+  connect(node: Node) {
+    this.connectionsOut.add(node);
+    node.connectionsIn.add(this);
   }
 }
 
@@ -57,7 +63,7 @@ export namespace Node {
       for (let c = 0; c < connectionsCount; c++) {
         const randomNode = nodes[Random.rangeInt(0, nodes.length - 1)];
         if (randomNode === node) continue;
-        node.connections.add(randomNode);
+        node.connect(randomNode);
       }
     }
   }

@@ -78,14 +78,16 @@ export function main(canvas: HTMLCanvasElement) {
     }
 
     Config.render.background.active && renderer.background();
-    Config.render.link.display && renderer.allLinks(nodes);
-    Config.render.node.display && renderer.allNodes(nodes);
-    Config.render.velocity.display && renderer.allVelocities(nodes);
-    Config.render.quadtree.display && renderer.allQuadtrees(quadtree);
+    Config.render.connection.display && renderer.connections(nodes);
+    Config.render.node.display && renderer.nodes(nodes);
+    Config.render.velocity.display && renderer.velocities(nodes);
+    Config.render.quadtree.display && renderer.quadtrees(quadtree);
 
     if (input.targetedNodeID) {
-      renderer.targetNode(nodes[input.targetedNodeID]);
-      renderer.targetLinks(nodes[input.targetedNodeID]);
+      const target = nodes[input.targetedNodeID];
+      renderer.targetConnections(target);
+      renderer.targetConnectedNodes(target);
+      renderer.targetNode(target);
     }
 
     Config.log.quadtrees && logQuadtrees(quadtree);

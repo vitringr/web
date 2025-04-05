@@ -19,9 +19,9 @@ export class Renderer {
     this.context.stroke();
   }
 
-  allLinks(nodes: Node[]) {
-    this.context.strokeStyle = Config.render.link.color;
-    this.context.lineWidth = Config.render.link.width;
+  connections(nodes: Node[]) {
+    this.context.strokeStyle = Config.render.connection.color;
+    this.context.lineWidth = Config.render.connection.width;
 
     const from = Structures.Vector2.zero();
     const to = Structures.Vector2.zero();
@@ -29,27 +29,32 @@ export class Renderer {
     for (const node of nodes) {
       from.copy(node.position).increase(nodeHalfSize, nodeHalfSize);
 
-      for (const link of node.connections) {
-        to.copy(link.position).increase(nodeHalfSize, nodeHalfSize);
+      for (const connection of node.connectionsOut) {
+        to.copy(connection.position).increase(nodeHalfSize, nodeHalfSize);
         this.line(from, to);
       }
     }
   }
 
-  targetLinks(node: Node) {
-    this.context.strokeStyle = Config.render.link.targetColor;
-    this.context.lineWidth = Config.render.link.width;
+  targetConnections(target: Node) {
+    this.context.strokeStyle = Config.render.target.connection;
+    this.context.lineWidth = Config.render.connection.width;
 
-    const from = node.position.clone().increase(nodeHalfSize, nodeHalfSize);
+    const from = target.position.clone().increase(nodeHalfSize, nodeHalfSize);
     const to = Structures.Vector2.zero();
 
-    for (const link of node.connections) {
-      to.copy(link.position).increase(nodeHalfSize, nodeHalfSize);
+    for (const connection of target.connectionsOut) {
+      to.copy(connection.position).increase(nodeHalfSize, nodeHalfSize);
+      this.line(from, to);
+    }
+
+    for (const connection of target.connectionsIn) {
+      to.copy(connection.position).increase(nodeHalfSize, nodeHalfSize);
       this.line(from, to);
     }
   }
 
-  allVelocities(nodes: Node[]) {
+  velocities(nodes: Node[]) {
     this.context.strokeStyle = Config.render.velocity.color;
     this.context.lineWidth = Config.render.velocity.width;
 
@@ -67,7 +72,7 @@ export class Renderer {
     }
   }
 
-  allNodes(nodes: Node[]) {
+  nodes(nodes: Node[]) {
     this.context.fillStyle = Config.render.node.color;
 
     let count: number = 0;
@@ -89,26 +94,45 @@ export class Renderer {
     Config.log.displayedNodes && console.log(count);
   }
 
-  targetNode(node: Node) {
-    this.context.fillStyle = Config.render.node.targetColor;
+  targetNode(target: Node) {
+    this.context.fillStyle = Config.render.target.node;
+
     this.context.fillRect(
-      node.position.x,
-      node.position.y,
+      target.position.x,
+      target.position.y,
       Config.render.node.size,
       Config.render.node.size,
     );
   }
 
-  private quadtree(quadtree: Structures.Quadtree<any, any>) {
-    const r = quadtree.rectangle;
-    this.context.strokeRect(r.x, r.y, r.w, r.h);
+  targetConnectedNodes(target: Node) {
+    this.context.fillStyle = Config.render.target.connected;
+
+    for (const connection of target.connectionsOut) {
+      this.context.fillRect(
+        connection.x,
+        connection.y,
+        Config.render.node.size,
+        Config.render.node.size,
+      );
+    }
+
+    for (const connection of target.connectionsIn) {
+      this.context.fillRect(
+        connection.x,
+        connection.y,
+        Config.render.node.size,
+        Config.render.node.size,
+      );
+    }
   }
 
-  allQuadtrees(quadtree: Structures.Quadtree<any, any>) {
+  quadtrees(quadtree: Structures.Quadtree<any, any>) {
     this.context.strokeStyle = Config.render.quadtree.color;
     this.context.lineWidth = Config.render.quadtree.width;
     quadtree.rootRecursion((quadtree) => {
-      this.quadtree(quadtree);
+      const r = quadtree.rectangle;
+      this.context.strokeRect(r.x, r.y, r.w, r.h);
     });
   }
 }

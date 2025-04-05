@@ -20,7 +20,7 @@ export namespace Force {
   }
 
   export function attractConnections(node: Node) {
-    const connections = node.connections;
+    const connections = node.connectionsOut;
     if (connections.size <= 0) return;
 
     for (const link of connections) {

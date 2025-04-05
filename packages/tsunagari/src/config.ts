@@ -35,13 +35,11 @@ export default {
     node: {
       display: true,
       color: "#A0A0A0",
-      targetColor: "#FFFF00",
       size: 12,
     },
-    link: {
+    connection: {
       display: true,
       color: "#666666",
-      targetColor: "#FFFF00",
       width: 4.0,
     },
     quadtree: {
@@ -55,6 +53,11 @@ export default {
       width: 1.0,
       scalar: 10,
     },
+    target: {
+      node: "#FFFF00",
+      connected: "#FFFF00",
+      connection: "#FFFF00",
+    }
   },
 
   quadtree: {
