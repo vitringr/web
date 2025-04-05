@@ -41,6 +41,10 @@ function inputControl(input: Input, nodes: Node[]) {
     input.isClicked = false;
     inCanvas && nodes.push(new Node(input.position));
   }
+
+  if(!inCanvas) return;
+
+
 }
 
 export function main(canvas: HTMLCanvasElement) {

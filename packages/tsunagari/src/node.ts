@@ -3,12 +3,15 @@ import { Random } from "@utilities/random";
 import Config from "./config";
 
 export class Node implements Structures.Shapes.IPoint {
+  readonly position = Structures.Vector2.zero();
   readonly velocity = Structures.Vector2.zero();
   readonly connections = new Set<Node>();
 
   inQuadtree: boolean = false;
 
-  constructor(readonly position: Structures.Vector2) {}
+  constructor(position: Structures.Vector2) {
+    this.position.copy(position);
+  }
 
   get x() {
     return this.position.x;
@@ -26,8 +29,10 @@ export namespace Node {
   export function spawnRandom(): Node[] {
     const nodes: Node[] = [];
 
+    const randomPosition = Structures.Vector2.zero();
+
     for (let i = 0; i < Config.nodes.spawn.count; i++) {
-      const randomPosition = new Structures.Vector2(
+      randomPosition.set(
         Random.range(0, Config.width),
         Random.range(0, Config.height),
       );
