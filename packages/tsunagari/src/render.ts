@@ -29,16 +29,16 @@ export class Renderer {
     const nodeHalfSize = Config.render.node.size * 0.5;
 
     for (let i = 0; i < nodes.length; i++) {
-      const current = nodes[i];
+      const node = nodes[i];
 
-      aCenter.x = current.x + nodeHalfSize;
-      aCenter.y = current.y + nodeHalfSize;
+      aCenter.x = node.x + nodeHalfSize;
+      aCenter.y = node.y + nodeHalfSize;
 
-      current.connections.forEach((link: Node) => {
+      for (const link of node.connections) {
         bCenter.x = link.x + nodeHalfSize;
         bCenter.y = link.y + nodeHalfSize;
         this.line(aCenter, bCenter);
-      });
+      }
     }
   }
 
@@ -88,20 +88,12 @@ export class Renderer {
       if (!node.inQuadtree) continue;
 
       const position = node.position;
-      this.circle(position.x, position.y, Config.render.node.size);
-    }
-  }
-
-  firstLevelQuadtreeWeight(
-    quadtree: Structures.Quadtree<any, Quadtree.Weight>,
-  ) {
-    this.context.fillStyle = "#FF000060";
-
-    for (let i = 0; i < quadtree.children.length; i++) {
-      const data = quadtree.children[i].data;
-      if (!data) continue;
-
-      this.context.fillRect(data.x, data.y, data.mass * 0.5, data.mass * 0.5);
+      this.context.fillRect(
+        position.x,
+        position.y,
+        Config.render.node.size,
+        Config.render.node.size,
+      );
     }
   }
 
@@ -116,11 +108,6 @@ export class Renderer {
     quadtree.rootRecursion((quadtree) => {
       this.quadtree(quadtree);
     });
-  }
-
-  test(w: Quadtree.Weight) {
-    this.context.fillStyle = "#FF5500";
-    this.circle(w.x, w.y, w.mass);
   }
 
   qtWeight(quadtree: Structures.Quadtree<any, Quadtree.Weight>) {

@@ -1,4 +1,5 @@
 import Config from "./config";
+import { Structures } from "@utilities/structures";
 import { Collision } from "@utilities/collision";
 import { Quadtree } from "./quadtree";
 import { Renderer } from "./render";
@@ -33,12 +34,7 @@ function inputControl(input: Input, nodes: Node[], probe: Node) {
 
   if (input.isClicked) {
     input.isClicked = false;
-    if (!inCanvas) {
-      console.log("Out of bounds");
-    } else {
-      console.log(`Spawn at: ${input.position}`);
-      nodes.push(Node.spawnAt(input.position));
-    }
+    inCanvas && nodes.push(new Node(input.position));
   }
 }
 
@@ -47,7 +43,7 @@ export function main(canvas: HTMLCanvasElement) {
   const renderer = new Renderer(context);
   const quadtree = Quadtree.create();
   const input = new Input(canvas);
-  const probe = new Node(50, 50);
+  const probe = new Node(Structures.Vector2.zero());
   const nodes: Node[] = [];
 
   Config.nodes.spawn.active   && nodes.push(...Node.spawnMany());
@@ -56,46 +52,23 @@ export function main(canvas: HTMLCanvasElement) {
   const loop = () => {
     inputControl(input, nodes, probe);
 
-    // QUADTREE
-
     quadtree.clear();
     Quadtree.insertNodes(quadtree, nodes);
     Quadtree.setWeights(quadtree);
 
-    // FORCE
-
-    nodes.forEach((node) => {
+    for (const node of nodes) {
       Config.force.center.active     && Force.centerPull(node);
       Config.force.attraction.active && Force.attractConnections(node);
       Config.force.repulsion.active  && Force.repulsion(node, quadtree);
       Config.force.drag.active       && Force.drag(node);
       node.move();
-    });
-
-    // RENDER
+    }
 
     Config.render.background.active && renderer.background();
     Config.render.link.display      && renderer.allLinks(nodes);
     Config.render.node.display      && renderer.allNodes(nodes);
     Config.render.velocity.display  && renderer.allVelocities(nodes);
     Config.render.quadtree.display  && renderer.allQuadtrees(quadtree);
-
-    // PROBE
-
-
-    // quadtree.rootRecursion(renderer.qtWeight.bind(renderer))
-
-
-    // Config.probe.force.center    && Force.centerPull(probe);
-    // Config.probe.force.attract   && Force.attractConnections(probe);
-    // Config.probe.force.repulsion && Force.repulsion(probe, quadtree);
-    // Config.probe.force.drag      && Force.drag(probe);
-    // probe.move();
-
-    Config.probe.render.display  && renderer.probe(probe);
-    Config.probe.render.velocity && renderer.velocity(probe);
-
-    // MISC
 
     Config.logger.quadtrees && Logger.quadtrees(quadtree);
 

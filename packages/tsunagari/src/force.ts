@@ -3,10 +3,17 @@ import Config from "./config";
 import { Node } from "./node";
 import { Quadtree } from "./quadtree";
 
-// TODO: Decide between normalization vs performance.
-
 export namespace Force {
+  const epsilon: number = 1e-10;
   const center = new Structures.Vector2(Config.width, Config.height).scale(0.5);
+
+  export function centerPull(node: Node) {
+    const velocity = Structures.Vector2.subtract(center, node.position).scale(
+      Config.force.center.scalar,
+    );
+
+    node.velocity.add(velocity);
+  }
 
   export function drag(node: Node) {
     node.velocity.scale(Config.force.drag.scalar);
@@ -16,11 +23,10 @@ export namespace Force {
     const connections = node.connections;
     if (connections.size <= 0) return;
 
-    connections.forEach((link) => {
-      // NOTE: Can optimize sqrt().
-      const distance = Structures.Vector2.distance(
-        link.position,
-        node.position,
+    for (const link of connections) {
+      const distance = Math.max(
+        Structures.Vector2.distance(link.position, node.position),
+        epsilon,
       );
 
       const difference = Structures.Vector2.subtract(
@@ -28,85 +34,69 @@ export namespace Force {
         node.position,
       );
 
-      const velocity = difference
-        .normalize()
-        .scale(
-          Config.force.attraction.scalar *
-            (distance - Config.force.attraction.idealDistance),
-        );
+      const hooke = distance - Config.force.attraction.idealDistance;
+      const velocity = difference.scale(hooke * Config.force.attraction.scalar);
 
-      node.addVelocity(velocity);
-      link.addVelocity(velocity.scale(-1));
-    });
+      node.velocity.add(velocity);
+      link.velocity.add(velocity.scale(-1));
+    }
   }
 
-  export function centerPull(node: Node) {
-    const velocity = Structures.Vector2.subtract(center, node.position).scale(
-      Config.force.center.scalar,
-    );
+  function distanceBasedVelocity(
+    from: Structures.Vector2,
+    to: Structures.Vector2,
+  ): Structures.Vector2 {
+    const difference = Structures.Vector2.subtract(from, to);
 
-    node.addVelocity(velocity);
+    const safeMagnitude = Math.max(difference.magnitude(), epsilon);
+    const inverseMagnitude = 1 / safeMagnitude;
+
+    const normalized = difference.scale(inverseMagnitude);
+    const velocity = normalized.scale(inverseMagnitude);
+
+    return velocity;
   }
 
   export function repulsion(
     node: Node,
     quadtree: Structures.Quadtree<Node, Quadtree.Weight>,
   ) {
-    const quadtreeData = quadtree.data;
-    if (!quadtreeData || quadtreeData.mass <= 0) return;
+    const weight = quadtree.data;
+    if (!weight || weight.mass <= 0) return;
 
-    const centerOfMass = new Structures.Vector2(quadtreeData.x, quadtreeData.y);
+    const centerOfMass = new Structures.Vector2(weight.x, weight.y);
 
-    // TODO: probably remove sqrt().
-    let distance = Structures.Vector2.distance(node.position, centerOfMass);
+    const distanceSquared = Math.max(
+      Structures.Vector2.distanceSquared(node.position, centerOfMass),
+      epsilon,
+    );
 
-    const theta = quadtree.rectangle.w / distance;
+    const theta = quadtree.rectangle.w ** 2 / distanceSquared;
+    const isFar = theta < 1;
 
-    const isDistant = theta < 1;
-
-    if (isDistant) {
-      const difference = Structures.Vector2.subtract(
-        node.position,
-        centerOfMass,
-      );
-
-      const velocity = difference
-        .normalize()
-        .scale(1 / distance)
-        .scale(quadtreeData.mass)
+    if (isFar) {
+      const velocity = distanceBasedVelocity(node.position, centerOfMass)
+        .scale(weight.mass)
         .scale(Config.force.repulsion.scalar);
 
-      node.addVelocity(velocity);
+      node.velocity.add(velocity);
       return;
     }
 
     if (quadtree.divided) {
-      quadtree.children.forEach((child) => {
+      for (const child of quadtree.children) {
         repulsion(node, child);
-      });
+      }
       return;
     }
 
-    quadtree.container.forEach((neighbor) => {
-      let nDistance = Structures.Vector2.distance(
+    for (const item of quadtree.container) {
+      const velocity = distanceBasedVelocity(
         node.position,
-        neighbor.position,
-      );
+        item.position,
+      ).scale(Config.force.repulsion.scalar);
 
-      if(nDistance <= 1) nDistance = 1;
-
-      const nDifference = Structures.Vector2.subtract(
-        node.position,
-        neighbor.position,
-      );
-
-      const nVelocity = nDifference
-        .normalize()
-        .scale(1/ nDistance)
-        .scale(Config.force.repulsion.scalar);
-
-      node.addVelocity(nVelocity);
-    });
-
+      node.velocity.add(velocity);
+    }
   }
 }

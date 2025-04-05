@@ -25,5 +25,4 @@ This creates the illusion of perfect equilibrium.
 Finish the project first, then optimize!
 
 - Remove `sqrt()` functions where it's possible.
-- Replace `forEach` loops with classic ones.
 - Reduce and reuse `context` setters.
