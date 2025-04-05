@@ -1,6 +1,6 @@
 export default {
-  width: 650,
-  height: 660,
+  width: 790,
+  height: 790,
 
   log: {
     quadtrees: false,
@@ -34,21 +34,21 @@ export default {
     },
     node: {
       display: true,
-      color: "#A0A0A0",
-      size: 12,
+      color: "#909090",
+      radius: 7,
     },
     connection: {
       display: true,
       color: "#666666",
-      width: 4.0,
+      width: 3.0,
     },
     quadtree: {
-      display: true,
+      display: false,
       color: "#008000",
       width: 0.5,
     },
     velocity: {
-      display: true,
+      display: false,
       color: "#FF00FF",
       width: 1.0,
       scalar: 10,
@@ -67,7 +67,7 @@ export default {
   nodes: {
     spawn: {
       active: true,
-      count: 200,
+      count: 300,
     },
     connect: {
       active: true,

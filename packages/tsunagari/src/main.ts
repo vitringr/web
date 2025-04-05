@@ -42,10 +42,10 @@ function inputControl(input: Input, quadtree: Structures.Quadtree<Node, any>) {
   if (!inCanvas) return;
 
   const targetRange: Structures.Shapes.Rectangle = {
-    x: position.x - Config.render.node.size,
-    y: position.y - Config.render.node.size,
-    w: Config.render.node.size,
-    h: Config.render.node.size,
+    x: position.x - Config.render.node.radius,
+    y: position.y - Config.render.node.radius,
+    w: Config.render.node.radius,
+    h: Config.render.node.radius,
   };
 
   const targetNode = quadtree.query(targetRange)[0] || null;

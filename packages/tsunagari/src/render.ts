@@ -1,8 +1,7 @@
 import { Structures } from "@utilities/structures";
 import Config from "./config";
 import { Node } from "./node";
-
-const nodeHalfSize = Config.render.node.size * 0.5;
+import { Mathematics } from "@utilities/mathematics";
 
 export class Renderer {
   constructor(private context: CanvasRenderingContext2D) {}
@@ -19,19 +18,19 @@ export class Renderer {
     this.context.stroke();
   }
 
+  private circle(at: Structures.Vector2, radius: number) {
+    this.context.beginPath();
+    this.context.arc(at.x, at.y, radius, 0, Mathematics.TAU);
+    this.context.fill();
+  }
+
   connections(nodes: Node[]) {
     this.context.strokeStyle = Config.render.connection.color;
     this.context.lineWidth = Config.render.connection.width;
 
-    const from = Structures.Vector2.zero();
-    const to = Structures.Vector2.zero();
-
     for (const node of nodes) {
-      from.copy(node.position).increase(nodeHalfSize, nodeHalfSize);
-
       for (const connection of node.connectionsOut) {
-        to.copy(connection.position).increase(nodeHalfSize, nodeHalfSize);
-        this.line(from, to);
+        this.line(node.position, connection.position);
       }
     }
   }
@@ -40,17 +39,12 @@ export class Renderer {
     this.context.strokeStyle = Config.render.target.connection;
     this.context.lineWidth = Config.render.connection.width;
 
-    const from = target.position.clone().increase(nodeHalfSize, nodeHalfSize);
-    const to = Structures.Vector2.zero();
-
     for (const connection of target.connectionsOut) {
-      to.copy(connection.position).increase(nodeHalfSize, nodeHalfSize);
-      this.line(from, to);
+      this.line(target.position, connection.position);
     }
 
     for (const connection of target.connectionsIn) {
-      to.copy(connection.position).increase(nodeHalfSize, nodeHalfSize);
-      this.line(from, to);
+      this.line(target.position, connection.position);
     }
   }
 
@@ -58,17 +52,15 @@ export class Renderer {
     this.context.strokeStyle = Config.render.velocity.color;
     this.context.lineWidth = Config.render.velocity.width;
 
-    const origin = Structures.Vector2.zero();
     const arrow = Structures.Vector2.zero();
     const target = Structures.Vector2.zero();
 
     for (const node of nodes) {
       if (!node.inQuadtree) continue;
 
-      origin.copy(node.position).increase(nodeHalfSize, nodeHalfSize);
       arrow.copy(node.velocity).scale(Config.render.velocity.scalar);
-      target.copy(origin).add(arrow);
-      this.line(origin, target);
+      target.copy(node.position).add(arrow);
+      this.line(node.position, target);
     }
   }
 
@@ -80,14 +72,7 @@ export class Renderer {
     for (const node of nodes) {
       if (!node.inQuadtree) continue;
 
-      const position = node.position;
-      this.context.fillRect(
-        position.x,
-        position.y,
-        Config.render.node.size,
-        Config.render.node.size,
-      );
-
+      this.circle(node.position, Config.render.node.radius);
       count++;
     }
 
@@ -96,34 +81,18 @@ export class Renderer {
 
   targetNode(target: Node) {
     this.context.fillStyle = Config.render.target.node;
-
-    this.context.fillRect(
-      target.position.x,
-      target.position.y,
-      Config.render.node.size,
-      Config.render.node.size,
-    );
+    this.circle(target.position, Config.render.node.radius);
   }
 
   targetConnectedNodes(target: Node) {
     this.context.fillStyle = Config.render.target.connected;
 
     for (const connection of target.connectionsOut) {
-      this.context.fillRect(
-        connection.x,
-        connection.y,
-        Config.render.node.size,
-        Config.render.node.size,
-      );
+      this.circle(connection.position, Config.render.node.radius);
     }
 
     for (const connection of target.connectionsIn) {
-      this.context.fillRect(
-        connection.x,
-        connection.y,
-        Config.render.node.size,
-        Config.render.node.size,
-      );
+      this.circle(connection.position, Config.render.node.radius);
     }
   }
 
