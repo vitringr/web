@@ -45,7 +45,7 @@ export class Renderer {
   private circle(x: number, y: number, r: number) {
     this.context.beginPath();
     this.context.arc(x, y, r, 0, Mathematics.TAU);
-    this.context.fill();
+    this.context.stroke();
   }
 
   velocity(node: Node) {
@@ -110,7 +110,7 @@ export class Renderer {
     });
   }
 
-  qtWeight(quadtree: Structures.Quadtree<any, Quadtree.Weight>) {
+  quadtreeWeight(quadtree: Structures.Quadtree<any, Quadtree.Weight>) {
     const data = quadtree.data;
 
     if (data && data.mass > 0) {
