@@ -2,8 +2,9 @@ export default {
   width: 700,
   height: 700,
 
-  logger: {
+  log: {
     quadtrees: false,
+    displayedNodes: false,
   },
 
   force: {
@@ -47,7 +48,7 @@ export default {
       width: 0.1,
     },
     velocity: {
-      display: false,
+      display: true,
       color: "#FF00FF",
       width: 1.0,
       scalar: 10,
@@ -78,7 +79,7 @@ export default {
   nodes: {
     spawn: {
       active: true,
-      count: 300,
+      count: 500,
     },
     connect: {
       active: true,

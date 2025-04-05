@@ -83,6 +83,7 @@ export class Renderer {
   allNodes(nodes: Node[]) {
     this.context.fillStyle = Config.render.node.color;
 
+    let count: number = 0;
     for (let i = 0; i < nodes.length; i++) {
       const node = nodes[i];
       if (!node.inQuadtree) continue;
@@ -94,7 +95,10 @@ export class Renderer {
         Config.render.node.size,
         Config.render.node.size,
       );
+      count++;
     }
+
+    Config.log.displayedNodes && console.log(count);
   }
 
   private quadtree(quadtree: Structures.Quadtree<any, any>) {

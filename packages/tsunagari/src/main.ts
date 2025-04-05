@@ -3,7 +3,6 @@ import { Structures } from "@utilities/structures";
 import { Collision } from "@utilities/collision";
 import { Quadtree } from "./quadtree";
 import { Renderer } from "./render";
-import { Logger } from "./logger";
 import { Force } from "./force";
 import { Input } from "./input";
 import { Node } from "./node";
@@ -16,6 +15,14 @@ function setupContext(canvas: HTMLCanvasElement) {
   if (!context) throw "Cannot get 2d context";
 
   return context;
+}
+
+function logQuadtrees(rootQuadtree: Structures.Quadtree<any, any>) {
+  let count: number = 0;
+  rootQuadtree.rootRecursion(() => {
+    count++;
+  });
+  console.log("QUADTREES: " + count);
 }
 
 function inputControl(input: Input, nodes: Node[], probe: Node) {
@@ -46,13 +53,14 @@ export function main(canvas: HTMLCanvasElement) {
   const probe = new Node(Structures.Vector2.zero());
   const nodes: Node[] = [];
 
+
   Config.nodes.spawn.active   && nodes.push(...Node.spawnMany());
   Config.nodes.connect.active && Node.connectRandomly(nodes);
 
   const loop = () => {
     inputControl(input, nodes, probe);
 
-    quadtree.clear();
+    quadtree.reset();
     Quadtree.insertNodes(quadtree, nodes);
     Quadtree.setWeights(quadtree);
 
@@ -70,7 +78,7 @@ export function main(canvas: HTMLCanvasElement) {
     Config.render.velocity.display  && renderer.allVelocities(nodes);
     Config.render.quadtree.display  && renderer.allQuadtrees(quadtree);
 
-    Config.logger.quadtrees && Logger.quadtrees(quadtree);
+    Config.log.quadtrees && logQuadtrees(quadtree);
 
     requestAnimationFrame(loop);
   };

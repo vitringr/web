@@ -12,6 +12,7 @@ export class Quadtree<Item extends IPoint, Data> {
   divided: boolean = false;
   children: Quadtree<Item, Data>[] = [];
   parent?: Quadtree<Item, Data>;
+  depth: number = 0;
 
   constructor(rectangle: IRectangle, capacity: number = 4) {
     this.rectangle = rectangle;
@@ -86,12 +87,13 @@ export class Quadtree<Item extends IPoint, Data> {
     callback(this);
   }
 
-  clear(): void {
+  reset(): void {
     this.container = [];
     this.data = undefined;
     this.divided = false;
     this.children = [];
     this.parent = undefined;
+    this.depth = 0;
   }
 
   private subdivide(): void {
@@ -109,6 +111,7 @@ export class Quadtree<Item extends IPoint, Data> {
 
     for (let i = 0; i < SUBDIVISIONS; i++) {
       this.children[i].parent = this;
+      this.children[i].depth = this.depth + 1;
     }
 
     for (let i = 0; i < this.container.length; i++) {
