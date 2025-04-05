@@ -82,10 +82,17 @@ export class Vector3 {
     return new Vector3(this.x, this.y, this.z);
   }
 
-  set(vector3: Vector3) {
+  copy(vector3: Vector3) {
     this.x = vector3.x;
     this.y = vector3.y;
     this.z = vector3.z;
+    return this;
+  }
+
+  set(x: number, y: number, z: number) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
     return this;
   }
 
@@ -96,10 +103,31 @@ export class Vector3 {
     return this;
   }
 
+  increase(x: number, y: number, z: number) {
+    this.x += x;
+    this.y += y;
+    this.z += z;
+    return this;
+  }
+
   subtract(vector3: Vector3) {
     this.x -= vector3.x;
     this.y -= vector3.y;
     this.z -= vector3.z;
+    return this;
+  }
+
+  decrease(x: number, y: number, z: number) {
+    this.x -= x;
+    this.y -= y;
+    this.z -= z;
+    return this;
+  }
+
+  multiply(vector3: Vector3) {
+    this.x *= vector3.x;
+    this.y *= vector3.y;
+    this.z *= vector3.z;
     return this;
   }
 
@@ -119,11 +147,11 @@ export class Vector3 {
   }
 
   normalize() {
-    const length = this.magnitude();
-    if (length > 0) {
-      this.x /= length;
-      this.y /= length;
-      this.z /= length;
+    const magnitude = this.magnitude();
+    if (magnitude > 0) {
+      this.x /= magnitude;
+      this.y /= magnitude;
+      this.z /= magnitude;
     }
     return this;
   }

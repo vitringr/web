@@ -4,6 +4,8 @@ import Config from "./config";
 import { Quadtree } from "./quadtree";
 import { Node } from "./node";
 
+const nodeHalfSize: number = Config.render.node.size * 0.5;
+
 export class Renderer {
   constructor(private context: CanvasRenderingContext2D) {}
 
@@ -53,7 +55,7 @@ export class Renderer {
     this.context.lineWidth = Config.render.velocity.width;
 
     const arrow = node.velocity.clone().scale(Config.render.velocity.scalar);
-    const target = node.position.clone().add(arrow);
+    const target = node.position.clone().add(arrow).add(nodeHalfSize);
 
     this.line(node.position, target);
   }

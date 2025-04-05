@@ -1,6 +1,6 @@
 export default {
-  width: 700,
-  height: 700,
+  width: 900,
+  height: 900,
 
   log: {
     quadtrees: false,

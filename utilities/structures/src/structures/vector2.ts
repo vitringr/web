@@ -70,9 +70,15 @@ export class Vector2 {
     return new Vector2(this.x, this.y);
   }
 
-  set(vector2: Vector2) {
+  copy(vector2: Vector2) {
     this.x = vector2.x;
     this.y = vector2.y;
+    return this;
+  }
+
+  set(x: number, y: number) {
+    this.x = x;
+    this.y = y;
     return this;
   }
 
@@ -82,9 +88,27 @@ export class Vector2 {
     return this;
   }
 
+  increase(x: number, y: number) {
+    this.x += x;
+    this.y += y;
+    return this;
+  }
+
   subtract(vector2: Vector2) {
     this.x -= vector2.x;
     this.y -= vector2.y;
+    return this;
+  }
+
+  decrease(x: number, y: number) {
+    this.x -= x;
+    this.y -= y;
+    return this;
+  }
+
+  multiply(vector2: Vector2) {
+    this.x *= vector2.x;
+    this.y *= vector2.y;
     return this;
   }
 
@@ -103,10 +127,10 @@ export class Vector2 {
   }
 
   normalize() {
-    const length = this.magnitude();
-    if (length > 0) {
-      this.x /= length;
-      this.y /= length;
+    const magnitude = this.magnitude();
+    if (magnitude > 0) {
+      this.x /= magnitude;
+      this.y /= magnitude;
     }
     return this;
   }
