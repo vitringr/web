@@ -1,4 +1,3 @@
-import Config from "./config";
 import { Structures } from "@utilities/structures";
 import { Collision } from "@utilities/collision";
 import { Quadtree } from "./quadtree";
@@ -6,6 +5,7 @@ import { Renderer } from "./render";
 import { Force } from "./force";
 import { Input } from "./input";
 import { Node } from "./node";
+import Config from "./config";
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = Config.width;
@@ -25,7 +25,7 @@ function logQuadtrees(rootQuadtree: Structures.Quadtree<any, any>) {
   console.log("QUADTREES: " + count);
 }
 
-function inputControl(input: Input, nodes: Node[], probe: Node) {
+function inputControl(input: Input, nodes: Node[]) {
   const position = input.position;
 
   const inCanvas = Collision.point_rectangle(
@@ -36,8 +36,6 @@ function inputControl(input: Input, nodes: Node[], probe: Node) {
     Config.width,
     Config.height,
   );
-
-  inCanvas && probe.position.set(position);
 
   if (input.isClicked) {
     input.isClicked = false;
@@ -50,15 +48,13 @@ export function main(canvas: HTMLCanvasElement) {
   const renderer = new Renderer(context);
   const quadtree = Quadtree.create();
   const input = new Input(canvas);
-  const probe = new Node(Structures.Vector2.zero());
   const nodes: Node[] = [];
 
-
-  Config.nodes.spawn.active   && nodes.push(...Node.spawnMany());
-  Config.nodes.connect.active && Node.connectRandomly(nodes);
+  Config.nodes.spawn.active   && nodes.push(...Node.spawnRandom());
+  Config.nodes.connect.active && Node.connectRandom(nodes);
 
   const loop = () => {
-    inputControl(input, nodes, probe);
+    inputControl(input, nodes);
 
     quadtree.reset();
     Quadtree.insertNodes(quadtree, nodes);

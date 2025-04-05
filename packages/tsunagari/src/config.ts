@@ -1,6 +1,6 @@
 export default {
-  width: 900,
-  height: 900,
+  width: 650,
+  height: 660,
 
   log: {
     quadtrees: false,
@@ -52,23 +52,6 @@ export default {
       color: "#FF00FF",
       width: 1.0,
       scalar: 10,
-    },
-  },
-
-  probe: {
-    render: {
-      display: true,
-      color: "#FFFF00",
-      size: 4,
-
-      link: true,
-      velocity: true,
-    },
-    force: {
-      center: true,
-      attract: true,
-      repulsion: true,
-      drag: true,
     },
   },
 

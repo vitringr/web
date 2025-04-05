@@ -1,10 +1,8 @@
-import { Mathematics } from "@utilities/mathematics";
 import { Structures } from "@utilities/structures";
 import Config from "./config";
-import { Quadtree } from "./quadtree";
 import { Node } from "./node";
 
-const nodeHalfSize: number = Config.render.node.size * 0.5;
+const nodeHalfSize = Config.render.node.size * 0.5;
 
 export class Renderer {
   constructor(private context: CanvasRenderingContext2D) {}
@@ -28,66 +26,40 @@ export class Renderer {
     const aCenter = Structures.Vector2.zero();
     const bCenter = Structures.Vector2.zero();
 
-    const nodeHalfSize = Config.render.node.size * 0.5;
-
-    for (let i = 0; i < nodes.length; i++) {
-      const node = nodes[i];
-
-      aCenter.x = node.x + nodeHalfSize;
-      aCenter.y = node.y + nodeHalfSize;
+    for (const node of nodes) {
+      aCenter.copy(node.position).increase(nodeHalfSize, nodeHalfSize);
 
       for (const link of node.connections) {
-        bCenter.x = link.x + nodeHalfSize;
-        bCenter.y = link.y + nodeHalfSize;
+        bCenter.copy(link.position).increase(nodeHalfSize, nodeHalfSize);
         this.line(aCenter, bCenter);
       }
     }
-  }
-
-  private circle(x: number, y: number, r: number) {
-    this.context.beginPath();
-    this.context.arc(x, y, r, 0, Mathematics.TAU);
-    this.context.stroke();
-  }
-
-  velocity(node: Node) {
-    this.context.strokeStyle = Config.render.velocity.color;
-    this.context.lineWidth = Config.render.velocity.width;
-
-    const arrow = node.velocity.clone().scale(Config.render.velocity.scalar);
-    const target = node.position.clone().add(arrow).add(nodeHalfSize);
-
-    this.line(node.position, target);
   }
 
   allVelocities(nodes: Node[]) {
     this.context.strokeStyle = Config.render.velocity.color;
     this.context.lineWidth = Config.render.velocity.width;
 
+    const origin = Structures.Vector2.zero();
     const arrow = Structures.Vector2.zero();
     const target = Structures.Vector2.zero();
 
-    for (let i = 0; i < nodes.length; i++) {
-      const node = nodes[i];
+    for (const node of nodes) {
       if (!node.inQuadtree) continue;
 
-      arrow.scale(0).add(node.velocity).scale(Config.render.velocity.scalar);
-      target.scale(0).add(node.position).add(arrow);
-      this.line(node.position, target);
+      origin.copy(node.position).increase(nodeHalfSize, nodeHalfSize);
+      arrow.copy(node.velocity).scale(Config.render.velocity.scalar);
+      target.copy(origin).add(arrow);
+      this.line(origin, target);
     }
-  }
-
-  probe(probe: Node) {
-    this.context.fillStyle = Config.probe.render.color;
-    this.circle(probe.x, probe.y, Config.probe.render.size);
   }
 
   allNodes(nodes: Node[]) {
     this.context.fillStyle = Config.render.node.color;
 
     let count: number = 0;
-    for (let i = 0; i < nodes.length; i++) {
-      const node = nodes[i];
+
+    for (const node of nodes) {
       if (!node.inQuadtree) continue;
 
       const position = node.position;
@@ -97,6 +69,7 @@ export class Renderer {
         Config.render.node.size,
         Config.render.node.size,
       );
+
       count++;
     }
 
@@ -114,14 +87,5 @@ export class Renderer {
     quadtree.rootRecursion((quadtree) => {
       this.quadtree(quadtree);
     });
-  }
-
-  quadtreeWeight(quadtree: Structures.Quadtree<any, Quadtree.Weight>) {
-    const data = quadtree.data;
-
-    if (data && data.mass > 0) {
-      this.context.fillStyle = "#FF0000";
-      this.circle(data.x, data.y, data.mass);
-    }
   }
 }

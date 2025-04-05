@@ -80,6 +80,7 @@ export namespace Force {
         .scale(Config.force.repulsion.scalar);
 
       node.velocity.add(velocity);
+
       return;
     }
 
