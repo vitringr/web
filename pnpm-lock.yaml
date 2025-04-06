@@ -68,6 +68,19 @@ importers:
         specifier: ^2.11.2
         version: 2.11.6(solid-js@1.9.5)(vite@6.2.5)
 
+  packages/pathfinder:
+    dependencies:
+      '@utilities/mathematics':
+        specifier: workspace:*
+        version: link:../../utilities/math
+    devDependencies:
+      '@utilities/typescript-config':
+        specifier: workspace:*
+        version: link:../../utilities/typescript-config
+      typescript:
+        specifier: latest
+        version: 5.8.3
+
   packages/quadtree-simulation:
     dependencies:
       '@utilities/random':
