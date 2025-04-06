@@ -8,6 +8,7 @@ export default {
   },
 
   force: {
+    maxVelocity: Infinity,
     center: {
       active: true,
       scalar: 0.0001,

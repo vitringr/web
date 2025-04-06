@@ -2,6 +2,8 @@ import { Structures } from "@utilities/structures";
 import { Random } from "@utilities/random";
 import Config from "./config";
 
+const MAX_VELOCITY_MAGNITUDE_SQUARED = Config.force.maxVelocity ** 2;
+
 export class Node implements Structures.Shapes.IPoint {
   readonly id: number;
 
@@ -24,7 +26,14 @@ export class Node implements Structures.Shapes.IPoint {
     return this.position.y;
   }
 
+  private limitVelocity() {
+    if (this.velocity.magnitudeSquared() > MAX_VELOCITY_MAGNITUDE_SQUARED) {
+      this.velocity.normalize().scale(Config.force.maxVelocity);
+    }
+  }
+
   move() {
+    this.limitVelocity();
     this.position.add(this.velocity);
   }
 

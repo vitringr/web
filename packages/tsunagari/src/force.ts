@@ -3,12 +3,12 @@ import Config from "./config";
 import { Node } from "./node";
 import { Quadtree } from "./quadtree";
 
-export namespace Force {
-  const epsilon: number = 1e-10;
-  const center = new Structures.Vector2(Config.width, Config.height).scale(0.5);
+const EPSILON: number = 1e-10;
+const CENTER = new Structures.Vector2(Config.width, Config.height).scale(0.5);
 
+export namespace Force {
   export function centerPull(node: Node) {
-    const velocity = Structures.Vector2.subtract(center, node.position).scale(
+    const velocity = Structures.Vector2.subtract(CENTER, node.position).scale(
       Config.force.center.scalar,
     );
 
@@ -26,7 +26,7 @@ export namespace Force {
     for (const link of connections) {
       const distance = Math.max(
         Structures.Vector2.distance(link.position, node.position),
-        epsilon,
+        EPSILON,
       );
 
       const difference = Structures.Vector2.subtract(
@@ -48,7 +48,7 @@ export namespace Force {
   ): Structures.Vector2 {
     const difference = Structures.Vector2.subtract(from, to);
 
-    const safeMagnitude = Math.max(difference.magnitude(), epsilon);
+    const safeMagnitude = Math.max(difference.magnitude(), EPSILON);
     const inverseMagnitude = 1 / safeMagnitude;
 
     const normalized = difference.scale(inverseMagnitude);
@@ -68,7 +68,7 @@ export namespace Force {
 
     const distanceSquared = Math.max(
       Structures.Vector2.distanceSquared(node.position, centerOfMass),
-      epsilon,
+      EPSILON,
     );
 
     const theta = quadtree.rectangle.w ** 2 / distanceSquared;
