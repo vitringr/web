@@ -2,10 +2,10 @@ export class Cell {
   readonly x: number;
   readonly y: number;
 
-  readonly type: Cell.Type = Cell.Type.Empty;
-  readonly list: Cell.List = Cell.List.None;
-
   readonly neighbors: Cell.Neighbor[] = [];
+
+  type: Cell.Type = Cell.Type.Empty;
+  list: Cell.List = Cell.List.None;
 
   g: number = 0; // movement
   t: number = 0; // terrain
@@ -16,12 +16,41 @@ export class Cell {
     this.x = x;
     this.y = y;
   }
+
+  private _updateF() {
+    this._f = this._g * gWeight + this._t * tWeight + this._h * hWeight;
+  }
+
+  getG() {
+    return this._g;
+  }
+  setG(value: number) {
+    this._g = value;
+    this._updateF();
+  }
+  getT() {
+    return this._t; // TODO: turn this into a gradient
+  }
+  setT(value: number) {
+    this._t = value;
+    this._updateF();
+  }
+  getH(): number {
+    return this._h;
+  }
+  setH(value: number) {
+    this._h = value;
+    this._updateF();
+  }
+  getF() {
+    return this._f;
+  }
 }
 
 export namespace Cell {
   export enum Type {
     Empty,
-    Terrain,
+    Rough,
     Block,
   }
 
