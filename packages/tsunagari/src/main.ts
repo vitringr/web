@@ -1,5 +1,4 @@
 import { Structures } from "@utilities/structures";
-import { Collision } from "@utilities/collision";
 import { Quadtree } from "./quadtree";
 import { Renderer } from "./render";
 import { Force } from "./force";
@@ -25,33 +24,6 @@ function logQuadtrees(rootQuadtree: Structures.Quadtree<any, any>) {
   console.log("QUADTREES: " + count);
 }
 
-function inputControl(input: Input, quadtree: Structures.Quadtree<Node, any>) {
-  input.targetedNodeID = null;
-
-  const position = input.position;
-
-  const inCanvas = Collision.point_rectangle(
-    position.x,
-    position.y,
-    0,
-    0,
-    Config.width,
-    Config.height,
-  );
-
-  if (!inCanvas) return;
-
-  const targetRange: Structures.Shapes.Rectangle = {
-    x: position.x - Config.render.node.radius,
-    y: position.y - Config.render.node.radius,
-    w: Config.render.node.radius,
-    h: Config.render.node.radius,
-  };
-
-  const targetNode = quadtree.query(targetRange)[0] || null;
-  if (targetNode) input.targetedNodeID = targetNode.id;
-}
-
 export function main(canvas: HTMLCanvasElement) {
   const context = setupContext(canvas);
   const renderer = new Renderer(context);
@@ -63,8 +35,6 @@ export function main(canvas: HTMLCanvasElement) {
   Config.nodes.connect.active && Node.connectRandom(nodes);
 
   const loop = () => {
-    inputControl(input, quadtree);
-
     quadtree.reset();
     Quadtree.insertNodes(quadtree, nodes);
     Quadtree.setWeights(quadtree);
@@ -77,13 +47,15 @@ export function main(canvas: HTMLCanvasElement) {
       node.move();
     }
 
+    input.main(quadtree, nodes);
+
     Config.render.background.active && renderer.background();
     Config.render.connection.display && renderer.connections(nodes);
     Config.render.node.display && renderer.nodes(nodes);
     Config.render.velocity.display && renderer.velocities(nodes);
     Config.render.quadtree.display && renderer.quadtrees(quadtree);
 
-    if (input.targetedNodeID) {
+    if (input.targetedNodeID !== null) {
       const target = nodes[input.targetedNodeID];
       renderer.targetConnections(target);
       renderer.targetConnectedNodes(target);

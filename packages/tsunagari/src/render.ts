@@ -1,7 +1,7 @@
+import { Mathematics } from "@utilities/mathematics";
 import { Structures } from "@utilities/structures";
 import Config from "./config";
 import { Node } from "./node";
-import { Mathematics } from "@utilities/mathematics";
 
 export class Renderer {
   constructor(private context: CanvasRenderingContext2D) {}

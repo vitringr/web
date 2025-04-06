@@ -1,6 +1,6 @@
 export default {
-  width: 790,
-  height: 790,
+  width: 980,
+  height: 980,
 
   log: {
     quadtrees: false,
@@ -14,12 +14,12 @@ export default {
     },
     repulsion: {
       active: true,
-      scalar: 0.04,
+      scalar: 0.045,
     },
     attraction: {
       active: true,
       scalar: 0.00001,
-      idealDistance: 40,
+      idealDistance: 45,
     },
     drag: {
       active: true,
@@ -35,11 +35,11 @@ export default {
     node: {
       display: true,
       color: "#909090",
-      radius: 7,
+      radius: 8,
     },
     connection: {
       display: true,
-      color: "#666666",
+      color: "#808080AA",
       width: 3.0,
     },
     quadtree: {
@@ -54,10 +54,10 @@ export default {
       scalar: 10,
     },
     target: {
-      node: "#FFFF00",
-      connected: "#FFFF00",
-      connection: "#FFFF00",
-    }
+      node: "#FFCC11",
+      connected: "#FFCC11",
+      connection: "#FFBB11",
+    },
   },
 
   quadtree: {
