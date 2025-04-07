@@ -1,3 +1,5 @@
+import { Config } from "./config";
+
 export class Cell {
   readonly x: number;
   readonly y: number;
@@ -17,33 +19,15 @@ export class Cell {
     this.y = y;
   }
 
-  private _updateF() {
-    this._f = this._g * gWeight + this._t * tWeight + this._h * hWeight;
+  sumF() {
+    this.f =
+      this.g * Config.algorithm.weights.g +
+      this.t * Config.algorithm.weights.t +
+      this.h * Config.algorithm.weights.h;
   }
 
-  getG() {
-    return this._g;
-  }
-  setG(value: number) {
-    this._g = value;
-    this._updateF();
-  }
-  getT() {
-    return this._t; // TODO: turn this into a gradient
-  }
-  setT(value: number) {
-    this._t = value;
-    this._updateF();
-  }
-  getH(): number {
-    return this._h;
-  }
-  setH(value: number) {
-    this._h = value;
-    this._updateF();
-  }
-  getF() {
-    return this._f;
+  isEqual(otherCell: Cell): boolean {
+    return this.x === otherCell.x && this.y === otherCell.y;
   }
 }
 

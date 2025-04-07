@@ -1,5 +1,5 @@
 import { Mathematics } from "@utilities/mathematics";
-import Config from "./config";
+import { Config } from "./config";
 import { Cell } from "./cell";
 
 export namespace Grid {
@@ -56,6 +56,17 @@ export namespace Grid {
         }
 
         cell.neighbors.push(...neighbors);
+      }
+    }
+  }
+
+  function precalculateDistances(target: Cell) {
+    for (const row of cells) {
+      for (const cell of row) {
+        if (Config.algorithm.distanceMethod === Config.DistanceMethod.EUCLIDEAN)
+          cell.h = Mathematics.euclideanDistance(cell.x, cell.y, target.x, target.y);
+        else if (Config.algorithm.distanceMethod === Config.DistanceMethod.MANHATTAN)
+          cell.h = Mathematics.manhattanDistance(cell.x, cell.y, target.x, target.y);
       }
     }
   }

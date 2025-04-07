@@ -22,8 +22,14 @@ export function lerp(a: number, b: number, step: number) {
   return a + step * (b - a);
 }
 
-export function manhattanDistance(x1: number, y1: number, x2: number, y2: number) {
-  return Math.abs(x1 - x2) + Math.abs(y1 - y2);
+export function euclideanDistance(ax: number, ay: number, bx: number, by: number) {
+  const xDifference = ax - bx;
+  const yDifference = ay - by;
+  return Math.sqrt(xDifference * xDifference + yDifference * yDifference);
+}
+
+export function manhattanDistance(ax: number, ay: number, bx: number, by: number) {
+  return Math.abs(ax - bx) + Math.abs(ay - by);
 }
 
 export function euclideanModulo(a: number, b: number) {
