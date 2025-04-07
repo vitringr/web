@@ -1,1 +1,1 @@
-export function main(canvas: HTMLCanvasElement) {}
+export async function main(canvas: HTMLCanvasElement) { }
