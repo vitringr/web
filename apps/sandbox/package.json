@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@packages/tsunagari": "workspace:*",
+    "@packages/pathfinder": "workspace:*",
     "@packages/quadtree-simulation": "workspace:*"
   },
   "devDependencies": {

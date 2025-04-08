@@ -1,6 +1,6 @@
 import { Random } from "@utilities/random";
 import { Cell } from "./cell";
-import Config from "./config";
+import { Config } from "./config";
 
 export namespace Terrain {
   export function randomBlocks(cells: Cell[][]) {
@@ -20,9 +20,9 @@ export namespace Terrain {
 
         if (Random.chance(Config.terrain.rough)) {
           cell.type = Cell.Type.Rough;
-          cell.setT(1); // TODO: turn this into a gradient
-          cell.markDisplay();
-          cell.skipAnimation();
+          // cell.setT(1); // TODO: turn this into a gradient
+          // cell.markDisplay();
+          // cell.skipAnimation();
         }
       }
     }

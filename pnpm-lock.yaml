@@ -17,6 +17,9 @@ importers:
 
   apps/sandbox:
     dependencies:
+      '@packages/pathfinder':
+        specifier: workspace:*
+        version: link:../../packages/pathfinder
       '@packages/quadtree-simulation':
         specifier: workspace:*
         version: link:../../packages/quadtree-simulation

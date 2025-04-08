@@ -12,6 +12,7 @@ export namespace Grid {
         cells[x].push(new Cell(x, y));
       }
     }
+    return cells;
   }
 
   function isValidCoordinate(x: number, y: number) {
@@ -22,7 +23,7 @@ export namespace Grid {
     return isValidCoordinate(x, y) ? cells[x][y] : null;
   }
 
-  function setNeighbors() {
+  export function setNeighbors() {
     //prettier-ignore
     for (let x = 0; x < Config.cols; x++) {
       for (let y = 0; y < Config.rows; y++) {
@@ -60,7 +61,7 @@ export namespace Grid {
     }
   }
 
-  function precalculateDistances(target: Cell) {
+  export function precalculateDistances(target: Cell) {
     for (const row of cells) {
       for (const cell of row) {
         if (Config.algorithm.distanceMethod === Config.DistanceMethod.EUCLIDEAN)

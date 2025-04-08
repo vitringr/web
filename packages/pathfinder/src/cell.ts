@@ -26,7 +26,7 @@ export class Cell {
       this.h * Config.algorithm.weights.h;
   }
 
-  isEqual(otherCell: Cell): boolean {
+  isEqual(otherCell: Cell) {
     return this.x === otherCell.x && this.y === otherCell.y;
   }
 }
