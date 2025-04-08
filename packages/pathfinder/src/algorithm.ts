@@ -49,6 +49,7 @@ export namespace Algorithm {
     open.delete(current);
     closed.add(current);
     current.list = Cell.List.Closed;
+    current.toRender = true;
 
     for (const n of current.neighbors) {
       if (!n) continue;
@@ -64,6 +65,7 @@ export namespace Algorithm {
       // this is weird. Fix.
       if (neighbor.list !== Cell.List.Open) {
         neighbor.list = Cell.List.Open;
+        neighbor.toRender = true;
         open.add(neighbor);
         neighbor.g = gSum;
         neighbor.sumF();

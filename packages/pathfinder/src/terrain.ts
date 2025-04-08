@@ -4,10 +4,12 @@ import { Config } from "./config";
 
 export namespace Terrain {
   export function randomBlocks(cells: Cell[][]) {
-    for (let x = 0; x < Config.cols; x++) {
-      for (let y = 0; y < Config.rows; y++) {
-        Random.chance(Config.terrain.blocks) &&
-          (cells[x][y].type = Cell.Type.Block);
+    for (const row of cells) {
+      for (const cell of row) {
+        if (Random.chance(Config.terrain.blocks)) {
+          cell.type = Cell.Type.Block;
+          cell.toRender = true;
+        }
       }
     }
   }
@@ -29,6 +31,6 @@ export namespace Terrain {
   }
 
   // TODO
-  export function noiseBlocks() {}
-  export function noiseTerrain() {}
+  export function noiseBlocks() { }
+  export function noiseTerrain() { }
 }

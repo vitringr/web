@@ -14,8 +14,17 @@ export namespace Config {
 
   export const diagonals = false;
 
+  export const colors = {
+    debug: "#FF00FF",
+    empty: "#313244",
+    block: "#11111B",
+    rough: "#116611",
+    open: "#B4BEFE",
+    closed: "#89B4FA",
+  };
+
   export const terrain = {
-    blocks: 0.3,
+    blocks: 0.2,
     rough: 0.1,
   } as const;
 

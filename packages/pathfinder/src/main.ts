@@ -28,16 +28,8 @@ export async function main(canvas: HTMLCanvasElement) {
 
   Algorithm.initiate(start, target);
 
-  // ----------
-  // -- DERP --
-  // ----------
-
   setInterval(() => {
     Algorithm.iterate();
-    for (const row of cells) {
-      for (const cell of row) {
-        renderer.drawCell(cell);
-      }
-    }
+    renderer.drawCells(cells);
   }, 1000 / 30);
 }

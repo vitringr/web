@@ -14,6 +14,8 @@ export class Cell {
   h: number = 0; // distance
   f: number = 0; // total
 
+  toRender: boolean = true;
+
   constructor(x: number, y: number) {
     this.x = x;
     this.y = y;
