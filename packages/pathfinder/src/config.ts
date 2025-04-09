@@ -9,7 +9,7 @@ export namespace Config {
     ANIMATED,
   }
 
-  export const runtime: Runtime = Runtime.INSTANT;
+  export const runtime: Runtime = Runtime.ANIMATED;
 
   export const width = 600;
   export const height = 600;

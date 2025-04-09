@@ -8,6 +8,8 @@ Amit Patel - RedBlob Games
 
 Daniel Shiffman - The Coding Train
 
+SimonDev
+
 Jasper Flick - Catlike Coding
 
 Tim Ruswick - Game Dev Underground
