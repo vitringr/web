@@ -1,50 +1,62 @@
 import { Canvas2D } from "@utilities/canvas2d";
 import { Easing } from "@utilities/easing";
 import { Config } from "./config";
+import { line } from "../../../utilities/canvas2d/src/main";
 
-const easingFunctions: ((step: number) => number)[] = [
-  Easing.linear,
-  Easing.easeInQuad,
-  Easing.easeOutQuad,
-  Easing.easeInOutQuad,
-  Easing.easeInCubic,
-  Easing.easeOutCubic,
-  Easing.easeInOutCubic,
-  Easing.easeInQuart,
-  Easing.easeOutQuart,
-  Easing.easeInOutQuart,
-  Easing.easeInQuint,
-  Easing.easeOutQuint,
-  Easing.easeInOutQuint,
-  Easing.easeInSine,
-  Easing.easeOutSine,
-  Easing.easeInOutSine,
-  Easing.easeInExpo,
-  Easing.easeOutExpo,
-  Easing.easeInOutExpo,
-  Easing.easeInCirc,
-  Easing.easeOutCirc,
-  Easing.easeInOutCirc,
-  Easing.easeInBack,
-  Easing.easeOutBack,
-  Easing.easeInOutBack,
-  Easing.easeInElastic,
-  Easing.easeOutElastic,
-  Easing.easeInOutElastic,
-  Easing.easeInBounce,
-  Easing.easeOutBounce,
-  Easing.easeInOutBounce,
+type NamedEasingFunction = {
+  name: string;
+  f: (step: number) => number;
+};
+
+const easingFunctions: NamedEasingFunction[] = [
+  { name: "linear", f: Easing.linear },
+  { name: "easeInQuad", f: Easing.easeInQuad },
+  { name: "easeOutQuad", f: Easing.easeOutQuad },
+  { name: "easeInOutQuad", f: Easing.easeInOutQuad },
+  { name: "easeInCubic", f: Easing.easeInCubic },
+  { name: "easeOutCubic", f: Easing.easeOutCubic },
+  { name: "easeInOutCubic", f: Easing.easeInOutCubic },
+  { name: "easeInQuart", f: Easing.easeInQuart },
+  { name: "easeOutQuart", f: Easing.easeOutQuart },
+  { name: "easeInOutQuart", f: Easing.easeInOutQuart },
+  { name: "easeInQuint", f: Easing.easeInQuint },
+  { name: "easeOutQuint", f: Easing.easeOutQuint },
+  { name: "easeInOutQuint", f: Easing.easeInOutQuint },
+  { name: "easeInSine", f: Easing.easeInSine },
+  { name: "easeOutSine", f: Easing.easeOutSine },
+  { name: "easeInOutSine", f: Easing.easeInOutSine },
+  { name: "easeInExpo", f: Easing.easeInExpo },
+  { name: "easeOutExpo", f: Easing.easeOutExpo },
+  { name: "easeInOutExpo", f: Easing.easeInOutExpo },
+  { name: "easeInCirc", f: Easing.easeInCirc },
+  { name: "easeOutCirc", f: Easing.easeOutCirc },
+  { name: "easeInOutCirc", f: Easing.easeInOutCirc },
+  { name: "easeInBack", f: Easing.easeInBack },
+  { name: "easeOutBack", f: Easing.easeOutBack },
+  { name: "easeInOutBack", f: Easing.easeInOutBack },
+  { name: "easeInElastic", f: Easing.easeInElastic },
+  { name: "easeOutElastic", f: Easing.easeOutElastic },
+  { name: "easeInOutElastic", f: Easing.easeInOutElastic },
+  { name: "easeInBounce", f: Easing.easeInBounce },
+  { name: "easeOutBounce", f: Easing.easeOutBounce },
+  { name: "easeInOutBounce", f: Easing.easeInOutBounce },
 ];
 
 const height = Config.gap + easingFunctions.length * Config.gap;
 
 function setupContext(canvas: HTMLCanvasElement) {
-  canvas.style.border = "1px solid red";
   canvas.width = Config.width;
   canvas.height = height;
 
   const context = canvas.getContext("2d");
   if (!context) throw "Cannot get 2d context";
+
+  context.strokeStyle = Config.colors.main;
+  context.lineWidth = 1;
+
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+  context.font = `${Config.text.size}px arial`;
 
   return context;
 }
@@ -57,7 +69,7 @@ function renderRails(context: CanvasRenderingContext2D) {
   const orbLeft = Config.left + Config.radius;
   const orbRight = Config.right - Config.radius;
 
-  context.fillStyle = context.strokeStyle = Config.colors.main;
+  context.fillStyle = Config.colors.main;
 
   for (let i = 0; i < easingFunctions.length; i++) {
     const y = getHeight(i);
@@ -81,11 +93,25 @@ export function main(canvas: HTMLCanvasElement) {
     renderRails(context);
 
     context.fillStyle = Config.colors.main;
-    for (let i = 0; i < easingFunctions.length; i++) {
-      const easing = easingFunctions[i](time);
-      const step = Easing.lerp(Config.left, Config.right, easing);
 
-      Canvas2D.fillCircle(context, step, getHeight(i), Config.radius);
+    for (let i = 0; i < easingFunctions.length; i++) {
+      const current = easingFunctions[i];
+
+      const y = getHeight(i);
+
+      context.fillText(current.name, Config.text.x, y - Config.text.gap);
+
+      const easing = Easing.lerp(Config.left, Config.right, current.f(time));
+      Canvas2D.fillCircle(context, easing, y, Config.radius);
+
+      const linear = Easing.lerp(Config.left, Config.right, time);
+      Canvas2D.line(
+        context,
+        linear,
+        y - Config.radius,
+        linear,
+        y + Config.radius,
+      );
     }
 
     requestAnimationFrame(loop);
