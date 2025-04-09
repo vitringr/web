@@ -4,13 +4,13 @@ export namespace Config {
     MANHATTAN,
   }
 
-  export const width = 500;
-  export const height = 500;
+  export const width = 600;
+  export const height = 600;
 
   export const cols = 50;
   export const rows = 50;
 
-  export const cellWidth = 10;
+  export const cellWidth = width / rows;
 
   export const diagonals = false;
 
@@ -24,8 +24,8 @@ export namespace Config {
   };
 
   export const terrain = {
-    blocks: 0.2,
-    rough: 0.1,
+    blocks: 0.3,
+    rough: 0.0,
   } as const;
 
   export const algorithm = {

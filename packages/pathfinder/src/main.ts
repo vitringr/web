@@ -19,17 +19,27 @@ export async function main(canvas: HTMLCanvasElement) {
   const renderer = new Renderer(context);
 
   const cells = Grid.createCells();
-  const start = cells[1][1];
+  const start = cells[0][0];
   const target = cells[Config.rows - 1][Config.cols - 1];
   Grid.setNeighbors();
   Grid.precalculateDistances(target);
 
   Terrain.randomBlocks(cells);
+  Terrain.randomRough(cells);
+  Terrain.unblockAroundCell(start, cells, 3);
+  Terrain.unblockAroundCell(target, cells, 3);
 
   Algorithm.initiate(start, target);
 
-  setInterval(() => {
+  while (!Algorithm.hasEnded) {
     Algorithm.iterate();
     renderer.drawCells(cells);
-  }, 1000 / 30);
+  }
+
+  // const loop = setInterval(() => {
+  //   Algorithm.iterate();
+  //   renderer.drawCells(cells);
+  //
+  //   Algorithm.hasEnded && clearInterval(loop);
+  // }, 1000 / 30);
 }

@@ -14,8 +14,8 @@ const config = {
   },
 
   quadtree: {
-    capacity: 4,
-    lineWidth: 0.5,
+    capacity: 10,
+    lineWidth: 1,
     color: "#005020",
   },
 } as const;
@@ -46,16 +46,16 @@ function drawBackground(context: CanvasRenderingContext2D) {
 
 function drawQuadtreeBounds(
   context: CanvasRenderingContext2D,
-  qt: Structures.Quadtree<any>,
+  qt: Structures.Quadtree<any, any>,
 ) {
-  const bounds = qt.getBounds;
+  const rectangle = qt.rectangle;
 
   context.beginPath();
-  context.lineTo(bounds.x, bounds.y);
-  context.lineTo(bounds.x + bounds.width, bounds.y);
-  context.lineTo(bounds.x + bounds.width, bounds.y + bounds.height);
-  context.lineTo(bounds.x, bounds.y + bounds.height);
-  context.lineTo(bounds.x, bounds.y);
+  context.lineTo(rectangle.x, rectangle.y);
+  context.lineTo(rectangle.x + rectangle.w, rectangle.y);
+  context.lineTo(rectangle.x + rectangle.w, rectangle.y + rectangle.h);
+  context.lineTo(rectangle.x, rectangle.y + rectangle.h);
+  context.lineTo(rectangle.x, rectangle.y);
   context.closePath();
   context.stroke();
 }
@@ -72,12 +72,12 @@ export function main(canvas: HTMLCanvasElement) {
 
   const context = setup(canvas);
 
-  const quadtree = new Structures.Quadtree<Particle>(
+  const quadtree = new Structures.Quadtree<Particle, any>(
     {
       x: 0,
       y: 0,
-      width: config.width,
-      height: config.height,
+      w: config.width,
+      h: config.height,
     },
     config.quadtree.capacity,
   );
@@ -95,12 +95,12 @@ export function main(canvas: HTMLCanvasElement) {
     quadtree.insert(particles[i]);
   }
 
-  quadtree.deepCallback((quadtree) => {
+  quadtree.rootRecursion((quadtree) => {
     drawQuadtreeBounds(context, quadtree);
   });
 
   setInterval(() => {
-    quadtree.clear();
+    quadtree.reset();
 
     drawBackground(context);
 
@@ -116,7 +116,7 @@ export function main(canvas: HTMLCanvasElement) {
       quadtree.insert(particles[i]);
     }
 
-    quadtree.deepCallback((quadtree) => {
+    quadtree.rootRecursion((quadtree) => {
       drawQuadtreeBounds(context, quadtree);
     });
   }, 1000 / config.FPS);

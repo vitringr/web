@@ -9,9 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@packages/tsunagari": "workspace:*",
+    "@packages/quadtree-simulation": "workspace:*",
     "@packages/pathfinder": "workspace:*",
-    "@packages/quadtree-simulation": "workspace:*"
+    "@packages/tsunagari": "workspace:*"
   },
   "devDependencies": {
     "@utilities/typescript-config": "workspace:*",

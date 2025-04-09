@@ -4,7 +4,7 @@ export namespace Algorithm {
   const open = new Set<Cell>();
   const closed = new Set<Cell>();
 
-  let hasEnded: boolean = false;
+  export let hasEnded: boolean = false;
 
   let start: Cell;
   let target: Cell;
@@ -57,12 +57,12 @@ export namespace Algorithm {
       const neighbor = n.cell;
       const moveCost = n.moveCost;
 
-      // neighbor null check?
+      // TODO: neighbor null check?
       if (neighbor.type === Cell.Type.Block || neighbor.list === Cell.List.Closed) continue;
 
       const gSum = current.g + moveCost;
 
-      // this is weird. Fix.
+      // TODO: this is weird. Fix.
       if (neighbor.list !== Cell.List.Open) {
         neighbor.list = Cell.List.Open;
         neighbor.toRender = true;

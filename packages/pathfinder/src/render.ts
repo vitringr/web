@@ -2,7 +2,7 @@ import { Cell } from "./cell";
 import { Config } from "./config";
 
 export class Renderer {
-  constructor(private context: CanvasRenderingContext2D) { }
+  constructor(private context: CanvasRenderingContext2D) {}
 
   private getColor(cell: Cell) {
     if (cell.type === Cell.Type.Block) return Config.colors.block;
@@ -24,16 +24,13 @@ export class Renderer {
   }
 
   drawCells(cells: Cell[][]) {
-    let count = 0;
     for (const row of cells) {
       for (const cell of row) {
-        if (cell.toRender) {
+        if(cell.toRender) {
           this.drawCell(cell);
           cell.toRender = false;
-          count++;
         }
       }
     }
-    console.log("count:", count);
   }
 }

@@ -12,6 +12,10 @@ export function measureFunction(func: () => void, label: string): number {
   return elapsed;
 }
 
+export function stackOverflow() {
+  stackOverflow();
+}
+
 type Success<T> = {
   data: T;
   error: null;
