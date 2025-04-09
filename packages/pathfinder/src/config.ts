@@ -4,6 +4,13 @@ export namespace Config {
     MANHATTAN,
   }
 
+  export enum Runtime {
+    INSTANT,
+    ANIMATED,
+  }
+
+  export const runtime: Runtime = Runtime.INSTANT;
+
   export const width = 600;
   export const height = 600;
 
@@ -29,7 +36,7 @@ export namespace Config {
   } as const;
 
   export const algorithm = {
-    distanceMethod: DistanceMethod.EUCLIDEAN,
+    distanceMethod: DistanceMethod.MANHATTAN as DistanceMethod,
     weights: {
       g: 2,
       t: 40,

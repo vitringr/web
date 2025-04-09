@@ -31,15 +31,18 @@ export async function main(canvas: HTMLCanvasElement) {
 
   Algorithm.initiate(start, target);
 
-  while (!Algorithm.hasEnded) {
-    Algorithm.iterate();
-    renderer.drawCells(cells);
-  }
+  if (Config.runtime === Config.Runtime.INSTANT) {
+    while (!Algorithm.hasEnded) {
+      Algorithm.iterate();
+      renderer.drawCells(cells);
+    }
+  } else if (Config.runtime === Config.Runtime.ANIMATED) {
+    const loop = () => {
+      Algorithm.iterate();
+      renderer.drawCells(cells);
 
-  // const loop = setInterval(() => {
-  //   Algorithm.iterate();
-  //   renderer.drawCells(cells);
-  //
-  //   Algorithm.hasEnded && clearInterval(loop);
-  // }, 1000 / 30);
+      requestAnimationFrame(loop);
+    };
+    loop();
+  }
 }

@@ -45,6 +45,13 @@ export class Vector2 {
     return v1.x * v2.x + v1.y * v2.y;
   }
 
+  static lerp(va: Vector2, vb: Vector2, step: number) {
+    return new Vector2(
+      va.x + step * (vb.x - va.x),
+      va.y + step * (vb.y - va.y),
+    );
+  }
+
   constructor(
     public x: number,
     public y: number,

@@ -48,6 +48,14 @@ export class Vector3 {
     return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
   }
 
+  static lerp(va: Vector3, vb: Vector3, step: number) {
+    return new Vector3(
+      va.x + step * (vb.x - va.x),
+      va.y + step * (vb.y - va.y),
+      va.z + step * (vb.z - va.z),
+    );
+  }
+
   constructor(
     public x: number,
     public y: number,
