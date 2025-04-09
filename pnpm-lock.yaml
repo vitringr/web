@@ -17,6 +17,9 @@ importers:
 
   apps/sandbox:
     dependencies:
+      '@packages/easing-functions':
+        specifier: workspace:*
+        version: link:../../packages/easing-functions
       '@packages/pathfinder':
         specifier: workspace:*
         version: link:../../packages/pathfinder
@@ -70,6 +73,22 @@ importers:
       vite-plugin-solid:
         specifier: ^2.11.2
         version: 2.11.6(solid-js@1.9.5)(vite@6.2.5)
+
+  packages/easing-functions:
+    dependencies:
+      '@utilities/canvas2d':
+        specifier: workspace:*
+        version: link:../../utilities/canvas2d
+      '@utilities/easing':
+        specifier: workspace:*
+        version: link:../../utilities/easing
+    devDependencies:
+      '@utilities/typescript-config':
+        specifier: workspace:*
+        version: link:../../utilities/typescript-config
+      typescript:
+        specifier: latest
+        version: 5.8.3
 
   packages/pathfinder:
     dependencies:
@@ -151,6 +170,15 @@ importers:
       typescript:
         specifier: latest
         version: 5.8.2
+
+  utilities/easing:
+    devDependencies:
+      '@utilities/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: latest
+        version: 5.8.3
 
   utilities/math:
     devDependencies:
