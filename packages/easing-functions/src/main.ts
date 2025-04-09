@@ -1,14 +1,13 @@
 import { Canvas2D } from "@utilities/canvas2d";
 import { Easing } from "@utilities/easing";
 import { Config } from "./config";
-import { line } from "../../../utilities/canvas2d/src/main";
 
 type NamedEasingFunction = {
   name: string;
   f: (step: number) => number;
 };
 
-const easingFunctions: NamedEasingFunction[] = [
+const namedEasingFunctions: NamedEasingFunction[] = [
   { name: "linear", f: Easing.linear },
   { name: "easeInQuad", f: Easing.easeInQuad },
   { name: "easeOutQuad", f: Easing.easeOutQuad },
@@ -42,7 +41,7 @@ const easingFunctions: NamedEasingFunction[] = [
   { name: "easeInOutBounce", f: Easing.easeInOutBounce },
 ];
 
-const height = Config.gap + easingFunctions.length * Config.gap;
+const height = Config.gap + namedEasingFunctions.length * Config.gap;
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = Config.width;
@@ -65,13 +64,11 @@ function getHeight(index: number) {
   return Config.gap + index * Config.gap;
 }
 
-function renderRails(context: CanvasRenderingContext2D) {
+function rails(context: CanvasRenderingContext2D) {
   const orbLeft = Config.left + Config.radius;
   const orbRight = Config.right - Config.radius;
 
-  context.fillStyle = Config.colors.main;
-
-  for (let i = 0; i < easingFunctions.length; i++) {
+  for (let i = 0; i < namedEasingFunctions.length; i++) {
     const y = getHeight(i);
     Canvas2D.circle(context, Config.left, y, Config.radius);
     Canvas2D.circle(context, Config.right, y, Config.radius);
@@ -79,32 +76,69 @@ function renderRails(context: CanvasRenderingContext2D) {
   }
 }
 
+function names(context: CanvasRenderingContext2D) {
+  context.fillStyle = Config.colors.main;
+
+  for (let i = 0; i < namedEasingFunctions.length; i++) {
+    context.fillText(
+      namedEasingFunctions[i].name,
+      Config.text.x,
+      getHeight(i) - Config.text.gap,
+    );
+  }
+}
+
+function background(context: CanvasRenderingContext2D) {
+  context.fillStyle = Config.colors.background;
+  context.fillRect(0, 0, Config.width, height);
+}
+
+function railBackground(context: CanvasRenderingContext2D) {
+  context.fillStyle = Config.colors.background;
+
+  const bufferRadius = Config.radius + 1;
+  const doubleRadius = bufferRadius * 2;
+
+  for (let i = 0; i < namedEasingFunctions.length; i++) {
+    context.fillRect(
+      0,
+      getHeight(i) - bufferRadius,
+      Config.width,
+      doubleRadius,
+    );
+  }
+}
+
 export function main(canvas: HTMLCanvasElement) {
   const context = setupContext(canvas);
 
+  background(context);
+  names(context);
+
   let time = 0;
+
   const loop = () => {
     time += Config.increment;
-    time = time % 1;
+    time %= 1;
 
-    context.fillStyle = Config.colors.background;
-    context.fillRect(0, 0, Config.width, height);
-
-    renderRails(context);
+    railBackground(context);
+    rails(context);
 
     context.fillStyle = Config.colors.main;
 
-    for (let i = 0; i < easingFunctions.length; i++) {
-      const current = easingFunctions[i];
-
+    for (let i = 0; i < namedEasingFunctions.length; i++) {
       const y = getHeight(i);
 
-      context.fillText(current.name, Config.text.x, y - Config.text.gap);
+      const easing = Easing.lerp(
+        Config.left,
+        Config.right,
+        namedEasingFunctions[i].f(time),
+      );
 
-      const easing = Easing.lerp(Config.left, Config.right, current.f(time));
       Canvas2D.fillCircle(context, easing, y, Config.radius);
 
       const linear = Easing.lerp(Config.left, Config.right, time);
+
       Canvas2D.line(
         context,
         linear,

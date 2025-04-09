@@ -17,7 +17,7 @@ export namespace Config {
   } as const;
 
   export const colors = {
-    background: "#111111",
+    background: "#141414",
     main: "#909090",
   } as const;
 }
