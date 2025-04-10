@@ -3,3 +3,30 @@
 `pnpm install`
 
 `turbo build` or `turbo run dev`
+
+# Architecture
+
+This is a [monorepo](https://monorepo.tools) - a single repository containing multiple projects with shared tooling and dependencies.
+
+## Directories
+
+### `/apps/`
+
+Entry points for applications.
+
+Can depend on `packages/`, `utilities/`, and external modules.
+
+### `/packages/`
+
+Feature-rich libraries/projects/applications with dependencies.
+
+Can depend on `utilities/` and external packages.
+
+### `/utilities/`
+
+Atomic, independent modules.
+
+Should not have dependencies. Should be self-contained.
+
+> [!NOTE]
+> The only current exception to this is the `@utilities/typescript-config` package, which is basically a shared `tsconfig.json` file for the repository.
