@@ -15,37 +15,37 @@ export class Vector3 {
     return new Vector3(vector3.x, vector3.y, vector3.z);
   }
 
-  static add(v1: Vector3, v2: Vector3) {
-    return new Vector3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
+  static add(va: Vector3, vb: Vector3) {
+    return new Vector3(va.x + vb.x, va.y + vb.y, va.z + vb.z);
   }
 
-  static subtract(v1: Vector3, v2: Vector3) {
-    return new Vector3(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
+  static subtract(va: Vector3, vb: Vector3) {
+    return new Vector3(va.x - vb.x, va.y - vb.y, va.z - vb.z);
   }
 
-  static multiply(v1: Vector3, v2: Vector3) {
-    return new Vector3(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
+  static multiply(va: Vector3, vb: Vector3) {
+    return new Vector3(va.x * vb.x, va.y * vb.y, va.z * vb.z);
   }
 
-  static divide(v1: Vector3, v2: Vector3) {
-    return new Vector3(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z);
+  static divide(va: Vector3, vb: Vector3) {
+    return new Vector3(va.x / vb.x, va.y / vb.y, va.z / vb.z);
   }
 
-  static distanceSquared(v1: Vector3, v2: Vector3) {
-    const xDistance = v1.x - v2.x;
-    const yDistance = v1.y - v2.y;
-    const zDistance = v1.z - v2.z;
+  static distanceSquared(va: Vector3, vb: Vector3) {
+    const xDistance = va.x - vb.x;
+    const yDistance = va.y - vb.y;
+    const zDistance = va.z - vb.z;
     return (
       xDistance * xDistance + yDistance * yDistance + zDistance * zDistance
     );
   }
 
-  static distance(v1: Vector3, v2: Vector3) {
-    return Math.sqrt(this.distanceSquared(v1, v2));
+  static distance(va: Vector3, vb: Vector3) {
+    return Math.sqrt(this.distanceSquared(va, vb));
   }
 
-  static dot(v1: Vector3, v2: Vector3) {
-    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+  static dot(va: Vector3, vb: Vector3) {
+    return va.x * vb.x + va.y * vb.y + va.z * vb.z;
   }
 
   static lerp(va: Vector3, vb: Vector3, step: number) {
@@ -60,7 +60,7 @@ export class Vector3 {
     public x: number,
     public y: number,
     public z: number,
-  ) {}
+  ) { }
 
   get r() {
     return this.x;

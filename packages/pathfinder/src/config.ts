@@ -11,15 +11,23 @@ export namespace Config {
 
   export const runtime: Runtime = Runtime.ANIMATED;
 
-  export const width = 600;
-  export const height = 600;
+  export const width = 500;
+  export const height = 500;
 
-  export const cols = 50;
-  export const rows = 50;
+  export const cols = 40;
+  export const rows = 40;
 
   export const cellWidth = width / rows;
 
   export const diagonals = false;
+
+  export const distanceMethod: DistanceMethod = DistanceMethod.EUCLIDEAN;
+
+  export const weights = {
+    g: 2,
+    t: 40,
+    h: 10,
+  } as const;
 
   export const colors = {
     debug: "#FF00FF",
@@ -28,19 +36,10 @@ export namespace Config {
     rough: "#116611",
     open: "#B4BEFE",
     closed: "#89B4FA",
-  };
+  } as const;
 
   export const terrain = {
     blocks: 0.3,
     rough: 0.0,
-  } as const;
-
-  export const algorithm = {
-    distanceMethod: DistanceMethod.MANHATTAN as DistanceMethod,
-    weights: {
-      g: 2,
-      t: 40,
-      h: 10,
-    },
   } as const;
 }

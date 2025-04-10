@@ -15,34 +15,34 @@ export class Vector2 {
     return new Vector2(vector2.x, vector2.y);
   }
 
-  static add(v1: Vector2, v2: Vector2) {
-    return new Vector2(v1.x + v2.x, v1.y + v2.y);
+  static add(va: Vector2, vb: Vector2) {
+    return new Vector2(va.x + vb.x, va.y + vb.y);
   }
 
-  static subtract(v1: Vector2, v2: Vector2) {
-    return new Vector2(v1.x - v2.x, v1.y - v2.y);
+  static subtract(va: Vector2, vb: Vector2) {
+    return new Vector2(va.x - vb.x, va.y - vb.y);
   }
 
-  static multiply(v1: Vector2, v2: Vector2) {
-    return new Vector2(v1.x * v2.x, v1.y * v2.y);
+  static multiply(va: Vector2, vb: Vector2) {
+    return new Vector2(va.x * vb.x, va.y * vb.y);
   }
 
-  static divide(v1: Vector2, v2: Vector2) {
-    return new Vector2(v1.x / v2.x, v1.y / v2.y);
+  static divide(va: Vector2, vb: Vector2) {
+    return new Vector2(va.x / vb.x, va.y / vb.y);
   }
 
-  static distanceSquared(v1: Vector2, v2: Vector2) {
-    const xDistance = v1.x - v2.x;
-    const yDistance = v1.y - v2.y;
+  static distanceSquared(va: Vector2, vb: Vector2) {
+    const xDistance = va.x - vb.x;
+    const yDistance = va.y - vb.y;
     return xDistance * xDistance + yDistance * yDistance;
   }
 
-  static distance(v1: Vector2, v2: Vector2) {
-    return Math.sqrt(Vector2.distanceSquared(v1, v2));
+  static distance(va: Vector2, vb: Vector2) {
+    return Math.sqrt(Vector2.distanceSquared(va, vb));
   }
 
-  static dot(v1: Vector2, v2: Vector2) {
-    return v1.x * v2.x + v1.y * v2.y;
+  static dot(va: Vector2, vb: Vector2) {
+    return va.x * vb.x + va.y * vb.y;
   }
 
   static lerp(va: Vector2, vb: Vector2, step: number) {

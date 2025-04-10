@@ -22,10 +22,7 @@ export class Cell {
   }
 
   sumF() {
-    this.f =
-      this.g * Config.algorithm.weights.g +
-      this.t * Config.algorithm.weights.t +
-      this.h * Config.algorithm.weights.h;
+    this.f = this.g * Config.weights.g + this.t * Config.weights.t + this.h * Config.weights.h;
   }
 
   isEqual(otherCell: Cell) {

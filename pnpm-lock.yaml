@@ -9,11 +9,11 @@ importers:
   .:
     devDependencies:
       turbo:
-        specifier: ^2.4.4
+        specifier: ^2.5.0
         version: 2.5.0
       typescript:
         specifier: latest
-        version: 5.8.2
+        version: 5.8.3
 
   apps/sandbox:
     dependencies:
@@ -38,7 +38,47 @@ importers:
         version: 5.7.3
       vite:
         specifier: ^6.2.0
-        version: 6.2.5
+        version: 6.2.6
+
+  apps/test:
+    dependencies:
+      '@utilities/canvas2d':
+        specifier: workspace:*
+        version: link:../../utilities/canvas2d
+      '@utilities/collision':
+        specifier: workspace:*
+        version: link:../../utilities/collision
+      '@utilities/common':
+        specifier: workspace:*
+        version: link:../../utilities/common
+      '@utilities/easing':
+        specifier: workspace:*
+        version: link:../../utilities/easing
+      '@utilities/mathematics':
+        specifier: workspace:*
+        version: link:../../utilities/mathematics
+      '@utilities/noise':
+        specifier: workspace:*
+        version: link:../../utilities/noise
+      '@utilities/random':
+        specifier: workspace:*
+        version: link:../../utilities/random
+      '@utilities/structures':
+        specifier: workspace:*
+        version: link:../../utilities/structures
+      '@utilities/typescript-config':
+        specifier: workspace:*
+        version: link:../../utilities/typescript-config
+      '@utilities/webgl':
+        specifier: workspace:*
+        version: link:../../utilities/webgl
+    devDependencies:
+      typescript:
+        specifier: ~5.7.2
+        version: 5.7.3
+      vite:
+        specifier: ^6.2.0
+        version: 6.2.6
 
   apps/website:
     dependencies:
@@ -66,13 +106,13 @@ importers:
         version: 5.7.3
       vite:
         specifier: ^6.2.0
-        version: 6.2.5
+        version: 6.2.6
       vite-plugin-glsl:
         specifier: ^1.4.0
-        version: 1.4.0(rollup@4.39.0)(vite@6.2.5)
+        version: 1.4.0(rollup@4.39.0)(vite@6.2.6)
       vite-plugin-solid:
         specifier: ^2.11.2
-        version: 2.11.6(solid-js@1.9.5)(vite@6.2.5)
+        version: 2.11.6(solid-js@1.9.5)(vite@6.2.6)
 
   packages/easing-functions:
     dependencies:
@@ -94,7 +134,7 @@ importers:
     dependencies:
       '@utilities/mathematics':
         specifier: workspace:*
-        version: link:../../utilities/math
+        version: link:../../utilities/mathematics
       '@utilities/random':
         specifier: workspace:*
         version: link:../../utilities/random
@@ -120,7 +160,7 @@ importers:
         version: link:../../utilities/typescript-config
       typescript:
         specifier: latest
-        version: 5.8.2
+        version: 5.8.3
 
   packages/tsunagari:
     dependencies:
@@ -129,7 +169,7 @@ importers:
         version: link:../../utilities/collision
       '@utilities/mathematics':
         specifier: workspace:*
-        version: link:../../utilities/math
+        version: link:../../utilities/mathematics
       '@utilities/random':
         specifier: workspace:*
         version: link:../../utilities/random
@@ -142,7 +182,7 @@ importers:
         version: link:../../utilities/typescript-config
       typescript:
         specifier: latest
-        version: 5.8.2
+        version: 5.8.3
 
   utilities/canvas2d:
     devDependencies:
@@ -160,7 +200,7 @@ importers:
         version: link:../typescript-config
       typescript:
         specifier: latest
-        version: 5.8.2
+        version: 5.8.3
 
   utilities/common:
     devDependencies:
@@ -169,7 +209,7 @@ importers:
         version: link:../typescript-config
       typescript:
         specifier: latest
-        version: 5.8.2
+        version: 5.8.3
 
   utilities/easing:
     devDependencies:
@@ -180,14 +220,23 @@ importers:
         specifier: latest
         version: 5.8.3
 
-  utilities/math:
+  utilities/mathematics:
     devDependencies:
       '@utilities/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       typescript:
         specifier: latest
-        version: 5.8.2
+        version: 5.8.3
+
+  utilities/noise:
+    devDependencies:
+      '@utilities/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: latest
+        version: 5.8.3
 
   utilities/random:
     devDependencies:
@@ -196,7 +245,7 @@ importers:
         version: link:../typescript-config
       typescript:
         specifier: latest
-        version: 5.8.2
+        version: 5.8.3
 
   utilities/structures:
     devDependencies:
@@ -205,7 +254,7 @@ importers:
         version: link:../typescript-config
       typescript:
         specifier: latest
-        version: 5.8.2
+        version: 5.8.3
 
   utilities/typescript-config: {}
 
@@ -216,7 +265,7 @@ importers:
         version: link:../typescript-config
       typescript:
         specifier: latest
-        version: 5.8.2
+        version: 5.8.3
 
 packages:
 
@@ -613,8 +662,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
-  caniuse-lite@1.0.30001710:
-    resolution: {integrity: sha512-B5C0I0UmaGqHgo5FuqJ7hBd4L57A4dDD+Xi+XX1nXOoxGeDdY4Ko38qJYOyqznBVJEqON5p8P1x5zRR3+rsnxA==}
+  caniuse-lite@1.0.30001713:
+    resolution: {integrity: sha512-wCIWIg+A4Xr7NfhTuHdX+/FKh3+Op3LBbSp2N5Pfx6T/LhdQy3GTyoTg48BReaW/MyMNZAkTadsBtai3ldWK0Q==}
 
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
@@ -631,8 +680,8 @@ packages:
       supports-color:
         optional: true
 
-  electron-to-chromium@1.5.132:
-    resolution: {integrity: sha512-QgX9EBvWGmvSRa74zqfnG7+Eno0Ak0vftBll0Pt2/z5b3bEGYL6OUXLgKPtvx73dn3dvwrlyVkjPKRRlhLYTEg==}
+  electron-to-chromium@1.5.135:
+    resolution: {integrity: sha512-8gXUdEmvb+WCaYUhA0Svr08uSeRjM2w3x5uHOc1QbaEVzJXB8rgm5eptieXzyKoVEtinLvW6MtTcurA65PeS1Q==}
 
   entities@4.5.0:
     resolution: {integrity: sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==}
@@ -785,11 +834,6 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typescript@5.8.2:
-    resolution: {integrity: sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-
   typescript@5.8.3:
     resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
     engines: {node: '>=14.17'}
@@ -820,8 +864,8 @@ packages:
       '@testing-library/jest-dom':
         optional: true
 
-  vite@6.2.5:
-    resolution: {integrity: sha512-j023J/hCAa4pRIUH6J9HemwYfjB5llR2Ps0CWeikOtdR8+pAURAk0DoJC5/mm9kd+UgdnIy7d6HE4EAvlYhPhA==}
+  vite@6.2.6:
+    resolution: {integrity: sha512-9xpjNl3kR4rVDZgPNdTL0/c6ao4km69a/2ihNQbcANz8RuCOK3hQBmLSJf3bRKVQjVMda+YvizNE8AwvogcPbw==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
     peerDependencies:
@@ -1191,12 +1235,12 @@ snapshots:
 
   browserslist@4.24.4:
     dependencies:
-      caniuse-lite: 1.0.30001710
-      electron-to-chromium: 1.5.132
+      caniuse-lite: 1.0.30001713
+      electron-to-chromium: 1.5.135
       node-releases: 2.0.19
       update-browserslist-db: 1.1.3(browserslist@4.24.4)
 
-  caniuse-lite@1.0.30001710: {}
+  caniuse-lite@1.0.30001713: {}
 
   convert-source-map@2.0.0: {}
 
@@ -1206,7 +1250,7 @@ snapshots:
     dependencies:
       ms: 2.1.3
 
-  electron-to-chromium@1.5.132: {}
+  electron-to-chromium@1.5.135: {}
 
   entities@4.5.0: {}
 
@@ -1367,8 +1411,6 @@ snapshots:
 
   typescript@5.7.3: {}
 
-  typescript@5.8.2: {}
-
   typescript@5.8.3: {}
 
   update-browserslist-db@1.1.3(browserslist@4.24.4):
@@ -1379,14 +1421,14 @@ snapshots:
 
   validate-html-nesting@1.2.2: {}
 
-  vite-plugin-glsl@1.4.0(rollup@4.39.0)(vite@6.2.5):
+  vite-plugin-glsl@1.4.0(rollup@4.39.0)(vite@6.2.6):
     dependencies:
       '@rollup/pluginutils': 5.1.4(rollup@4.39.0)
-      vite: 6.2.5
+      vite: 6.2.6
     transitivePeerDependencies:
       - rollup
 
-  vite-plugin-solid@2.11.6(solid-js@1.9.5)(vite@6.2.5):
+  vite-plugin-solid@2.11.6(solid-js@1.9.5)(vite@6.2.6):
     dependencies:
       '@babel/core': 7.26.10
       '@types/babel__core': 7.20.5
@@ -1394,12 +1436,12 @@ snapshots:
       merge-anything: 5.1.7
       solid-js: 1.9.5
       solid-refresh: 0.6.3(solid-js@1.9.5)
-      vite: 6.2.5
-      vitefu: 1.0.6(vite@6.2.5)
+      vite: 6.2.6
+      vitefu: 1.0.6(vite@6.2.6)
     transitivePeerDependencies:
       - supports-color
 
-  vite@6.2.5:
+  vite@6.2.6:
     dependencies:
       esbuild: 0.25.2
       postcss: 8.5.3
@@ -1407,8 +1449,8 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  vitefu@1.0.6(vite@6.2.5):
+  vitefu@1.0.6(vite@6.2.6):
     optionalDependencies:
-      vite: 6.2.5
+      vite: 6.2.6
 
   yallist@3.1.1: {}
