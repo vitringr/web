@@ -1,20 +1,21 @@
-import { Structures } from "@utilities/structures";
+import { Vector2 } from "@utilities/vector";
+import { IPoint } from "@utilities/shapes";
 import { Random } from "@utilities/random";
 import Config from "./config";
 
 const MAX_VELOCITY_MAGNITUDE_SQUARED = Config.force.maxVelocity ** 2;
 
-export class Node implements Structures.Shapes.IPoint {
+export class Node implements IPoint {
   readonly id: number;
 
-  readonly position = Structures.Vector2.zero();
-  readonly velocity = Structures.Vector2.zero();
+  readonly position = Vector2.zero();
+  readonly velocity = Vector2.zero();
   readonly connectionsOut = new Set<Node>();
   readonly connectionsIn = new Set<Node>();
 
   inQuadtree: boolean = false;
 
-  constructor(id: number, position: Structures.Vector2) {
+  constructor(id: number, position: Vector2) {
     this.id = id;
     this.position.copy(position);
   }
@@ -47,7 +48,7 @@ export namespace Node {
   export function spawnRandom(): Node[] {
     const nodes: Node[] = [];
 
-    const randomPosition = Structures.Vector2.zero();
+    const randomPosition = Vector2.zero();
 
     for (let i = 0; i < Config.nodes.spawn.count; i++) {
       randomPosition.set(

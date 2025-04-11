@@ -5,8 +5,8 @@ export namespace Config {
   }
 
   export enum Runtime {
-    INSTANT,
     ANIMATED,
+    INSTANT,
   }
 
   export const runtime: Runtime = Runtime.ANIMATED;

@@ -1,8 +1,8 @@
-import { Structures } from "@utilities/structures";
+import { Quadtree } from "@utilities/quadtree";
 import Config from "./config";
 import { Node } from "./node";
 
-export namespace Quadtree {
+export namespace Field {
   export type Weight = {
     x: number;
     y: number;
@@ -10,14 +10,14 @@ export namespace Quadtree {
   };
 
   export function create() {
-    return new Structures.Quadtree<Node, Weight>(
+    return new Quadtree<Node, Weight>(
       { x: 0, y: 0, w: Config.width, h: Config.height },
       Config.quadtree.capacity,
     );
   }
 
   export function insertNodes(
-    quadtree: Structures.Quadtree<Node, any>,
+    quadtree: Quadtree<Node, any>,
     nodes: Node[],
   ) {
     for (const node of nodes) {
@@ -26,7 +26,7 @@ export namespace Quadtree {
     }
   }
 
-  export function setWeights(quadtree: Structures.Quadtree<Node, Weight>) {
+  export function setWeights(quadtree: Quadtree<Node, Weight>) {
     quadtree.leafRecursion((qt) => {
       const sum: Weight = { x: 0, y: 0, mass: 0 };
 

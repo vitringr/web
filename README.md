@@ -20,7 +20,7 @@ Can depend on `packages/`, `utilities/`, and external modules.
 
 Feature-rich libraries/projects/applications with dependencies.
 
-Can depend on `utilities/` and external packages.
+Can depend on `utilities/` and external modules.
 
 ### `/utilities/`
 

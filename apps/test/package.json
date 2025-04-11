@@ -10,15 +10,9 @@
   },
   "dependencies": {
     "@utilities/canvas2d": "workspace:*",
-    "@utilities/collision": "workspace:*",
-    "@utilities/common": "workspace:*",
-    "@utilities/easing": "workspace:*",
     "@utilities/mathematics": "workspace:*",
-    "@utilities/noise": "workspace:*",
     "@utilities/random": "workspace:*",
-    "@utilities/structures": "workspace:*",
-    "@utilities/typescript-config": "workspace:*",
-    "@utilities/webgl": "workspace:*"
+    "@utilities/vector": "workspace:*"
   },
   "devDependencies": {
     "@utilities/typescript-config": "workspace:*",

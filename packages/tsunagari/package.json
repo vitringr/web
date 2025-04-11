@@ -9,9 +9,11 @@
   },
   "dependencies": {
     "@utilities/mathematics": "workspace:*",
-    "@utilities/structures": "workspace:*",
     "@utilities/collision": "workspace:*",
-    "@utilities/random": "workspace:*"
+    "@utilities/quadtree": "workspace:*",
+    "@utilities/random": "workspace:*",
+    "@utilities/vector": "workspace:*",
+    "@utilities/shapes": "workspace:*"
   },
   "devDependencies": {
     "@utilities/typescript-config": "workspace:*",

@@ -1,6 +1,6 @@
 import { Mathematics } from "@utilities/mathematics";
-import { Structures } from "@utilities/structures";
 import { Canvas2D } from "@utilities/canvas2d";
+import { Vector2 } from "@utilities/vector";
 import { Random } from "@utilities/random";
 
 const canvasSize = 800;
@@ -29,12 +29,12 @@ context.fillRect(0, 0, canvasSize, canvasSize);
 // -- Pixels --
 // ------------
 
-const pixels: Structures.Vector2[][] = [];
+const pixels: Vector2[][] = [];
 
 for (let x = 0; x < pixelCount; x++) {
   pixels.push([]);
   for (let y = 0; y < pixelCount; y++) {
-    pixels[x].push(new Structures.Vector2(x * pixelSize, y * pixelSize));
+    pixels[x].push(new Vector2(x * pixelSize, y * pixelSize));
   }
 }
 
@@ -55,7 +55,7 @@ context.fillStyle = "#555555";
 // -- Vectors --
 // -------------
 
-const vectors: Structures.Vector2[][] = [];
+const vectors: Vector2[][] = [];
 
 const gridPixels = 4;
 const cornerCount = pixelCount / gridPixels;
@@ -64,7 +64,7 @@ for (let x = 0; x <= cornerCount; x++) {
   vectors.push([]);
   for (let y = 0; y <= cornerCount; y++) {
     const angle = Random.range(0, Mathematics.TAU);
-    vectors[x].push(new Structures.Vector2(Math.cos(angle), Math.sin(angle)));
+    vectors[x].push(new Vector2(Math.cos(angle), Math.sin(angle)));
   }
 }
 
@@ -90,7 +90,7 @@ for (let x = 0; x <= cornerCount; x++) {
 
 for (let x = 0; x < cornerCount; x++) {
   for (let y = 0; y < cornerCount; y++) {
-    // const cellCoordinate = new Structures.Vector2(
+    // const cellCoordinate = new Vector2(
     //   Math.floor(x / gridPixels),
     //   Math.floor(y / gridPixels),
     // );

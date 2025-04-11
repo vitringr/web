@@ -1,14 +1,15 @@
-import { Structures } from "@utilities/structures";
+import { Quadtree } from "@utilities/quadtree";
+import { Vector2 } from "@utilities/vector";
 import Config from "./config";
 import { Node } from "./node";
-import { Quadtree } from "./quadtree";
+import { Field } from "./quadtree";
 
 const EPSILON: number = 1e-10;
-const CENTER = new Structures.Vector2(Config.width, Config.height).scale(0.5);
+const CENTER = new Vector2(Config.width, Config.height).scale(0.5);
 
 export namespace Force {
   export function centerPull(node: Node) {
-    const velocity = Structures.Vector2.subtract(CENTER, node.position).scale(
+    const velocity = Vector2.subtract(CENTER, node.position).scale(
       Config.force.center.scalar,
     );
 
@@ -25,11 +26,11 @@ export namespace Force {
 
     for (const link of connections) {
       const distance = Math.max(
-        Structures.Vector2.distance(link.position, node.position),
+        Vector2.distance(link.position, node.position),
         EPSILON,
       );
 
-      const difference = Structures.Vector2.subtract(
+      const difference = Vector2.subtract(
         link.position,
         node.position,
       );
@@ -43,10 +44,10 @@ export namespace Force {
   }
 
   function distanceBasedVelocity(
-    from: Structures.Vector2,
-    to: Structures.Vector2,
-  ): Structures.Vector2 {
-    const difference = Structures.Vector2.subtract(from, to);
+    from: Vector2,
+    to: Vector2,
+  ): Vector2 {
+    const difference = Vector2.subtract(from, to);
 
     const safeMagnitude = Math.max(difference.magnitude(), EPSILON);
     const inverseMagnitude = 1 / safeMagnitude;
@@ -59,15 +60,15 @@ export namespace Force {
 
   export function repulsion(
     node: Node,
-    quadtree: Structures.Quadtree<Node, Quadtree.Weight>,
+    quadtree: Quadtree<Node, Field.Weight>,
   ) {
     const weight = quadtree.data;
     if (!weight || weight.mass <= 0) return;
 
-    const centerOfMass = new Structures.Vector2(weight.x, weight.y);
+    const centerOfMass = new Vector2(weight.x, weight.y);
 
     const distanceSquared = Math.max(
-      Structures.Vector2.distanceSquared(node.position, centerOfMass),
+      Vector2.distanceSquared(node.position, centerOfMass),
       EPSILON,
     );
 

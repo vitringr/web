@@ -1,6 +1,6 @@
 import { Random } from "@utilities/random";
-import { Cell } from "./cell";
 import { Config } from "./config";
+import { Cell } from "./cell";
 
 export namespace Terrain {
   export function randomBlocks(cells: Cell[][]) {

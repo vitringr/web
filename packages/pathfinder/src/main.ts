@@ -1,8 +1,8 @@
 import { Algorithm } from "./algorithm";
-import { Config } from "./config";
-import { Grid } from "./grid";
 import { Renderer } from "./render";
 import { Terrain } from "./terrain";
+import { Config } from "./config";
+import { Grid } from "./grid";
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = Config.width;

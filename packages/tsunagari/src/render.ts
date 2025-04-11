@@ -1,5 +1,6 @@
 import { Mathematics } from "@utilities/mathematics";
-import { Structures } from "@utilities/structures";
+import { Quadtree } from "@utilities/quadtree";
+import { Vector2 } from "@utilities/vector";
 import Config from "./config";
 import { Node } from "./node";
 
@@ -11,14 +12,14 @@ export class Renderer {
     this.context.fillRect(0, 0, Config.width, Config.height);
   }
 
-  private line(from: Structures.Vector2, to: Structures.Vector2) {
+  private line(from: Vector2, to: Vector2) {
     this.context.beginPath();
     this.context.lineTo(from.x, from.y);
     this.context.lineTo(to.x, to.y);
     this.context.stroke();
   }
 
-  private circle(at: Structures.Vector2, radius: number) {
+  private circle(at: Vector2, radius: number) {
     this.context.beginPath();
     this.context.arc(at.x, at.y, radius, 0, Mathematics.TAU);
     this.context.fill();
@@ -52,8 +53,8 @@ export class Renderer {
     this.context.strokeStyle = Config.render.velocity.color;
     this.context.lineWidth = Config.render.velocity.width;
 
-    const arrow = Structures.Vector2.zero();
-    const target = Structures.Vector2.zero();
+    const arrow = Vector2.zero();
+    const target = Vector2.zero();
 
     for (const node of nodes) {
       if (!node.inQuadtree) continue;
@@ -96,7 +97,7 @@ export class Renderer {
     }
   }
 
-  quadtrees(quadtree: Structures.Quadtree<any, any>) {
+  quadtrees(quadtree: Quadtree<any, any>) {
     this.context.strokeStyle = Config.render.quadtree.color;
     this.context.lineWidth = Config.render.quadtree.width;
     quadtree.rootRecursion((quadtree) => {

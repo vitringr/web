@@ -1,5 +1,5 @@
-import { Structures } from "@utilities/structures";
 import { Random } from "@utilities/random";
+import { Quadtree } from "@utilities/quadtree";
 
 const config = {
   FPS: 60,
@@ -46,7 +46,7 @@ function drawBackground(context: CanvasRenderingContext2D) {
 
 function drawQuadtreeBounds(
   context: CanvasRenderingContext2D,
-  qt: Structures.Quadtree<any, any>,
+  qt: Quadtree<any, any>,
 ) {
   const rectangle = qt.rectangle;
 
@@ -72,7 +72,7 @@ export function main(canvas: HTMLCanvasElement) {
 
   const context = setup(canvas);
 
-  const quadtree = new Structures.Quadtree<Particle, any>(
+  const quadtree = new Quadtree<Particle, any>(
     {
       x: 0,
       y: 0,

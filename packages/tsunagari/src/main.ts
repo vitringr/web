@@ -1,5 +1,5 @@
-import { Structures } from "@utilities/structures";
-import { Quadtree } from "./quadtree";
+import { Quadtree } from "@utilities/quadtree";
+import { Field } from "./quadtree";
 import { Renderer } from "./render";
 import { Force } from "./force";
 import { Input } from "./input";
@@ -16,7 +16,7 @@ function setupContext(canvas: HTMLCanvasElement) {
   return context;
 }
 
-function logQuadtrees(rootQuadtree: Structures.Quadtree<any, any>) {
+function logQuadtrees(rootQuadtree: Quadtree<any, any>) {
   let count: number = 0;
   rootQuadtree.rootRecursion(() => {
     count++;
@@ -27,7 +27,7 @@ function logQuadtrees(rootQuadtree: Structures.Quadtree<any, any>) {
 export function main(canvas: HTMLCanvasElement) {
   const context = setupContext(canvas);
   const renderer = new Renderer(context);
-  const quadtree = Quadtree.create();
+  const quadtree = Field.create();
   const input = new Input(canvas);
   const nodes: Node[] = [];
 
@@ -36,8 +36,8 @@ export function main(canvas: HTMLCanvasElement) {
 
   const loop = () => {
     quadtree.reset();
-    Quadtree.insertNodes(quadtree, nodes);
-    Quadtree.setWeights(quadtree);
+    Field.insertNodes(quadtree, nodes);
+    Field.setWeights(quadtree);
 
     for (const node of nodes) {
       Config.force.center.active && Force.centerPull(node);

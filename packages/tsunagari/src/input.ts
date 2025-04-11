@@ -1,10 +1,12 @@
-import { Structures } from "@utilities/structures";
-import Config from "./config";
 import { Collision } from "@utilities/collision";
+import { Rectangle } from "@utilities/shapes";
+import { Quadtree } from "@utilities/quadtree";
+import { Vector2 } from "@utilities/vector";
+import Config from "./config";
 import { Node } from "./node";
 
 export class Input {
-  position = Structures.Vector2.infinity();
+  position = Vector2.infinity();
   isClicked: boolean = false;
 
   targetedNodeID: number | null = null;
@@ -30,7 +32,7 @@ export class Input {
     });
   }
 
-  main(quadtree: Structures.Quadtree<Node, any>, nodes: Node[]) {
+  main(quadtree: Quadtree<Node, any>, nodes: Node[]) {
     const inCanvas = Collision.point_rectangle(
       this.position.x,
       this.position.y,
@@ -50,7 +52,7 @@ export class Input {
 
     this.targetedNodeID = null;
 
-    const targetArea: Structures.Shapes.Rectangle = {
+    const targetArea: Rectangle = {
       x: this.position.x - Config.render.node.radius,
       y: this.position.y - Config.render.node.radius,
       w: Config.render.node.radius * 2,

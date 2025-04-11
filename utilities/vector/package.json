@@ -1,5 +1,5 @@
 {
-  "name": "@utilities/structures",
+  "name": "@utilities/vector",
   "type": "module",
   "private": true,
   "exports": "./src/index.ts",
