@@ -44,8 +44,8 @@ export default {
       width: 3.0,
     },
     quadtree: {
-      display: true,
-      color: "#00EEEE",
+      display: false,
+      color: "#00EE00",
       width: 0.5,
     },
     velocity: {

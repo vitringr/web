@@ -8,7 +8,7 @@ export namespace Config {
 
   export const radius = 8;
 
-  export const increment = 0.004;
+  export const increment = 0.007;
 
   export const text = {
     x: 300,

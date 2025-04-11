@@ -8,6 +8,6 @@ const canvas = document.getElementById(canvasID) as HTMLCanvasElement;
 if (!canvas) throw `Cannot get #${canvasID}`;
 
 // QuadtreeSimulation.main(canvas)
-// EasingFunctions.main(canvas);
 // Pathfinder.main(canvas);
 Tsunagari.main(canvas);
+// EasingFunctions.main(canvas);

@@ -10,7 +10,7 @@ export class Renderer {
     if (cell.list === Cell.List.Closed) return Config.colors.closed;
     if (cell.type === Cell.Type.Empty) return Config.colors.empty;
     if (cell.type === Cell.Type.Rough) return Config.colors.rough;
-    return "#FF00FF";
+    return Config.colors.debug;
   }
 
   drawCell(cell: Cell) {

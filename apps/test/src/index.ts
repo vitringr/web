@@ -2,85 +2,179 @@ import { Mathematics } from "@utilities/mathematics";
 import { Canvas2D } from "@utilities/canvas2d";
 import { Vector2 } from "@utilities/vector";
 import { Random } from "@utilities/random";
-
-const canvasSize = 800;
-
-const pixelSize = 20;
-const pixelCount = canvasSize / pixelSize;
+import { Config } from "./config";
 
 // -----------
 // -- Setup --
 // -----------
 
-const canvasID = "mainCanvas";
-const canvas = document.getElementById(canvasID) as HTMLCanvasElement;
-if (!canvas) throw `Cannot get #${canvasID}`;
+const pixelWidth = Config.width / Config.pixelsPerRow;
+const cellWidth = Config.width / Config.cellsPerRow;
 
-canvas.width = canvasSize;
-canvas.height = canvasSize;
+function setupContext() {
+  const canvasID = "mainCanvas";
+  const canvas = document.getElementById(canvasID) as HTMLCanvasElement;
+  if (!canvas) throw `Cannot get #${canvasID}`;
 
-const context = canvas.getContext("2d");
-if (!context) throw "Cannot get 2d context";
+  canvas.width = canvas.height = Config.width;
 
-context.fillStyle = "#111111";
-context.fillRect(0, 0, canvasSize, canvasSize);
+  const context = canvas.getContext("2d");
+  if (!context) throw "Cannot get 2d context";
 
-// ------------
-// -- Pixels --
-// ------------
+  context.fillStyle = "#111111";
+  context.fillRect(0, 0, Config.width, Config.width);
 
-const pixels: Vector2[][] = [];
+  return context;
+}
 
-for (let x = 0; x < pixelCount; x++) {
-  pixels.push([]);
-  for (let y = 0; y < pixelCount; y++) {
-    pixels[x].push(new Vector2(x * pixelSize, y * pixelSize));
+function getColor(value: number) {
+  const byte = Math.floor(value * 255);
+  return `rgb(${byte},${byte},${byte})`;
+}
+
+class Pixel {
+  static createAll() {
+    const pixels: Pixel[][] = [];
+
+    for (let x = 0; x < Config.pixelsPerRow; x++) {
+      pixels.push([]);
+      for (let y = 0; y < Config.pixelsPerRow; y++) {
+        pixels[x].push(new Pixel(x, y));
+      }
+    }
+
+    return pixels;
+  }
+
+  static renderAll(pixels: Pixel[][]) {
+    for (const row of pixels) {
+      for (const pixel of row) {
+        pixel.render();
+      }
+    }
+
+    if (!Config.pixelLines) return;
+
+    context.strokeStyle = Config.colors.pixelBorder;
+    context.lineWidth = Config.pixelBorderWidth;
+
+    for (let x = 0; x <= Config.pixelsPerRow; x++) {
+      Canvas2D.line(context, 0, x * pixelWidth, Config.width, x * pixelWidth);
+    }
+
+    for (let y = 0; y <= Config.pixelsPerRow; y++) {
+      Canvas2D.line(context, y * pixelWidth, 0, y * pixelWidth, Config.width);
+    }
+  }
+
+  readonly position = Vector2.zero();
+
+  color: number = 0.1;
+  // color = Random.range(0, 1);
+
+  constructor(
+    readonly x: number,
+    readonly y: number,
+  ) {
+    this.position.set(x * pixelWidth, y * pixelWidth);
+  }
+
+  render() {
+    context.fillStyle = getColor(this.color);
+    context.fillRect(this.position.x, this.position.y, pixelWidth, pixelWidth);
   }
 }
 
-context.strokeStyle = "#FFFFFF";
-context.lineWidth = 0.1;
+class Gradient {
+  static createAll() {
+    const gradients: Gradient[][] = [];
 
-for (let x = 0; x < pixelCount; x++) {
-  Canvas2D.line(context, x * pixelSize, 0, x * pixelSize, canvasSize);
-}
+    for (let x = 0; x <= Config.cellsPerRow; x++) {
+      gradients.push([]);
+      for (let y = 0; y <= Config.cellsPerRow; y++) {
+        gradients[x].push(new Gradient(x, y));
+      }
+    }
 
-for (let y = 0; y < pixelCount; y++) {
-  Canvas2D.line(context, 0, y * pixelSize, canvasSize, y * pixelSize);
-}
+    return gradients;
+  }
 
-context.fillStyle = "#555555";
+  static renderAll(gradients: Gradient[][]) {
+    context.strokeStyle = context.fillStyle = Config.colors.gradient;
+    context.lineWidth = Config.gradientArrowWidth;
 
-// -------------
-// -- Vectors --
-// -------------
+    for (const row of gradients) {
+      for (const cell of row) {
+        cell.render();
+      }
+    }
+  }
 
-const vectors: Vector2[][] = [];
+  readonly vector = Vector2.zero();
+  readonly position = Vector2.zero();
 
-const gridPixels = 4;
-const cornerCount = pixelCount / gridPixels;
+  constructor(
+    readonly x: number,
+    readonly y: number,
+  ) {
+    this.position.set(x * cellWidth, y * cellWidth);
 
-for (let x = 0; x <= cornerCount; x++) {
-  vectors.push([]);
-  for (let y = 0; y <= cornerCount; y++) {
     const angle = Random.range(0, Mathematics.TAU);
-    vectors[x].push(new Vector2(Math.cos(angle), Math.sin(angle)));
+    this.vector.set(Math.cos(angle), Math.sin(angle));
+  }
+
+  render() {
+    Canvas2D.fillCircle(
+      context,
+      this.position.x,
+      this.position.y,
+      Config.gradientCircle,
+    );
+
+    const arrow = this.vector
+      .clone()
+      .scale(Config.gradientArrowLength)
+      .add(this.position);
+    Canvas2D.line(context, this.position.x, this.position.y, arrow.x, arrow.y);
   }
 }
 
-context.strokeStyle = "#909090";
-context.lineWidth = 1;
+class Cell {
+  static createAll() {
+    const cells: Cell[][] = [];
 
-for (let x = 0; x <= cornerCount; x++) {
-  for (let y = 0; y <= cornerCount; y++) {
-    const xOrigin = x * pixelSize * gridPixels;
-    const yOrigin = y * pixelSize * gridPixels;
+    for (let x = 0; x < Config.cellsPerRow; x++) {
+      cells.push([]);
+      for (let y = 0; y < Config.cellsPerRow; y++) {
+        cells[x].push(new Cell(x, y));
+      }
+    }
 
-    const arrow = vectors[x][y].clone().scale(12).increase(xOrigin, yOrigin);
+    return cells;
+  }
 
-    Canvas2D.fillCircle(context, xOrigin, yOrigin, 3);
+  static renderAll(cells: Cell[][]) {
+    context.strokeStyle = Config.colors.cellBorder;
 
-    Canvas2D.line(context, xOrigin, yOrigin, arrow.x, arrow.y);
+    for (const row of cells) {
+      for (const cell of row) {
+        cell.render();
+      }
+    }
+  }
+
+  readonly position = Vector2.zero();
+  // color = Random.range(0, 1);
+
+  constructor(
+    readonly x: number,
+    readonly y: number,
+  ) {
+    this.position.set(x * cellWidth, y * cellWidth);
+  }
+
+  render() {
+    context.strokeRect(this.position.x, this.position.y, cellWidth, cellWidth);
   }
 }
 
@@ -88,16 +182,19 @@ for (let x = 0; x <= cornerCount; x++) {
 // -- Main --
 // ----------
 
-for (let x = 0; x < cornerCount; x++) {
-  for (let y = 0; y < cornerCount; y++) {
-    // const cellCoordinate = new Vector2(
-    //   Math.floor(x / gridPixels),
-    //   Math.floor(y / gridPixels),
-    // );
+const context = setupContext();
 
-    // const tl = vectors[cellCoordinate.x + 0][cellCoordinate.y + 0];
-    // const tr = vectors[cellCoordinate.x + 1][cellCoordinate.y + 0];
-    // const bl = vectors[cellCoordinate.x + 0][cellCoordinate.y + 1];
-    // const br = vectors[cellCoordinate.x + 1][cellCoordinate.y + 1];
-  }
-}
+const pixels = Pixel.createAll();
+const cells = Cell.createAll();
+const gradients = Gradient.createAll();
+
+const target = pixels[3][2];
+target.color = 0.6;
+
+// ------------
+// -- Render --
+// ------------
+
+Pixel.renderAll(pixels);
+Cell.renderAll(cells);
+Gradient.renderAll(gradients);
