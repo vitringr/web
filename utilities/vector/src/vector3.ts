@@ -62,29 +62,12 @@ export class Vector3 {
     public z: number,
   ) { }
 
-  get r() {
-    return this.x;
-  }
-
-  set r(value: number) {
-    this.x = value;
-  }
-
-  get g() {
-    return this.y;
-  }
-
-  set g(value: number) {
-    this.y = value;
-  }
-
-  get b() {
-    return this.z;
-  }
-
-  set b(value: number) {
-    this.z = value;
-  }
+  get r() { return this.x; }
+  set r(value: number) { this.x = value; }
+  get g() { return this.y; }
+  set g(value: number) { this.y = value; }
+  get b() { return this.z; }
+  set b(value: number) { this.z = value; }
 
   clone() {
     return new Vector3(this.x, this.y, this.z);

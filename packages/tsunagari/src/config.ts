@@ -1,6 +1,6 @@
 export default {
-  width: 980,
-  height: 980,
+  width: 900,
+  height: 900,
 
   log: {
     quadtrees: false,
@@ -44,8 +44,8 @@ export default {
       width: 3.0,
     },
     quadtree: {
-      display: false,
-      color: "#008000",
+      display: true,
+      color: "#00EEEE",
       width: 0.5,
     },
     velocity: {

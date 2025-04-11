@@ -57,21 +57,10 @@ export class Vector2 {
     public y: number,
   ) {}
 
-  get r() {
-    return this.x;
-  }
-
-  set r(value: number) {
-    this.x = value;
-  }
-
-  get g() {
-    return this.y;
-  }
-
-  set g(value: number) {
-    this.y = value;
-  }
+  get r() { return this.x; }
+  set r(value: number) { this.x = value; }
+  get g() { return this.y; }
+  set g(value: number) { this.y = value; }
 
   clone() {
     return new Vector2(this.x, this.y);
