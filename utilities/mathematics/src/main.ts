@@ -22,13 +22,27 @@ export function lerp(a: number, b: number, step: number) {
   return a + step * (b - a);
 }
 
-export function euclideanDistance(ax: number, ay: number, bx: number, by: number) {
+export function dot(ax: number, ay: number, bx: number, by: number) {
+  return ax * bx + ay * by;
+}
+
+export function euclideanDistance(
+  ax: number,
+  ay: number,
+  bx: number,
+  by: number,
+) {
   const xDifference = ax - bx;
   const yDifference = ay - by;
   return Math.sqrt(xDifference * xDifference + yDifference * yDifference);
 }
 
-export function manhattanDistance(ax: number, ay: number, bx: number, by: number) {
+export function manhattanDistance(
+  ax: number,
+  ay: number,
+  bx: number,
+  by: number,
+) {
   return Math.abs(ax - bx) + Math.abs(ay - by);
 }
 

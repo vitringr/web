@@ -2,6 +2,7 @@ import { Mathematics } from "@utilities/mathematics";
 import { Canvas2D } from "@utilities/canvas2d";
 import { Vector2 } from "@utilities/vector";
 import { Random } from "@utilities/random";
+import { Colors } from "@utilities/colors";
 import { Config } from "./config";
 
 // -----------
@@ -24,11 +25,6 @@ function setupContext(canvas: HTMLCanvasElement) {
   return context;
 }
 
-function getColor(value: number) {
-  const byte = Math.floor(value * 255);
-  return `rgb(${byte},${byte},${byte})`;
-}
-
 class Pixel {
   static createAll() {
     const pixels: Pixel[][] = [];
@@ -43,15 +39,15 @@ class Pixel {
     return pixels;
   }
 
-  static renderAll(pixels: Pixel[][]) {
+  static renderAll(context: CanvasRenderingContext2D, pixels: Pixel[][]) {
     for (const row of pixels) {
       for (const pixel of row) {
-        pixel.render();
+        pixel.render(context);
       }
     }
+  }
 
-    if (!Config.pixelLines) return;
-
+  static renderPixelLines(context: CanvasRenderingContext2D) {
     context.strokeStyle = Config.colors.pixelBorder;
     context.lineWidth = Config.pixelBorderWidth;
 
@@ -66,8 +62,7 @@ class Pixel {
 
   readonly position = Vector2.zero();
 
-  color: number = 0.1;
-  // color = Random.range(0, 1);
+  color: number = 0;
 
   constructor(
     readonly x: number,
@@ -76,8 +71,8 @@ class Pixel {
     this.position.set(x * pixelWidth, y * pixelWidth);
   }
 
-  render() {
-    context.fillStyle = getColor(this.color);
+  render(context: CanvasRenderingContext2D) {
+    context.fillStyle = Colors.getRGBGrayscale(this.color);
     context.fillRect(this.position.x, this.position.y, pixelWidth, pixelWidth);
   }
 }
@@ -96,15 +91,27 @@ class Gradient {
     return gradients;
   }
 
-  static renderAll(gradients: Gradient[][]) {
+  static renderAll(context: CanvasRenderingContext2D, gradients: Gradient[][]) {
     context.strokeStyle = context.fillStyle = Config.colors.gradient;
     context.lineWidth = Config.gradientArrowWidth;
 
     for (const row of gradients) {
       for (const cell of row) {
-        cell.render();
+        cell.render(context);
       }
     }
+  }
+
+  static getTargetGradients(gradients: Gradient[][], x: number, y: number) {
+    const xCell = Math.floor(x / pixelsPerCell);
+    const yCell = Math.floor(y / pixelsPerCell);
+
+    return [
+      gradients[xCell][yCell],
+      gradients[xCell + 1][yCell],
+      gradients[xCell][yCell + 1],
+      gradients[xCell + 1][yCell + 1],
+    ];
   }
 
   readonly vector = Vector2.zero();
@@ -120,7 +127,7 @@ class Gradient {
     this.vector.set(Math.cos(angle), Math.sin(angle));
   }
 
-  render() {
+  render(context: CanvasRenderingContext2D) {
     Canvas2D.fillCircle(
       context,
       this.position.x,
@@ -150,18 +157,24 @@ class Cell {
     return cells;
   }
 
-  static renderAll(cells: Cell[][]) {
+  static renderAll(context: CanvasRenderingContext2D, cells: Cell[][]) {
     context.strokeStyle = Config.colors.cellBorder;
 
     for (const row of cells) {
       for (const cell of row) {
-        cell.render();
+        cell.render(context);
       }
     }
   }
 
+  static getTargetCell(cells: Cell[][], x: number, y: number) {
+    const xCell = Math.floor(x / pixelsPerCell);
+    const yCell = Math.floor(y / pixelsPerCell);
+
+    return cells[xCell][yCell];
+  }
+
   readonly position = Vector2.zero();
-  // color = Random.range(0, 1);
 
   constructor(
     readonly x: number,
@@ -170,78 +183,54 @@ class Cell {
     this.position.set(x * cellWidth, y * cellWidth);
   }
 
-  render() {
+  render(context: CanvasRenderingContext2D) {
     context.strokeRect(this.position.x, this.position.y, cellWidth, cellWidth);
   }
 }
 
-// ----------
-// -- Main --
-// ----------
+export function main(canvas: HTMLCanvasElement) {
+  const context = setupContext(canvas);
 
-const context = setupContext();
+  const pixels = Pixel.createAll();
+  const cells = Cell.createAll();
+  const gradients = Gradient.createAll();
 
-const pixels = Pixel.createAll();
-const cells = Cell.createAll();
-const gradients = Gradient.createAll();
+  for (const row of pixels) {
+    for (const pixel of row) {
+      const xPos = (pixel.x % pixelsPerCell) / pixelsPerCell;
+      const yPos = (pixel.y % pixelsPerCell) / pixelsPerCell;
 
-function getTargetCell(x: number, y: number) {
-  const xCell = Math.floor(x / pixelsPerCell);
-  const yCell = Math.floor(y / pixelsPerCell);
+      const [g00, g10, g01, g11] = Gradient.getTargetGradients(
+        gradients,
+        pixel.x,
+        pixel.y,
+      );
 
-  return cells[xCell][yCell];
-}
+      const d00 = new Vector2(xPos, yPos);
+      const d10 = new Vector2(xPos - 1, yPos);
+      const d01 = new Vector2(xPos, yPos - 1);
+      const d11 = new Vector2(xPos - 1, yPos - 1);
 
-function getTargetGradients(x: number, y: number) {
-  const xCell = Math.floor(x / pixelsPerCell);
-  const yCell = Math.floor(y / pixelsPerCell);
+      const dot00 = Mathematics.dot(g00.vector.x, g00.vector.y, d00.x, d00.y);
+      const dot10 = Mathematics.dot(g10.vector.x, g10.vector.y, d10.x, d10.y);
+      const dot01 = Mathematics.dot(g01.vector.x, g01.vector.y, d01.x, d01.y);
+      const dot11 = Mathematics.dot(g11.vector.x, g11.vector.y, d11.x, d11.y);
 
-  return [
-    gradients[xCell][yCell],
-    gradients[xCell + 1][yCell],
-    gradients[xCell][yCell + 1],
-    gradients[xCell + 1][yCell + 1],
-  ];
-}
+      function interpolate(a: number, b: number, t: number) {
+        const t2 = t * t * (3 - 2 * t);
+        return a + (b - a) * t2;
+      }
 
-function dot(ax: number, ay: number, bx: number, by: number) {
-  return ax * bx + ay * by;
-}
+      const ix0 = interpolate(dot00, dot10, xPos);
+      const ix1 = interpolate(dot01, dot11, xPos);
+      const value = interpolate(ix0, ix1, yPos);
 
-for (const row of pixels) {
-  for (const pixel of row) {
-    const xPos = (pixel.x % pixelsPerCell) / pixelsPerCell;
-    const yPos = (pixel.y % pixelsPerCell) / pixelsPerCell;
-
-    const [g00, g10, g01, g11] = getTargetGradients(pixel.x, pixel.y);
-
-    const d00 = new Vector2(xPos, yPos);
-    const d10 = new Vector2(xPos - 1, yPos);
-    const d01 = new Vector2(xPos, yPos - 1);
-    const d11 = new Vector2(xPos - 1, yPos - 1);
-
-    const dot00 = dot(g00.vector.x, g00.vector.y, d00.x, d00.y);
-    const dot10 = dot(g10.vector.x, g10.vector.y, d10.x, d10.y);
-    const dot01 = dot(g01.vector.x, g01.vector.y, d01.x, d01.y);
-    const dot11 = dot(g11.vector.x, g11.vector.y, d11.x, d11.y);
-
-    function interpolate(a: number, b: number, t: number) {
-      const t2 = t * t * (3 - 2 * t);
-      return a + (b - a) * t2;
+      pixel.color = (value + 1) / 2;
     }
-
-    const ix0 = interpolate(dot00, dot10, xPos);
-    const ix1 = interpolate(dot01, dot11, xPos);
-    const value = interpolate(ix0, ix1, yPos);
-
-    pixel.color = (value + 1) / 2;
   }
+
+  Pixel.renderAll(context, pixels);
+  Config.renderCells && Cell.renderAll(context, cells);
+  Config.renderPixelLines && Pixel.renderPixelLines(context);
+  Config.renderGradients && Gradient.renderAll(context, gradients);
 }
-
-// ------------
-// -- Render --
-// ------------
-
-Pixel.renderAll(pixels);
-// Cell.renderAll(cells);
-// Gradient.renderAll(gradients);

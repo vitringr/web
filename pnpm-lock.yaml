@@ -20,6 +20,9 @@ importers:
       '@packages/easing-functions':
         specifier: workspace:*
         version: link:../../packages/easing-functions
+      '@packages/learning-noise':
+        specifier: workspace:*
+        version: link:../../packages/learning-noise
       '@packages/pathfinder':
         specifier: workspace:*
         version: link:../../packages/pathfinder
@@ -29,31 +32,6 @@ importers:
       '@packages/tsunagari':
         specifier: workspace:*
         version: link:../../packages/tsunagari
-    devDependencies:
-      '@utilities/typescript-config':
-        specifier: workspace:*
-        version: link:../../utilities/typescript-config
-      typescript:
-        specifier: ~5.7.2
-        version: 5.7.3
-      vite:
-        specifier: ^6.2.0
-        version: 6.2.6
-
-  apps/test:
-    dependencies:
-      '@utilities/canvas2d':
-        specifier: workspace:*
-        version: link:../../utilities/canvas2d
-      '@utilities/mathematics':
-        specifier: workspace:*
-        version: link:../../utilities/mathematics
-      '@utilities/random':
-        specifier: workspace:*
-        version: link:../../utilities/random
-      '@utilities/vector':
-        specifier: workspace:*
-        version: link:../../utilities/vector
     devDependencies:
       '@utilities/typescript-config':
         specifier: workspace:*
@@ -117,6 +95,9 @@ importers:
       '@utilities/canvas2d':
         specifier: workspace:*
         version: link:../../utilities/canvas2d
+      '@utilities/colors':
+        specifier: workspace:*
+        version: link:../../utilities/colors
       '@utilities/mathematics':
         specifier: workspace:*
         version: link:../../utilities/mathematics

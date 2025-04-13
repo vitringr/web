@@ -9,7 +9,9 @@ export namespace Config {
   // -- Render --
   // ------------
 
-  export const pixelLines = false;
+  export const renderCells = false;
+  export const renderGradients = false;
+  export const renderPixelLines = false;
 
   export const gradientArrowWidth = 2;
   export const gradientArrowLength = 20;

@@ -11,7 +11,8 @@
     "@utilities/canvas2d": "workspace:*",
     "@utilities/mathematics": "workspace:*",
     "@utilities/random": "workspace:*",
-    "@utilities/vector": "workspace:*"
+    "@utilities/vector": "workspace:*",
+    "@utilities/colors": "workspace:*"
   },
   "devDependencies": {
     "@utilities/typescript-config": "workspace:*",

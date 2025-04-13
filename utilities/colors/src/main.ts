@@ -1,7 +1,7 @@
 /*
 
-  For canvas context, prefer using RGB format.
-  Internally it converts hex strings to RGB/RGBA anyways.
+  For canvas context, prefer using the RGB format.
+  Internally it converts hex strings into RGB/RGBA anyways.
 
 */
 
