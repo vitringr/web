@@ -98,6 +98,9 @@ importers:
       '@utilities/colors':
         specifier: workspace:*
         version: link:../../utilities/colors
+      '@utilities/easing':
+        specifier: workspace:*
+        version: link:../../utilities/easing
       '@utilities/mathematics':
         specifier: workspace:*
         version: link:../../utilities/mathematics

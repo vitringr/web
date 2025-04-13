@@ -27,9 +27,9 @@ export class Pixel {
     }
   }
 
-  static renderPixelLines(context: CanvasRenderingContext2D) {
-    context.strokeStyle = Config.colors.pixelBorder;
-    context.lineWidth = Config.pixelBorderWidth;
+  static renderPixelBorders(context: CanvasRenderingContext2D) {
+    context.strokeStyle = Config.colors.pixelBorders;
+    context.lineWidth = Config.pixelBordersWidth;
 
     for (let x = 0; x <= Config.pixelsPerRow; x++) {
       Canvas2D.line(context, 0, x * pixelWidth, Config.width, x * pixelWidth);

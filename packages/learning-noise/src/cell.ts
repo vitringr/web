@@ -19,7 +19,7 @@ export class Cell {
   }
 
   static renderAll(context: CanvasRenderingContext2D, cells: Cell[][]) {
-    context.strokeStyle = Config.colors.cellBorder;
+    context.strokeStyle = Config.colors.cellBorders;
 
     for (const row of cells) {
       for (const cell of row) {

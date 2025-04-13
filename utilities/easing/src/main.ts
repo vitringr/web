@@ -10,6 +10,18 @@ export function linear(step: number) {
   return step;
 }
 
+// ----------------
+// -- Smoothstep --
+// ----------------
+
+export function smoothstep(step: number) {
+  return step * step * (3 - 2 * step);
+}
+
+export function smootherstep(step: number) {
+  return step * step * step * (step * (step * 6 - 15) + 10);
+}
+
 // ---------------
 // -- Quadratic --
 // ---------------
@@ -153,7 +165,7 @@ export function easeInOutBack(step: number) {
   return step < 0.5
     ? (4 * step * step * ((c2 + 1) * 2 * step - c2)) / 2
     : ((2 * step - 2) * (2 * step - 2) * ((c2 + 1) * (step * 2 - 2) + c2) + 2) /
-        2;
+    2;
 }
 
 // -------------
@@ -174,7 +186,7 @@ export function easeOutElastic(step: number) {
   if (step === 1) return 1;
   return (
     Math.pow(2, -10 * step) *
-      Math.sin(((step * 10 - 0.75) * (2 * Math.PI)) / 3) +
+    Math.sin(((step * 10 - 0.75) * (2 * Math.PI)) / 3) +
     1
   );
 }
@@ -184,13 +196,13 @@ export function easeInOutElastic(step: number) {
   if (step === 1) return 1;
   return step < 0.5
     ? -(
-        Math.pow(2, 20 * step - 10) *
-        Math.sin(((20 * step - 11.125) * (2 * Math.PI)) / 4.5)
-      ) / 2
+      Math.pow(2, 20 * step - 10) *
+      Math.sin(((20 * step - 11.125) * (2 * Math.PI)) / 4.5)
+    ) / 2
     : (Math.pow(2, -20 * step + 10) *
-        Math.sin(((20 * step - 11.125) * (2 * Math.PI)) / 4.5)) /
-        2 +
-        1;
+      Math.sin(((20 * step - 11.125) * (2 * Math.PI)) / 4.5)) /
+    2 +
+    1;
 }
 
 // ------------

@@ -22,12 +22,12 @@ export class Gradient {
   }
 
   static renderAll(context: CanvasRenderingContext2D, gradients: Gradient[][]) {
-    context.strokeStyle = context.fillStyle = Config.colors.gradient;
+    context.strokeStyle = context.fillStyle = Config.colors.gradients;
     context.lineWidth = Config.gradientArrowWidth;
 
     for (const row of gradients) {
-      for (const cell of row) {
-        cell.render(context);
+      for (const gradient of row) {
+        gradient.render(context);
       }
     }
   }
@@ -62,7 +62,7 @@ export class Gradient {
       context,
       this.position.x,
       this.position.y,
-      Config.gradientCircle,
+      Config.gradientCircleRadius,
     );
 
     const arrow = this.vector
