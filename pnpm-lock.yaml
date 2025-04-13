@@ -112,6 +112,28 @@ importers:
         specifier: latest
         version: 5.8.3
 
+  packages/learning-noise:
+    dependencies:
+      '@utilities/canvas2d':
+        specifier: workspace:*
+        version: link:../../utilities/canvas2d
+      '@utilities/mathematics':
+        specifier: workspace:*
+        version: link:../../utilities/mathematics
+      '@utilities/random':
+        specifier: workspace:*
+        version: link:../../utilities/random
+      '@utilities/vector':
+        specifier: workspace:*
+        version: link:../../utilities/vector
+    devDependencies:
+      '@utilities/typescript-config':
+        specifier: workspace:*
+        version: link:../../utilities/typescript-config
+      typescript:
+        specifier: latest
+        version: 5.8.3
+
   packages/pathfinder:
     dependencies:
       '@utilities/mathematics':
@@ -182,6 +204,15 @@ importers:
         version: 5.8.3
 
   utilities/collision:
+    devDependencies:
+      '@utilities/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: latest
+        version: 5.8.3
+
+  utilities/colors:
     devDependencies:
       '@utilities/typescript-config':
         specifier: workspace:*

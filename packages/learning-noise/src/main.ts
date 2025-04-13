@@ -12,11 +12,7 @@ const pixelWidth = Config.width / Config.pixelsPerRow;
 const cellWidth = Config.width / Config.cellsPerRow;
 const pixelsPerCell = Config.pixelsPerRow / Config.cellsPerRow;
 
-function setupContext() {
-  const canvasID = "mainCanvas";
-  const canvas = document.getElementById(canvasID) as HTMLCanvasElement;
-  if (!canvas) throw `Cannot get #${canvasID}`;
-
+function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = canvas.height = Config.width;
 
   const context = canvas.getContext("2d");
