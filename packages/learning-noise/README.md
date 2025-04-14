@@ -2,7 +2,7 @@
 
 The goal of this project is to help one learn how noise generation works.
 
-- [ ] [Value Noise](https://en.wikipedia.org/wiki/Value_noise)
+- [x] [Value Noise](https://en.wikipedia.org/wiki/Value_noise)
 - [x] [Gradient Noise](https://en.wikipedia.org/wiki/Gradient_noise)
 - [ ] [Simplex Noise](https://en.wikipedia.org/wiki/Simplex_noise)
 - [ ] [Worley Noise](https://en.wikipedia.org/wiki/Worley_noise)

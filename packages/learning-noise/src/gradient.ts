@@ -72,4 +72,3 @@ export class Gradient {
     Canvas2D.line(context, this.position.x, this.position.y, arrow.x, arrow.y);
   }
 }
-

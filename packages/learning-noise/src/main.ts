@@ -1,11 +1,11 @@
 import { Mathematics } from "@utilities/mathematics";
 import { Vector2 } from "@utilities/vector";
 import { Easing } from "@utilities/easing";
+import { Gradient } from "./gradient";
 import { Config } from "./config";
 import { Pixel } from "./pixel";
-import { Cell } from "./cell";
-import { Gradient } from "./gradient";
 import { Value } from "./value";
+import { Cell } from "./cell";
 
 const pixelsPerCell = Config.pixelsPerRow / Config.cellsPerRow;
 
@@ -27,7 +27,7 @@ function easingFunction(stepValue: number) {
   return stepValue;
 }
 
-export function valueNoise(canvas: HTMLCanvasElement) {
+function valueNoise(canvas: HTMLCanvasElement) {
   const context = setupContext(canvas);
 
   const pixels = Pixel.createAll();
@@ -59,7 +59,7 @@ export function valueNoise(canvas: HTMLCanvasElement) {
   Config.renderValues && Value.renderAll(context, values);
 }
 
-export function gradientNoise(canvas: HTMLCanvasElement) {
+function gradientNoise(canvas: HTMLCanvasElement) {
   const context = setupContext(canvas);
 
   const pixels = Pixel.createAll();

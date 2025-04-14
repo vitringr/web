@@ -1,11 +1,3 @@
-export function lerp(a: number, b: number, step: number) {
-  return a + step * (b - a);
-}
-
-// ------------
-// -- Linear --
-// ------------
-
 export function linear(step: number) {
   return step;
 }
@@ -18,8 +10,14 @@ export function smoothstep(step: number) {
   return step * step * (3 - 2 * step);
 }
 
-export function smootherstep(step: number) {
+export function smoothstep2(step: number) {
   return step * step * step * (step * (step * 6 - 15) + 10);
+}
+
+export function smoothstep3(step: number) {
+  return (
+    step * step * step * step * (step * (step * (step * -20 + 70) - 84) + 35)
+  );
 }
 
 // ---------------
