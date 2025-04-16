@@ -14,8 +14,8 @@ export namespace Config {
   export const width = 500;
   export const height = 500;
 
-  export const cols = 50;
-  export const rows = 50;
+  export const cols = 30;
+  export const rows = 30;
 
   export const cellWidth = width / rows;
 

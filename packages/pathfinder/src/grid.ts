@@ -61,6 +61,36 @@ export namespace Grid {
     }
   }
 
+  export function setHexNeighbors() {
+    //prettier-ignore
+    for (let x = 0; x < Config.cols; x++) {
+      for (let y = 0; y < Config.rows; y++) {
+        const cell = cells[x][y];
+        const neighbors: Cell.Neighbor[] = [];
+
+        const isEven = y % 2 === 0;
+
+        const northEast = getCell(isEven ? x : x + 1, y - 1);
+        const east = getCell(x + 1, y);
+        const southEast = getCell(isEven ? x : x + 1, y + 1);
+        const southWest = getCell(isEven ? x - 1 : x, y + 1);
+        const west = getCell(x - 1, y);
+        const northWest = getCell(isEven ? x - 1 : x, y - 1);
+
+        neighbors.push(
+          northEast ? { cell: northEast, moveCost: 1 } : null,
+          east ? { cell: east, moveCost: 1 } : null,
+          southEast ? { cell: southEast, moveCost: 1 } : null,
+          southWest ? { cell: southWest, moveCost: 1 } : null,
+          west ? { cell: west, moveCost: 1 } : null,
+          northWest ? { cell: northWest, moveCost: 1 } : null,
+        );
+
+        cell.neighbors.push(...neighbors);
+      }
+    }
+  }
+
   export function precalculateDistances(target: Cell) {
     for (const row of cells) {
       for (const cell of row) {

@@ -6,7 +6,7 @@ export function line(
   by: number,
 ) {
   context.beginPath();
-  context.lineTo(ax, ay);
+  context.moveTo(ax, ay);
   context.lineTo(bx, by);
   context.stroke();
 }
@@ -34,10 +34,8 @@ export function fillCircle(
 }
 
 const SIN_60 = 0.8660254037844386;
-
 const hexCosinesFlat: number[] = [1, 0.5, -0.5, -1, -0.5, 0.5];
 const hexSinesFlat: number[] = [0, SIN_60, SIN_60, 0, -SIN_60, -SIN_60];
-
 const hexCosinesPointy: number[] = [SIN_60, SIN_60, 0, -SIN_60, -SIN_60, 0];
 const hexSinesPointy: number[] = [-0.5, 0.5, 1, 0.5, -0.5, -1];
 
