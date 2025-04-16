@@ -1,4 +1,9 @@
 export namespace Config {
+  export enum Grid {
+    RECTANGLE,
+    HEXAGON,
+  }
+
   export enum DistanceMethod {
     EUCLIDEAN,
     MANHATTAN,
@@ -8,6 +13,8 @@ export namespace Config {
     ANIMATED,
     INSTANT,
   }
+
+  export const grid: Grid = Grid.HEXAGON;
 
   export const runtime: Runtime = Runtime.ANIMATED;
 
@@ -29,7 +36,7 @@ export namespace Config {
     h: 10,
   } as const;
 
-  export const animationStepIncrement = 0.02;
+  export const animationStepIncrement = 0.03;
 
   export const colors = {
     debug: "#FF00FF",

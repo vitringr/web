@@ -23,7 +23,7 @@ export namespace Grid {
     return isValidCoordinate(x, y) ? cells[x][y] : null;
   }
 
-  export function setNeighbors() {
+  function setNeighborsRectangle() {
     //prettier-ignore
     for (let x = 0; x < Config.cols; x++) {
       for (let y = 0; y < Config.rows; y++) {
@@ -61,7 +61,7 @@ export namespace Grid {
     }
   }
 
-  export function setHexNeighbors() {
+  function setNeighborsHex() {
     //prettier-ignore
     for (let x = 0; x < Config.cols; x++) {
       for (let y = 0; y < Config.rows; y++) {
@@ -89,6 +89,11 @@ export namespace Grid {
         cell.neighbors.push(...neighbors);
       }
     }
+  }
+
+  export function setNeighbors() {
+    if (Config.grid === 0) return setNeighborsRectangle();
+    return setNeighborsHex();
   }
 
   export function precalculateDistances(target: Cell) {

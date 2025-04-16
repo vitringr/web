@@ -22,8 +22,7 @@ export async function main(canvas: HTMLCanvasElement) {
   const cells = Grid.createCells();
   const start = cells[0][0];
   const target = cells[Config.rows - 1][Config.cols - 1];
-  // Grid.setNeighbors();
-  Grid.setHexNeighbors();
+  Grid.setNeighbors();
   Grid.precalculateDistances(target);
 
   Terrain.randomBlocks(cells);

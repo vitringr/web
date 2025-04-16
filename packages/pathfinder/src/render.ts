@@ -1,8 +1,14 @@
 import { Mathematics } from "@utilities/mathematics";
+import { Canvas2D } from "@utilities/canvas2d";
 import { Easing } from "@utilities/easing";
 import { Config } from "./config";
 import { Cell } from "./cell";
-import { Canvas2D } from "@utilities/canvas2d";
+
+const hexOuterDiameter = Config.cellWidth * (2 - Mathematics.COS_30);
+const hexOuterRadius = hexOuterDiameter * 0.5;
+const hexInnerRadius = hexOuterRadius * Mathematics.COS_30;
+const hexInnerDiameter = hexInnerRadius * 2;
+const hexAdjacentJoin = hexOuterRadius * 1.5;
 
 export class Renderer {
   constructor(private context: CanvasRenderingContext2D) { }
@@ -16,7 +22,7 @@ export class Renderer {
     return Config.colors.debug;
   }
 
-  drawCell(cell: Cell) {
+  private drawCell(cell: Cell) {
     this.context.fillStyle = this.getColor(cell);
 
     if (cell.renderAnimationStep < 1) {
@@ -35,11 +41,8 @@ export class Renderer {
     this.context.fillRect(cell.renderCenterPosition.x, cell.renderCenterPosition.y, size, size);
   }
 
-  drawHexCell(cell: Cell) {
+  private drawHexCell(cell: Cell) {
     this.context.fillStyle = this.getColor(cell);
-
-    // WIP
-    this.context.strokeStyle = "yellow";
 
     if (cell.renderAnimationStep < 1) {
       cell.renderAnimationStep += Config.animationStepIncrement;
@@ -48,26 +51,33 @@ export class Renderer {
       cell.toRender = false;
     }
 
-    // WIP
-    const diameter = Config.cellWidth * (2 - Mathematics.COS_30)
-    const outerRadius = diameter * 0.5
-    const innerRadius = outerRadius * Mathematics.COS_30
-
     const isEven = cell.y % 2 === 0;
-    const xOffset = isEven ? 0 : innerRadius;
+    const xOffset = isEven ? 0 : hexInnerRadius;
 
-    const x = innerRadius + xOffset + cell.x * (innerRadius * 2);
-    const y = outerRadius + cell.y * (outerRadius * 1.5);
+    const x = hexInnerRadius + xOffset + cell.x * hexInnerDiameter;
+    const y = hexOuterRadius + cell.y * hexAdjacentJoin;
 
-    // WIP
-    Canvas2D.fillHex(this.context, x, y, outerRadius);
+    const size = Mathematics.lerp(0, hexOuterRadius, Easing.easeOutCubic(cell.renderAnimationStep));
+
+    Canvas2D.fillHex(this.context, x, y, size);
   }
 
   drawCells(cells: Cell[][]) {
+    if (Config.grid === 1) {
+      for (const row of cells) {
+        for (const cell of row) {
+          if (cell.toRender) {
+            this.drawHexCell(cell);
+          }
+        }
+      }
+      return;
+    }
+
     for (const row of cells) {
       for (const cell of row) {
         if (cell.toRender) {
-          this.drawHexCell(cell);
+          this.drawCell(cell);
         }
       }
     }
