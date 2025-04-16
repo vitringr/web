@@ -126,6 +126,9 @@ importers:
 
   packages/pathfinder:
     dependencies:
+      '@utilities/canvas2d':
+        specifier: workspace:*
+        version: link:../../utilities/canvas2d
       '@utilities/easing':
         specifier: workspace:*
         version: link:../../utilities/easing

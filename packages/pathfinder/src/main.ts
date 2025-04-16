@@ -4,6 +4,7 @@ import { Terrain } from "./terrain";
 import { Config } from "./config";
 import { Grid } from "./grid";
 
+
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = Config.width;
   canvas.height = Config.height;
@@ -16,6 +17,7 @@ function setupContext(canvas: HTMLCanvasElement) {
 
 export async function main(canvas: HTMLCanvasElement) {
   const context = setupContext(canvas);
+
   const renderer = new Renderer(context);
 
   const cells = Grid.createCells();
