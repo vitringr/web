@@ -1,6 +1,6 @@
 # Learning Noise
 
-The goal of this project is to help one learn how noise generation works.
+The goal of this project is to help one learn and visualize how noise generation works.
 
 - [x] [Value Noise](https://en.wikipedia.org/wiki/Value_noise)
 - [x] [Gradient Noise](https://en.wikipedia.org/wiki/Gradient_noise)

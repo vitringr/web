@@ -2,6 +2,7 @@ export const PI = 3.141592653589793;
 export const TAU = 6.283185307179586;
 
 export const SQRT_2 = 1.4142135623730951;
+export const SQRT_3 = 1.7320508075688772;
 
 export const SIN_60 = 0.8660254037844386;
 export const COS_60 = 0.5;

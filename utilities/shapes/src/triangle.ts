@@ -1,11 +1,17 @@
 export type Triangle = {
-  a: number;
-  b: number;
-  c: number;
+  ax: number;
+  ay: number;
+  bx: number;
+  by: number;
+  cx: number;
+  cy: number;
 };
 
 export interface ITriangle {
-  a: number;
-  b: number;
-  c: number;
+  ax: number;
+  ay: number;
+  bx: number;
+  by: number;
+  cx: number;
+  cy: number;
 }

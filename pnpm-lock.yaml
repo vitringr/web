@@ -29,6 +29,9 @@ importers:
       '@packages/quadtree-simulation':
         specifier: workspace:*
         version: link:../../packages/quadtree-simulation
+      '@packages/test':
+        specifier: workspace:*
+        version: link:../../packages/test
       '@packages/tsunagari':
         specifier: workspace:*
         version: link:../../packages/tsunagari
@@ -142,6 +145,28 @@ importers:
       '@utilities/random':
         specifier: workspace:*
         version: link:../../utilities/random
+    devDependencies:
+      '@utilities/typescript-config':
+        specifier: workspace:*
+        version: link:../../utilities/typescript-config
+      typescript:
+        specifier: latest
+        version: 5.8.3
+
+  packages/test:
+    dependencies:
+      '@utilities/canvas2d':
+        specifier: workspace:*
+        version: link:../../utilities/canvas2d
+      '@utilities/easing':
+        specifier: workspace:*
+        version: link:../../utilities/easing
+      '@utilities/mathematics':
+        specifier: workspace:*
+        version: link:../../utilities/mathematics
+      '@utilities/shapes':
+        specifier: workspace:*
+        version: link:../../utilities/shapes
     devDependencies:
       '@utilities/typescript-config':
         specifier: workspace:*
