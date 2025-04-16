@@ -34,20 +34,34 @@ export function fillCircle(
 }
 
 const SIN_60 = 0.8660254037844386;
-const hexCosines: number[] = [1, 0.5, -0.5, -1, -0.5, 0.5];
-const hexSines: number[] = [0, SIN_60, SIN_60, 0, -SIN_60, -SIN_60];
+
+const hexCosinesFlat: number[] = [1, 0.5, -0.5, -1, -0.5, 0.5];
+const hexSinesFlat: number[] = [0, SIN_60, SIN_60, 0, -SIN_60, -SIN_60];
+
+const hexCosinesPointy: number[] = [SIN_60, SIN_60, 0, -SIN_60, -SIN_60, 0];
+const hexSinesPointy: number[] = [-0.5, 0.5, 1, 0.5, -0.5, -1];
 
 export function fillHex(
   context: CanvasRenderingContext2D,
   x: number,
   y: number,
-  radius: number,
+  r: number,
+  flat: boolean = false,
 ) {
   context.beginPath();
-  context.moveTo(x + radius * hexCosines[0], y + radius * hexSines[0]);
-  for (let i = 1; i < 6; i++) {
-    context.lineTo(x + radius * hexCosines[i], y + radius * hexSines[i]);
+
+  if (flat) {
+    context.moveTo(x + r * hexCosinesFlat[0], y + r * hexSinesFlat[0]);
+    for (let i = 1; i < 6; i++) {
+      context.lineTo(x + r * hexCosinesFlat[i], y + r * hexSinesFlat[i]);
+    }
+  } else {
+    context.moveTo(x + r * hexCosinesPointy[0], y + r * hexSinesPointy[0]);
+    for (let i = 1; i < 6; i++) {
+      context.lineTo(x + r * hexCosinesPointy[i], y + r * hexSinesPointy[i]);
+    }
   }
+
   context.fill();
 }
 
@@ -55,13 +69,24 @@ export function hex(
   context: CanvasRenderingContext2D,
   x: number,
   y: number,
-  radius: number,
+  r: number,
+  flat: boolean = false,
 ) {
   context.beginPath();
-  context.moveTo(x + radius * hexCosines[0], y + radius * hexSines[0]);
-  for (let i = 1; i < 6; i++) {
-    context.lineTo(x + radius * hexCosines[i], y + radius * hexSines[i]);
+
+  if (flat) {
+    context.moveTo(x + r * hexCosinesFlat[0], y + r * hexSinesFlat[0]);
+    for (let i = 1; i < 6; i++) {
+      context.lineTo(x + r * hexCosinesFlat[i], y + r * hexSinesFlat[i]);
+    }
+    context.lineTo(x + r * hexCosinesFlat[0], y + r * hexSinesFlat[0]);
+  } else {
+    context.moveTo(x + r * hexCosinesPointy[0], y + r * hexSinesPointy[0]);
+    for (let i = 1; i < 6; i++) {
+      context.lineTo(x + r * hexCosinesPointy[i], y + r * hexSinesPointy[i]);
+    }
+    context.lineTo(x + r * hexCosinesPointy[0], y + r * hexSinesPointy[0]);
   }
-  context.lineTo(x + radius * hexCosines[0], y + radius * hexSines[0]);
+
   context.stroke();
 }
