@@ -85,6 +85,9 @@ importers:
       '@utilities/easing':
         specifier: workspace:*
         version: link:../../utilities/easing
+      '@utilities/mathematics':
+        specifier: workspace:*
+        version: link:../../utilities/mathematics
     devDependencies:
       '@utilities/typescript-config':
         specifier: workspace:*
@@ -123,12 +126,18 @@ importers:
 
   packages/pathfinder:
     dependencies:
+      '@utilities/easing':
+        specifier: workspace:*
+        version: link:../../utilities/easing
       '@utilities/mathematics':
         specifier: workspace:*
         version: link:../../utilities/mathematics
       '@utilities/random':
         specifier: workspace:*
         version: link:../../utilities/random
+      '@utilities/vector':
+        specifier: workspace:*
+        version: link:../../utilities/vector
     devDependencies:
       '@utilities/typescript-config':
         specifier: workspace:*

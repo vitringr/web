@@ -1,3 +1,4 @@
+import { Mathematics } from "@utilities/mathematics";
 import { Canvas2D } from "@utilities/canvas2d";
 import { Easing } from "@utilities/easing";
 import { Config } from "./config";
@@ -129,7 +130,7 @@ export function main(canvas: HTMLCanvasElement) {
     for (let i = 0; i < namedEasingFunctions.length; i++) {
       const y = getHeight(i);
 
-      const easing = Easing.lerp(
+      const easing = Mathematics.lerp(
         Config.left,
         Config.right,
         namedEasingFunctions[i].f(time),
@@ -137,7 +138,7 @@ export function main(canvas: HTMLCanvasElement) {
 
       Canvas2D.fillCircle(context, easing, y, Config.radius);
 
-      const linear = Easing.lerp(Config.left, Config.right, time);
+      const linear = Mathematics.lerp(Config.left, Config.right, time);
 
       Canvas2D.line(
         context,

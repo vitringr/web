@@ -14,8 +14,8 @@ export namespace Config {
   export const width = 500;
   export const height = 500;
 
-  export const cols = 40;
-  export const rows = 40;
+  export const cols = 80;
+  export const rows = 80;
 
   export const cellWidth = width / rows;
 
@@ -28,6 +28,8 @@ export namespace Config {
     t: 40,
     h: 10,
   } as const;
+
+  export const animationStepIncrement = 0.02;
 
   export const colors = {
     debug: "#FF00FF",

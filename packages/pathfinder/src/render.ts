@@ -1,8 +1,10 @@
+import { Mathematics } from "@utilities/mathematics";
+import { Easing } from "@utilities/easing";
 import { Cell } from "./cell";
 import { Config } from "./config";
 
 export class Renderer {
-  constructor(private context: CanvasRenderingContext2D) {}
+  constructor(private context: CanvasRenderingContext2D) { }
 
   private getColor(cell: Cell) {
     if (cell.type === Cell.Type.Block) return Config.colors.block;
@@ -15,20 +17,24 @@ export class Renderer {
 
   drawCell(cell: Cell) {
     this.context.fillStyle = this.getColor(cell);
-    this.context.fillRect(
-      cell.x * Config.cellWidth,
-      cell.y * Config.cellWidth,
-      Config.cellWidth,
-      Config.cellWidth,
-    );
+
+    if (cell.renderAnimationStep < 1) {
+      cell.renderAnimationStep += Config.animationStepIncrement;
+    } else {
+      cell.renderAnimationStep = 1;
+      cell.toRender = false;
+    }
+
+    const size = Mathematics.lerp(0, Config.cellWidth, Easing.easeOutCubic(cell.renderAnimationStep));
+
+    this.context.fillRect(cell.renderCenterPosition.x, cell.renderCenterPosition.y, size, size);
   }
 
   drawCells(cells: Cell[][]) {
     for (const row of cells) {
       for (const cell of row) {
-        if(cell.toRender) {
+        if (cell.toRender) {
           this.drawCell(cell);
-          cell.toRender = false;
         }
       }
     }

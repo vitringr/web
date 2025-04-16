@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "@utilities/mathematics": "workspace:*",
-    "@utilities/random": "workspace:*"
+    "@utilities/random": "workspace:*",
+    "@utilities/vector": "workspace:*",
+    "@utilities/easing": "workspace:*"
   },
   "devDependencies": {
     "@utilities/typescript-config": "workspace:*",

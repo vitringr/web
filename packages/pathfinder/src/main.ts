@@ -40,7 +40,6 @@ export async function main(canvas: HTMLCanvasElement) {
     const loop = () => {
       Algorithm.iterate();
       renderer.drawCells(cells);
-
       requestAnimationFrame(loop);
     };
     loop();
