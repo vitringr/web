@@ -1,15 +1,18 @@
 enum Main {
-  SKEW_VISUALIZATION,
+  // Visualizations:
+  SKEWING,
+  TRIANGLE,
+  // Algorithms:
   VALUE,
   PERLIN,
   SIMPLEX,
 }
 
 export namespace Config {
-  export const main: Main = Main.SIMPLEX;
+  export const main: Main = Main.TRIANGLE;
 
   export const width = 600;
-  export const pixelsPerRow = 50;
+  export const pixelsPerRow = 30;
   export const cellsPerRow = 5;
 
   // ------------
@@ -21,10 +24,12 @@ export namespace Config {
   export const renderGradients = true;
   export const renderPixelBorders = true;
 
-  export const pixelBordersWidth = 0.2;
+  export const pixelBordersWidth = 0.5;
+
+  export const cellBordersWidth = 3;
 
   export const gradientArrowWidth = 2;
-  export const gradientArrowLength = 25;
+  export const gradientArrowLength = 30;
   export const gradientCircleRadius = 4;
 
   export const valueCircleRadius = 6;
@@ -34,6 +39,6 @@ export namespace Config {
     values: "#CCCC00",
     gradients: "#CCCC00",
     cellBorders: "#999900",
-    pixelBorders: "#CCCC00",
+    pixelBorders: "#AAAA00",
   } as const;
 }

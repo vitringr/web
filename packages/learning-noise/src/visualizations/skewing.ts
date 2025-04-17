@@ -1,17 +1,16 @@
 import { Mathematics } from "@utilities/mathematics";
 import { Canvas2D } from "@utilities/canvas2d";
 import { Easing } from "@utilities/easing";
+import { Config } from "../config";
 
 const config = {
-  width: 700,
-  height: 700,
-
   pointsPerRow: 20,
 
   FPS: 144,
 
   radius: 6,
   color: "#888888",
+  background: "#333333",
 };
 
 type Point = {
@@ -21,17 +20,17 @@ type Point = {
   yOriginal: number;
 };
 
-const F = (Math.sqrt(3) - 1) / 2;
+const F = (Math.sqrt(3) - 1) * 0.5;
 
 function background(context: CanvasRenderingContext2D) {
-  context.fillStyle = "#333333";
-  context.fillRect(0, 0, config.width, config.height);
+  context.fillStyle = config.background;
+  context.fillRect(0, 0, Config.width, Config.width);
 }
 
 function createPoints() {
   const points: Point[][] = [];
 
-  const gap = config.width / config.pointsPerRow + 10;
+  const gap = Config.width / config.pointsPerRow + 10;
 
   for (let x = 0; x <= config.pointsPerRow; x++) {
     points.push([]);
@@ -53,7 +52,7 @@ function renderPoints(context: CanvasRenderingContext2D, points: Point[][]) {
 
   for (const row of points) {
     for (const point of row) {
-      Canvas2D.fillCircle(context, point.x, point.y, config.radius);
+      Canvas2D.circleFill(context, point.x, point.y, config.radius);
     }
   }
 }
@@ -98,7 +97,7 @@ function skewStep(point: Point, F: number) {
   point.y = yp;
 }
 
-export function skewVisualization(context: CanvasRenderingContext2D) {
+export function skewing(context: CanvasRenderingContext2D) {
   const points = createPoints();
 
   let time: number = 0;

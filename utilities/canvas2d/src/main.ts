@@ -22,7 +22,7 @@ export function circle(
   context.stroke();
 }
 
-export function fillCircle(
+export function circleFill(
   context: CanvasRenderingContext2D,
   x: number,
   y: number,
@@ -33,35 +33,45 @@ export function fillCircle(
   context.fill();
 }
 
+export function triangle(
+  context: CanvasRenderingContext2D,
+  ax: number,
+  ay: number,
+  bx: number,
+  by: number,
+  cx: number,
+  cy: number,
+) {
+  context.beginPath();
+  context.moveTo(ax, ay);
+  context.lineTo(bx, by);
+  context.lineTo(cx, cy);
+  context.lineTo(ax, ay);
+  context.stroke();
+}
+
+export function triangleFill(
+  context: CanvasRenderingContext2D,
+  ax: number,
+  ay: number,
+  bx: number,
+  by: number,
+  cx: number,
+  cy: number,
+) {
+  context.beginPath();
+  context.moveTo(ax, ay);
+  context.lineTo(bx, by);
+  context.lineTo(cx, cy);
+  context.lineTo(ax, ay);
+  context.fill();
+}
+
 const SIN_60 = 0.8660254037844386;
 const hexCosinesFlat: number[] = [1, 0.5, -0.5, -1, -0.5, 0.5];
 const hexSinesFlat: number[] = [0, SIN_60, SIN_60, 0, -SIN_60, -SIN_60];
 const hexCosinesPointy: number[] = [SIN_60, SIN_60, 0, -SIN_60, -SIN_60, 0];
 const hexSinesPointy: number[] = [-0.5, 0.5, 1, 0.5, -0.5, -1];
-
-export function fillHex(
-  context: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  r: number,
-  flat: boolean = false,
-) {
-  context.beginPath();
-
-  if (flat) {
-    context.moveTo(x + r * hexCosinesFlat[0], y + r * hexSinesFlat[0]);
-    for (let i = 1; i < 6; i++) {
-      context.lineTo(x + r * hexCosinesFlat[i], y + r * hexSinesFlat[i]);
-    }
-  } else {
-    context.moveTo(x + r * hexCosinesPointy[0], y + r * hexSinesPointy[0]);
-    for (let i = 1; i < 6; i++) {
-      context.lineTo(x + r * hexCosinesPointy[i], y + r * hexSinesPointy[i]);
-    }
-  }
-
-  context.fill();
-}
 
 export function hex(
   context: CanvasRenderingContext2D,
@@ -87,4 +97,28 @@ export function hex(
   }
 
   context.stroke();
+}
+
+export function hexFill(
+  context: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  r: number,
+  flat: boolean = false,
+) {
+  context.beginPath();
+
+  if (flat) {
+    context.moveTo(x + r * hexCosinesFlat[0], y + r * hexSinesFlat[0]);
+    for (let i = 1; i < 6; i++) {
+      context.lineTo(x + r * hexCosinesFlat[i], y + r * hexSinesFlat[i]);
+    }
+  } else {
+    context.moveTo(x + r * hexCosinesPointy[0], y + r * hexSinesPointy[0]);
+    for (let i = 1; i < 6; i++) {
+      context.lineTo(x + r * hexCosinesPointy[i], y + r * hexSinesPointy[i]);
+    }
+  }
+
+  context.fill();
 }

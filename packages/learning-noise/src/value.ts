@@ -56,7 +56,7 @@ export class Value {
 
   render(context: CanvasRenderingContext2D) {
     context.fillStyle = Colors.getRGBGrayscale(this.value);
-    Canvas2D.fillCircle(
+    Canvas2D.circleFill(
       context,
       this.position.x,
       this.position.y,

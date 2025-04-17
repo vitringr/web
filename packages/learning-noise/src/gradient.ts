@@ -58,7 +58,7 @@ export class Gradient {
   }
 
   render(context: CanvasRenderingContext2D) {
-    Canvas2D.fillCircle(
+    Canvas2D.circleFill(
       context,
       this.position.x,
       this.position.y,
