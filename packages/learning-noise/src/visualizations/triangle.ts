@@ -37,6 +37,10 @@ const C = new Vector2(
   centerPoint.y + Math.sin(angles[2]) * config.triangleSide,
 );
 
+const aGradient = Vector2.south();
+const bGradient = Vector2.north();
+const cGradient = Vector2.north();
+
 function renderTriangle(context: CanvasRenderingContext2D) {
   Canvas2D.triangle(context, A.x, A.y, B.x, B.y, C.x, C.y);
   Canvas2D.circleFill(context, A.x, A.y, config.pointRadius);
@@ -61,6 +65,16 @@ function renderDistanceLines(context: CanvasRenderingContext2D) {
   Canvas2D.line(context, pointer.x, pointer.y, A.x, A.y);
   Canvas2D.line(context, pointer.x, pointer.y, B.x, B.y);
   Canvas2D.line(context, pointer.x, pointer.y, C.x, C.y);
+}
+
+function renderGradients(context: CanvasRenderingContext2D) {
+  const ga = aGradient.clone().scale(20).add(A)
+  const gb = bGradient.clone().scale(20).add(B)
+  const gc = cGradient.clone().scale(20).add(C)
+
+  Canvas2D.line(context, A.x, A.y, ga.x, ga.y);
+  Canvas2D.line(context, B.x, B.y, gb.x, gb.y);
+  Canvas2D.line(context, C.x, C.y, gc.x, gc.y);
 }
 
 function background(context: CanvasRenderingContext2D) {
@@ -115,6 +129,8 @@ export function triangle(context: CanvasRenderingContext2D) {
 
     context.strokeStyle = config.pointerColor;
     renderDistanceLines(context);
+
+    renderGradients(context)
 
     const distances = getDistances(pointer, A, B, C);
     const totalDistance = distances.a + distances.b + distances.c;

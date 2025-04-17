@@ -10,11 +10,11 @@ export class Vector2 {
   }
 
   static north() {
-    return new Vector2(0, 1);
+    return new Vector2(0, -1);
   }
 
   static northEast() {
-    return new Vector2(SIN_45, SIN_45);
+    return new Vector2(SIN_45, -SIN_45);
   }
 
   static east() {
@@ -22,15 +22,15 @@ export class Vector2 {
   }
 
   static southEast() {
-    return new Vector2(SIN_45, -SIN_45);
+    return new Vector2(SIN_45, SIN_45);
   }
 
   static south() {
-    return new Vector2(0, -1);
+    return new Vector2(0, 1);
   }
 
   static southWest() {
-    return new Vector2(-SIN_45, -SIN_45);
+    return new Vector2(-SIN_45, SIN_45);
   }
 
   static west() {
@@ -38,7 +38,7 @@ export class Vector2 {
   }
 
   static northWest() {
-    return new Vector2(-SIN_45, SIN_45);
+    return new Vector2(-SIN_45, -SIN_45);
   }
 
   static infinity() {
