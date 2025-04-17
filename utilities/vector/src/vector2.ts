@@ -1,3 +1,5 @@
+const SIN_45 = 0.7071067811865476;
+
 export class Vector2 {
   static zero() {
     return new Vector2(0, 0);
@@ -5,6 +7,38 @@ export class Vector2 {
 
   static one() {
     return new Vector2(1, 1);
+  }
+
+  static north() {
+    return new Vector2(0, 1);
+  }
+
+  static northEast() {
+    return new Vector2(SIN_45, SIN_45);
+  }
+
+  static east() {
+    return new Vector2(1, 0);
+  }
+
+  static southEast() {
+    return new Vector2(SIN_45, -SIN_45);
+  }
+
+  static south() {
+    return new Vector2(0, -1);
+  }
+
+  static southWest() {
+    return new Vector2(-SIN_45, -SIN_45);
+  }
+
+  static west() {
+    return new Vector2(-1, 0);
+  }
+
+  static northWest() {
+    return new Vector2(-SIN_45, SIN_45);
   }
 
   static infinity() {
@@ -57,10 +91,18 @@ export class Vector2 {
     public y: number,
   ) {}
 
-  get r() { return this.x; }
-  set r(value: number) { this.x = value; }
-  get g() { return this.y; }
-  set g(value: number) { this.y = value; }
+  get r() {
+    return this.x;
+  }
+  set r(value: number) {
+    this.x = value;
+  }
+  get g() {
+    return this.y;
+  }
+  set g(value: number) {
+    this.y = value;
+  }
 
   clone() {
     return new Vector2(this.x, this.y);
