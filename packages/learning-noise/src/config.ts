@@ -1,7 +1,7 @@
 enum Main {
   // Visualizations:
-  SKEWING,
-  TRIANGLE,
+  GRID_SKEWING,
+  TRIANGLE_INFLUENCE,
   // Algorithms:
   VALUE,
   PERLIN,
@@ -9,7 +9,7 @@ enum Main {
 }
 
 export namespace Config {
-  export const main: Main = Main.TRIANGLE;
+  export const main: Main = Main.TRIANGLE_INFLUENCE;
 
   export const width = 600;
   export const pixelsPerRow = 30;

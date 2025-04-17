@@ -97,7 +97,7 @@ function skewStep(point: Point, F: number) {
   point.y = yp;
 }
 
-export function skewing(context: CanvasRenderingContext2D) {
+export function gridSkewing(context: CanvasRenderingContext2D) {
   const points = createPoints();
 
   let time: number = 0;

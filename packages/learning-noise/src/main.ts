@@ -1,8 +1,8 @@
+import { triangleInfluence } from "./visualizations/triangle-influence";
+import { gridSkewing } from "./visualizations/grid-skewing";
 import { simplexNoise } from "./algorithms/simplex-noise";
 import { perlinNoise } from "./algorithms/perlin-noise";
 import { valueNoise } from "./algorithms/value-noise";
-import { skewing } from "./visualizations/skewing";
-import { triangle } from "./visualizations/triangle";
 import { Config } from "./config";
 
 function setupContext(canvas: HTMLCanvasElement) {
@@ -22,9 +22,9 @@ export function main(canvas: HTMLCanvasElement) {
 
   switch (Config.main) {
     case 0:
-      return skewing(context);
+      return gridSkewing(context);
     case 1:
-      return triangle(context);
+      return triangleInfluence(context);
     case 2:
       return valueNoise(context);
     case 3:

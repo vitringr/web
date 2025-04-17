@@ -11,6 +11,8 @@ export function line(
   context.stroke();
 }
 
+const TAU = 6.283185307179586;
+
 export function circle(
   context: CanvasRenderingContext2D,
   x: number,
@@ -18,7 +20,7 @@ export function circle(
   r: number,
 ) {
   context.beginPath();
-  context.arc(x, y, r, 0, Math.PI * 2);
+  context.arc(x, y, r, 0, TAU);
   context.stroke();
 }
 
@@ -29,7 +31,7 @@ export function circleFill(
   r: number,
 ) {
   context.beginPath();
-  context.arc(x, y, r, 0, Math.PI * 2);
+  context.arc(x, y, r, 0, TAU);
   context.fill();
 }
 

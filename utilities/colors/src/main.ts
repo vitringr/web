@@ -31,7 +31,7 @@ export function getRGBA(
     "," +
     ((blue * 255) | 0) +
     "," +
-    ((alpha * 255) | 0) +
+    alpha +
     ")"
   );
 }
