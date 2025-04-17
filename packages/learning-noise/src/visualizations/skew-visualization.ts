@@ -1,7 +1,18 @@
 import { Mathematics } from "@utilities/mathematics";
 import { Canvas2D } from "@utilities/canvas2d";
 import { Easing } from "@utilities/easing";
-import { Config } from "./config";
+
+const config = {
+  width: 700,
+  height: 700,
+
+  pointsPerRow: 20,
+
+  FPS: 144,
+
+  radius: 6,
+  color: "#888888",
+};
 
 type Point = {
   x: number;
@@ -12,29 +23,19 @@ type Point = {
 
 const F = (Math.sqrt(3) - 1) / 2;
 
-function setupContext(canvas: HTMLCanvasElement) {
-  canvas.width = Config.width;
-  canvas.height = Config.height;
-
-  const context = canvas.getContext("2d");
-  if (!context) throw "Cannot get 2d context";
-
-  return context;
-}
-
 function background(context: CanvasRenderingContext2D) {
   context.fillStyle = "#333333";
-  context.fillRect(0, 0, Config.width, Config.height);
+  context.fillRect(0, 0, config.width, config.height);
 }
 
 function createPoints() {
   const points: Point[][] = [];
 
-  const gap = Config.width / Config.pointsPerRow + 10;
+  const gap = config.width / config.pointsPerRow + 10;
 
-  for (let x = 0; x <= Config.pointsPerRow; x++) {
+  for (let x = 0; x <= config.pointsPerRow; x++) {
     points.push([]);
-    for (let y = 0; y <= Config.pointsPerRow; y++) {
+    for (let y = 0; y <= config.pointsPerRow; y++) {
       points[x].push({
         x: x * gap,
         y: y * gap,
@@ -48,11 +49,11 @@ function createPoints() {
 }
 
 function renderPoints(context: CanvasRenderingContext2D, points: Point[][]) {
-  context.fillStyle = Config.color;
+  context.fillStyle = config.color;
 
   for (const row of points) {
     for (const point of row) {
-      Canvas2D.fillCircle(context, point.x, point.y, Config.radius);
+      Canvas2D.fillCircle(context, point.x, point.y, config.radius);
     }
   }
 }
@@ -60,8 +61,8 @@ function renderPoints(context: CanvasRenderingContext2D, points: Point[][]) {
 function renderLines(context: CanvasRenderingContext2D, points: Point[][]) {
   context.strokeStyle = "#FFEE00";
   context.lineWidth = 0.5;
-  for (let x = 0; x < Config.pointsPerRow; x++) {
-    for (let y = 0; y < Config.pointsPerRow; y++) {
+  for (let x = 0; x < config.pointsPerRow; x++) {
+    for (let y = 0; y < config.pointsPerRow; y++) {
       const point = points[x][y];
 
       const right = points[x + 1][y];
@@ -97,8 +98,7 @@ function skewStep(point: Point, F: number) {
   point.y = yp;
 }
 
-export function main(canvas: HTMLCanvasElement) {
-  const context = setupContext(canvas);
+export function skewVisualization(context: CanvasRenderingContext2D) {
   const points = createPoints();
 
   let time: number = 0;
@@ -123,5 +123,5 @@ export function main(canvas: HTMLCanvasElement) {
     renderPoints(context, points);
   };
 
-  setInterval(loop, 1000 / Config.FPS);
+  setInterval(loop, 1000 / config.FPS);
 }
