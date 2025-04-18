@@ -35,7 +35,7 @@ const config = {
   colors: {
     red: "#FF0000",
     green: "#00FF00",
-    blue: "#004DFF",
+    blue: "#0033FF",
   },
 } as const;
 
@@ -72,9 +72,7 @@ const _AB = new Vector2(-Mathematics.COS_60, -Mathematics.SIN_60)
 const _BC = new Vector2(1 + Mathematics.COS_60, -Mathematics.SIN_60)
   .scale(config.upscale)
   .add(_offset);
-const _AC = new Vector2(Mathematics.COS_60, Mathematics.SIN_60)
-  .scale(config.upscale)
-  .add(_offset);
+const _AC = new Vector2(Mathematics.COS_60, Mathematics.SIN_60).scale(config.upscale).add(_offset);
 
 function background(context: CanvasRenderingContext2D) {
   context.fillStyle = config.background;
@@ -135,55 +133,25 @@ function renderInfluence(context: CanvasRenderingContext2D) {
   */
 
   const aDistanceSquared = Vector2.distanceSquared(A, target);
-  const aInfluence = (influenceRadiusSquared - aDistanceSquared) * 2;
+  const aInfluence = Math.max(0, (influenceRadiusSquared - aDistanceSquared) * 2);
 
   const bDistanceSquared = Vector2.distanceSquared(B, target);
-  const bInfluence = (influenceRadiusSquared - bDistanceSquared) * 2;
+  const bInfluence = Math.max(0, (influenceRadiusSquared - bDistanceSquared) * 2);
 
   const cDistanceSquared = Vector2.distanceSquared(C, target);
-  const cInfluence = (influenceRadiusSquared - cDistanceSquared) * 2;
+  const cInfluence = Math.max(0, (influenceRadiusSquared - cDistanceSquared) * 2);
 
-  //prettier-ignore
-  const _aGradient = context.createRadialGradient(
-    _A.x, _A.y, 0,
-    _A.x, _A.y, _influenceRadius
-  );
-  _aGradient.addColorStop(
-    0,
-    Colors.getRGBA(config.influenceBrightness, 0, 0, aInfluence),
-  );
-  _aGradient.addColorStop(
-    1,
-    Colors.getRGBA(config.influenceBrightness, 0, 0, 0),
-  );
+  const _aGradient = context.createRadialGradient(_A.x, _A.y, 0, _A.x, _A.y, _influenceRadius);
+  _aGradient.addColorStop(0, Colors.getRGBA(config.influenceBrightness, 0, 0, aInfluence));
+  _aGradient.addColorStop(1, Colors.getRGBA(config.influenceBrightness, 0, 0, 0));
 
-  //prettier-ignore
-  const _bGradient = context.createRadialGradient(
-    _B.x, _B.y, 0,
-    _B.x, _B.y, _influenceRadius
-  );
-  _bGradient.addColorStop(
-    0,
-    Colors.getRGBA(0, config.influenceBrightness, 0, bInfluence),
-  );
-  _bGradient.addColorStop(
-    1,
-    Colors.getRGBA(0, config.influenceBrightness, 0, 0),
-  );
+  const _bGradient = context.createRadialGradient(_B.x, _B.y, 0, _B.x, _B.y, _influenceRadius);
+  _bGradient.addColorStop(0, Colors.getRGBA(0, config.influenceBrightness, 0, bInfluence));
+  _bGradient.addColorStop(1, Colors.getRGBA(0, config.influenceBrightness, 0, 0));
 
-  //prettier-ignore
-  const _cGradient = context.createRadialGradient(
-    _C.x, _C.y, 0,
-    _C.x, _C.y, _influenceRadius
-  );
-  _cGradient.addColorStop(
-    0,
-    Colors.getRGBA(0, 0.3, config.influenceBrightness, cInfluence),
-  );
-  _cGradient.addColorStop(
-    1,
-    Colors.getRGBA(0, 0.3, config.influenceBrightness, 0),
-  );
+  const _cGradient = context.createRadialGradient(_C.x, _C.y, 0, _C.x, _C.y, _influenceRadius);
+  _cGradient.addColorStop(0, Colors.getRGBA(0, 0.2, config.influenceBrightness, cInfluence));
+  _cGradient.addColorStop(1, Colors.getRGBA(0, 0.2, config.influenceBrightness, 0));
 
   context.fillStyle = _aGradient;
   Canvas2D.circleFill(context, _A.x, _A.y, _influenceRadius);
@@ -199,10 +167,10 @@ function renderInfluence(context: CanvasRenderingContext2D) {
   context.strokeStyle = config.colors.blue;
   Canvas2D.circle(context, _C.x, _C.y, _influenceRadius);
 
-  _targetColor = Colors.getRGB(aInfluence, bInfluence, cInfluence);
+  _targetColor = Colors.getRGB(aInfluence, bInfluence + 0.2 * cInfluence, cInfluence);
 }
 
-function renderPointer(context: CanvasRenderingContext2D) {
+function renderTarget(context: CanvasRenderingContext2D) {
   context.fillStyle = _targetColor;
   Canvas2D.circleFill(context, _target.x, _target.y, config.pointerRadius);
 }
@@ -236,7 +204,7 @@ export function triangleInfluence(context: CanvasRenderingContext2D) {
     renderVertices(context);
     renderCentroid(context);
 
-    renderPointer(context);
+    renderTarget(context);
     requestAnimationFrame(loop);
   };
 
