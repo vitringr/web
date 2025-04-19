@@ -59,7 +59,7 @@ export class Renderer {
 
     const size = Mathematics.lerp(0, hexOuterRadius, Easing.easeOutCubic(cell.renderAnimationStep));
 
-    Canvas2D.fillHex(this.context, x, y, size);
+    Canvas2D.hexFill(this.context, x, y, size);
   }
 
   drawCells(cells: Cell[][]) {
