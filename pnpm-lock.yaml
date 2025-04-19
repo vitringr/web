@@ -170,15 +170,15 @@ importers:
       '@utilities/canvas2d':
         specifier: workspace:*
         version: link:../../utilities/canvas2d
-      '@utilities/easing':
+      '@utilities/collision':
         specifier: workspace:*
-        version: link:../../utilities/easing
+        version: link:../../utilities/collision
       '@utilities/mathematics':
         specifier: workspace:*
         version: link:../../utilities/mathematics
-      '@utilities/shapes':
+      '@utilities/vector':
         specifier: workspace:*
-        version: link:../../utilities/shapes
+        version: link:../../utilities/vector
     devDependencies:
       '@utilities/typescript-config':
         specifier: workspace:*

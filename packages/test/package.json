@@ -9,9 +9,9 @@
   },
   "dependencies": {
     "@utilities/mathematics": "workspace:*",
+    "@utilities/collision": "workspace:*",
     "@utilities/canvas2d": "workspace:*",
-    "@utilities/easing": "workspace:*",
-    "@utilities/shapes": "workspace:*"
+    "@utilities/vector": "workspace:*"
   },
   "devDependencies": {
     "@utilities/typescript-config": "workspace:*",
