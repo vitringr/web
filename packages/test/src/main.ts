@@ -3,10 +3,13 @@ import { Vector2 } from "@utilities/vector";
 import { Config } from "./config";
 
 const F = (Math.sqrt(3) - 1) * 0.5;
+const G = F / (1 + 2 * F);
+
 const middle = Config.height * 0.5;
 const verticesSpacing = Config.width / Config.verticesPerRow;
 
 const pointer = Vector2.zero();
+let isPointerTop = false;
 
 function createVertices() {
   const vertices: Vector2[][] = [];
@@ -34,7 +37,6 @@ function setupInput(canvas: HTMLCanvasElement) {
   canvas.addEventListener("pointermove", (event: PointerEvent) => {
     pointer.x = event.clientX - bounds.left;
     pointer.y = event.clientY - bounds.top;
-    pointer.y %= middle;
   });
 }
 
@@ -47,6 +49,7 @@ function background(context: CanvasRenderingContext2D) {
 }
 
 function renderVertices(context: CanvasRenderingContext2D, vertices: Vector2[][]) {
+  const gap = verticesSpacing * 0.5;
   // Top:
   context.fillStyle = Config.colors.verticesTop;
   for (const row of vertices) {
@@ -64,10 +67,12 @@ function renderVertices(context: CanvasRenderingContext2D, vertices: Vector2[][]
   context.fillStyle = Config.colors.verticesBot;
   for (const row of vertices) {
     for (const vertex of row) {
+      const S = (vertex.x + vertex.y) * F;
+
       Canvas2D.circleFill(
         context,
-        vertex.x * verticesSpacing,
-        middle + vertex.y * verticesSpacing,
+        (vertex.x + S) * verticesSpacing,
+        middle + (vertex.y + S) * verticesSpacing,
         Config.vertexRadius,
       );
     }
@@ -75,13 +80,20 @@ function renderVertices(context: CanvasRenderingContext2D, vertices: Vector2[][]
 }
 
 function renderPointer(context: CanvasRenderingContext2D) {
-  context.fillStyle = Config.colors.pointerTop;
-  Canvas2D.circleFill(context, pointer.x, pointer.y, Config.poitnerRadius);
-
-  const S = (pointer.x + pointer.y) * F;
-
-  context.fillStyle = Config.colors.pointerBot;
-  Canvas2D.circleFill(context, pointer.x + S, pointer.y + middle + S, Config.poitnerRadius);
+  if (pointer.y <= middle) {
+    const S = (pointer.x + pointer.y) * F;
+    context.fillStyle = Config.colors.pointerTop;
+    Canvas2D.circleFill(context, pointer.x, pointer.y, Config.poitnerRadius);
+    context.fillStyle = Config.colors.pointerBot;
+    Canvas2D.circleFill(context, pointer.x + S, pointer.y + middle + S, Config.poitnerRadius);
+  } else {
+    const yTop = pointer.y % middle;
+    const U = (pointer.x + yTop) * G;
+    context.fillStyle = Config.colors.pointerTop;
+    Canvas2D.circleFill(context, pointer.x - U, yTop - U, Config.poitnerRadius);
+    context.fillStyle = Config.colors.pointerBot;
+    Canvas2D.circleFill(context, pointer.x, pointer.y, Config.poitnerRadius);
+  }
 }
 
 export function main(canvas: HTMLCanvasElement) {
