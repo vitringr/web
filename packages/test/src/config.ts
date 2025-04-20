@@ -1,11 +1,11 @@
 export namespace Config {
-  export const width = 420;
-  export const height = 840;
+  export const width = 400;
+  export const height = 800;
 
   export const verticesPerRow = 8;
   export const vertexRadius = 3;
 
-  export const poitnerRadius = 5;
+  export const poitnerRadius = 4;
 
   export const colors = {
     backgroundTop: "#111130",
