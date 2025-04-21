@@ -1,11 +1,12 @@
 enum Mode {
+  // Noise:
   VALUE,
   PERLIN,
   SIMPLEX,
 
   GRID_SKEWING,
   GRID_REFLECTION,
-  TRIANGLE_VISUALIZATION,
+  INFLUENCE,
 }
 
-export const mode: Mode = Mode.VALUE;
+export const mode: Mode = Mode.GRID_REFLECTION;
