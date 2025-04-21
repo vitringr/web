@@ -1,17 +1,7 @@
 import { Mathematics } from "@utilities/mathematics";
 import { Canvas2D } from "@utilities/canvas2d";
 import { Easing } from "@utilities/easing";
-import { Config } from "../config";
-
-const config = {
-  pointsPerRow: 20,
-
-  FPS: 144,
-
-  radius: 6,
-  color: "#888888",
-  background: "#333333",
-};
+import { Config } from "./config";
 
 type Point = {
   x: number;
@@ -23,18 +13,18 @@ type Point = {
 const F = (Math.sqrt(3) - 1) * 0.5;
 
 function background(context: CanvasRenderingContext2D) {
-  context.fillStyle = config.background;
+  context.fillStyle = Config.background;
   context.fillRect(0, 0, Config.width, Config.width);
 }
 
 function createPoints() {
   const points: Point[][] = [];
 
-  const gap = Config.width / config.pointsPerRow + 10;
+  const gap = Config.width / Config.pointsPerRow + 10;
 
-  for (let x = 0; x <= config.pointsPerRow; x++) {
+  for (let x = 0; x <= Config.pointsPerRow; x++) {
     points.push([]);
-    for (let y = 0; y <= config.pointsPerRow; y++) {
+    for (let y = 0; y <= Config.pointsPerRow; y++) {
       points[x].push({
         x: x * gap,
         y: y * gap,
@@ -48,11 +38,11 @@ function createPoints() {
 }
 
 function renderPoints(context: CanvasRenderingContext2D, points: Point[][]) {
-  context.fillStyle = config.color;
+  context.fillStyle = Config.color;
 
   for (const row of points) {
     for (const point of row) {
-      Canvas2D.circleFill(context, point.x, point.y, config.radius);
+      Canvas2D.circleFill(context, point.x, point.y, Config.radius);
     }
   }
 }
@@ -60,8 +50,8 @@ function renderPoints(context: CanvasRenderingContext2D, points: Point[][]) {
 function renderLines(context: CanvasRenderingContext2D, points: Point[][]) {
   context.strokeStyle = "#FFEE00";
   context.lineWidth = 0.5;
-  for (let x = 0; x < config.pointsPerRow; x++) {
-    for (let y = 0; y < config.pointsPerRow; y++) {
+  for (let x = 0; x < Config.pointsPerRow; x++) {
+    for (let y = 0; y < Config.pointsPerRow; y++) {
       const point = points[x][y];
 
       const right = points[x + 1][y];
@@ -103,7 +93,7 @@ export function gridSkewing(context: CanvasRenderingContext2D) {
   let time: number = 0;
 
   const loop = () => {
-    time += 0.005;
+    time += Config.timeIncrement;
 
     const step = (Math.sin(time) + 1) * 0.5;
 
@@ -120,7 +110,9 @@ export function gridSkewing(context: CanvasRenderingContext2D) {
     background(context);
     renderLines(context, points);
     renderPoints(context, points);
+
+    requestAnimationFrame(loop);
   };
 
-  setInterval(loop, 1000 / config.FPS);
+  loop();
 }
