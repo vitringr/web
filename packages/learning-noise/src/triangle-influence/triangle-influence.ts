@@ -23,6 +23,18 @@ const centroid = new Vector2((A.x + B.x + C.x) / 3, (A.y + B.y + C.y) / 3);
 
 const target = new Vector2(100, 100);
 
+function setupContext(canvas: HTMLCanvasElement) {
+  canvas.width = canvas.height = Config.width;
+
+  const context = canvas.getContext("2d");
+  if (!context) throw "Cannot get 2d context";
+
+  context.fillStyle = "#111111";
+  context.fillRect(0, 0, Config.width, Config.width);
+
+  return context;
+}
+
 // ------------
 // -- Render --
 // ------------
@@ -161,7 +173,9 @@ function setupInput(canvas: HTMLCanvasElement) {
   });
 }
 
-export function triangleInfluence(context: CanvasRenderingContext2D) {
+export function triangleInfluence(canvas: HTMLCanvasElement) {
+  const context = setupContext(canvas);
+
   setupInput(context.canvas);
 
   const loop = () => {

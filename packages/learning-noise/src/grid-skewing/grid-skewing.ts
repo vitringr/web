@@ -12,6 +12,18 @@ type Point = {
 
 const F = (Math.sqrt(3) - 1) * 0.5;
 
+function setupContext(canvas: HTMLCanvasElement) {
+  canvas.width = canvas.height = Config.width;
+
+  const context = canvas.getContext("2d");
+  if (!context) throw "Cannot get 2d context";
+
+  context.fillStyle = "#111111";
+  context.fillRect(0, 0, Config.width, Config.width);
+
+  return context;
+}
+
 function background(context: CanvasRenderingContext2D) {
   context.fillStyle = Config.background;
   context.fillRect(0, 0, Config.width, Config.width);
@@ -87,7 +99,9 @@ function skewStep(point: Point, F: number) {
   point.y = yp;
 }
 
-export function gridSkewing(context: CanvasRenderingContext2D) {
+export function gridSkewing(canvas: HTMLCanvasElement) {
+  const context = setupContext(canvas);
+
   const points = createPoints();
 
   let time: number = 0;

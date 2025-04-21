@@ -5,26 +5,12 @@ import { perlinNoise } from "./algorithms/perlin-noise";
 import { valueNoise } from "./algorithms/value-noise";
 import { mode } from "./config";
 
-function setupContext(canvas: HTMLCanvasElement) {
-  canvas.width = canvas.height = Config.width;
-
-  const context = canvas.getContext("2d");
-  if (!context) throw "Cannot get 2d context";
-
-  context.fillStyle = "#111111";
-  context.fillRect(0, 0, Config.width, Config.width);
-
-  return context;
-}
-
 export function main(canvas: HTMLCanvasElement) {
-  const context = setupContext(canvas);
-
   switch (mode) {
     case 0:
-      return gridSkewing(context);
+      return gridSkewing(canvas);
     case 1:
-      return triangleInfluence(context);
+      return triangleInfluence(canvas);
     case 2:
       return valueNoise(canvas);
     case 3:

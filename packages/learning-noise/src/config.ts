@@ -1,10 +1,8 @@
 enum Mode {
-  // Algorithms:
   VALUE,
   PERLIN,
   SIMPLEX,
 
-  // Visualizations:
   GRID_SKEWING,
   GRID_REFLECTION,
   TRIANGLE_VISUALIZATION,
