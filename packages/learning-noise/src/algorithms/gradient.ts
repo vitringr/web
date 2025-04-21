@@ -58,17 +58,9 @@ export class Gradient {
   }
 
   render(context: CanvasRenderingContext2D) {
-    Canvas2D.circleFill(
-      context,
-      this.position.x,
-      this.position.y,
-      Config.gradientCircleRadius,
-    );
+    Canvas2D.circleFill(context, this.position.x, this.position.y, Config.gradientCircleRadius);
 
-    const arrow = this.vector
-      .clone()
-      .scale(Config.gradientArrowLength)
-      .add(this.position);
+    const arrow = this.vector.clone().scale(Config.gradientArrowLength).add(this.position);
     Canvas2D.line(context, this.position.x, this.position.y, arrow.x, arrow.y);
   }
 }

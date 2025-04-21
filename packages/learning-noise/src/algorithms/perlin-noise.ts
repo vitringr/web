@@ -1,14 +1,28 @@
 import { Mathematics } from "@utilities/mathematics";
 import { Vector2 } from "@utilities/vector";
 import { Easing } from "@utilities/easing";
-import { Gradient } from "../../gradient";
-import { Config } from "../../config";
-import { Pixel } from "../../pixel";
-import { Cell } from "../../cell";
+import { Gradient } from "./gradient";
+import { Config } from "./config";
+import { Pixel } from "./pixel";
+import { Cell } from "./cell";
 
 const pixelsPerCell = Config.pixelsPerRow / Config.cellsPerRow;
 
-export function perlinNoise(context: CanvasRenderingContext2D) {
+function setupContext(canvas: HTMLCanvasElement) {
+  canvas.width = canvas.height = Config.width;
+
+  const context = canvas.getContext("2d");
+  if (!context) throw "Cannot get 2d context";
+
+  context.fillStyle = "#111111";
+  context.fillRect(0, 0, Config.width, Config.width);
+
+  return context;
+}
+
+export function perlinNoise(canvas: HTMLCanvasElement) {
+  const context = setupContext(canvas);
+
   const pixels = Pixel.createAll();
   const cells = Cell.createAll();
   const gradients = Gradient.createAll();
@@ -18,11 +32,7 @@ export function perlinNoise(context: CanvasRenderingContext2D) {
       const xPos = (pixel.x % pixelsPerCell) / pixelsPerCell;
       const yPos = (pixel.y % pixelsPerCell) / pixelsPerCell;
 
-      const [g00, g10, g01, g11] = Gradient.getTargetGradients(
-        gradients,
-        pixel.x,
-        pixel.y,
-      );
+      const [g00, g10, g01, g11] = Gradient.getTargetGradients(gradients, pixel.x, pixel.y);
 
       const d00 = new Vector2(xPos, yPos);
       const d10 = new Vector2(xPos - 1, yPos);

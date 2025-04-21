@@ -1,9 +1,9 @@
-import { triangleInfluence } from "./visualizations/triangle-influence";
-import { gridSkewing } from "./visualizations/grid-skewing";
-import { simplexNoise } from "./algorithms/simplex-noise/simplex-noise";
-import { perlinNoise } from "./algorithms/perlin-noise/perlin-noise";
-import { valueNoise } from "./algorithms/value-noise/value-noise";
-import { Config } from "./config";
+import { triangleInfluence } from "./triangle-influence/triangle-influence";
+import { simplexNoise } from "./algorithms/simplex-noise";
+import { gridSkewing } from "./grid-skewing/grid-skewing";
+import { perlinNoise } from "./algorithms/perlin-noise";
+import { valueNoise } from "./algorithms/value-noise";
+import { mode } from "./config";
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = canvas.height = Config.width;
@@ -20,16 +20,16 @@ function setupContext(canvas: HTMLCanvasElement) {
 export function main(canvas: HTMLCanvasElement) {
   const context = setupContext(canvas);
 
-  switch (Config.main) {
+  switch (mode) {
     case 0:
       return gridSkewing(context);
     case 1:
       return triangleInfluence(context);
     case 2:
-      return valueNoise(context);
+      return valueNoise(canvas);
     case 3:
-      return perlinNoise(context);
+      return perlinNoise(canvas);
     case 4:
-      return simplexNoise(context);
+      return simplexNoise(canvas);
   }
 }
