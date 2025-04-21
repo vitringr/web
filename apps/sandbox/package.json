@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@utilities/typescript-config": "workspace:*",
-    "typescript": "~5.7.2",
+    "typescript": "latest",
     "vite": "^6.2.0"
   }
 }
