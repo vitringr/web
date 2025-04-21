@@ -50,8 +50,7 @@ function background(context: CanvasRenderingContext2D) {
   context.fillRect(0, middle, Config.width, middle);
 }
 
-function renderVertices(context: CanvasRenderingContext2D, vertices: Vector2[][]) {
-  // Top:
+function renderVerticesTop(context: CanvasRenderingContext2D, vertices: Vector2[][]) {
   context.fillStyle = Config.colors.verticesTop;
   for (const row of vertices) {
     for (const vertex of row) {
@@ -63,8 +62,9 @@ function renderVertices(context: CanvasRenderingContext2D, vertices: Vector2[][]
       );
     }
   }
+}
 
-  // Bot:
+function renderVerticesBot(context: CanvasRenderingContext2D, vertices: Vector2[][]) {
   context.fillStyle = Config.colors.verticesBot;
   for (const row of vertices) {
     for (const vertex of row) {
@@ -97,16 +97,105 @@ function renderPointer(context: CanvasRenderingContext2D) {
   }
 }
 
+function renderEdgesTop(context: CanvasRenderingContext2D, vertices: Vector2[][]) {
+  context.lineWidth = Config.edgeWidth;
+  context.strokeStyle = Config.colors.verticesTop;
+
+  for (let x = 0; x < vertices.length; x++) {
+    for (let y = 0; y < vertices.length; y++) {
+      const vertex = vertices[x][y];
+
+      if (y < vertices.length - 1) {
+        const bottom = vertices[x][y + 1];
+        Canvas2D.line(
+          context,
+          gap + vertex.x * verticesSpacing,
+          gap + vertex.y * verticesSpacing,
+          gap + bottom.x * verticesSpacing,
+          gap + bottom.y * verticesSpacing,
+        );
+      }
+
+      if (x < vertices.length - 1) {
+        const right = vertices[x + 1][y];
+        Canvas2D.line(
+          context,
+          gap + vertex.x * verticesSpacing,
+          gap + vertex.y * verticesSpacing,
+          gap + right.x * verticesSpacing,
+          gap + right.y * verticesSpacing,
+        );
+      }
+
+      if (x > 0 && y < vertices.length - 1) {
+        const botLeft = vertices[x - 1][y + 1];
+        Canvas2D.line(
+          context,
+          gap + vertex.x * verticesSpacing,
+          gap + vertex.y * verticesSpacing,
+          gap + botLeft.x * verticesSpacing,
+          gap + botLeft.y * verticesSpacing,
+        );
+      }
+    }
+  }
+}
+
+function renderEdgesBottom(context: CanvasRenderingContext2D, vertices: Vector2[][]) {
+  context.lineWidth = Config.edgeWidth;
+  context.strokeStyle = Config.colors.verticesTop;
+
+  for (let x = 0; x < vertices.length; x++) {
+    for (let y = 0; y < vertices.length; y++) {
+      const vertex = vertices[x][y];
+
+      if (y < vertices.length - 1) {
+        const bottom = vertices[x][y + 1];
+        Canvas2D.line(
+          context,
+          gap + vertex.x * verticesSpacing,
+          gap + vertex.y * verticesSpacing,
+          gap + bottom.x * verticesSpacing,
+          gap + bottom.y * verticesSpacing,
+        );
+      }
+
+      if (x < vertices.length - 1) {
+        const right = vertices[x + 1][y];
+        Canvas2D.line(
+          context,
+          gap + vertex.x * verticesSpacing,
+          gap + vertex.y * verticesSpacing,
+          gap + right.x * verticesSpacing,
+          gap + right.y * verticesSpacing,
+        );
+      }
+
+      if (x > 0 && y < vertices.length - 1) {
+        const botLeft = vertices[x - 1][y + 1];
+        Canvas2D.line(
+          context,
+          gap + vertex.x * verticesSpacing,
+          gap + vertex.y * verticesSpacing,
+          gap + botLeft.x * verticesSpacing,
+          gap + botLeft.y * verticesSpacing,
+        );
+      }
+    }
+  }
+}
+
 export function main(canvas: HTMLCanvasElement) {
   const context = setupContext(canvas);
   setupInput(canvas);
 
   const vertices = createVertices();
-  renderVertices(context, vertices);
 
   const loop = () => {
     background(context);
-    renderVertices(context, vertices);
+    renderVerticesTop(context, vertices);
+    renderVerticesBot(context, vertices);
+    renderEdgesTop(context, vertices);
     renderPointer(context);
 
     requestAnimationFrame(loop);

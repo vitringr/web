@@ -5,6 +5,8 @@ export namespace Config {
   export const verticesPerRow = 8;
   export const vertexRadius = 3;
 
+  export const edgeWidth = 1;
+
   export const poitnerRadius = 4;
 
   export const colors = {

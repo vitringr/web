@@ -1,12 +1,7 @@
-import { Mathematics } from "@utilities/mathematics";
-import { Vector2 } from "@utilities/vector";
-import { Easing } from "@utilities/easing";
-import { Gradient } from "../gradient";
-import { Config } from "../config";
-import { Pixel } from "../pixel";
-import { Cell } from "../cell";
-
-const pixelsPerCell = Config.pixelsPerRow / Config.cellsPerRow;
+import { Gradient } from "../../gradient";
+import { Config } from "../../config";
+import { Pixel } from "../../pixel";
+import { Cell } from "../../cell";
 
 export function simplexNoise(context: CanvasRenderingContext2D) {
   const pixels = Pixel.createAll();

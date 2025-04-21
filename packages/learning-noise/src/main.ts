@@ -1,8 +1,8 @@
 import { triangleInfluence } from "./visualizations/triangle-influence";
 import { gridSkewing } from "./visualizations/grid-skewing";
-import { simplexNoise } from "./algorithms/simplex-noise";
-import { perlinNoise } from "./algorithms/perlin-noise";
-import { valueNoise } from "./algorithms/value-noise";
+import { simplexNoise } from "./algorithms/simplex-noise/simplex-noise";
+import { perlinNoise } from "./algorithms/perlin-noise/perlin-noise";
+import { valueNoise } from "./algorithms/value-noise/value-noise";
 import { Config } from "./config";
 
 function setupContext(canvas: HTMLCanvasElement) {

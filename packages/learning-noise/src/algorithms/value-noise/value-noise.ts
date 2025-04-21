@@ -1,9 +1,9 @@
 import { Mathematics } from "@utilities/mathematics";
 import { Easing } from "@utilities/easing";
-import { Config } from "../config";
-import { Value } from "../value";
-import { Pixel } from "../pixel";
-import { Cell } from "../cell";
+import { Config } from "../../config";
+import { Value } from "../../value";
+import { Pixel } from "../../pixel";
+import { Cell } from "../../cell";
 
 const pixelsPerCell = Config.pixelsPerRow / Config.cellsPerRow;
 
