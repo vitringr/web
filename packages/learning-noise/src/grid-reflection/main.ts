@@ -9,10 +9,10 @@ const middle = Config.height * 0.5;
 const verticesSpacing = Config.width / Config.verticesPerRow;
 const gap = verticesSpacing * 0.5;
 
-const pointerTop = Vector2.zero();
-const pointerBot = Vector2.zero();
-const pointerNoGapTop = Vector2.zero();
-const pointerNoGapBot = Vector2.zero();
+const pointerTop = Vector2.infinity();
+const pointerBot = Vector2.infinity();
+const pointerNoGapTop = Vector2.infinity();
+const pointerNoGapBot = Vector2.infinity();
 
 type Vertex = {
   x: number;
@@ -90,6 +90,12 @@ function renderVertices(context: CanvasRenderingContext2D, vertices: Vertex[][])
   for (const row of vertices) {
     for (const vertex of row) {
       Canvas2D.circleFill(context, vertex.xRenderTop, vertex.yRenderTop, Config.vertexRadius);
+    }
+  }
+
+  context.fillStyle = Config.colors.gridBot;
+  for (const row of vertices) {
+    for (const vertex of row) {
       Canvas2D.circleFill(context, vertex.xRenderBot, vertex.yRenderBot, Config.vertexRadius);
     }
   }
@@ -206,9 +212,9 @@ function renderTargetTriangle(context: CanvasRenderingContext2D, vertices: Verte
   const b = vertices[xFloor + 1][yFloor];
   const c = vertices[xFloor][yFloor + 1];
 
-  context.lineWidth = Config.targetEdgesWidth;
   context.fillStyle = Config.colors.targetVertices;
 
+  context.lineWidth = Config.targetEdgesWidth;
   context.strokeStyle = Config.colors.gridTopLighter;
 
   Canvas2D.line(context, a.xRenderTop, a.yRenderTop, b.xRenderTop, b.yRenderTop);
@@ -219,6 +225,14 @@ function renderTargetTriangle(context: CanvasRenderingContext2D, vertices: Verte
   Canvas2D.circleFill(context, b.xRenderTop, b.yRenderTop, Config.targetVertexRadius);
   Canvas2D.circleFill(context, c.xRenderTop, c.yRenderTop, Config.targetVertexRadius);
 
+  context.lineWidth = Config.pointerEdgesWidth;
+  context.strokeStyle = Config.colors.pointer;
+
+  Canvas2D.line(context, pointerTop.x, pointerTop.y, b.xRenderTop, b.yRenderTop);
+  Canvas2D.line(context, pointerTop.x, pointerTop.y, c.xRenderTop, c.yRenderTop);
+  Canvas2D.line(context, pointerTop.x, pointerTop.y, a.xRenderTop, a.yRenderTop);
+
+  context.lineWidth = Config.targetEdgesWidth;
   context.strokeStyle = Config.colors.gridBotLighter;
 
   Canvas2D.line(context, a.xRenderBot, a.yRenderBot, b.xRenderBot, b.yRenderBot);
@@ -228,6 +242,13 @@ function renderTargetTriangle(context: CanvasRenderingContext2D, vertices: Verte
   Canvas2D.circleFill(context, a.xRenderBot, a.yRenderBot, Config.targetVertexRadius);
   Canvas2D.circleFill(context, b.xRenderBot, b.yRenderBot, Config.targetVertexRadius);
   Canvas2D.circleFill(context, c.xRenderBot, c.yRenderBot, Config.targetVertexRadius);
+
+  context.lineWidth = Config.pointerEdgesWidth;
+  context.strokeStyle = Config.colors.pointer;
+
+  Canvas2D.line(context, pointerBot.x, pointerBot.y, b.xRenderBot, b.yRenderBot);
+  Canvas2D.line(context, pointerBot.x, pointerBot.y, c.xRenderBot, c.yRenderBot);
+  Canvas2D.line(context, pointerBot.x, pointerBot.y, a.xRenderBot, a.yRenderBot);
 }
 
 export function gridReflection(canvas: HTMLCanvasElement) {
@@ -246,9 +267,9 @@ export function gridReflection(canvas: HTMLCanvasElement) {
     renderEdgesTop(context, vertices);
     renderEdgesBot(context, vertices);
 
-    renderPointer(context);
-
     renderTargetTriangle(context, vertices);
+
+    renderPointer(context);
 
     requestAnimationFrame(loop);
   };

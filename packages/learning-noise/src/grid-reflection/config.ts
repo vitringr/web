@@ -10,6 +10,7 @@ export namespace Config {
   export const targetEdgesWidth = 4;
 
   export const poitnerRadius = 5;
+  export const pointerEdgesWidth = 3;
 
   export const colors = {
     backgroundTop: "#111130",
