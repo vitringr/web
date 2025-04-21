@@ -101,6 +101,9 @@ importers:
       '@utilities/canvas2d':
         specifier: workspace:*
         version: link:../../utilities/canvas2d
+      '@utilities/collision':
+        specifier: workspace:*
+        version: link:../../utilities/collision
       '@utilities/colors':
         specifier: workspace:*
         version: link:../../utilities/colors

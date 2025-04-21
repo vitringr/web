@@ -9,14 +9,18 @@ const middle = Config.height * 0.5;
 const verticesSpacing = Config.width / Config.verticesPerRow;
 const gap = verticesSpacing * 0.5;
 
-const pointer = Vector2.zero();
-const pointerNoGap = Vector2.zero();
+const pointerTop = Vector2.zero();
+const pointerBot = Vector2.zero();
+const pointerNoGapTop = Vector2.zero();
+const pointerNoGapBot = Vector2.zero();
 
 type Vertex = {
   x: number;
   y: number;
-  xRender: number;
-  yRender: number;
+  xRenderTop: number;
+  yRenderTop: number;
+  xRenderBot: number;
+  yRenderBot: number;
 };
 
 function setupContext(canvas: HTMLCanvasElement) {
@@ -29,23 +33,7 @@ function setupContext(canvas: HTMLCanvasElement) {
   return context;
 }
 
-function createVerticesTop() {
-  const vertices: Vertex[][] = [];
-  for (let x = 0; x < Config.verticesPerRow; x++) {
-    vertices.push([]);
-    for (let y = 0; y < Config.verticesPerRow; y++) {
-      vertices[x].push({
-        x,
-        y,
-        xRender: gap + x * verticesSpacing,
-        yRender: gap + y * verticesSpacing,
-      });
-    }
-  }
-  return vertices;
-}
-
-function createVerticesBot() {
+function createVertices() {
   const vertices: Vertex[][] = [];
   for (let x = 0; x < Config.verticesPerRow; x++) {
     vertices.push([]);
@@ -54,8 +42,10 @@ function createVerticesBot() {
       vertices[x].push({
         x,
         y,
-        xRender: gap + (x + S) * verticesSpacing,
-        yRender: gap + middle + (y + S) * verticesSpacing,
+        xRenderTop: gap + x * verticesSpacing,
+        yRenderTop: gap + y * verticesSpacing,
+        xRenderBot: gap + (x + S) * verticesSpacing,
+        yRenderBot: gap + middle + (y + S) * verticesSpacing,
       });
     }
   }
@@ -65,9 +55,26 @@ function createVerticesBot() {
 function setupInput(canvas: HTMLCanvasElement) {
   const bounds = canvas.getBoundingClientRect();
   canvas.addEventListener("pointermove", (event: PointerEvent) => {
-    pointer.x = event.clientX - bounds.left;
-    pointer.y = event.clientY - bounds.top;
-    pointerNoGap.set(pointer.x - gap, pointer.y - gap);
+    const x = event.clientX - bounds.left;
+    const y = event.clientY - bounds.top;
+
+    if (y <= middle) {
+      pointerTop.set(x, y);
+
+      pointerNoGapTop.copy(pointerTop).decrease(gap, gap);
+
+      const S = (pointerNoGapTop.x + pointerNoGapTop.y) * F;
+      pointerBot.copy(pointerTop).increase(S, middle + S);
+    } else {
+      pointerBot.set(x, y);
+
+      pointerNoGapBot.copy(pointerBot).decrease(gap, gap);
+
+      const U = (pointerNoGapBot.x + (pointerNoGapBot.y - middle)) * G;
+      pointerTop.copy(pointerBot).decrease(U, middle + U);
+
+      pointerNoGapTop.copy(pointerTop).decrease(gap, gap);
+    }
   });
 }
 
@@ -78,44 +85,24 @@ function background(context: CanvasRenderingContext2D) {
   context.fillRect(0, middle, Config.width, middle);
 }
 
-function renderVerticesTop(context: CanvasRenderingContext2D, vertices: Vertex[][]) {
-  context.fillStyle = Config.colors.verticesTop;
+function renderVertices(context: CanvasRenderingContext2D, vertices: Vertex[][]) {
+  context.fillStyle = Config.colors.gridTop;
   for (const row of vertices) {
     for (const vertex of row) {
-      Canvas2D.circleFill(context, vertex.xRender, vertex.yRender, Config.vertexRadius);
-    }
-  }
-}
-
-function renderVerticesBot(context: CanvasRenderingContext2D, vertices: Vertex[][]) {
-  context.fillStyle = Config.colors.verticesBot;
-  for (const row of vertices) {
-    for (const vertex of row) {
-      Canvas2D.circleFill(context, vertex.xRender, vertex.yRender, Config.vertexRadius);
+      Canvas2D.circleFill(context, vertex.xRenderTop, vertex.yRenderTop, Config.vertexRadius);
+      Canvas2D.circleFill(context, vertex.xRenderBot, vertex.yRenderBot, Config.vertexRadius);
     }
   }
 }
 
 function renderPointer(context: CanvasRenderingContext2D) {
-  if (pointer.y <= middle) {
-    const S = (pointerNoGap.x + pointerNoGap.y) * F;
-    context.fillStyle = Config.colors.pointerTop;
-    Canvas2D.circleFill(context, pointer.x, pointer.y, Config.poitnerRadius);
-    context.fillStyle = Config.colors.pointerBot;
-    Canvas2D.circleFill(context, pointer.x + S, pointer.y + middle + S, Config.poitnerRadius);
-  } else {
-    const yTop = pointer.y % middle;
-    const U = (pointerNoGap.x + (yTop - gap)) * G;
-    context.fillStyle = Config.colors.pointerTop;
-    Canvas2D.circleFill(context, pointer.x - U, yTop - U, Config.poitnerRadius);
-    context.fillStyle = Config.colors.pointerBot;
-    Canvas2D.circleFill(context, pointer.x, pointer.y, Config.poitnerRadius);
-  }
+  context.fillStyle = Config.colors.pointer;
+  Canvas2D.circleFill(context, pointerTop.x, pointerTop.y, Config.poitnerRadius);
+  Canvas2D.circleFill(context, pointerBot.x, pointerBot.y, Config.poitnerRadius);
 }
 
 function renderEdgesTop(context: CanvasRenderingContext2D, vertices: Vertex[][]) {
-  context.lineWidth = Config.edgeWidth;
-  context.strokeStyle = Config.colors.verticesTop;
+  context.strokeStyle = Config.colors.gridTop;
 
   for (let x = 0; x < vertices.length; x++) {
     for (let y = 0; y < vertices.length; y++) {
@@ -125,10 +112,10 @@ function renderEdgesTop(context: CanvasRenderingContext2D, vertices: Vertex[][])
         const bottom = vertices[x][y + 1];
         Canvas2D.line(
           context,
-          gap + vertex.x * verticesSpacing,
-          gap + vertex.y * verticesSpacing,
-          gap + bottom.x * verticesSpacing,
-          gap + bottom.y * verticesSpacing,
+          vertex.xRenderTop,
+          vertex.yRenderTop,
+          bottom.xRenderTop,
+          bottom.yRenderTop,
         );
       }
 
@@ -136,10 +123,10 @@ function renderEdgesTop(context: CanvasRenderingContext2D, vertices: Vertex[][])
         const right = vertices[x + 1][y];
         Canvas2D.line(
           context,
-          gap + vertex.x * verticesSpacing,
-          gap + vertex.y * verticesSpacing,
-          gap + right.x * verticesSpacing,
-          gap + right.y * verticesSpacing,
+          vertex.xRenderTop,
+          vertex.yRenderTop,
+          right.xRenderTop,
+          right.yRenderTop,
         );
       }
 
@@ -147,10 +134,10 @@ function renderEdgesTop(context: CanvasRenderingContext2D, vertices: Vertex[][])
         const botLeft = vertices[x - 1][y + 1];
         Canvas2D.line(
           context,
-          gap + vertex.x * verticesSpacing,
-          gap + vertex.y * verticesSpacing,
-          gap + botLeft.x * verticesSpacing,
-          gap + botLeft.y * verticesSpacing,
+          vertex.xRenderTop,
+          vertex.yRenderTop,
+          botLeft.xRenderTop,
+          botLeft.yRenderTop,
         );
       }
     }
@@ -158,8 +145,7 @@ function renderEdgesTop(context: CanvasRenderingContext2D, vertices: Vertex[][])
 }
 
 function renderEdgesBot(context: CanvasRenderingContext2D, vertices: Vertex[][]) {
-  context.lineWidth = Config.edgeWidth;
-  context.strokeStyle = Config.colors.verticesBot;
+  context.strokeStyle = Config.colors.gridBot;
 
   for (let x = 0; x < vertices.length; x++) {
     for (let y = 0; y < vertices.length; y++) {
@@ -167,20 +153,81 @@ function renderEdgesBot(context: CanvasRenderingContext2D, vertices: Vertex[][])
 
       if (y < vertices.length - 1) {
         const bottom = vertices[x][y + 1];
-        Canvas2D.line(context, vertex.xRender, vertex.yRender, bottom.xRender, bottom.yRender);
+        Canvas2D.line(
+          context,
+          vertex.xRenderBot,
+          vertex.yRenderBot,
+          bottom.xRenderBot,
+          bottom.yRenderBot,
+        );
       }
 
       if (x < vertices.length - 1) {
         const right = vertices[x + 1][y];
-        Canvas2D.line(context, vertex.xRender, vertex.yRender, right.xRender, right.yRender);
+        Canvas2D.line(
+          context,
+          vertex.xRenderBot,
+          vertex.yRenderBot,
+          right.xRenderBot,
+          right.yRenderBot,
+        );
       }
 
       if (x > 0 && y < vertices.length - 1) {
         const botLeft = vertices[x - 1][y + 1];
-        Canvas2D.line(context, vertex.xRender, vertex.yRender, botLeft.xRender, botLeft.yRender);
+        Canvas2D.line(
+          context,
+          vertex.xRenderBot,
+          vertex.yRenderBot,
+          botLeft.xRenderBot,
+          botLeft.yRenderBot,
+        );
       }
     }
   }
+}
+
+function renderTargetTriangle(context: CanvasRenderingContext2D, vertices: Vertex[][]) {
+  const x = pointerNoGapTop.x / verticesSpacing;
+  const y = pointerNoGapTop.y / verticesSpacing;
+
+  const xFloor = Math.floor(x);
+  const yFloor = Math.floor(y);
+
+  if (xFloor < 0 || yFloor < 0 || xFloor >= vertices.length - 1 || yFloor >= vertices.length - 1)
+    return;
+
+  const xMod = x % 1;
+  const yMod = y % 1;
+
+  const isLeft = 1 - xMod > yMod;
+
+  const a = isLeft ? vertices[xFloor][yFloor] : vertices[xFloor + 1][yFloor + 1];
+  const b = vertices[xFloor + 1][yFloor];
+  const c = vertices[xFloor][yFloor + 1];
+
+  context.lineWidth = Config.targetEdgesWidth;
+  context.fillStyle = Config.colors.targetVertices;
+
+  context.strokeStyle = Config.colors.gridTopLighter;
+
+  Canvas2D.line(context, a.xRenderTop, a.yRenderTop, b.xRenderTop, b.yRenderTop);
+  Canvas2D.line(context, b.xRenderTop, b.yRenderTop, c.xRenderTop, c.yRenderTop);
+  Canvas2D.line(context, c.xRenderTop, c.yRenderTop, a.xRenderTop, a.yRenderTop);
+
+  Canvas2D.circleFill(context, a.xRenderTop, a.yRenderTop, Config.targetVertexRadius);
+  Canvas2D.circleFill(context, b.xRenderTop, b.yRenderTop, Config.targetVertexRadius);
+  Canvas2D.circleFill(context, c.xRenderTop, c.yRenderTop, Config.targetVertexRadius);
+
+  context.strokeStyle = Config.colors.gridBotLighter;
+
+  Canvas2D.line(context, a.xRenderBot, a.yRenderBot, b.xRenderBot, b.yRenderBot);
+  Canvas2D.line(context, b.xRenderBot, b.yRenderBot, c.xRenderBot, c.yRenderBot);
+  Canvas2D.line(context, c.xRenderBot, c.yRenderBot, a.xRenderBot, a.yRenderBot);
+
+  Canvas2D.circleFill(context, a.xRenderBot, a.yRenderBot, Config.targetVertexRadius);
+  Canvas2D.circleFill(context, b.xRenderBot, b.yRenderBot, Config.targetVertexRadius);
+  Canvas2D.circleFill(context, c.xRenderBot, c.yRenderBot, Config.targetVertexRadius);
 }
 
 export function gridReflection(canvas: HTMLCanvasElement) {
@@ -188,16 +235,20 @@ export function gridReflection(canvas: HTMLCanvasElement) {
 
   setupInput(canvas);
 
-  const verticesTop = createVerticesTop();
-  const verticesBot = createVerticesBot();
+  const vertices = createVertices();
 
   const loop = () => {
     background(context);
-    renderVerticesTop(context, verticesTop);
-    renderVerticesBot(context, verticesBot);
-    renderEdgesTop(context, verticesTop);
-    renderEdgesBot(context, verticesBot);
+
+    renderVertices(context, vertices);
+
+    context.lineWidth = Config.edgeWidth;
+    renderEdgesTop(context, vertices);
+    renderEdgesBot(context, vertices);
+
     renderPointer(context);
+
+    renderTargetTriangle(context, vertices);
 
     requestAnimationFrame(loop);
   };
