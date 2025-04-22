@@ -9,16 +9,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@packages/quadtree-simulation": "workspace:*",
     "@packages/easing-functions": "workspace:*",
     "@packages/learning-noise": "workspace:*",
     "@packages/pathfinder": "workspace:*",
-    "@packages/tsunagari": "workspace:*",
-    "@packages/test": "workspace:*"
+    "@packages/quadtree-simulation": "workspace:*",
+    "@packages/test": "workspace:*",
+    "@packages/tsunagari": "workspace:*"
   },
   "devDependencies": {
     "@utilities/typescript-config": "workspace:*",
     "typescript": "latest",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "vite-plugin-singlefile": "^2.2.0"
   }
 }
