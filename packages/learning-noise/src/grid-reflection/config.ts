@@ -2,6 +2,8 @@ export namespace Config {
   export const width = 450;
   export const height = 900;
 
+  export const timeIncrement = 0.01;
+
   export const verticesPerRow = 5;
   export const vertexRadius = 4;
   export const edgeWidth = 1;
