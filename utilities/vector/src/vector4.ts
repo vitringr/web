@@ -66,16 +66,32 @@ export class Vector4 {
     public y: number,
     public z: number,
     public w: number,
-  ) { }
+  ) {}
 
-  get r() { return this.x; }
-  set r(value: number) { this.x = value; }
-  get g() { return this.y; }
-  set g(value: number) { this.y = value; }
-  get b() { return this.z; }
-  set b(value: number) { this.z = value; }
-  get a() { return this.w; }
-  set a(value: number) { this.w = value; }
+  get r() {
+    return this.x;
+  }
+  set r(value: number) {
+    this.x = value;
+  }
+  get g() {
+    return this.y;
+  }
+  set g(value: number) {
+    this.y = value;
+  }
+  get b() {
+    return this.z;
+  }
+  set b(value: number) {
+    this.z = value;
+  }
+  get a() {
+    return this.w;
+  }
+  set a(value: number) {
+    this.w = value;
+  }
 
   clone() {
     return new Vector4(this.x, this.y, this.z, this.w);
@@ -142,6 +158,38 @@ export class Vector4 {
     this.y *= scalar;
     this.z *= scalar;
     this.w *= scalar;
+    return this;
+  }
+
+  floor() {
+    this.x = Math.floor(this.x);
+    this.y = Math.floor(this.y);
+    this.z = Math.floor(this.z);
+    this.w = Math.floor(this.w);
+    return this;
+  }
+
+  ceil() {
+    this.x = Math.ceil(this.x);
+    this.y = Math.ceil(this.y);
+    this.z = Math.ceil(this.z);
+    this.w = Math.ceil(this.w);
+    return this;
+  }
+
+  round() {
+    this.x = Math.round(this.x);
+    this.y = Math.round(this.y);
+    this.z = Math.round(this.z);
+    this.w = Math.round(this.w);
+    return this;
+  }
+
+  abs() {
+    this.x = Math.abs(this.x);
+    this.y = Math.abs(this.y);
+    this.z = Math.abs(this.z);
+    this.w = Math.abs(this.w);
     return this;
   }
 

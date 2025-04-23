@@ -17,7 +17,6 @@ function setupContext(canvas: HTMLCanvasElement) {
 
 export function simplexNoise(canvas: HTMLCanvasElement) {
   const context = setupContext(canvas);
-
   const pixels = Pixel.createAll();
   const cells = Cell.createAll();
   const gradients = Gradient.createAll();

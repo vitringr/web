@@ -60,14 +60,26 @@ export class Vector3 {
     public x: number,
     public y: number,
     public z: number,
-  ) { }
+  ) {}
 
-  get r() { return this.x; }
-  set r(value: number) { this.x = value; }
-  get g() { return this.y; }
-  set g(value: number) { this.y = value; }
-  get b() { return this.z; }
-  set b(value: number) { this.z = value; }
+  get r() {
+    return this.x;
+  }
+  set r(value: number) {
+    this.x = value;
+  }
+  get g() {
+    return this.y;
+  }
+  set g(value: number) {
+    this.y = value;
+  }
+  get b() {
+    return this.z;
+  }
+  set b(value: number) {
+    this.z = value;
+  }
 
   clone() {
     return new Vector3(this.x, this.y, this.z);
@@ -126,6 +138,34 @@ export class Vector3 {
     this.x *= scalar;
     this.y *= scalar;
     this.z *= scalar;
+    return this;
+  }
+
+  floor() {
+    this.x = Math.floor(this.x);
+    this.y = Math.floor(this.y);
+    this.z = Math.floor(this.z);
+    return this;
+  }
+
+  ceil() {
+    this.x = Math.ceil(this.x);
+    this.y = Math.ceil(this.y);
+    this.z = Math.ceil(this.z);
+    return this;
+  }
+
+  round() {
+    this.x = Math.round(this.x);
+    this.y = Math.round(this.y);
+    this.z = Math.round(this.z);
+    return this;
+  }
+
+  abs() {
+    this.x = Math.abs(this.x);
+    this.y = Math.abs(this.y);
+    this.z = Math.abs(this.z);
     return this;
   }
 

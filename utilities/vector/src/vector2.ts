@@ -156,6 +156,30 @@ export class Vector2 {
     return this;
   }
 
+  floor() {
+    this.x = Math.floor(this.x);
+    this.y = Math.floor(this.y);
+    return this;
+  }
+
+  ceil() {
+    this.x = Math.ceil(this.x);
+    this.y = Math.ceil(this.y);
+    return this;
+  }
+
+  round() {
+    this.x = Math.round(this.x);
+    this.y = Math.round(this.y);
+    return this;
+  }
+
+  abs() {
+    this.x = Math.abs(this.x);
+    this.y = Math.abs(this.y);
+    return this;
+  }
+
   magnitudeSquared() {
     return this.x * this.x + this.y * this.y;
   }
