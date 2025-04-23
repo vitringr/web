@@ -1,7 +1,7 @@
 import { Canvas2D } from "@utilities/canvas2d";
 import { Vector2 } from "@utilities/vector";
 import { Colors } from "@utilities/colors";
-import { Config } from "./config";
+import { Config } from "../config";
 
 const pixelWidth = Config.width / Config.pixelsPerRow;
 

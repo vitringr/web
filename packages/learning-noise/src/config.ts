@@ -4,9 +4,10 @@ enum Mode {
   PERLIN,
   SIMPLEX,
 
+  // Intuition:
   GRID_SKEWING,
   GRID_REFLECTION,
   INFLUENCE,
 }
 
-export const mode: Mode = Mode.GRID_REFLECTION;
+export const mode: Mode = Mode.SIMPLEX;

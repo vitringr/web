@@ -2,7 +2,7 @@ import { Mathematics } from "@utilities/mathematics";
 import { Canvas2D } from "@utilities/canvas2d";
 import { Vector2 } from "@utilities/vector";
 import { Random } from "@utilities/random";
-import { Config } from "./config";
+import { Config } from "../config";
 
 const pixelsPerCell = Config.pixelsPerRow / Config.cellsPerRow;
 const cellWidth = Config.width / Config.cellsPerRow;

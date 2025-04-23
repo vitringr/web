@@ -1,7 +1,7 @@
-import { Gradient } from "./gradient";
+import { Gradient } from "./reusable/gradient";
 import { Config } from "./config";
-import { Pixel } from "./pixel";
-import { Cell } from "./cell";
+import { Pixel } from "./reusable/pixel";
+import { Cell } from "./reusable/cell";
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = canvas.height = Config.width;

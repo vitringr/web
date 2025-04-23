@@ -1,5 +1,5 @@
 import { Vector2 } from "@utilities/vector";
-import { Config } from "./config";
+import { Config } from "../config";
 
 const pixelsPerCell = Config.pixelsPerRow / Config.cellsPerRow;
 const cellWidth = Config.width / Config.cellsPerRow;

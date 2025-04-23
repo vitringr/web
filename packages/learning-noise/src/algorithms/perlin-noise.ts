@@ -1,10 +1,10 @@
 import { Mathematics } from "@utilities/mathematics";
 import { Vector2 } from "@utilities/vector";
 import { Easing } from "@utilities/easing";
-import { Gradient } from "./gradient";
+import { Gradient } from "./reusable/gradient";
 import { Config } from "./config";
-import { Pixel } from "./pixel";
-import { Cell } from "./cell";
+import { Pixel } from "./reusable/pixel";
+import { Cell } from "./reusable/cell";
 
 const pixelsPerCell = Config.pixelsPerRow / Config.cellsPerRow;
 
