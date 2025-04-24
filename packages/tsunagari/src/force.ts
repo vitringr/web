@@ -1,8 +1,8 @@
 import { Quadtree } from "@utilities/quadtree";
 import { Vector2 } from "@utilities/vector";
-import Config from "./config";
-import { Node } from "./node";
+import { Config } from "./config";
 import { Field } from "./quadtree";
+import { Node } from "./node";
 
 const EPSILON: number = 1e-10;
 const CENTER = new Vector2(Config.width, Config.height).scale(0.5);

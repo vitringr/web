@@ -44,8 +44,8 @@ export class Gradient {
     ];
   }
 
-  readonly vector = Vector2.zero();
-  readonly position = Vector2.zero();
+  readonly vector = Vector2.Create.zero();
+  readonly position = Vector2.Create.zero();
 
   constructor(
     readonly x: number,

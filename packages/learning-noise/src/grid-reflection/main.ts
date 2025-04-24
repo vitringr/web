@@ -14,7 +14,7 @@ const middle = Config.height * 0.5;
 const verticesSpacing = Config.width / Config.verticesPerRow;
 const gap = verticesSpacing * 0.5;
 
-const input = Vector2.one().scale(-10);
+const input = Vector2.Create.one().scale(-10);
 const pointerTop = input.clone();
 const pointerBot = input.clone();
 const pointerNoGapTop = input.clone();

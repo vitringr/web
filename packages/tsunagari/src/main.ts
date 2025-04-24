@@ -1,10 +1,10 @@
 import { Quadtree } from "@utilities/quadtree";
 import { Field } from "./quadtree";
 import { Renderer } from "./render";
+import { Config } from "./config";
 import { Force } from "./force";
 import { Input } from "./input";
 import { Node } from "./node";
-import Config from "./config";
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = Config.width;

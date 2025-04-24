@@ -14,14 +14,17 @@ export class Vector2 {
   get r() {
     return this.x;
   }
+
   /** Alias for x. */
   set r(value: number) {
     this.x = value;
   }
+
   /** Alias for y. */
   get g() {
     return this.y;
   }
+
   /** Alias for y. */
   set g(value: number) {
     this.y = value;
@@ -219,85 +222,78 @@ export namespace Vector2 {
       return new Vector2(Math.random(), Math.random());
     }
 
+    const SIN_45 = 0.7071067811865476;
+
     /**
      *
-     * Contains factory methods for normalized cardinal and ordinal direction vectors.
-     * @namespace Directions
+     * Returns a normalized vector pointing north.
+     * @returns {Vector2} (0, -1)
      */
-    export namespace Directions {
-      const SIN_45 = 0.7071067811865476;
+    export function north(): Vector2 {
+      return new Vector2(0, -1);
+    }
 
-      /**
-       *
-       * Returns a normalized vector pointing north.
-       * @returns {Vector2} (0, -1)
-       */
-      export function north(): Vector2 {
-        return new Vector2(0, -1);
-      }
+    /**
+     *
+     * Returns a normalized vector pointing northEast.
+     * @returns {Vector2} (0.707..., -0.707...)
+     */
+    export function northEast(): Vector2 {
+      return new Vector2(SIN_45, -SIN_45);
+    }
 
-      /**
-       *
-       * Returns a normalized vector pointing northEast.
-       * @returns {Vector2} (0.707..., -0.707...)
-       */
-      export function northEast(): Vector2 {
-        return new Vector2(SIN_45, -SIN_45);
-      }
+    /**
+     *
+     * Returns a normalized vector pointing east.
+     * @returns {Vector2} (1, 0)
+     */
+    export function east(): Vector2 {
+      return new Vector2(1, 0);
+    }
 
-      /**
-       *
-       * Returns a normalized vector pointing east.
-       * @returns {Vector2} (1, 0)
-       */
-      export function east(): Vector2 {
-        return new Vector2(1, 0);
-      }
+    /**
+     *
+     * Returns a normalized vector pointing southEast.
+     * @returns {Vector2} (0.707..., 0.707...)
+     */
+    export function southEast(): Vector2 {
+      return new Vector2(SIN_45, SIN_45);
+    }
 
-      /**
-       *
-       * Returns a normalized vector pointing southEast.
-       * @returns {Vector2} (0.707..., 0.707...)
-       */
-      export function southEast(): Vector2 {
-        return new Vector2(SIN_45, SIN_45);
-      }
+    /**
+     *
+     * Returns a normalized vector pointing south.
+     * @returns {Vector2} (0, 1)
+     */
+    export function south(): Vector2 {
+      return new Vector2(0, 1);
+    }
 
-      /**
-       *
-       * Returns a normalized vector pointing south.
-       * @returns {Vector2} (0, 1)
-       */
-      export function south(): Vector2 {
-        return new Vector2(0, 1);
-      }
+    /**
+     *
+     * Returns a normalized vector pointing southWest.
+     * @returns {Vector2} (-0.707..., 0.707...)
+     */
+    export function southWest(): Vector2 {
+      return new Vector2(-SIN_45, SIN_45);
+    }
 
-      /**
-       *
-       * Returns a normalized vector pointing southWest.
-       * @returns {Vector2} (-0.707..., 0.707...)
-       */
-      export function southWest(): Vector2 {
-        return new Vector2(-SIN_45, SIN_45);
-      }
+    /**
+     *
+     * Returns a normalized vector pointing west.
+     * @returns {Vector2} (-1, 0)
+     */
+    export function west(): Vector2 {
+      return new Vector2(-1, 0);
+    }
 
-      /**
-       *
-       * Returns a normalized vector pointing west.
-       * @returns {Vector2} (-1, 0)
-       */
-      export function west(): Vector2 {
-        return new Vector2(-1, 0);
-      }
-
-      /**
-       *
-       * Returns a normalized vector pointing northWest.
-       * @returns {Vector2} (-0.707..., -0.707...)
-       */
-      export function northWest(): Vector2 {
-        return new Vector2(-SIN_45, -SIN_45);
-      }
+    /**
+     *
+     * Returns a normalized vector pointing northWest.
+     * @returns {Vector2} (-0.707..., -0.707...)
+     */
+    export function northWest(): Vector2 {
+      return new Vector2(-SIN_45, -SIN_45);
     }
   }
 

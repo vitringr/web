@@ -45,7 +45,7 @@ export class Value {
   }
 
   readonly value = Random.range(0, 1);
-  readonly position = Vector2.zero();
+  readonly position = Vector2.Create.zero();
 
   constructor(
     readonly x: number,

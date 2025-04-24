@@ -40,7 +40,7 @@ export class Pixel {
     }
   }
 
-  readonly position = Vector2.zero();
+  readonly position = Vector2.Create.zero();
 
   color: number = 0;
 

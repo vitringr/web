@@ -1,14 +1,14 @@
 import { Vector2 } from "@utilities/vector";
 
 const gradients: Vector2[] = [
-  Vector2.north(),
-  Vector2.northEast(),
-  Vector2.east(),
-  Vector2.southEast(),
-  Vector2.south(),
-  Vector2.southWest(),
-  Vector2.west(),
-  Vector2.northWest(),
+  Vector2.Create.north(),
+  Vector2.Create.northEast(),
+  Vector2.Create.east(),
+  Vector2.Create.southEast(),
+  Vector2.Create.south(),
+  Vector2.Create.southWest(),
+  Vector2.Create.west(),
+  Vector2.Create.northWest(),
 ] as const;
 
 const skewFactor = 0.5 * (Math.sqrt(3) - 1);
@@ -19,5 +19,5 @@ function generate(input: Vector2) {
 
   const skewed = input.clone().increase(skewAmount, skewAmount);
 
-  const base = skewed
+  const base = skewed;
 }

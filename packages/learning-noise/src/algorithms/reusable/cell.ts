@@ -36,7 +36,7 @@ export class Cell {
     return cells[xCell][yCell];
   }
 
-  readonly position = Vector2.zero();
+  readonly position = Vector2.Create.zero();
 
   constructor(
     readonly x: number,

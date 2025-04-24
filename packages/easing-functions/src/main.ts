@@ -136,7 +136,7 @@ export function main(canvas: HTMLCanvasElement) {
         namedEasingFunctions[i].f(time),
       );
 
-      Canvas2D.fillCircle(context, easing, y, Config.radius);
+      Canvas2D.circleFill(context, easing, y, Config.radius);
 
       const linear = Mathematics.lerp(Config.left, Config.right, time);
 

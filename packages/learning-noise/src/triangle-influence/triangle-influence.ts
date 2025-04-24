@@ -40,7 +40,7 @@ function setupContext(canvas: HTMLCanvasElement) {
 // ------------
 
 let _targetColor = "#000000";
-const _target = Vector2.zero();
+const _target = Vector2.Create.zero();
 const _offset = new Vector2(Config.xOffset, Config.yOffset);
 const _influenceRadius = influenceRadius * Config.upscale;
 const _A = A.clone().scale(Config.upscale).add(_offset);

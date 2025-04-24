@@ -1,4 +1,3 @@
-import { Vector2 } from "./utilities/vector2";
 import { Config } from "./config";
 
 export class Input {

@@ -9,8 +9,8 @@ const middle = Config.height * 0.5;
 const verticesSpacing = Config.width / Config.verticesPerRow;
 const gap = verticesSpacing * 0.5;
 
-const pointer = Vector2.zero();
-const pointerNoGap = Vector2.zero();
+const pointer = Vector2.Create.zero();
+const pointerNoGap = Vector2.Create.zero();
 
 function createVertices() {
   const vertices: Vector2[][] = [];

@@ -2,11 +2,11 @@ import { Collision } from "@utilities/collision";
 import { Rectangle } from "@utilities/shapes";
 import { Quadtree } from "@utilities/quadtree";
 import { Vector2 } from "@utilities/vector";
-import Config from "./config";
+import { Config } from "./config";
 import { Node } from "./node";
 
 export class Input {
-  position = Vector2.infinity();
+  position = Vector2.Create.infinity();
   isClicked: boolean = false;
 
   targetedNodeID: number | null = null;

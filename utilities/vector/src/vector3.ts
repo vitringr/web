@@ -16,22 +16,27 @@ export class Vector3 {
   get r() {
     return this.x;
   }
+
   /** Alias for x. */
   set r(value: number) {
     this.x = value;
   }
+
   /** Alias for y. */
   get g() {
     return this.y;
   }
+
   /** Alias for y. */
   set g(value: number) {
     this.y = value;
   }
+
   /** Alias for z. */
   get b() {
     return this.z;
   }
+
   /** Alias for z. */
   set b(value: number) {
     this.z = value;

@@ -1,7 +1,7 @@
 import { Mathematics } from "@utilities/mathematics";
 import { Quadtree } from "@utilities/quadtree";
 import { Vector2 } from "@utilities/vector";
-import Config from "./config";
+import { Config } from "./config";
 import { Node } from "./node";
 
 export class Renderer {
@@ -53,8 +53,8 @@ export class Renderer {
     this.context.strokeStyle = Config.render.velocity.color;
     this.context.lineWidth = Config.render.velocity.width;
 
-    const arrow = Vector2.zero();
-    const target = Vector2.zero();
+    const arrow = Vector2.Create.zero();
+    const target = Vector2.Create.zero();
 
     for (const node of nodes) {
       if (!node.inQuadtree) continue;

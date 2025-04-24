@@ -1,5 +1,5 @@
 import { Quadtree } from "@utilities/quadtree";
-import Config from "./config";
+import { Config } from "./config";
 import { Node } from "./node";
 
 export namespace Field {

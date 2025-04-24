@@ -1,13 +1,13 @@
-export default {
-  width: 900,
-  height: 900,
+export namespace Config {
+  export const width = 900;
+  export const height = 900;
 
-  log: {
+  export const log = {
     quadtrees: false,
     displayedNodes: false,
-  },
+  } as const;
 
-  force: {
+  export const force = {
     maxVelocity: Infinity,
     center: {
       active: true,
@@ -26,9 +26,9 @@ export default {
       active: true,
       scalar: 0.98,
     },
-  },
+  } as const;
 
-  render: {
+  export const render = {
     background: {
       active: true,
       color: "#111111",
@@ -59,13 +59,13 @@ export default {
       connected: "#FFCC11",
       connection: "#FFBB11",
     },
-  },
+  } as const;
 
-  quadtree: {
+  export const quadtree = {
     capacity: 10,
-  },
+  } as const;
 
-  nodes: {
+  export const nodes = {
     spawn: {
       active: true,
       count: 300,
@@ -78,5 +78,5 @@ export default {
         max: 3,
       },
     },
-  },
-} as const;
+  } as const;
+}
