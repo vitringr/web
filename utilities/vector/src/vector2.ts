@@ -1,202 +1,5 @@
-const SIN_45 = 0.7071067811865476;
-
 /** Mutable 2D Vector class. */
 export class Vector2 {
-  /**
-   *
-   * Contains methods that create common vector instances.
-   * @namespace Create
-   */
-  static Create = class {
-    /** Returns a (0, 0) vector. */
-    static zero() {
-      return new Vector2(0, 0);
-    }
-
-    /** Returns a (1, 1) vector. */
-    static one() {
-      return new Vector2(1, 1);
-    }
-
-    /** Returns a (Infinity, Infinity) vector. */
-    static infinity() {
-      return new Vector2(Infinity, Infinity);
-    }
-
-    /** Returns a vector with random components in the 0 to 1 range. */
-    static random() {
-      return new Vector2(Math.random(), Math.random());
-    }
-
-    /**
-     *
-     * Contains factory methods for normalized cardinal and intercardinal direction vectors.
-     * @namespace Directions
-     */
-    static Directions = class {
-      /**
-       *
-       * Returns a normalized vector pointing north.
-       * @returns {Vector2} (0, -1)
-       */
-      static north(): Vector2 {
-        return new Vector2(0, -1);
-      }
-
-      /**
-       *
-       * Returns a normalized vector pointing northEast.
-       * @returns {Vector2} (0.707..., -0.707...)
-       */
-      static northEast(): Vector2 {
-        return new Vector2(SIN_45, -SIN_45);
-      }
-
-      /**
-       *
-       * Returns a normalized vector pointing east.
-       * @returns {Vector2} (1, 0)
-       */
-      static east(): Vector2 {
-        return new Vector2(1, 0);
-      }
-
-      /**
-       *
-       * Returns a normalized vector pointing southEast.
-       * @returns {Vector2} (0.707..., 0.707...)
-       */
-      static southEast(): Vector2 {
-        return new Vector2(SIN_45, SIN_45);
-      }
-
-      /**
-       *
-       * Returns a normalized vector pointing south.
-       * @returns {Vector2} (0, 1)
-       */
-      static south(): Vector2 {
-        return new Vector2(0, 1);
-      }
-
-      /**
-       *
-       * Returns a normalized vector pointing southWest.
-       * @returns {Vector2} (-0.707..., 0.707...)
-       */
-      static southWest(): Vector2 {
-        return new Vector2(-SIN_45, SIN_45);
-      }
-
-      /**
-       *
-       * Returns a normalized vector pointing west.
-       * @returns {Vector2} (-1, 0)
-       */
-      static west(): Vector2 {
-        return new Vector2(-1, 0);
-      }
-
-      /**
-       *
-       * Returns a normalized vector pointing northWest.
-       * @returns {Vector2} (-0.707..., -0.707...)
-       */
-      static northWest(): Vector2 {
-        return new Vector2(-SIN_45, -SIN_45);
-      }
-    };
-  };
-
-  /**
-   * Returns a new duplicate of the given vector.
-   * @param vector2 The vector to clone
-   */
-  static clone(vector2: Vector2) {
-    return new Vector2(vector2.x, vector2.y);
-  }
-
-  /**
-   * Adds two vectors component-wise and returns the result as a new vector.
-   * @param va First vector
-   * @param vb Second vector
-   */
-  static add(va: Vector2, vb: Vector2) {
-    return new Vector2(va.x + vb.x, va.y + vb.y);
-  }
-
-  /**
-   * Subtracts the second vector from the first component-wise and returns the result as a new vector.
-   * @param va First vector
-   * @param vb Second vector to subtract
-   */
-  static subtract(va: Vector2, vb: Vector2) {
-    return new Vector2(va.x - vb.x, va.y - vb.y);
-  }
-
-  /**
-   * Multiplies two vectors component-wise and returns the result as a new vector.
-   * @param va First vector
-   * @param vb Second vector
-   */
-  static multiply(va: Vector2, vb: Vector2) {
-    return new Vector2(va.x * vb.x, va.y * vb.y);
-  }
-
-  /**
-   * Divides the first vector by the second component-wise and returns the result as a new vector.
-   *
-   * WARNING: Does not check for division by zero.
-   *
-   * @param va First vector (dividend)
-   * @param vb Second vector (divisor)
-   */
-  static divide(va: Vector2, vb: Vector2) {
-    return new Vector2(va.x / vb.x, va.y / vb.y);
-  }
-
-  /**
-   * Calculates the squared distance between two vectors (faster than distance).
-   * @param va First vector
-   * @param vb Second vector
-   */
-  static distanceSquared(va: Vector2, vb: Vector2) {
-    const xDistance = va.x - vb.x;
-    const yDistance = va.y - vb.y;
-    return xDistance * xDistance + yDistance * yDistance;
-  }
-
-  /**
-   * Calculates the Euclidean distance between two vectors.
-   * @param va First vector
-   * @param vb Second vector
-   */
-  static distance(va: Vector2, vb: Vector2) {
-    return Math.sqrt(Vector2.distanceSquared(va, vb));
-  }
-
-  /**
-   * Calculates the dot product of two vectors.
-   * @param va First vector
-   * @param vb Second vector
-   */
-  static dot(va: Vector2, vb: Vector2) {
-    return va.x * vb.x + va.y * vb.y;
-  }
-
-  /**
-   * Performs linear interpolation between two vectors.
-   * @param va Starting vector
-   * @param vb Target vector
-   * @param step Interpolation factor (0 = va, 1 = vb)
-   */
-  static lerp(va: Vector2, vb: Vector2, step: number) {
-    return new Vector2(
-      va.x + step * (vb.x - va.x),
-      va.y + step * (vb.y - va.y),
-    );
-  }
-
   /**
    * Creates a new Vector2 instance.
    * @param x X component
@@ -386,5 +189,204 @@ export class Vector2 {
   /** Returns a string representation of this vector in the form "(x, y)". */
   toString() {
     return `(${this.x}, ${this.y})`;
+  }
+}
+
+export namespace Vector2 {
+  /**
+   *
+   * Contains methods that create common vector instances.
+   * @namespace Create
+   */
+  export namespace Create {
+    /** Returns a (0, 0) vector. */
+    export function zero() {
+      return new Vector2(0, 0);
+    }
+
+    /** Returns a (1, 1) vector. */
+    export function one() {
+      return new Vector2(1, 1);
+    }
+
+    /** Returns a (Infinity, Infinity) vector. */
+    export function infinity() {
+      return new Vector2(Infinity, Infinity);
+    }
+
+    /** Returns a vector with random (0 to 1 range) components */
+    export function random() {
+      return new Vector2(Math.random(), Math.random());
+    }
+
+    /**
+     *
+     * Contains factory methods for normalized cardinal and ordinal direction vectors.
+     * @namespace Directions
+     */
+    export namespace Directions {
+      const SIN_45 = 0.7071067811865476;
+
+      /**
+       *
+       * Returns a normalized vector pointing north.
+       * @returns {Vector2} (0, -1)
+       */
+      export function north(): Vector2 {
+        return new Vector2(0, -1);
+      }
+
+      /**
+       *
+       * Returns a normalized vector pointing northEast.
+       * @returns {Vector2} (0.707..., -0.707...)
+       */
+      export function northEast(): Vector2 {
+        return new Vector2(SIN_45, -SIN_45);
+      }
+
+      /**
+       *
+       * Returns a normalized vector pointing east.
+       * @returns {Vector2} (1, 0)
+       */
+      export function east(): Vector2 {
+        return new Vector2(1, 0);
+      }
+
+      /**
+       *
+       * Returns a normalized vector pointing southEast.
+       * @returns {Vector2} (0.707..., 0.707...)
+       */
+      export function southEast(): Vector2 {
+        return new Vector2(SIN_45, SIN_45);
+      }
+
+      /**
+       *
+       * Returns a normalized vector pointing south.
+       * @returns {Vector2} (0, 1)
+       */
+      export function south(): Vector2 {
+        return new Vector2(0, 1);
+      }
+
+      /**
+       *
+       * Returns a normalized vector pointing southWest.
+       * @returns {Vector2} (-0.707..., 0.707...)
+       */
+      export function southWest(): Vector2 {
+        return new Vector2(-SIN_45, SIN_45);
+      }
+
+      /**
+       *
+       * Returns a normalized vector pointing west.
+       * @returns {Vector2} (-1, 0)
+       */
+      export function west(): Vector2 {
+        return new Vector2(-1, 0);
+      }
+
+      /**
+       *
+       * Returns a normalized vector pointing northWest.
+       * @returns {Vector2} (-0.707..., -0.707...)
+       */
+      export function northWest(): Vector2 {
+        return new Vector2(-SIN_45, -SIN_45);
+      }
+    }
+  }
+
+  /**
+   * Returns a new duplicate of the given vector.
+   * @param vector2 The vector to clone
+   */
+  export function clone(vector2: Vector2) {
+    return new Vector2(vector2.x, vector2.y);
+  }
+
+  /**
+   * Adds two vectors component-wise and returns the result as a new vector.
+   * @param va First vector
+   * @param vb Second vector
+   */
+  export function add(va: Vector2, vb: Vector2) {
+    return new Vector2(va.x + vb.x, va.y + vb.y);
+  }
+
+  /**
+   * Subtracts the second vector from the first component-wise and returns the result as a new vector.
+   * @param va First vector
+   * @param vb Second vector to subtract
+   */
+  export function subtract(va: Vector2, vb: Vector2) {
+    return new Vector2(va.x - vb.x, va.y - vb.y);
+  }
+
+  /**
+   * Multiplies two vectors component-wise and returns the result as a new vector.
+   * @param va First vector
+   * @param vb Second vector
+   */
+  export function multiply(va: Vector2, vb: Vector2) {
+    return new Vector2(va.x * vb.x, va.y * vb.y);
+  }
+
+  /**
+   * Divides the first vector by the second component-wise and returns the result as a new vector.
+   *
+   * WARNING: Does not check for division by zero.
+   *
+   * @param va First vector (dividend)
+   * @param vb Second vector (divisor)
+   */
+  export function divide(va: Vector2, vb: Vector2) {
+    return new Vector2(va.x / vb.x, va.y / vb.y);
+  }
+
+  /**
+   * Calculates the squared distance between two vectors (faster than distance).
+   * @param va First vector
+   * @param vb Second vector
+   */
+  export function distanceSquared(va: Vector2, vb: Vector2) {
+    const xDistance = va.x - vb.x;
+    const yDistance = va.y - vb.y;
+    return xDistance * xDistance + yDistance * yDistance;
+  }
+
+  /**
+   * Calculates the Euclidean distance between two vectors.
+   * @param va First vector
+   * @param vb Second vector
+   */
+  export function distance(va: Vector2, vb: Vector2) {
+    return Math.sqrt(distanceSquared(va, vb));
+  }
+
+  /**
+   * Calculates the dot product of two vectors.
+   * @param va First vector
+   * @param vb Second vector
+   */
+  export function dot(va: Vector2, vb: Vector2) {
+    return va.x * vb.x + va.y * vb.y;
+  }
+
+  /**
+   * Performs linear interpolation between two vectors.
+   * @param va Starting vector
+   * @param vb Target vector
+   * @param step Interpolation factor (0 = va, 1 = vb)
+   */
+  export function lerp(va: Vector2, vb: Vector2, step: number) {
+    return new Vector2(
+      va.x + step * (vb.x - va.x),
+      va.y + step * (vb.y - va.y),
+    );
   }
 }

@@ -1,136 +1,6 @@
 /** Mutable 4D Vector class. */
 export class Vector4 {
   /**
-   *
-   * Contains methods that create common vector instances.
-   * @namespace Create
-   */
-  static Create = class {
-    /** Returns a (0, 0, 0, 0) vector. */
-    static zero() {
-      return new Vector4(0, 0, 0, 0);
-    }
-
-    /** Returns a (1, 1, 1, 1) vector. */
-    static one() {
-      return new Vector4(1, 1, 1, 1);
-    }
-
-    /** Returns a (Infinity, Infinity, Infinity, Infinity) vector. */
-    static infinity() {
-      return new Vector4(Infinity, Infinity, Infinity, Infinity);
-    }
-
-    /** Returns a vector with random components in the 0 to 1 range. */
-    static random() {
-      return new Vector4(
-        Math.random(),
-        Math.random(),
-        Math.random(),
-        Math.random(),
-      );
-    }
-  };
-
-  /**
-   * Returns a new duplicate of the given vector.
-   * @param vector4 The vector to clone
-   */
-  static clone(vector4: Vector4) {
-    return new Vector4(vector4.x, vector4.y, vector4.z, vector4.w);
-  }
-
-  /**
-   * Adds two vectors component-wise and returns the result as a new vector.
-   * @param va First vector
-   * @param vb Second vector
-   */
-  static add(va: Vector4, vb: Vector4) {
-    return new Vector4(va.x + vb.x, va.y + vb.y, va.z + vb.z, va.w + vb.w);
-  }
-
-  /**
-   * Subtracts the second vector from the first component-wise and returns the result as a new vector.
-   * @param va First vector
-   * @param vb Second vector to subtract
-   */
-  static subtract(va: Vector4, vb: Vector4) {
-    return new Vector4(va.x - vb.x, va.y - vb.y, va.z - vb.z, va.w - vb.w);
-  }
-
-  /**
-   * Multiplies two vectors component-wise and returns the result as a new vector.
-   * @param va First vector
-   * @param vb Second vector
-   */
-  static multiply(va: Vector4, vb: Vector4) {
-    return new Vector4(va.x * vb.x, va.y * vb.y, va.z * vb.z, va.w * vb.w);
-  }
-
-  /**
-   * Divides the first vector by the second component-wise and returns the result as a new vector.
-   *
-   * WARNING: Does not check for division by zero.
-   *
-   * @param va First vector (dividend)
-   * @param vb Second vector (divisor)
-   */
-  static divide(va: Vector4, vb: Vector4) {
-    return new Vector4(va.x / vb.x, va.y / vb.y, va.z / vb.z, va.w / vb.w);
-  }
-
-  /**
-   * Calculates the squared distance between two vectors (faster than distance).
-   * @param va First vector
-   * @param vb Second vector
-   */
-  static distanceSquared(va: Vector4, vb: Vector4) {
-    const xDistance = va.x - vb.x;
-    const yDistance = va.y - vb.y;
-    const zDistance = va.z - vb.z;
-    const wDistance = va.w - vb.w;
-    return (
-      xDistance * xDistance +
-      yDistance * yDistance +
-      zDistance * zDistance +
-      wDistance * wDistance
-    );
-  }
-
-  /**
-   * Calculates the Euclidean distance between two vectors.
-   * @param va First vector
-   * @param vb Second vector
-   */
-  static distance(va: Vector4, vb: Vector4) {
-    return Math.sqrt(this.distanceSquared(va, vb));
-  }
-
-  /**
-   * Calculates the dot product of two vectors.
-   * @param va First vector
-   * @param vb Second vector
-   */
-  static dot(va: Vector4, vb: Vector4) {
-    return va.x * vb.x + va.y * vb.y + va.z * vb.z + va.w * vb.w;
-  }
-
-  /**
-   * Performs linear interpolation between two vectors.
-   * @param va Starting vector
-   * @param vb Target vector
-   * @param step Interpolation factor (0 = va, 1 = vb)
-   */
-  static lerp(va: Vector4, vb: Vector4, step: number) {
-    return new Vector4(
-      va.x + step * (vb.x - va.x),
-      va.y + step * (vb.y - va.y),
-      va.z + step * (vb.z - va.z),
-      va.w + step * (vb.w - va.w),
-    );
-  }
-
-  /**
    * Creates a new Vector4 instance.
    * @param x X component or red in RGBA
    * @param y Y component or green in RGBA
@@ -373,5 +243,137 @@ export class Vector4 {
   /** Returns a string representation of this vector in the form "(x, y, z, w)". */
   toString() {
     return `(${this.x}, ${this.y}, ${this.z}, ${this.w})`;
+  }
+}
+
+export namespace Vector4 {
+  /**
+   *
+   * Contains methods that create common vector instances.
+   * @namespace Create
+   */
+  export namespace Create {
+    /** Returns a (0, 0, 0, 0) vector. */
+    export function zero() {
+      return new Vector4(0, 0, 0, 0);
+    }
+
+    /** Returns a (1, 1, 1, 1) vector. */
+    export function one() {
+      return new Vector4(1, 1, 1, 1);
+    }
+
+    /** Returns a (Infinity, Infinity, Infinity, Infinity) vector. */
+    export function infinity() {
+      return new Vector4(Infinity, Infinity, Infinity, Infinity);
+    }
+
+    /** Returns a vector with random (0 to 1 range) components */
+    export function random() {
+      return new Vector4(
+        Math.random(),
+        Math.random(),
+        Math.random(),
+        Math.random(),
+      );
+    }
+  }
+
+  /**
+   * Returns a new duplicate of the given vector.
+   * @param vector4 The vector to clone
+   */
+  export function clone(vector4: Vector4) {
+    return new Vector4(vector4.x, vector4.y, vector4.z, vector4.w);
+  }
+
+  /**
+   * Adds two vectors component-wise and returns the result as a new vector.
+   * @param va First vector
+   * @param vb Second vector
+   */
+  export function add(va: Vector4, vb: Vector4) {
+    return new Vector4(va.x + vb.x, va.y + vb.y, va.z + vb.z, va.w + vb.w);
+  }
+
+  /**
+   * Subtracts the second vector from the first component-wise and returns the result as a new vector.
+   * @param va First vector
+   * @param vb Second vector to subtract
+   */
+  export function subtract(va: Vector4, vb: Vector4) {
+    return new Vector4(va.x - vb.x, va.y - vb.y, va.z - vb.z, va.w - vb.w);
+  }
+
+  /**
+   * Multiplies two vectors component-wise and returns the result as a new vector.
+   * @param va First vector
+   * @param vb Second vector
+   */
+  export function multiply(va: Vector4, vb: Vector4) {
+    return new Vector4(va.x * vb.x, va.y * vb.y, va.z * vb.z, va.w * vb.w);
+  }
+
+  /**
+   * Divides the first vector by the second component-wise and returns the result as a new vector.
+   *
+   * WARNING: Does not check for division by zero.
+   *
+   * @param va First vector (dividend)
+   * @param vb Second vector (divisor)
+   */
+  export function divide(va: Vector4, vb: Vector4) {
+    return new Vector4(va.x / vb.x, va.y / vb.y, va.z / vb.z, va.w / vb.w);
+  }
+
+  /**
+   * Calculates the squared distance between two vectors (faster than distance).
+   * @param va First vector
+   * @param vb Second vector
+   */
+  export function distanceSquared(va: Vector4, vb: Vector4) {
+    const xDistance = va.x - vb.x;
+    const yDistance = va.y - vb.y;
+    const zDistance = va.z - vb.z;
+    const wDistance = va.w - vb.w;
+    return (
+      xDistance * xDistance +
+      yDistance * yDistance +
+      zDistance * zDistance +
+      wDistance * wDistance
+    );
+  }
+
+  /**
+   * Calculates the Euclidean distance between two vectors.
+   * @param va First vector
+   * @param vb Second vector
+   */
+  export function distance(va: Vector4, vb: Vector4) {
+    return Math.sqrt(distanceSquared(va, vb));
+  }
+
+  /**
+   * Calculates the dot product of two vectors.
+   * @param va First vector
+   * @param vb Second vector
+   */
+  export function dot(va: Vector4, vb: Vector4) {
+    return va.x * vb.x + va.y * vb.y + va.z * vb.z + va.w * vb.w;
+  }
+
+  /**
+   * Performs linear interpolation between two vectors.
+   * @param va Starting vector
+   * @param vb Target vector
+   * @param step Interpolation factor (0 = va, 1 = vb)
+   */
+  export function lerp(va: Vector4, vb: Vector4, step: number) {
+    return new Vector4(
+      va.x + step * (vb.x - va.x),
+      va.y + step * (vb.y - va.y),
+      va.z + step * (vb.z - va.z),
+      va.w + step * (vb.w - va.w),
+    );
   }
 }
