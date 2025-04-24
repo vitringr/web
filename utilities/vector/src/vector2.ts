@@ -2,60 +2,111 @@ const SIN_45 = 0.7071067811865476;
 
 /** Mutable 2D Vector class. */
 export class Vector2 {
-  /** Returns a (0, 0) vector. */
-  static zero() {
-    return new Vector2(0, 0);
-  }
+  /**
+   *
+   * Contains methods that create common vector instances.
+   * @namespace Create
+   */
+  static Create = class {
+    /** Returns a (0, 0) vector. */
+    static zero() {
+      return new Vector2(0, 0);
+    }
 
-  /** Returns a (1, 1) vector. */
-  static one() {
-    return new Vector2(1, 1);
-  }
+    /** Returns a (1, 1) vector. */
+    static one() {
+      return new Vector2(1, 1);
+    }
 
-  /** Returns a normalized vector pointing north. */
-  static north() {
-    return new Vector2(0, -1);
-  }
+    /** Returns a (Infinity, Infinity) vector. */
+    static infinity() {
+      return new Vector2(Infinity, Infinity);
+    }
 
-  /** Returns a normalized vector pointing northEast. */
-  static northEast() {
-    return new Vector2(SIN_45, -SIN_45);
-  }
+    /** Returns a vector with random components in the 0 to 1 range. */
+    static random() {
+      return new Vector2(Math.random(), Math.random());
+    }
 
-  /** Returns a normalized vector pointing east. */
-  static east() {
-    return new Vector2(1, 0);
-  }
+    /**
+     *
+     * Contains factory methods for normalized cardinal and intercardinal direction vectors.
+     * @namespace Directions
+     */
+    static Directions = class {
+      /**
+       *
+       * Returns a normalized vector pointing north.
+       * @returns {Vector2} (0, -1)
+       */
+      static north(): Vector2 {
+        return new Vector2(0, -1);
+      }
 
-  /** Returns a normalized vector pointing southEast. */
-  static southEast() {
-    return new Vector2(SIN_45, SIN_45);
-  }
+      /**
+       *
+       * Returns a normalized vector pointing northEast.
+       * @returns {Vector2} (0.707..., -0.707...)
+       */
+      static northEast(): Vector2 {
+        return new Vector2(SIN_45, -SIN_45);
+      }
 
-  /** Returns a normalized vector pointing south. */
-  static south() {
-    return new Vector2(0, 1);
-  }
+      /**
+       *
+       * Returns a normalized vector pointing east.
+       * @returns {Vector2} (1, 0)
+       */
+      static east(): Vector2 {
+        return new Vector2(1, 0);
+      }
 
-  /** Returns a normalized vector pointing southWest. */
-  static southWest() {
-    return new Vector2(-SIN_45, SIN_45);
-  }
+      /**
+       *
+       * Returns a normalized vector pointing southEast.
+       * @returns {Vector2} (0.707..., 0.707...)
+       */
+      static southEast(): Vector2 {
+        return new Vector2(SIN_45, SIN_45);
+      }
 
-  /** Returns a normalized vector pointing west. */
-  static west() {
-    return new Vector2(-1, 0);
-  }
+      /**
+       *
+       * Returns a normalized vector pointing south.
+       * @returns {Vector2} (0, 1)
+       */
+      static south(): Vector2 {
+        return new Vector2(0, 1);
+      }
 
-  /** Returns a normalized vector pointing northWest. */
-  static northWest() {
-    return new Vector2(-SIN_45, -SIN_45);
-  }
+      /**
+       *
+       * Returns a normalized vector pointing southWest.
+       * @returns {Vector2} (-0.707..., 0.707...)
+       */
+      static southWest(): Vector2 {
+        return new Vector2(-SIN_45, SIN_45);
+      }
 
-  /** Returns a (Infinity, Infinity) vector. */
-  static infinity() {
-    return new Vector2(Infinity, Infinity);
-  }
+      /**
+       *
+       * Returns a normalized vector pointing west.
+       * @returns {Vector2} (-1, 0)
+       */
+      static west(): Vector2 {
+        return new Vector2(-1, 0);
+      }
+
+      /**
+       *
+       * Returns a normalized vector pointing northWest.
+       * @returns {Vector2} (-0.707..., -0.707...)
+       */
+      static northWest(): Vector2 {
+        return new Vector2(-SIN_45, -SIN_45);
+      }
+    };
+  };
 
   /**
    * Returns a new duplicate of the given vector.
@@ -94,6 +145,9 @@ export class Vector2 {
 
   /**
    * Divides the first vector by the second component-wise and returns the result as a new vector.
+   *
+   * WARNING: Does not check for division by zero.
+   *
    * @param va First vector (dividend)
    * @param vb Second vector (divisor)
    */

@@ -28,34 +28,23 @@ export function measureFunction(func: () => void, label: string): number {
 /**
  *
  * Intentionally causes a stack overflow by infinite recursion.
+ *
  * WARNING: Will crash your program.
  */
 export function stackOverflow() {
   stackOverflow();
 }
 
-/**
- *
- * Represents a successful operation result.
- */
 type Success<T> = {
   data: T;
   error: null;
 };
 
-/**
- *
- * Represents a failed operation result.
- */
 type Failure<E> = {
   data: null;
   error: E;
 };
 
-/**
- *
- * Discriminated union type representing either success or failure.
- */
 type Result<T, E = Error> = Success<T> | Failure<E>;
 
 /**

@@ -1,19 +1,31 @@
 /** Mutable 3D Vector class. */
 export class Vector3 {
-  /** Returns a (0, 0, 0) vector. */
-  static zero() {
-    return new Vector3(0, 0, 0);
-  }
+  /**
+   *
+   * Contains methods that create common vector instances.
+   * @namespace Create
+   */
+  static Create = class {
+    /** Returns a (0, 0, 0) vector. */
+    static zero() {
+      return new Vector3(0, 0, 0);
+    }
 
-  /** Returns a (1, 1, 1) vector. */
-  static one() {
-    return new Vector3(1, 1, 1);
-  }
+    /** Returns a (1, 1, 1) vector. */
+    static one() {
+      return new Vector3(1, 1, 1);
+    }
 
-  /** Returns a (Infinity, Infinity, Infinity) vector. */
-  static infinity() {
-    return new Vector3(Infinity, Infinity, Infinity);
-  }
+    /** Returns a (Infinity, Infinity, Infinity) vector. */
+    static infinity() {
+      return new Vector3(Infinity, Infinity, Infinity);
+    }
+
+    /** Returns a vector with random components in the 0 to 1 range. */
+    static random() {
+      return new Vector3(Math.random(), Math.random(), Math.random());
+    }
+  };
 
   /**
    * Returns a new duplicate of the given vector.
@@ -52,6 +64,9 @@ export class Vector3 {
 
   /**
    * Divides the first vector by the second component-wise and returns the result as a new vector.
+   *
+   * WARNING: Does not check for division by zero.
+   *
    * @param va First vector (dividend)
    * @param vb Second vector (divisor)
    */
