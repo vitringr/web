@@ -16,8 +16,14 @@ const unskewFactor = (3 - Math.sqrt(3)) / 6;
 
 function generate(input: Vector2) {
   const skewAmount = (input.x + input.y) * skewFactor;
-
   const skewed = input.clone().increase(skewAmount, skewAmount);
 
-  const base = skewed;
+  const base = skewed.floor();
+
+  const unskewAmount = (base.x + base.y) * unskewFactor;
+  const origin = base.clone().decrease(unskewAmount, unskewAmount);
+
+  const differenceFromOrigin = input.clone().subtract(origin);
+
+
 }

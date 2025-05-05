@@ -1,5 +1,18 @@
 /**
  *
+ * Flips the canvas so that (0, 0) is the bottom-left corner.
+ *
+ * Useful as it matches the standard coordinates in mathematics.
+ * @param context Canvas rendering context
+ * @param canvasHeight The height of the canvas element.
+ */
+export function flipY(context: CanvasRenderingContext2D, canvasHeight: number) {
+  context.translate(0, canvasHeight);
+  context.scale(1, -1);
+}
+
+/**
+ *
  * Draws a line between two points on a canvas context.
  * @param context Canvas rendering context
  * @param ax Starting point x coordinate

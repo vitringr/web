@@ -10,4 +10,4 @@ enum Mode {
   INFLUENCE,
 }
 
-export const mode: Mode = Mode.INFLUENCE;
+export const mode: Mode = Mode.SIMPLEX;
