@@ -14,10 +14,10 @@ export class Cell {
   type: Cell.Type = Cell.Type.Empty;
   list: Cell.List = Cell.List.None;
 
-  g: number = 0; // movement
-  t: number = 0; // terrain
-  h: number = 0; // distance
-  f: number = 0; // total
+  moveCost: number = 0; // movement
+  distanceCost: number = 0; // distance
+  terrainCost: number = 0; // terrain
+  totalCost: number = 0; // total
 
   toRender: boolean = true;
   renderAnimationStep: number = 1;
@@ -32,8 +32,11 @@ export class Cell {
     );
   }
 
-  sumF() {
-    this.f = this.g * Config.weights.g + this.t * Config.weights.t + this.h * Config.weights.h;
+  sumTotalCost() {
+    this.totalCost =
+      this.moveCost * Config.weights.moveCost +
+      this.terrainCost * Config.weights.terrainCost +
+      this.distanceCost * Config.weights.distanceCost;
   }
 
   setToRender() {

@@ -18,11 +18,11 @@ export namespace Config {
 
   export const runtime: Runtime = Runtime.ANIMATED;
 
-  export const width = 500;
-  export const height = 500;
+  export const width = 900;
+  export const height = 600;
 
-  export const cols = 40;
-  export const rows = 30;
+  export const cols = 60;
+  export const rows = 40;
 
   export const cellWidth = width / cols;
 
@@ -31,9 +31,9 @@ export namespace Config {
   export const distanceMethod: DistanceMethod = DistanceMethod.EUCLIDEAN;
 
   export const weights = {
-    g: 2,
-    t: 40,
-    h: 10,
+    moveCost: 1,
+    distanceCost: 1.5,
+    terrainCost: 0,
   } as const;
 
   export const animationStepIncrement = 0.02;
@@ -49,6 +49,7 @@ export namespace Config {
 
   export const terrain = {
     blocks: 0.3,
-    rough: 0.0,
+    // blocks: 0,
+    rough: 0,
   } as const;
 }

@@ -1,11 +1,11 @@
+import { Mathematics } from "@utilities/mathematics";
 import { Canvas2D } from "@utilities/canvas2d";
 import { Vector2 } from "@utilities/vector";
-import { Config } from "./config";
-import { Mathematics } from "@utilities/mathematics";
 import { Easing } from "@utilities/easing";
+import { Config } from "./config";
 
 const F = (Math.sqrt(3) - 1) * 0.5;
-const G = F / (1 + 2 * F);
+const G = (3 - Math.sqrt(3)) / 6;
 
 let dynamicF: number = F;
 let dynamicG: number = G;
@@ -250,6 +250,7 @@ export function gridReflection(canvas: HTMLCanvasElement) {
     time += Config.timeIncrement;
 
     const waveStep = (Math.sin(time) + 1) * 0.5;
+    // const waveStep = 1;
 
     dynamicF = Mathematics.lerp(0, F, Easing.smoothstep(waveStep));
     dynamicG = Mathematics.lerp(0, G, Easing.smoothstep(waveStep));

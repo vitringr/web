@@ -100,9 +100,9 @@ export namespace Grid {
     for (const row of cells) {
       for (const cell of row) {
         if (Config.distanceMethod === Config.DistanceMethod.EUCLIDEAN)
-          cell.h = Mathematics.euclideanDistance(cell.x, cell.y, target.x, target.y);
+          cell.distanceCost = Mathematics.euclideanDistance(cell.x, cell.y, target.x, target.y);
         else if (Config.distanceMethod === Config.DistanceMethod.MANHATTAN)
-          cell.h = Mathematics.manhattanDistance(cell.x, cell.y, target.x, target.y);
+          cell.distanceCost = Mathematics.manhattanDistance(cell.x, cell.y, target.x, target.y);
       }
     }
   }

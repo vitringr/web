@@ -8,7 +8,7 @@ export class Vector2 {
   constructor(
     public x: number,
     public y: number,
-  ) { }
+  ) {}
 
   /** Alias for x. */
   get r() {
@@ -227,19 +227,19 @@ export namespace Vector2 {
     /**
      *
      * Returns a normalized vector pointing north.
-     * @returns {Vector2} (0, -1)
+     * @returns {Vector2} (0, 1)
      */
     export function north(): Vector2 {
-      return new Vector2(0, -1);
+      return new Vector2(0, 1);
     }
 
     /**
      *
      * Returns a normalized vector pointing northEast.
-     * @returns {Vector2} (0.707..., -0.707...)
+     * @returns {Vector2} (0.707..., 0.707...)
      */
     export function northEast(): Vector2 {
-      return new Vector2(SIN_45, -SIN_45);
+      return new Vector2(SIN_45, SIN_45);
     }
 
     /**
@@ -254,28 +254,28 @@ export namespace Vector2 {
     /**
      *
      * Returns a normalized vector pointing southEast.
-     * @returns {Vector2} (0.707..., 0.707...)
+     * @returns {Vector2} (0.707..., -0.707...)
      */
     export function southEast(): Vector2 {
-      return new Vector2(SIN_45, SIN_45);
+      return new Vector2(SIN_45, -SIN_45);
     }
 
     /**
      *
      * Returns a normalized vector pointing south.
-     * @returns {Vector2} (0, 1)
+     * @returns {Vector2} (0, -1)
      */
     export function south(): Vector2 {
-      return new Vector2(0, 1);
+      return new Vector2(0, -1);
     }
 
     /**
      *
      * Returns a normalized vector pointing southWest.
-     * @returns {Vector2} (-0.707..., 0.707...)
+     * @returns {Vector2} (-0.707..., -0.707...)
      */
     export function southWest(): Vector2 {
-      return new Vector2(-SIN_45, SIN_45);
+      return new Vector2(-SIN_45, -SIN_45);
     }
 
     /**
@@ -290,10 +290,10 @@ export namespace Vector2 {
     /**
      *
      * Returns a normalized vector pointing northWest.
-     * @returns {Vector2} (-0.707..., -0.707...)
+     * @returns {Vector2} (-0.707..., 0.707...)
      */
     export function northWest(): Vector2 {
-      return new Vector2(-SIN_45, -SIN_45);
+      return new Vector2(-SIN_45, SIN_45);
     }
   }
 

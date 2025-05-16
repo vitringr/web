@@ -23,7 +23,7 @@ export namespace Terrain {
         if (Random.chance(Config.terrain.rough)) {
           cell.type = Cell.Type.Rough;
           cell.toRender = true;
-          cell.t = 1;
+          cell.terrainCost = 1;
           // cell.skipAnimation();
         }
       }

@@ -11,7 +11,7 @@ const hexInnerDiameter = hexInnerRadius * 2;
 const hexAdjacentJoin = hexOuterRadius * 1.5;
 
 export class Renderer {
-  constructor(private context: CanvasRenderingContext2D) { }
+  constructor(private context: CanvasRenderingContext2D) {}
 
   private getColor(cell: Cell) {
     if (cell.type === Cell.Type.Block) return Config.colors.block;

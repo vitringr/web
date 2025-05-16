@@ -1,6 +1,6 @@
 export namespace Config {
   export const width = 600;
-  export const pixelsPerRow = 30;
+  export const pixelsPerRow = 40;
   export const cellsPerRow = 5;
 
   // ------------

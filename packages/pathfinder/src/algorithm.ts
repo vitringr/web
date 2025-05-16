@@ -25,7 +25,7 @@ export namespace Algorithm {
   function getBestFromOpen() {
     let best: Cell | null = null;
     for (const cell of open) {
-      if (!best || cell.f < best.f) best = cell;
+      if (!best || cell.totalCost < best.totalCost) best = cell;
     }
     return best;
   }
@@ -60,18 +60,17 @@ export namespace Algorithm {
       // TODO: neighbor null check?
       if (neighbor.type === Cell.Type.Block || neighbor.list === Cell.List.Closed) continue;
 
-      const gSum = current.g + moveCost;
+      const gSum = current.moveCost + moveCost;
 
-      // TODO: this is weird. Fix.
       if (neighbor.list !== Cell.List.Open) {
         neighbor.list = Cell.List.Open;
         neighbor.setToRender();
         open.add(neighbor);
-        neighbor.g = gSum;
-        neighbor.sumF();
-      } else if (gSum <= neighbor.g) {
-        neighbor.g = gSum;
-        neighbor.sumF();
+        neighbor.moveCost = gSum;
+        neighbor.sumTotalCost();
+      } else if (gSum <= neighbor.moveCost) {
+        neighbor.moveCost = gSum;
+        neighbor.sumTotalCost();
       }
     }
   }
