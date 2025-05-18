@@ -1,10 +1,10 @@
 import { Canvas2D } from "@utilities/canvas2d";
-import { Colors } from "@utilities/colors";
 import { Vector2 } from "@utilities/vector";
+import { Colors } from "@utilities/colors";
 
 // PERFORMANCE: Maybe reduce number fractional detail?
-// const F = 0.3660254037844386; // Skew factor
-// const G = 0.2113248654051871; // Unskew factor
+const F = 0.3660254037844386; // Skew factor
+const G = 0.2113248654051871; // Unskew factor
 
 const PERMUTATIONS = [
   // PERFORMANCE: Optimize array structure.
@@ -36,206 +36,129 @@ const PERMUTATIONS = [
 ];
 
 const GRADIENTS = [
-  Vector2.Create.north(),
-  Vector2.Create.northEast(),
-  Vector2.Create.east(),
-  Vector2.Create.southEast(),
-  Vector2.Create.south(),
-  Vector2.Create.southWest(),
-  Vector2.Create.west(),
-  Vector2.Create.northWest(),
+  new Vector2(0, 1),
+  new Vector2(1, 1),
+  new Vector2(1, 0),
+  new Vector2(1, -1),
+  new Vector2(0, -1),
+  new Vector2(-1, -1),
+  new Vector2(-1, 0),
+  new Vector2(-1, 1),
+
+  // Vector2.Create.north(),
+  // Vector2.Create.northEast(),
+  // Vector2.Create.east(),
+  // Vector2.Create.southEast(),
+  // Vector2.Create.south(),
+  // Vector2.Create.southWest(),
+  // Vector2.Create.west(),
+  // Vector2.Create.northWest(),
 ];
 
 function hash(u: number, v: number) {
-  // PERFORMANCE: Use bitwise wrapping.
   const u_wrapped = u & 255;
   const v_wrapped = v & 255;
 
   return PERMUTATIONS[u_wrapped + PERMUTATIONS[v_wrapped]];
 }
 
-function unskew(vector: Vector2) {
-  const t = (vector.x + vector.y) * G;
-  return vector.clone().decrease(t, t);
-}
-
 function noise(x: number, y: number, scale: number) {
-  const input = new Vector2((x * scale) % 1, (y * scale) % 1);
+  // -------------------------------------------------------
+  // -- Start with simplex input and scale it arbitrarily --
+  // -------------------------------------------------------
+  const input_triangle_x = x * scale;
+  const input_triangle_y = y * scale;
 
-  // 1. Find square cell origin.
-  const origin = input.clone().floor();
+  // --------------------------------
+  // -- Skew input to square space --
+  // --------------------------------
+  const S = (input_triangle_x + input_triangle_y) * F;
+  const input_square_x = input_triangle_x + S;
+  const input_square_y = input_triangle_y + S;
 
-  // 2. Find square cell triangle.
-  const fraction = input.clone().subtract(origin);
-  const isBotTriangle = fraction.x > fraction.y;
+  // ------------------------
+  // -- Find square origin --
+  // ------------------------
+  const A_square_x = Math.floor(input_square_x);
+  const A_square_y = Math.floor(input_square_y);
 
-  // 2. Get the three square-space corners of the triangle.
-  const a_corner = origin.clone();
-  const b_corner = origin.clone();
-  isBotTriangle ? (b_corner.x += 1) : (b_corner.y += 1);
-  const c_corner = origin.clone().increase(1, 1);
+  // -----------------------------------------------------
+  // -- Find cell fraction and determine which triangle --
+  // -----------------------------------------------------
+  const fraction_x = input_square_x - A_square_x;
+  const fraction_y = input_square_y - A_square_y;
+  const isBotTriangle = fraction_x > fraction_y;
 
-  // 3. Unskew corners into simplex space.
-  const a_corner_simplex = unskew(a_corner);
-  const b_corner_simplex = unskew(b_corner);
-  const c_corner_simplex = unskew(c_corner);
+  // --------------------------------
+  // -- Find other square vertices --
+  // --------------------------------
+  const B_square_x = A_square_x + (isBotTriangle ? 1 : 0);
+  const B_square_y = A_square_y + (isBotTriangle ? 0 : 1);
 
-  // 4. Compute difference vectors in simplex space.
-  const a_difference = input.clone().subtract(a_corner_simplex);
-  const b_difference = input.clone().subtract(b_corner_simplex);
-  const c_difference = input.clone().subtract(c_corner_simplex);
+  const C_square_x = A_square_x + 1;
+  const C_square_y = A_square_y + 1;
 
-  // 5. Get gradients for each corner (from permutation table)
-  // Note: In practice, you'd use a permutation table here
+  // --------------------------------------------
+  // -- Unskew square origin to triangle space --
+  // --------------------------------------------
+  const TA = (A_square_x + A_square_y) * G;
+  const A_triangle_x = A_square_x - TA;
+  const A_triangle_y = A_square_y - TA;
 
-  const a_gradient = GRADIENTS[hash(a_corner.x, a_corner.y) % 8];
-  const b_gradient = GRADIENTS[hash(b_corner.x, b_corner.y) % 8];
-  const c_gradient = GRADIENTS[hash(c_corner.x, c_corner.y) % 8];
+  const TB = (B_square_x + B_square_y) * G;
+  const B_triangle_x = B_square_x - TB;
+  const B_triangle_y = B_square_y - TB;
 
-  // 6. Calculate dot products and falloff
-  const falloff = (r2: number) => Math.max(0, 0.5 - r2) ** 4;
+  const TC = (C_square_x + C_square_y) * G;
+  const C_triangle_x = C_square_x - TC;
+  const C_triangle_y = C_square_y - TC;
 
-  const dotA = a_gradient.x * a_difference.x + a_gradient.y * a_difference.y;
-  const dotB = b_gradient.x * b_difference.x + b_gradient.y * b_difference.y;
-  const dotC = c_gradient.x * c_difference.x + c_gradient.y * c_difference.y;
+  // -------------------------------------------
+  // -- Difference between input and vertices --
+  // -------------------------------------------
+  const delta_A_x = input_triangle_x - A_triangle_x;
+  const delta_A_y = input_triangle_y - A_triangle_y;
 
-  const r2a = a_difference.x * a_difference.x + a_difference.y * a_difference.y;
-  const r2b = b_difference.x * b_difference.x + b_difference.y * b_difference.y;
-  const r2c = c_difference.x * c_difference.x + c_difference.y * c_difference.y;
+  const delta_B_x = input_triangle_x - B_triangle_x;
+  const delta_B_y = input_triangle_y - B_triangle_y;
 
-  const contributionA = dotA * falloff(r2a);
-  const contributionB = dotB * falloff(r2b);
-  const contributionC = dotC * falloff(r2c);
+  const delta_C_x = input_triangle_x - C_triangle_x;
+  const delta_C_y = input_triangle_y - C_triangle_y;
 
-  // 7. Combine contributions (scaled to ~[-1, 1])
-  return (contributionA + contributionB + contributionC) * 70;
-}
+  // ------
+  // ---------------
+  // ------------------------
+  // ---------------------------------
+  // --  End my torment                -- --
+  // ---------------------------------
+  // ------------------------
+  // ---------------
+  // ------
 
-const SQRT3 = Math.sqrt(3.0);
-const F = 0.5 * (SQRT3 - 1.0);
-const G = (3.0 - SQRT3) / 6.0;
+  // Inside noise() function, after calculating deltas:
+  const gradient_index_A = hash(A_square_x, A_square_y) % GRADIENTS.length;
+  const gradient_index_B = hash(B_square_x, B_square_y) % GRADIENTS.length;
+  const gradient_index_C = hash(C_square_x, C_square_y) % GRADIENTS.length;
 
-// I'm really not sure why this | 0 (basically a coercion to int)
-// is making this faster but I get ~5 million ops/sec more on the
-// benchmarks across the board or a ~10% speedup.
-const floor = (x: number) => Math.floor(x) | 0;
+  let kernel_A = 0.5 - delta_A_x * delta_A_x - delta_A_y * delta_A_y;
+  let kernel_B = 0.5 - delta_B_x * delta_B_x - delta_B_y * delta_B_y;
+  let kernel_C = 0.5 - delta_C_x * delta_C_x - delta_C_y * delta_C_y;
 
-const grad2 = new Float64Array([
-  1, 1, -1, 1, 1, -1, -1, -1, 1, 0, -1, 0, 1, 0, -1, 0, 0, 1, 0, -1, 0, 1, 0, -1,
-]);
+  kernel_A = Math.max(0, kernel_A ** 4);
+  kernel_B = Math.max(0, kernel_B ** 4);
+  kernel_C = Math.max(0, kernel_C ** 4);
 
-export function createNoise2D(random: typeof Math.random) {
-  const perm = buildPermutationTable(random);
-  // Precompute gradient tables for X and Y components (3% performance boost)
-  const permGrad2x = new Float64Array(perm).map((v) => grad2[(v % 12) * 2]);
-  const permGrad2y = new Float64Array(perm).map((v) => grad2[(v % 12) * 2 + 1]);
+  const dot_A = GRADIENTS[gradient_index_A].x * delta_A_x + GRADIENTS[gradient_index_A].y * delta_A_y;
+  const dot_B = GRADIENTS[gradient_index_B].x * delta_B_x + GRADIENTS[gradient_index_B].y * delta_B_y;
+  const dot_C = GRADIENTS[gradient_index_C].x * delta_C_x + GRADIENTS[gradient_index_C].y * delta_C_y;
 
-  return function noise2D(x: number, y: number): number {
-    // Noise contributions from the three corners of the simplex triangle
-    let contributionA = 0;
-    let contributionB = 0;
-    let contributionC = 0;
+  const result = dot_A * kernel_A + dot_B * kernel_B + dot_C * kernel_C;
 
-    // --- Step 1: Skew input to square space to find simplex cell ---
-    const skewFactor = (x + y) * F;
-    const cellOriginX = floor(x + skewFactor); // Square-space X
-    const cellOriginY = floor(y + skewFactor); // Square-space Y
-
-    // --- Step 2: Unskew cell origin to simplex space ---
-    const unskewFactor = (cellOriginX + cellOriginY) * G;
-    const simplexOriginX = cellOriginX - unskewFactor; // Simplex-space X
-    const simplexOriginY = cellOriginY - unskewFactor; // Simplex-space Y
-
-    // --- Step 3: Calculate displacement from origin in simplex space ---
-    const differenceX0 = x - simplexOriginX;
-    const differenceY0 = y - simplexOriginY;
-
-    // --- Step 4: Determine which simplex triangle we're in (lower/upper) ---
-    let middleCornerOffsetX: number, middleCornerOffsetY: number;
-    if (differenceX0 > differenceY0) {
-      // Lower triangle (XY order)
-      middleCornerOffsetX = 1;
-      middleCornerOffsetY = 0;
-    } else {
-      // Upper triangle (YX order)
-      middleCornerOffsetX = 0;
-      middleCornerOffsetY = 1;
-    }
-
-    // --- Step 5: Calculate displacements for all three corners ---
-    // Corner B (middle corner)
-    const deltaX1 = differenceX0 - middleCornerOffsetX + G;
-    const deltaY1 = differenceY0 - middleCornerOffsetY + G;
-    // Corner C (last corner)
-    const deltaX2 = differenceX0 - 1.0 + 2.0 * G;
-    const deltaY2 = differenceY0 - 1.0 + 2.0 * G;
-
-    // --- Step 6: Hash gradient indices for each corner ---
-    const wrappedCellX = cellOriginX & 255; // Wrap to [0,255] for permutation table
-    const wrappedCellY = cellOriginY & 255;
-
-    // --- Step 7: Calculate contributions from each corner ---
-    // Corner A (origin)
-    let falloffA = 0.5 - differenceX0 * differenceX0 - differenceY0 * differenceY0;
-    if (falloffA >= 0) {
-      const gradientIndexA = wrappedCellX + perm[wrappedCellY];
-      const gradientXA = permGrad2x[gradientIndexA];
-      const gradientYA = permGrad2y[gradientIndexA];
-      falloffA *= falloffA;
-      contributionA = falloffA * falloffA * (gradientXA * differenceX0 + gradientYA * differenceY0);
-    }
-
-    // Corner B (middle)
-    let falloffB = 0.5 - deltaX1 * deltaX1 - deltaY1 * deltaY1;
-    if (falloffB >= 0) {
-      const gradientIndexB =
-        wrappedCellX + middleCornerOffsetX + perm[wrappedCellY + middleCornerOffsetY];
-      const gradientXB = permGrad2x[gradientIndexB];
-      const gradientYB = permGrad2y[gradientIndexB];
-      falloffB *= falloffB;
-      contributionB = falloffB * falloffB * (gradientXB * deltaX1 + gradientYB * deltaY1);
-    }
-
-    // Corner C (last)
-    let falloffC = 0.5 - deltaX2 * deltaX2 - deltaY2 * deltaY2;
-    if (falloffC >= 0) {
-      const gradientIndexC = wrappedCellX + 1 + perm[wrappedCellY + 1];
-      const gradientXC = permGrad2x[gradientIndexC];
-      const gradientYC = permGrad2y[gradientIndexC];
-      falloffC *= falloffC;
-      contributionC = falloffC * falloffC * (gradientXC * deltaX2 + gradientYC * deltaY2);
-    }
-
-    // --- Step 8: Combine contributions and scale to [-1, 1] ---
-    return 70.0 * (contributionA + contributionB + contributionC);
-  };
-}
-
-/**
- * Builds a random permutation table.
- * This is exported only for (internal) testing purposes.
- * Do not rely on this export.
- * @private
- */
-export function buildPermutationTable(random: typeof Math.random): Uint8Array {
-  const tableSize = 512;
-  const p = new Uint8Array(tableSize);
-  for (let i = 0; i < tableSize / 2; i++) {
-    p[i] = i;
-  }
-  for (let i = 0; i < tableSize / 2 - 1; i++) {
-    const r = i + ~~(random() * (256 - i));
-    const aux = p[i];
-    p[i] = p[r];
-    p[r] = aux;
-  }
-  for (let i = 256; i < tableSize; i++) {
-    p[i] = p[i - 256];
-  }
-  return p;
+  return result * 35 + 0.5;
 }
 
 const size = 600;
+const scalar = 0.02;
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = canvas.height = size;
@@ -254,18 +177,25 @@ function setupContext(canvas: HTMLCanvasElement) {
 export function simplexNoise(canvas: HTMLCanvasElement) {
   const context = setupContext(canvas);
 
-  const cool = createNoise2D(Math.random);
-
+  let min = Infinity;
+  let max = -Infinity;
+  let sum = 0;
   for (let x = 0; x < size; x++) {
     for (let y = 0; y < size; y++) {
-      const nx = x / size;
-      const ny = y / size;
-      // const value = noise(nx, ny, 7) * 0.5 + 0.5;
-      const scale = 5;
-      const value = cool(nx * scale, ny * scale) * 0.5 + 0.5;
+      const value = noise(x, y, scalar);
+
+      if (value < min) min = value;
+      if (value > max) max = value;
+      sum += value;
 
       context.fillStyle = Colors.getRGBGrayscale(value);
       context.fillRect(x, y, 1, 1);
     }
   }
+
+  const average = sum / (size * size);
+
+  console.log("min:", min);
+  console.log("max:", max);
+  console.log("average:", average);
 }
