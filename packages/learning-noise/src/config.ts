@@ -11,3 +11,4 @@ enum Mode {
 }
 
 export const mode: Mode = Mode.SIMPLEX;
+// export const mode: Mode = Mode.INFLUENCE;

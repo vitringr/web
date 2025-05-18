@@ -47,12 +47,8 @@ const _A = A.clone().scale(Config.upscale).add(_offset);
 const _B = B.clone().scale(Config.upscale).add(_offset);
 const _C = C.clone().scale(Config.upscale).add(_offset);
 const _centroid = centroid.clone().scale(Config.upscale).add(_offset);
-const _AB = new Vector2(-Mathematics.COS_60, -Mathematics.SIN_60)
-  .scale(Config.upscale)
-  .add(_offset);
-const _BC = new Vector2(1 + Mathematics.COS_60, -Mathematics.SIN_60)
-  .scale(Config.upscale)
-  .add(_offset);
+const _AB = new Vector2(-Mathematics.COS_60, -Mathematics.SIN_60).scale(Config.upscale).add(_offset);
+const _BC = new Vector2(1 + Mathematics.COS_60, -Mathematics.SIN_60).scale(Config.upscale).add(_offset);
 const _AC = new Vector2(Mathematics.COS_60, Mathematics.SIN_60).scale(Config.upscale).add(_offset);
 
 function background(context: CanvasRenderingContext2D) {
