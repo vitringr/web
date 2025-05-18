@@ -1,7 +1,9 @@
 import { Canvas2D } from "@utilities/canvas2d";
 import { Vector2 } from "@utilities/vector";
 import { Colors } from "@utilities/colors";
-import { Common } from "@utilities/common";
+
+import { createNoise2D } from "./ref";
+import { Mathematics } from "@utilities/mathematics";
 
 // PERFORMANCE: Maybe reduce number fractional detail?
 const F = 0.3660254037844386; // Skew factor
@@ -39,7 +41,30 @@ const PERMUTATIONS = [
   254, 138, 236, 205, 93, 222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 18,
 ] as const;
 
-const GRADIENTS = [
+const GRADIENTS_32: Vector2[] = [];
+
+for (let i = 0; i < 32; i++) {
+  const angle = Mathematics.TAU / 32;
+  GRADIENTS_32.push(new Vector2(Math.cos(i * angle), Math.sin(i * angle)));
+}
+console.log("GRADIENTS_32:", GRADIENTS_32);
+
+const GRADIENTS_12 = [
+  new Vector2(1, 0),
+  new Vector2(1, 1),
+  new Vector2(1, -1),
+  new Vector2(1, 0),
+  new Vector2(0, 1),
+  new Vector2(0, -1),
+  new Vector2(0, 1),
+  new Vector2(0, -1),
+  new Vector2(-1, 0),
+  new Vector2(-1, -1),
+  new Vector2(-1, 1),
+  new Vector2(-1, 0),
+] as const;
+
+const GRADIENTS_8 = [
   Vector2.Create.north(),
   Vector2.Create.northEast(),
   Vector2.Create.east(),
@@ -129,9 +154,9 @@ function noise(input_triangle_x: number, input_triangle_y: number): number {
   // -- Select gradients from square-space vertices --
   // -------------------------------------------------
 
-  const gradient_index_A = hash(A_square_x, A_square_y) & 7;
-  const gradient_index_B = hash(B_square_x, B_square_y) & 7;
-  const gradient_index_C = hash(C_square_x, C_square_y) & 7;
+  const gradient_index_A = hash(A_square_x, A_square_y) % 32;
+  const gradient_index_B = hash(B_square_x, B_square_y) % 32;
+  const gradient_index_C = hash(C_square_x, C_square_y) % 32;
 
   // -----------------------
   // -- Influence kernels --
@@ -141,35 +166,35 @@ function noise(input_triangle_x: number, input_triangle_y: number): number {
   const distance_B_squared = delta_B_x * delta_B_x + delta_B_y * delta_B_y;
   const distance_C_squared = delta_C_x * delta_C_x + delta_C_y * delta_C_y;
 
-  let kernel_A = 0.5 - distance_A_squared;
-  let kernel_B = 0.5 - distance_B_squared;
-  let kernel_C = 0.5 - distance_C_squared;
+  let kernel_A = Math.max(0, 0.5 - distance_A_squared);
+  let kernel_B = Math.max(0, 0.5 - distance_B_squared);
+  let kernel_C = Math.max(0, 0.5 - distance_C_squared);
 
-  kernel_A = Math.max(0, kernel_A ** 4);
-  kernel_B = Math.max(0, kernel_B ** 4);
-  kernel_C = Math.max(0, kernel_C ** 4);
+  kernel_A = kernel_A ** 4;
+  kernel_B = kernel_B ** 4;
+  kernel_C = kernel_C ** 4;
 
   // -------------------------------------------------------------
   // -- Alignment between gradient vector and difference vector --
   // -------------------------------------------------------------
 
   const dot_A =
-    GRADIENTS[gradient_index_A].x * delta_A_x + GRADIENTS[gradient_index_A].y * delta_A_y;
+    GRADIENTS_32[gradient_index_A].x * delta_A_x + GRADIENTS_32[gradient_index_A].y * delta_A_y;
   const dot_B =
-    GRADIENTS[gradient_index_B].x * delta_B_x + GRADIENTS[gradient_index_B].y * delta_B_y;
+    GRADIENTS_32[gradient_index_B].x * delta_B_x + GRADIENTS_32[gradient_index_B].y * delta_B_y;
   const dot_C =
-    GRADIENTS[gradient_index_C].x * delta_C_x + GRADIENTS[gradient_index_C].y * delta_C_y;
+    GRADIENTS_32[gradient_index_C].x * delta_C_x + GRADIENTS_32[gradient_index_C].y * delta_C_y;
 
   const result = dot_A * kernel_A + dot_B * kernel_B + dot_C * kernel_C;
 
-  // -------------------------------------------------------------------------
-  // -- Magic numbers to empirically scale the output into the [0, 1] range --
-  // -------------------------------------------------------------------------
+  // -----------------------------------------------------------------------
+  // -- Magic numbers to empirically fit the output into the [0, 1] range --
+  // -----------------------------------------------------------------------
   return result * 49 + 0.5;
 }
 
-const size = 600;
-const scalar = 0.02;
+const size = 900;
+const scalar = 0.009;
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = canvas.height = size;
@@ -188,6 +213,8 @@ function setupContext(canvas: HTMLCanvasElement) {
 export function simplexNoise(canvas: HTMLCanvasElement) {
   const context = setupContext(canvas);
 
+  const ref = createNoise2D(Math.random);
+
   let min = Infinity;
   let max = -Infinity;
   let sum = 0;
@@ -195,12 +222,13 @@ export function simplexNoise(canvas: HTMLCanvasElement) {
   for (let x = 0; x < size; x++) {
     for (let y = 0; y < size; y++) {
       const value = noise(x * scalar, y * scalar);
+      // const value = ref(x * scalar, y * scalar) * 0.5 + 0.5;
 
       if (value < min) min = value;
       if (value > max) max = value;
       sum += value;
 
-      context.fillStyle = Colors.getRGB(0, value * 0.4, 0);
+      context.fillStyle = Colors.getRGB(0, value * 0.7, 0);
       context.fillRect(x, y, 1, 1);
     }
   }
