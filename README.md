@@ -2,7 +2,7 @@
 
 `pnpm install`
 
-`turbo build` or `turbo run dev`
+`pnpm build` or `pnpm dev`
 
 # Architecture
 

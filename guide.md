@@ -8,7 +8,7 @@ Amit Patel - RedBlob Games
 
 Daniel Shiffman - The Coding Train
 
-SimonDev
+SimonDev - Youtube
 
 Jasper Flick - Catlike Coding
 
