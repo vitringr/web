@@ -31,15 +31,17 @@ export namespace Terrain {
     }
   }
 
-  // TODO
-  const scalar = 0.3
-  const asd = 0.4
   export function noiseBlocks(cells: Cell[][]) {
+    const seed = Math.random() * cells.length;
+
     for (const row of cells) {
       for (const cell of row) {
-        const value = Noise.get(cell.x * scalar, cell.y * scalar);
+        const value = Noise.get(
+          (cell.x + seed) * Config.terrain.noiseScalar,
+          (cell.y + seed) * Config.terrain.noiseScalar,
+        );
 
-        if (value < asd) {
+        if (value < Config.terrain.blocks) {
           cell.type = Cell.Type.Block;
           cell.toRender = true;
         }
@@ -47,7 +49,7 @@ export namespace Terrain {
     }
   }
 
-  export function noiseTerrain() { }
+  export function noiseTerrain() {}
 
   export function unblockAroundCell(cell: Cell, cells: Cell[][], radius: number) {
     if (radius < 1) throw "Radius less than 1";
@@ -59,7 +61,7 @@ export namespace Terrain {
 
     for (const row of cells) {
       for (const cell of row) {
-        if(!cell) continue;
+        if (!cell) continue;
         if (cell.x >= xLeft && cell.x <= xRight && cell.y >= yTop && cell.y <= yBottom) {
           cell.type = Cell.Type.Empty;
           cell.toRender = true;

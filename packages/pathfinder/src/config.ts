@@ -48,8 +48,9 @@ export namespace Config {
   } as const;
 
   export const terrain = {
-    blocks: 0.3,
-    // blocks: 0,
+    blocks: 0.4,
     rough: 0,
+
+    noiseScalar: 0.27,
   } as const;
 }
