@@ -1,6 +1,7 @@
 import { Random } from "@utilities/random";
 import { Config } from "./config";
 import { Cell } from "./cell";
+import { Noise } from "@utilities/noise";
 
 export namespace Terrain {
   export function randomBlocks(cells: Cell[][]) {
@@ -31,7 +32,21 @@ export namespace Terrain {
   }
 
   // TODO
-  export function noiseBlocks() { }
+  const scalar = 0.3
+  const asd = 0.4
+  export function noiseBlocks(cells: Cell[][]) {
+    for (const row of cells) {
+      for (const cell of row) {
+        const value = Noise.get(cell.x * scalar, cell.y * scalar);
+
+        if (value < asd) {
+          cell.type = Cell.Type.Block;
+          cell.toRender = true;
+        }
+      }
+    }
+  }
+
   export function noiseTerrain() { }
 
   export function unblockAroundCell(cell: Cell, cells: Cell[][], radius: number) {

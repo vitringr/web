@@ -25,7 +25,8 @@ export async function main(canvas: HTMLCanvasElement) {
   Grid.setNeighbors();
   Grid.precalculateDistances(target);
 
-  Terrain.randomBlocks(cells);
+  // Terrain.randomBlocks(cells);
+  Terrain.noiseBlocks(cells);
   Terrain.randomRough(cells);
   Terrain.unblockAroundCell(start, cells, 3);
   Terrain.unblockAroundCell(target, cells, 3);

@@ -122,17 +122,17 @@ export function get(input_x: number, input_y: number): number {
   const delta_C_x = input_x - triangle_C_x;
   const delta_C_y = input_y - triangle_C_y;
 
-  // -----------------------
-  // -- Influence kernels --
-  // -----------------------
+  // ---------------------------------
+  // -- Influence based on distance --
+  // ---------------------------------
 
   const distance_A_squared = delta_A_x * delta_A_x + delta_A_y * delta_A_y;
   const distance_B_squared = delta_B_x * delta_B_x + delta_B_y * delta_B_y;
   const distance_C_squared = delta_C_x * delta_C_x + delta_C_y * delta_C_y;
 
-  const kernel_A = 0.5 - distance_A_squared;
-  const kernel_B = 0.5 - distance_B_squared;
-  const kernel_C = 0.5 - distance_C_squared;
+  const influence_A = 0.5 - distance_A_squared;
+  const influence_B = 0.5 - distance_B_squared;
+  const influence_C = 0.5 - distance_C_squared;
 
   // -------------------
   // -- Contributions --
@@ -142,25 +142,25 @@ export function get(input_x: number, input_y: number): number {
   let contribution_B = 0;
   let contribution_C = 0;
 
-  if (kernel_A > 0) {
+  if (influence_A > 0) {
     const index = hash(square_A_x, square_A_y) & 0xf;
     const dot = GRADIENTS_X[index] * delta_A_x + GRADIENTS_Y[index] * delta_A_y;
-    const kernel_quartic = kernel_A * kernel_A * kernel_A * kernel_A;
-    contribution_A = dot * kernel_quartic;
+    const influence_quartic = influence_A * influence_A * influence_A * influence_A;
+    contribution_A = dot * influence_quartic;
   }
 
-  if (kernel_B > 0) {
+  if (influence_B > 0) {
     const index = hash(square_B_x, square_B_y) & 0xf;
     const dot = GRADIENTS_X[index] * delta_B_x + GRADIENTS_Y[index] * delta_B_y;
-    const kernel_quartic = kernel_B * kernel_B * kernel_B * kernel_B;
-    contribution_B = dot * kernel_quartic;
+    const influence_quartic = influence_B * influence_B * influence_B * influence_B;
+    contribution_B = dot * influence_quartic;
   }
 
-  if (kernel_C > 0) {
+  if (influence_C > 0) {
     const index = hash(square_C_x, square_C_y) & 0xf;
     const dot = GRADIENTS_X[index] * delta_C_x + GRADIENTS_Y[index] * delta_C_y;
-    const kernel_quartic = kernel_C * kernel_C * kernel_C * kernel_C;
-    contribution_C = dot * kernel_quartic;
+    const influence_quartic = influence_C * influence_C * influence_C * influence_C;
+    contribution_C = dot * influence_quartic;
   }
 
   const result = contribution_A + contribution_B + contribution_C;

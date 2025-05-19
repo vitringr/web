@@ -12,7 +12,8 @@
     "@utilities/canvas2d": "workspace:*",
     "@utilities/random": "workspace:*",
     "@utilities/vector": "workspace:*",
-    "@utilities/easing": "workspace:*"
+    "@utilities/easing": "workspace:*",
+    "@utilities/noise": "workspace:*"
   },
   "devDependencies": {
     "@utilities/typescript-config": "workspace:*",

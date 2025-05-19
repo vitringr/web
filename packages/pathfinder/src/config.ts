@@ -18,11 +18,11 @@ export namespace Config {
 
   export const runtime: Runtime = Runtime.ANIMATED;
 
-  export const width = 900;
+  export const width = 600;
   export const height = 600;
 
-  export const cols = 60;
-  export const rows = 40;
+  export const cols = 30;
+  export const rows = 34;
 
   export const cellWidth = width / cols;
 
