@@ -13,8 +13,7 @@
     "@utilities/easing": "workspace:*",
     "@utilities/random": "workspace:*",
     "@utilities/vector": "workspace:*",
-    "@utilities/colors": "workspace:*",
-    "@utilities/common": "workspace:*"
+    "@utilities/colors": "workspace:*"
   },
   "devDependencies": {
     "@utilities/typescript-config": "workspace:*",

@@ -110,9 +110,6 @@ importers:
       '@utilities/colors':
         specifier: workspace:*
         version: link:../../utilities/colors
-      '@utilities/common':
-        specifier: workspace:*
-        version: link:../../utilities/common
       '@utilities/easing':
         specifier: workspace:*
         version: link:../../utilities/easing

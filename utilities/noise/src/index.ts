@@ -1,1 +1,1 @@
-export { noise } from "./simplex-noise";
+export * as Noise from "./noise";

@@ -49,7 +49,7 @@ function hash(x: number, y: number): number {
   return PERMUTATIONS[(x & 0xff) + PERMUTATIONS[y & 0xff]];
 }
 
-export function noise(input_x: number, input_y: number): number {
+export function get(input_x: number, input_y: number): number {
   // --------------------------------
   // -- Skew input to square space --
   // --------------------------------
