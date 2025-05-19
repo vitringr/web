@@ -35,9 +35,6 @@ importers:
       '@packages/tsunagari':
         specifier: workspace:*
         version: link:../../packages/tsunagari
-      '@utilities/noise':
-        specifier: workspace:*
-        version: link:../../utilities/noise
     devDependencies:
       '@utilities/typescript-config':
         specifier: workspace:*
@@ -185,6 +182,9 @@ importers:
       '@utilities/mathematics':
         specifier: workspace:*
         version: link:../../utilities/mathematics
+      '@utilities/noise':
+        specifier: workspace:*
+        version: link:../../utilities/noise
       '@utilities/vector':
         specifier: workspace:*
         version: link:../../utilities/vector
