@@ -35,6 +35,9 @@ importers:
       '@packages/tsunagari':
         specifier: workspace:*
         version: link:../../packages/tsunagari
+      '@utilities/noise':
+        specifier: workspace:*
+        version: link:../../utilities/noise
     devDependencies:
       '@utilities/typescript-config':
         specifier: workspace:*

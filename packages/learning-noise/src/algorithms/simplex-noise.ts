@@ -1,19 +1,18 @@
 import { Canvas2D } from "@utilities/canvas2d";
-import { Vector2 } from "@utilities/vector";
 import { Colors } from "@utilities/colors";
 
-import { createNoise2D } from "./ref";
-import { Mathematics } from "@utilities/mathematics";
+const F = 0.3660254037844386;
+const G = 0.2113248654051871;
 
-// PERFORMANCE: Maybe reduce number fractional detail?
-const F = 0.3660254037844386; // Skew factor
-const G = 0.2113248654051871; // Unskew factor
+const GRADIENTS_X = new Int8Array([
+  1, 1, 1, 0, 0, 0, -1, -1, -1, -1, -1, 0, 0, 0, 1, 1,
+]) as Readonly<Int8Array>;
 
-// The permutations table is duplicated once so that it does not
-// overflow, even if the index exceeds 256. Otherwise % operations
-// would be needed to wrap it around.
-const PERMUTATIONS = [
-  // PERFORMANCE: Optimize array structure.
+const GRADIENTS_Y = new Int8Array([
+  0, 0, 1, 1, 1, 1, 1, 0, 0, 0, -1, -1, -1, -1, -1, 0,
+]) as Readonly<Int8Array>;
+
+const PERMUTATIONS = new Uint8Array([
   51, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30, 69, 142,
   8, 99, 37, 240, 21, 10, 23, 190, 6, 148, 247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203,
   117, 35, 11, 32, 57, 177, 33, 88, 237, 149, 56, 87, 174, 20, 125, 136, 171, 168, 68, 175, 74, 165,
@@ -39,124 +38,84 @@ const PERMUTATIONS = [
   246, 97, 228, 251, 34, 242, 193, 238, 210, 144, 12, 191, 179, 162, 241, 81, 51, 145, 235, 249, 14,
   239, 107, 49, 192, 214, 31, 181, 199, 106, 157, 184, 84, 204, 176, 115, 121, 50, 45, 127, 4, 150,
   254, 138, 236, 205, 93, 222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 18,
-] as const;
+]) as Readonly<Uint8Array>;
 
-const GRADIENTS_32: Vector2[] = [];
-
-for (let i = 0; i < 32; i++) {
-  const angle = Mathematics.TAU / 32;
-  GRADIENTS_32.push(new Vector2(Math.cos(i * angle), Math.sin(i * angle)));
-}
-console.log("GRADIENTS_32:", GRADIENTS_32);
-
-const GRADIENTS_12 = [
-  new Vector2(1, 0),
-  new Vector2(1, 1),
-  new Vector2(1, -1),
-  new Vector2(1, 0),
-  new Vector2(0, 1),
-  new Vector2(0, -1),
-  new Vector2(0, 1),
-  new Vector2(0, -1),
-  new Vector2(-1, 0),
-  new Vector2(-1, -1),
-  new Vector2(-1, 1),
-  new Vector2(-1, 0),
-] as const;
-
-const GRADIENTS_8 = [
-  Vector2.Create.north(),
-  Vector2.Create.northEast(),
-  Vector2.Create.east(),
-  Vector2.Create.southEast(),
-  Vector2.Create.south(),
-  Vector2.Create.southWest(),
-  Vector2.Create.west(),
-  Vector2.Create.northWest(),
-] as const;
-
-// The number 256 (2⁸) is perfect for bitwise wrapping and for hardware performance.
-// Lower ranges produce visible artifacts and bias.
-// Higher ranges don't really improve visual output, while damaging performance.
 function hash(x: number, y: number): number {
-  const x_wrapped = x & 255;
-  const y_wrapped = y & 255;
-
-  // For the guide, do PERMUTATIONS[x_wrapped + y_wrapped] to show
-  // the directional bias produced.
-  return PERMUTATIONS[x_wrapped + PERMUTATIONS[y_wrapped]];
+  return PERMUTATIONS[(x & 0xff) + PERMUTATIONS[y & 0xff]];
 }
 
-function noise(input_triangle_x: number, input_triangle_y: number): number {
+function noise(input_x: number, input_y: number): number {
   // --------------------------------
   // -- Skew input to square space --
   // --------------------------------
 
-  const S = (input_triangle_x + input_triangle_y) * F;
-  const input_square_x = input_triangle_x + S;
-  const input_square_y = input_triangle_y + S;
+  const S = (input_x + input_y) * F;
+  const input_square_x = input_x + S;
+  const input_square_y = input_y + S;
 
-  // ------------------------
-  // -- Find square origin --
-  // ------------------------
+  // ---------------------------------
+  // -- Floor to find square origin --
+  // ---------------------------------
 
-  const A_square_x = Math.floor(input_square_x);
-  const A_square_y = Math.floor(input_square_y);
+  const square_A_x = Math.floor(input_square_x) | 0;
+  const square_A_y = Math.floor(input_square_y) | 0;
 
   // -----------------------------------------------------
   // -- Find cell fraction and determine which triangle --
   // -----------------------------------------------------
 
-  const fraction_x = input_square_x - A_square_x;
-  const fraction_y = input_square_y - A_square_y;
+  const fraction_x = input_square_x - square_A_x;
+  const fraction_y = input_square_y - square_A_y;
   const isBotTriangle = fraction_x > fraction_y;
 
   // --------------------------------
   // -- Find other square vertices --
   // --------------------------------
 
-  const B_square_x = A_square_x + (isBotTriangle ? 1 : 0);
-  const B_square_y = A_square_y + (isBotTriangle ? 0 : 1);
+  let offset_B_x;
+  let offset_B_y;
+  if (isBotTriangle) {
+    offset_B_x = 1;
+    offset_B_y = 0;
+  } else {
+    offset_B_x = 0;
+    offset_B_y = 1;
+  }
 
-  const C_square_x = A_square_x + 1;
-  const C_square_y = A_square_y + 1;
+  const square_B_x = square_A_x + offset_B_x;
+  const square_B_y = square_A_y + offset_B_y;
 
-  // --------------------------------------------
-  // -- Unskew square origin to triangle space --
-  // --------------------------------------------
+  const square_C_x = square_A_x + 1;
+  const square_C_y = square_A_y + 1;
 
-  const TA = (A_square_x + A_square_y) * G;
-  const A_triangle_x = A_square_x - TA;
-  const A_triangle_y = A_square_y - TA;
+  // ----------------------------------------------
+  // -- Unskew square vertices to triangle space --
+  // ----------------------------------------------
 
-  const TB = (B_square_x + B_square_y) * G;
-  const B_triangle_x = B_square_x - TB;
-  const B_triangle_y = B_square_y - TB;
+  const TA = (square_A_x + square_A_y) * G;
+  const triangle_A_x = square_A_x - TA;
+  const triangle_A_y = square_A_y - TA;
 
-  const TC = (C_square_x + C_square_y) * G;
-  const C_triangle_x = C_square_x - TC;
-  const C_triangle_y = C_square_y - TC;
+  const TB = (square_B_x + square_B_y) * G;
+  const triangle_B_x = square_B_x - TB;
+  const triangle_B_y = square_B_y - TB;
+
+  const TC = (square_C_x + square_C_y) * G;
+  const triangle_C_x = square_C_x - TC;
+  const triangle_C_y = square_C_y - TC;
 
   // -------------------------------------------
   // -- Difference between input and vertices --
   // -------------------------------------------
 
-  const delta_A_x = input_triangle_x - A_triangle_x;
-  const delta_A_y = input_triangle_y - A_triangle_y;
+  const delta_A_x = input_x - triangle_A_x;
+  const delta_A_y = input_y - triangle_A_y;
 
-  const delta_B_x = input_triangle_x - B_triangle_x;
-  const delta_B_y = input_triangle_y - B_triangle_y;
+  const delta_B_x = input_x - triangle_B_x;
+  const delta_B_y = input_y - triangle_B_y;
 
-  const delta_C_x = input_triangle_x - C_triangle_x;
-  const delta_C_y = input_triangle_y - C_triangle_y;
-
-  // -------------------------------------------------
-  // -- Select gradients from square-space vertices --
-  // -------------------------------------------------
-
-  const gradient_index_A = hash(A_square_x, A_square_y) % 32;
-  const gradient_index_B = hash(B_square_x, B_square_y) % 32;
-  const gradient_index_C = hash(C_square_x, C_square_y) % 32;
+  const delta_C_x = input_x - triangle_C_x;
+  const delta_C_y = input_y - triangle_C_y;
 
   // -----------------------
   // -- Influence kernels --
@@ -166,35 +125,50 @@ function noise(input_triangle_x: number, input_triangle_y: number): number {
   const distance_B_squared = delta_B_x * delta_B_x + delta_B_y * delta_B_y;
   const distance_C_squared = delta_C_x * delta_C_x + delta_C_y * delta_C_y;
 
-  let kernel_A = Math.max(0, 0.5 - distance_A_squared);
-  let kernel_B = Math.max(0, 0.5 - distance_B_squared);
-  let kernel_C = Math.max(0, 0.5 - distance_C_squared);
+  const kernel_A = 0.5 - distance_A_squared;
+  const kernel_B = 0.5 - distance_B_squared;
+  const kernel_C = 0.5 - distance_C_squared;
 
-  kernel_A = kernel_A ** 4;
-  kernel_B = kernel_B ** 4;
-  kernel_C = kernel_C ** 4;
+  // -------------------
+  // -- Contributions --
+  // -------------------
 
-  // -------------------------------------------------------------
-  // -- Alignment between gradient vector and difference vector --
-  // -------------------------------------------------------------
+  let contribution_A = 0;
+  let contribution_B = 0;
+  let contribution_C = 0;
 
-  const dot_A =
-    GRADIENTS_32[gradient_index_A].x * delta_A_x + GRADIENTS_32[gradient_index_A].y * delta_A_y;
-  const dot_B =
-    GRADIENTS_32[gradient_index_B].x * delta_B_x + GRADIENTS_32[gradient_index_B].y * delta_B_y;
-  const dot_C =
-    GRADIENTS_32[gradient_index_C].x * delta_C_x + GRADIENTS_32[gradient_index_C].y * delta_C_y;
+  if (kernel_A > 0) {
+    const index_A = hash(square_A_x, square_A_y) & 0xf;
+    const dot_A = GRADIENTS_X[index_A] * delta_A_x + GRADIENTS_Y[index_A] * delta_A_y;
+    const kernel_A_quartic = kernel_A * kernel_A * kernel_A * kernel_A;
+    contribution_A = dot_A * kernel_A_quartic;
+  }
 
-  const result = dot_A * kernel_A + dot_B * kernel_B + dot_C * kernel_C;
+  if (kernel_B > 0) {
+    const index_B = hash(square_B_x, square_B_y) & 0xf;
+    const dot_B = GRADIENTS_X[index_B] * delta_B_x + GRADIENTS_Y[index_B] * delta_B_y;
+    const kernel_B_quartic = kernel_B * kernel_B * kernel_B * kernel_B;
+    contribution_B = dot_B * kernel_B_quartic;
+  }
 
-  // -----------------------------------------------------------------------
-  // -- Magic numbers to empirically fit the output into the [0, 1] range --
-  // -----------------------------------------------------------------------
-  return result * 49 + 0.5;
+  if (kernel_C > 0) {
+    const index_C = hash(square_C_x, square_C_y) & 0xf;
+    const dot_C = GRADIENTS_X[index_C] * delta_C_x + GRADIENTS_Y[index_C] * delta_C_y;
+    const kernel_C_quartic = kernel_C * kernel_C * kernel_C * kernel_C;
+    contribution_C = dot_C * kernel_C_quartic;
+  }
+
+  const result = contribution_A + contribution_B + contribution_C;
+
+  // ---------------------------------------------------------------
+  // -- Arbitrary numbers to fit the output into the [0, 1] range --
+  // ---------------------------------------------------------------
+
+  return result * 35 + 0.5;
 }
 
-const size = 900;
-const scalar = 0.009;
+const size = 600;
+const scalar = 0.01;
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = canvas.height = size;
@@ -213,16 +187,13 @@ function setupContext(canvas: HTMLCanvasElement) {
 export function simplexNoise(canvas: HTMLCanvasElement) {
   const context = setupContext(canvas);
 
-  const ref = createNoise2D(Math.random);
-
   let min = Infinity;
   let max = -Infinity;
   let sum = 0;
 
   for (let x = 0; x < size; x++) {
     for (let y = 0; y < size; y++) {
-      const value = noise(x * scalar, y * scalar);
-      // const value = ref(x * scalar, y * scalar) * 0.5 + 0.5;
+      const value = noise(x * scalar * -1, y * scalar);
 
       if (value < min) min = value;
       if (value > max) max = value;

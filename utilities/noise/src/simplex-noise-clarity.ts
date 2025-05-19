@@ -7,14 +7,6 @@ import { createNoise2D } from "./ref";
 const F = 0.3660254037844386; // Skew factor
 const G = 0.2113248654051871; // Unskew factor
 
-const GRADIENTS_16_X = new Uint8Array([
-  1, 1, 1, 0, 0, 0, -1, -1, -1, -1, -1, 0, 0, 0, 1, 1,
-]);
-
-const GRADIENTS_16_Y = new Uint8Array([
-  0, 0, 1, 1, 1, 1, 1, 0, 0, 0, -1, -1, -1, -1, -1, 0,
-]);
-
 const PERMUTATIONS = [
   // The permutations table is duplicated once so that it does not
   // overflow, even if the index exceeds 256. Otherwise % operations
