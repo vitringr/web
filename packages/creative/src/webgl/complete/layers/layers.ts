@@ -3,70 +3,66 @@ import { WebGL } from "@utilities/webgl";
 import vertex from "./vertex.glsl";
 import fragment from "./fragment.glsl";
 
-export class Layers {
-  private readonly images: HTMLImageElement[] = [];
-  private pointerX: number = 0;
-  private pointerY: number = 0;
+const images: HTMLImageElement[] = [];
+let pointerX: number = 0;
+let pointerY: number = 0;
 
-  constructor(private readonly canvas: HTMLCanvasElement) { }
+function setupPointer(onMove: () => void) {
+  const canvasBounds = this.canvas.getBoundingClientRect();
+  this.canvas.addEventListener("mousemove", (ev: MouseEvent) => {
+    this.pointerX = ev.clientX - canvasBounds.left;
+    this.pointerY = ev.clientY - canvasBounds.top;
+    onMove();
+  });
+}
 
-  init() {
-    const gl = this.canvas.getContext("webgl2");
-    if (!gl) throw new Error("Failed to get WebGL2 context");
+function loadImage(source: string, onLoad: () => void) {
+  const image = new Image();
+  image.src = source;
+  image.onload = onLoad;
+  return image;
+}
 
-    const vertexShader = WebGL.Setup.compileShader(gl, "vertex", vertex);
-    const fragmentShader = WebGL.Setup.compileShader(gl, "fragment", fragment);
-    const program = WebGL.Setup.linkProgram(gl, vertexShader, fragmentShader);
+function loadImages(
+  sources: string[],
+  target: HTMLImageElement[],
+  onAllLoaded: () => void,
+) {
+  let toLoadCount = sources.length;
 
-    WebGL.Canvas.resizeToDisplaySize(gl.canvas as HTMLCanvasElement);
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    gl.clearColor(0, 0, 0, 1);
-    gl.clear(gl.COLOR_BUFFER_BIT);
+  const onImageLoaded = () => {
+    toLoadCount--;
+    if (toLoadCount <= 0) onAllLoaded();
+  };
 
-    const sources = [
-      "assets/layers/0.png",
-      "assets/layers/1.png",
-      "assets/layers/2.png",
-      "assets/layers/3.png",
-    ];
-    this.loadImages(sources, this.images, () => this.main(gl, program));
+  for (let i = 0; i < sources.length; i++) {
+    const image = loadImage(sources[i], onImageLoaded);
+    target.push(image);
   }
+}
 
-  private setupPointer(onMove: () => void) {
-    const canvasBounds = this.canvas.getBoundingClientRect();
-    this.canvas.addEventListener("mousemove", (ev: MouseEvent) => {
-      this.pointerX = ev.clientX - canvasBounds.left;
-      this.pointerY = ev.clientY - canvasBounds.top;
-      onMove();
-    });
-  }
+export function main(canvas: HTMLCanvasElement) {
+  const gl = canvas.getContext("webgl2");
+  if (!gl) throw new Error("Failed to get WebGL2 context");
 
-  private loadImage(source: string, onLoad: () => void) {
-    const image = new Image();
-    image.src = source;
-    image.onload = onLoad;
-    return image;
-  }
+  const vertexShader = WebGL.Setup.compileShader(gl, "vertex", vertex);
+  const fragmentShader = WebGL.Setup.compileShader(gl, "fragment", fragment);
+  const program = WebGL.Setup.linkProgram(gl, vertexShader, fragmentShader);
 
-  private loadImages(
-    sources: string[],
-    target: HTMLImageElement[],
-    onAllLoaded: () => void,
-  ) {
-    let toLoadCount = sources.length;
+  WebGL.Canvas.resizeToDisplaySize(gl.canvas as HTMLCanvasElement);
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+  gl.clearColor(0, 0, 0, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT);
 
-    const onImageLoaded = () => {
-      toLoadCount--;
-      if (toLoadCount <= 0) onAllLoaded();
-    };
+  // TODO: assets
+  const sources = [
+    "assets/layers/0.png",
+    "assets/layers/1.png",
+    "assets/layers/2.png",
+    "assets/layers/3.png",
+  ];
 
-    for (let i = 0; i < sources.length; i++) {
-      const image = this.loadImage(sources[i], onImageLoaded);
-      target.push(image);
-    }
-  }
-
-  private main(gl: WebGL2RenderingContext, program: WebGLProgram) {
+  loadImages(sources, images, () => {
     const aPositionLocation = gl.getAttribLocation(program, "a_position");
     const aTextureCoordinatesLocation = gl.getAttribLocation(
       program,
@@ -128,7 +124,7 @@ export class Layers {
         gl.RGBA,
         gl.RGBA,
         gl.UNSIGNED_BYTE,
-        this.images[i],
+        images[i],
       );
     }
 
@@ -143,11 +139,7 @@ export class Layers {
     const render = () => {
       requestAnimationFrame(() => {
         gl.uniform2f(uResolutionLocation, gl.canvas.width, gl.canvas.height);
-        gl.uniform2f(
-          uPointerLocation,
-          this.pointerX,
-          this.canvas.height - this.pointerY,
-        );
+        gl.uniform2f(uPointerLocation, pointerX, canvas.height - pointerY);
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
       });
@@ -155,6 +147,6 @@ export class Layers {
 
     render();
 
-    this.setupPointer(render);
-  }
+    setupPointer(render);
+  });
 }
