@@ -3,6 +3,7 @@
 // --------------
 
 export * as NoiseLoop from "./canvas2D/noise-loop";
+export * as NoiseWalker from "./canvas2D/noise-walker";
 
 // -----------
 // -- WebGL --

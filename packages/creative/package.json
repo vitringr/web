@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@utilities/mathematics": "workspace:*",
+    "@utilities/canvas2d": "workspace:*",
     "@utilities/random": "workspace:*",
     "@utilities/vector": "workspace:*",
     "@utilities/noise": "workspace:*",

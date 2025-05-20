@@ -88,6 +88,9 @@ importers:
 
   packages/creative:
     dependencies:
+      '@utilities/canvas2d':
+        specifier: workspace:*
+        version: link:../../utilities/canvas2d
       '@utilities/mathematics':
         specifier: workspace:*
         version: link:../../utilities/mathematics
