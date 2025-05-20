@@ -17,6 +17,9 @@ importers:
 
   apps/sandbox:
     dependencies:
+      '@packages/creative':
+        specifier: workspace:*
+        version: link:../../packages/creative
       '@packages/easing-functions':
         specifier: workspace:*
         version: link:../../packages/easing-functions

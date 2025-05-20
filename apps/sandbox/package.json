@@ -14,6 +14,7 @@
     "@packages/pathfinder": "workspace:*",
     "@packages/quadtree-simulation": "workspace:*",
     "@packages/test": "workspace:*",
+    "@packages/creative": "workspace:*",
     "@packages/tsunagari": "workspace:*"
   },
   "devDependencies": {
