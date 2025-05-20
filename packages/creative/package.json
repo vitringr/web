@@ -11,6 +11,7 @@
     "@utilities/mathematics": "workspace:*",
     "@utilities/random": "workspace:*",
     "@utilities/vector": "workspace:*",
+    "@utilities/noise": "workspace:*",
     "@utilities/webgl": "workspace:*"
   },
   "devDependencies": {

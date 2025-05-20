@@ -1,6 +1,15 @@
-export { BlockCellularAutomata } from "./webgl/complete/block-cellular-automata/block-cellular-automata";
-export { Godfather } from "./webgl/complete/godfather/godfather";
-export { Layers } from "./webgl/complete/layers/layers";
-export { TenThousand } from "./webgl/complete/tenthousand/tenthousand";
+// --------------
+// -- Canvas2D --
+// --------------
 
-export * as Regeneration from "./webgl/complete/regeneration/regeneration"
+export * as NoiseLoop from "./canvas2D/noise-loop";
+
+// -----------
+// -- WebGL --
+// -----------
+
+export * as BlockCellularAutomata from "./webgl/complete/block-cellular-automata/block-cellular-automata";
+export * as Godfather from "./webgl/complete/godfather/godfather";
+export * as Layers from "./webgl/complete/layers/layers";
+export * as TenThousand from "./webgl/complete/tenthousand/tenthousand";
+export * as Regeneration from "./webgl/complete/regeneration/regeneration";

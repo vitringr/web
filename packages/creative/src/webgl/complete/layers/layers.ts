@@ -3,15 +3,20 @@ import { WebGL } from "@utilities/webgl";
 import vertex from "./vertex.glsl";
 import fragment from "./fragment.glsl";
 
+const config = {
+  canvasWidth: 600,
+  canvasHeight: 600,
+};
+
 const images: HTMLImageElement[] = [];
 let pointerX: number = 0;
 let pointerY: number = 0;
 
-function setupPointer(onMove: () => void) {
-  const canvasBounds = this.canvas.getBoundingClientRect();
-  this.canvas.addEventListener("mousemove", (ev: MouseEvent) => {
-    this.pointerX = ev.clientX - canvasBounds.left;
-    this.pointerY = ev.clientY - canvasBounds.top;
+function setupPointer(onMove: () => void, canvas: HTMLCanvasElement) {
+  const canvasBounds = canvas.getBoundingClientRect();
+  canvas.addEventListener("mousemove", (ev: MouseEvent) => {
+    pointerX = ev.clientX - canvasBounds.left;
+    pointerY = ev.clientY - canvasBounds.top;
     onMove();
   });
 }
@@ -49,6 +54,8 @@ export function main(canvas: HTMLCanvasElement) {
   const fragmentShader = WebGL.Setup.compileShader(gl, "fragment", fragment);
   const program = WebGL.Setup.linkProgram(gl, vertexShader, fragmentShader);
 
+  canvas.width = config.canvasWidth;
+  canvas.height = config.canvasHeight;
   WebGL.Canvas.resizeToDisplaySize(gl.canvas as HTMLCanvasElement);
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
   gl.clearColor(0, 0, 0, 1);
@@ -147,6 +154,6 @@ export function main(canvas: HTMLCanvasElement) {
 
     render();
 
-    setupPointer(render);
+    setupPointer(render, canvas);
   });
 }

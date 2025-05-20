@@ -8,10 +8,13 @@ import renderVertex from "./render-vertex.glsl";
 import renderFragment from "./render-fragment.glsl";
 
 const config = {
+  canvasWidth: 600,
+  canvasHeight: 600,
+
   width: 200,
   height: 200,
 
-  spawnChancePercent: 1,
+  spawnChancePercent: 0.05,
   pointerArea: 0.01,
 } as const;
 
@@ -210,6 +213,9 @@ function setupState(
 export function main(canvas: HTMLCanvasElement) {
   const gl = canvas.getContext("webgl2");
   if (!gl) throw new Error("Failed to get WebGL2 context");
+
+  canvas.width = config.canvasWidth;
+  canvas.height = config.canvasHeight;
 
   setupPointer(canvas);
 

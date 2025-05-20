@@ -7,6 +7,8 @@ import renderVertex from "./render-vertex.glsl";
 import renderFragment from "./render-fragment.glsl";
 
 const config = {
+  canvasWidth: 600,
+  canvasHeight: 600,
   particlesCount: 6_000,
   minColor: 0.4,
   minPointSize: 3.0,
@@ -274,7 +276,9 @@ export function main(canvas: HTMLCanvasElement) {
   const gl = canvas.getContext("webgl2");
   if (!gl) throw new Error("Failed to get WebGL2 context");
 
-  // TODO: assets
+  canvas.width = config.canvasWidth;
+  canvas.height = config.canvasHeight;
+
   image.src = "assets/godfather.png";
 
   image.onload = () => {

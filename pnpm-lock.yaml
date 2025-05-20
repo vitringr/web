@@ -91,6 +91,9 @@ importers:
       '@utilities/mathematics':
         specifier: workspace:*
         version: link:../../utilities/mathematics
+      '@utilities/noise':
+        specifier: workspace:*
+        version: link:../../utilities/noise
       '@utilities/random':
         specifier: workspace:*
         version: link:../../utilities/random
