@@ -3,7 +3,7 @@ import { Utilities } from "../../../utilities";
 import vertex from "./vertex.glsl";
 import fragment from "./fragment.glsl";
 
-export class Minimal {
+export class NewWebGL2 {
   private initialized = false;
 
   constructor(private readonly canvas: HTMLCanvasElement) {}
