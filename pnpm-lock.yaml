@@ -91,6 +91,12 @@ importers:
       '@utilities/canvas2d':
         specifier: workspace:*
         version: link:../../utilities/canvas2d
+      '@utilities/colors':
+        specifier: workspace:*
+        version: link:../../utilities/colors
+      '@utilities/easing':
+        specifier: workspace:*
+        version: link:../../utilities/easing
       '@utilities/mathematics':
         specifier: workspace:*
         version: link:../../utilities/mathematics
