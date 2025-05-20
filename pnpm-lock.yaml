@@ -80,6 +80,28 @@ importers:
         specifier: ^2.11.2
         version: 2.11.6(solid-js@1.9.5)(vite@6.3.2)
 
+  packages/creative:
+    dependencies:
+      '@utilities/mathematics':
+        specifier: workspace:*
+        version: link:../../utilities/mathematics
+      '@utilities/random':
+        specifier: workspace:*
+        version: link:../../utilities/random
+      '@utilities/vector':
+        specifier: workspace:*
+        version: link:../../utilities/vector
+      '@utilities/webgl':
+        specifier: workspace:*
+        version: link:../../utilities/webgl
+    devDependencies:
+      '@utilities/typescript-config':
+        specifier: workspace:*
+        version: link:../../utilities/typescript-config
+      typescript:
+        specifier: latest
+        version: 5.8.3
+
   packages/easing-functions:
     dependencies:
       '@utilities/canvas2d':
