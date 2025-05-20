@@ -1,3 +1,7 @@
+import { Vector2 } from "@utilities/vector";
+import { Random } from "@utilities/random";
+import { WebGL } from "@utilities/webgl";
+
 import updateVertex from "./update-vertex.glsl";
 import updateFragment from "./update-fragment.glsl";
 import renderVertex from "./render-vertex.glsl";
@@ -23,7 +27,7 @@ export class Sandfall {
   private readonly totalCells = this.width * this.height;
 
   private readonly input = {
-    pointer: { coordinates: Vector2.zero(), isDown: 0 },
+    pointer: { coordinates: Vector2.Create.zero(), isDown: 0 },
     key: InputKeys.NONE,
   };
   private initialized = false;
@@ -120,7 +124,7 @@ export class Sandfall {
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
         //const r = Random.percent(this.percent) ? 1 : 0;
-        const r = Random.percent(this.percent) ? 3 : 0;
+        const r = Random.chance(this.percent) ? 3 : 0;
         const g = 0;
         const b = 0;
         const a = 0;

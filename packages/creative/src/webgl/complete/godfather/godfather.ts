@@ -1,3 +1,6 @@
+import { WebGL } from "@utilities/webgl";
+import { Random } from "@utilities/random";
+
 import updateVertex from "./update-vertex.glsl";
 import updateFragment from "./update-fragment.glsl";
 import renderVertex from "./render-vertex.glsl";
@@ -30,28 +33,28 @@ export class Godfather {
   }
 
   private setupPrograms(gl: WebGL2RenderingContext) {
-    const updateVS = Utilities.WebGL.Setup.compileShader(gl, "vertex", updateVertex);
-    const updateFS = Utilities.WebGL.Setup.compileShader(gl, "fragment", updateFragment);
-    const renderVS = Utilities.WebGL.Setup.compileShader(gl, "vertex", renderVertex);
-    const renderFS = Utilities.WebGL.Setup.compileShader(gl, "fragment", renderFragment);
+    const updateVS = WebGL.Setup.compileShader(gl, "vertex", updateVertex);
+    const updateFS = WebGL.Setup.compileShader(gl, "fragment", updateFragment);
+    const renderVS = WebGL.Setup.compileShader(gl, "vertex", renderVertex);
+    const renderFS = WebGL.Setup.compileShader(gl, "fragment", renderFragment);
 
     return {
-      update: Utilities.WebGL.Setup.linkTransformFeedbackProgram(
+      update: WebGL.Setup.linkTransformFeedbackProgram(
         gl,
         updateVS,
         updateFS,
         ["newPosition", "texelColor"],
         "separate",
       ),
-      render: Utilities.WebGL.Setup.linkProgram(gl, renderVS, renderFS),
+      render: WebGL.Setup.linkProgram(gl, renderVS, renderFS),
     };
   }
 
   private generatePositionData() {
     const positions: number[] = [];
     for (let i = 0; i < this.particlesCount; i++) {
-      positions.push(Utilities.Random.range(0, 1));
-      positions.push(Utilities.Random.range(1, 10));
+      positions.push(Random.range(0, 1));
+      positions.push(Random.range(1, 10));
     }
     return positions;
   }
@@ -59,7 +62,7 @@ export class Godfather {
   private generateWeightData() {
     const weights: number[] = [];
     for (let i = 0; i < this.particlesCount; i++) {
-      weights.push(Utilities.Random.range(0, 1));
+      weights.push(Random.range(0, 1));
     }
     return weights;
   }
@@ -68,13 +71,29 @@ export class Godfather {
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.image);
-    Utilities.WebGL.Texture.applyClampAndNearest(gl);
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.RGBA,
+      gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      this.image,
+    );
+    WebGL.Texture.applyClampAndNearest(gl);
   }
 
-  private setupUniformBlock(gl: WebGL2RenderingContext, programs: { update: WebGLProgram; render: WebGLProgram }) {
-    const blockIndexInUpdate = gl.getUniformBlockIndex(programs.update, "GlobalStaticData");
-    const blockIndexInRender = gl.getUniformBlockIndex(programs.render, "GlobalStaticData");
+  private setupUniformBlock(
+    gl: WebGL2RenderingContext,
+    programs: { update: WebGLProgram; render: WebGLProgram },
+  ) {
+    const blockIndexInUpdate = gl.getUniformBlockIndex(
+      programs.update,
+      "GlobalStaticData",
+    );
+    const blockIndexInRender = gl.getUniformBlockIndex(
+      programs.render,
+      "GlobalStaticData",
+    );
 
     gl.uniformBlockBinding(programs.update, blockIndexInUpdate, 0);
     gl.uniformBlockBinding(programs.render, blockIndexInRender, 0);
@@ -99,10 +118,16 @@ export class Godfather {
     gl.bufferSubData(gl.UNIFORM_BUFFER, 0, globalStaticData);
   }
 
-  private setupState(gl: WebGL2RenderingContext, programs: { update: WebGLProgram; render: WebGLProgram }) {
+  private setupState(
+    gl: WebGL2RenderingContext,
+    programs: { update: WebGLProgram; render: WebGLProgram },
+  ) {
     const locations = {
       update: {
-        aCurrentPosition: gl.getAttribLocation(programs.update, "a_currentPosition"),
+        aCurrentPosition: gl.getAttribLocation(
+          programs.update,
+          "a_currentPosition",
+        ),
         aWeight: gl.getAttribLocation(programs.update, "a_weight"),
         uTextureIndex: gl.getUniformLocation(programs.update, "u_textureIndex"),
         uDeltaTime: gl.getUniformLocation(programs.update, "u_deltaTime"),
@@ -135,10 +160,18 @@ export class Godfather {
     gl.bufferData(gl.ARRAY_BUFFER, data.positions, gl.STREAM_DRAW);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.firstTexelColor);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.particlesCount * 3).fill(0), gl.STREAM_DRAW);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array(this.particlesCount * 3).fill(0),
+      gl.STREAM_DRAW,
+    );
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.nextTexelColor);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.particlesCount * 3).fill(0), gl.STREAM_DRAW);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array(this.particlesCount * 3).fill(0),
+      gl.STREAM_DRAW,
+    );
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.weight);
     gl.bufferData(gl.ARRAY_BUFFER, data.weights, gl.STREAM_DRAW);
@@ -155,7 +188,14 @@ export class Godfather {
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.firstPosition);
     gl.enableVertexAttribArray(locations.update.aCurrentPosition);
-    gl.vertexAttribPointer(locations.update.aCurrentPosition, 2, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(
+      locations.update.aCurrentPosition,
+      2,
+      gl.FLOAT,
+      false,
+      0,
+      0,
+    );
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.weight);
     gl.enableVertexAttribArray(locations.update.aWeight);
@@ -166,7 +206,14 @@ export class Godfather {
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.nextPosition);
     gl.enableVertexAttribArray(locations.update.aCurrentPosition);
-    gl.vertexAttribPointer(locations.update.aCurrentPosition, 2, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(
+      locations.update.aCurrentPosition,
+      2,
+      gl.FLOAT,
+      false,
+      0,
+      0,
+    );
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.weight);
     gl.enableVertexAttribArray(locations.update.aWeight);
@@ -177,22 +224,50 @@ export class Godfather {
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.firstPosition);
     gl.enableVertexAttribArray(locations.render.aNewPosition);
-    gl.vertexAttribPointer(locations.render.aNewPosition, 2, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(
+      locations.render.aNewPosition,
+      2,
+      gl.FLOAT,
+      false,
+      0,
+      0,
+    );
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.firstTexelColor);
     gl.enableVertexAttribArray(locations.render.aTexelColor);
-    gl.vertexAttribPointer(locations.render.aTexelColor, 3, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(
+      locations.render.aTexelColor,
+      3,
+      gl.FLOAT,
+      false,
+      0,
+      0,
+    );
 
     // render VAO next
     gl.bindVertexArray(vertexArrayObjects.renderNext);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.nextPosition);
     gl.enableVertexAttribArray(locations.render.aNewPosition);
-    gl.vertexAttribPointer(locations.render.aNewPosition, 2, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(
+      locations.render.aNewPosition,
+      2,
+      gl.FLOAT,
+      false,
+      0,
+      0,
+    );
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.nextTexelColor);
     gl.enableVertexAttribArray(locations.render.aTexelColor);
-    gl.vertexAttribPointer(locations.render.aTexelColor, 3, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(
+      locations.render.aTexelColor,
+      3,
+      gl.FLOAT,
+      false,
+      0,
+      0,
+    );
 
     const transformFeedbacks = {
       first: gl.createTransformFeedback(),
@@ -218,7 +293,8 @@ export class Godfather {
   private main(gl: WebGL2RenderingContext) {
     const programs = this.setupPrograms(gl);
 
-    const { locations, vertexArrayObjects, transformFeedbacks } = this.setupState(gl, programs);
+    const { locations, vertexArrayObjects, transformFeedbacks } =
+      this.setupState(gl, programs);
 
     this.setupTexture(gl);
 
@@ -234,7 +310,7 @@ export class Godfather {
       TF: transformFeedbacks.first,
     };
 
-    Utilities.WebGL.Canvas.resizeToDisplaySize(this.canvas);
+    WebGL.Canvas.resizeToDisplaySize(this.canvas);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.clearColor(0.08, 0.08, 0.08, 1.0);
 

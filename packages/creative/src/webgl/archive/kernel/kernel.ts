@@ -1,38 +1,46 @@
+import { WebGL } from "@utilities/webgl";
+
 import vertex from "./vertex.glsl";
 import fragment from "./fragment.glsl";
 
 export class Kernel {
-  private readonly kernel = Utilities.WebGL.Kernels.matrices3x3.identity;
+  private readonly kernel = WebGL.Kernels.matrices3x3.identity;
 
   private image = new Image();
 
   constructor(private readonly canvas: HTMLCanvasElement) { }
 
-  setup () {
+  setup() {
     const gl = this.canvas.getContext("webgl2");
     if (!gl) throw new Error("Failed to get WebGL2 context");
 
-    const vertexShader = Utilities.WebGL.Setup.compileShader(gl, "vertex", vertex);
-    const fragmentShader = Utilities.WebGL.Setup.compileShader(gl, "fragment", fragment);
-    const program = Utilities.WebGL.Setup.linkProgram(gl, vertexShader, fragmentShader);
+    const vertexShader = WebGL.Setup.compileShader(gl, "vertex", vertex);
+    const fragmentShader = WebGL.Setup.compileShader(gl, "fragment", fragment);
+    const program = WebGL.Setup.linkProgram(gl, vertexShader, fragmentShader);
 
-    Utilities.WebGL.Canvas.resizeToDisplaySize(gl.canvas as HTMLCanvasElement);
+    WebGL.Canvas.resizeToDisplaySize(gl.canvas as HTMLCanvasElement);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.clearColor(0, 0, 0, 1);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     this.image.src = "assets/lateralus.png";
     this.image.onload = () => this.main(gl, program);
-  };
+  }
 
-  private main (gl: WebGL2RenderingContext, program: WebGLProgram) {
+  private main(gl: WebGL2RenderingContext, program: WebGLProgram) {
     const aPositionLocation = gl.getAttribLocation(program, "a_position");
-    const aTextureCoordinatesLocation = gl.getAttribLocation(program, "a_textureCoordinates");
+    const aTextureCoordinatesLocation = gl.getAttribLocation(
+      program,
+      "a_textureCoordinates",
+    );
 
     const uResolutionLocation = gl.getUniformLocation(program, "u_resolution");
     const uImageLocation = gl.getUniformLocation(program, "u_image");
     const uKernelLocation = gl.getUniformLocation(program, "u_kernel[0]");
-    const uKernelWeightLocation = gl.getUniformLocation(program, "u_kernelWeight");
+    const uKernelWeightLocation = gl.getUniformLocation(
+      program,
+      "u_kernelWeight",
+    );
 
     const vao = gl.createVertexArray();
     gl.bindVertexArray(vao);
@@ -41,7 +49,9 @@ export class Kernel {
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
     gl.bufferData(
       gl.ARRAY_BUFFER,
-      new Float32Array(Utilities.WebGL.Points.rectangle(0, 0, gl.canvas.width, gl.canvas.height)),
+      new Float32Array(
+        WebGL.Points.rectangle(0, 0, gl.canvas.width, gl.canvas.height),
+      ),
       gl.STATIC_DRAW,
     );
     gl.enableVertexAttribArray(aPositionLocation);
@@ -49,9 +59,20 @@ export class Kernel {
 
     // aTextureCoordinates
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(Utilities.WebGL.Points.rectangle(0, 0, 1, 1)), gl.STATIC_DRAW);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array(WebGL.Points.rectangle(0, 0, 1, 1)),
+      gl.STATIC_DRAW,
+    );
     gl.enableVertexAttribArray(aTextureCoordinatesLocation);
-    gl.vertexAttribPointer(aTextureCoordinatesLocation, 2, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(
+      aTextureCoordinatesLocation,
+      2,
+      gl.FLOAT,
+      false,
+      0,
+      0,
+    );
 
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
@@ -61,10 +82,17 @@ export class Kernel {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.image);
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.RGBA,
+      gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      this.image,
+    );
 
     // Kernel.
-    const kernelWeight = Utilities.WebGL.Kernels.computeKernelWeight(this.kernel);
+    const kernelWeight = WebGL.Kernels.computeKernelWeight(this.kernel);
 
     // Draw.
     gl.useProgram(program);
@@ -77,5 +105,5 @@ export class Kernel {
 
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
-  };
+  }
 }

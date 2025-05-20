@@ -1,3 +1,5 @@
+import { WebGL } from "@utilities/webgl";
+
 import vertex from "./vertex.glsl";
 import fragment from "./fragment.glsl";
 
@@ -8,7 +10,7 @@ export class Base {
   private pointerY: number = 0;
   private time: number = 0;
 
-  constructor(private readonly canvas: HTMLCanvasElement) {}
+  constructor(private readonly canvas: HTMLCanvasElement) { }
 
   setup() {
     // Gets the WebGL context.
@@ -16,13 +18,13 @@ export class Base {
     if (!gl) throw new Error("Failed to get WebGL2 context");
 
     // Compiles shader programs from the GLSL source code.
-    const vertexShader = Utilities.WebGL.Setup.compileShader(gl, "vertex", vertex);
-    const fragmentShader = Utilities.WebGL.Setup.compileShader(gl, "fragment", fragment);
+    const vertexShader = WebGL.Setup.compileShader(gl, "vertex", vertex);
+    const fragmentShader = WebGL.Setup.compileShader(gl, "fragment", fragment);
 
     // Creates a new WebGL program, attaches the shaders to it, and links it to WebGL.
-    const program = Utilities.WebGL.Setup.linkProgram(gl, vertexShader, fragmentShader);
+    const program = WebGL.Setup.linkProgram(gl, vertexShader, fragmentShader);
 
-    Utilities.WebGL.Canvas.resizeToDisplaySize(gl.canvas as HTMLCanvasElement);
+    WebGL.Canvas.resizeToDisplaySize(gl.canvas as HTMLCanvasElement);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.clearColor(0, 0, 0, 1);
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -58,7 +60,14 @@ export class Base {
     // Provides data to the current ARRAY_BUFFER.
     gl.bufferData(
       gl.ARRAY_BUFFER,
-      new Float32Array(Utilities.WebGL.Points.rectangle(10, 10, gl.canvas.width - 20, gl.canvas.height - 20)),
+      new Float32Array(
+        WebGL.Points.rectangle(
+          10,
+          10,
+          gl.canvas.width - 20,
+          gl.canvas.height - 20,
+        ),
+      ),
       gl.STATIC_DRAW,
     );
 

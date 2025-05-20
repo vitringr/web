@@ -1,3 +1,5 @@
+import { WebGL } from "@utilities/webgl";
+
 import updateVertex from "./update-vertex.glsl";
 import updateFragment from "./update-fragment.glsl";
 import renderVertex from "./render-vertex.glsl";
@@ -59,20 +61,20 @@ export class Regeneration {
   }
 
   private setupPrograms(gl: WebGL2RenderingContext) {
-    const updateVS = Utilities.WebGL.Setup.compileShader(gl, "vertex", updateVertex);
-    const updateFS = Utilities.WebGL.Setup.compileShader(gl, "fragment", updateFragment);
-    const renderVS = Utilities.WebGL.Setup.compileShader(gl, "vertex", renderVertex);
-    const renderFS = Utilities.WebGL.Setup.compileShader(gl, "fragment", renderFragment);
+    const updateVS = WebGL.Setup.compileShader(gl, "vertex", updateVertex);
+    const updateFS = WebGL.Setup.compileShader(gl, "fragment", updateFragment);
+    const renderVS = WebGL.Setup.compileShader(gl, "vertex", renderVertex);
+    const renderFS = WebGL.Setup.compileShader(gl, "fragment", renderFragment);
 
     return {
-      update: Utilities.WebGL.Setup.linkTransformFeedbackProgram(
+      update: WebGL.Setup.linkTransformFeedbackProgram(
         gl,
         updateVS,
         updateFS,
         ["tf_newPosition", "tf_distanceFromOrigin"],
         "separate",
       ),
-      render: Utilities.WebGL.Setup.linkProgram(gl, renderVS, renderFS),
+      render: WebGL.Setup.linkProgram(gl, renderVS, renderFS),
     };
   }
 
@@ -253,7 +255,7 @@ export class Regeneration {
       TF: transformFeedbacks.first,
     };
 
-    Utilities.WebGL.Canvas.resizeToDisplaySize(this.canvas);
+    WebGL.Canvas.resizeToDisplaySize(this.canvas);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.clearColor(0.08, 0.08, 0.08, 1.0);
 

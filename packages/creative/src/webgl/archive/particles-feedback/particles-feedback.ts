@@ -1,3 +1,6 @@
+import { Random } from "@utilities/random";
+import { WebGL } from "@utilities/webgl";
+
 import updateVertex from "./update-vertex.glsl";
 import updateFragment from "./update-fragment.glsl";
 import renderVertex from "./render-vertex.glsl";
@@ -23,22 +26,22 @@ export class ParticlesFeedback {
   }
 
   private createPrograms(gl: WebGL2RenderingContext) {
-    const updateVS = Utilities.WebGL.Setup.compileShader(gl, "vertex", updateVertex);
-    const updateFS = Utilities.WebGL.Setup.compileShader(gl, "fragment", updateFragment);
-    const renderVS = Utilities.WebGL.Setup.compileShader(gl, "vertex", renderVertex);
-    const renderFS = Utilities.WebGL.Setup.compileShader(gl, "fragment", renderFragment);
+    const updateVS = WebGL.Setup.compileShader(gl, "vertex", updateVertex);
+    const updateFS = WebGL.Setup.compileShader(gl, "fragment", updateFragment);
+    const renderVS = WebGL.Setup.compileShader(gl, "vertex", renderVertex);
+    const renderFS = WebGL.Setup.compileShader(gl, "fragment", renderFragment);
 
     return {
-      update: Utilities.WebGL.Setup.linkTransformFeedbackProgram(gl, updateVS, updateFS, ["newPosition"], "separate"),
-      render: Utilities.WebGL.Setup.linkProgram(gl, renderVS, renderFS),
+      update: WebGL.Setup.linkTransformFeedbackProgram(gl, updateVS, updateFS, ["newPosition"], "separate"),
+      render: WebGL.Setup.linkProgram(gl, renderVS, renderFS),
     };
   }
 
   private generatePositionData() {
     const positions: number[] = [];
     for (let i = 0; i < this.particlesCount; i++) {
-      positions.push(Utilities.Random.range(0, 1));
-      positions.push(Utilities.Random.range(0, 1));
+      positions.push(Random.range(0, 1));
+      positions.push(Random.range(0, 1));
     }
     return positions;
   }
@@ -46,10 +49,10 @@ export class ParticlesFeedback {
   private generateVelocityData() {
     const velocities: number[] = [];
     for (let i = 0; i < this.particlesCount; i++) {
-      const angle = Utilities.Random.rangeInt(0, 360);
+      const angle = Random.rangeInt(0, 360);
 
-      const sin = Utilities.TrigCache.sin(angle);
-      const cos = Utilities.TrigCache.cos(angle);
+      const sin = Math.sin(angle);
+      const cos = Math.cos(angle);
 
       velocities.push(cos);
       velocities.push(sin);
@@ -168,7 +171,7 @@ export class ParticlesFeedback {
       TF: transformFeedbacks.firstPosition,
     };
 
-    Utilities.WebGL.Canvas.resizeToDisplaySize(this.canvas);
+    WebGL.Canvas.resizeToDisplaySize(this.canvas);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
     const updateLoop = (deltaTime: number) => {

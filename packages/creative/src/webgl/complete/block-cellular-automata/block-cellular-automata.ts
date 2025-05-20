@@ -1,3 +1,7 @@
+import { Vector2 } from "@utilities/vector";
+import { Random } from "@utilities/random";
+import { WebGL } from "@utilities/webgl";
+
 import updateVertex from "./update-vertex.glsl";
 import updateFragment from "./update-fragment.glsl";
 import renderVertex from "./render-vertex.glsl";
@@ -13,7 +17,7 @@ export class BlockCellularAutomata {
   private readonly totalCells = this.width * this.height;
 
   private readonly pointer = {
-    coordinates: Vector2.zero(),
+    coordinates: Vector2.Create.zero(),
     isDown: 0,
   };
   private initialized = false;
@@ -70,7 +74,7 @@ export class BlockCellularAutomata {
 
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
-        state.push(Random.percent(this.spawnChancePercent) ? 1 : 0);
+        state.push(Random.chance(this.spawnChancePercent) ? 1 : 0);
       }
     }
 

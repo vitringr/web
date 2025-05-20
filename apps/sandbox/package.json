@@ -20,6 +20,7 @@
     "@utilities/typescript-config": "workspace:*",
     "typescript": "latest",
     "vite": "^6.2.0",
+    "vite-plugin-glsl": "^1.4.1",
     "vite-plugin-singlefile": "^2.2.0"
   }
 }

@@ -1,3 +1,5 @@
+import { WebGL } from "@utilities/webgl";
+
 import vertex from "./vertex.glsl";
 import fragment from "./fragment.glsl";
 
@@ -13,12 +15,12 @@ export class NewWebGL2 {
     const gl = this.canvas.getContext("webgl2");
     if (!gl) throw new Error("Failed to get WebGL2 context");
 
-    const vertexShader = Utilities.WebGL.Setup.compileShader(gl, "vertex", vertex);
-    const fragmentShader = Utilities.WebGL.Setup.compileShader(gl, "fragment", fragment);
+    const vertexShader = WebGL.Setup.compileShader(gl, "vertex", vertex);
+    const fragmentShader = WebGL.Setup.compileShader(gl, "fragment", fragment);
 
-    const program = Utilities.WebGL.Setup.linkProgram(gl, vertexShader, fragmentShader);
+    const program = WebGL.Setup.linkProgram(gl, vertexShader, fragmentShader);
 
-    Utilities.WebGL.Canvas.resizeToDisplaySize(this.canvas);
+    WebGL.Canvas.resizeToDisplaySize(this.canvas);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
     this.main(gl, program);
@@ -35,7 +37,7 @@ export class NewWebGL2 {
     const buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
-    const canvasVertices = Utilities.WebGL.Points.rectangle(0, 0, 1, 1);
+    const canvasVertices = WebGL.Points.rectangle(0, 0, 1, 1);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(canvasVertices), gl.STATIC_DRAW);
 
     gl.enableVertexAttribArray(locations.aCanvasVertices);

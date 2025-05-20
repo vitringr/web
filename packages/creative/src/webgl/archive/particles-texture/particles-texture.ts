@@ -1,3 +1,6 @@
+import { Random } from "@utilities/random";
+import { WebGL } from "@utilities/webgl";
+
 import simulationVertex from "./simulation-vertex.glsl";
 import simulationFragment from "./simulation-fragment.glsl";
 import renderVertex from "./render-vertex.glsl";
@@ -17,15 +20,15 @@ export class ParticlesTexture {
     const gl = this.canvas.getContext("webgl2");
     if (!gl) throw new Error("Failed to get WebGL2 context");
 
-    const simulationVS = Utilities.WebGL.Setup.compileShader(gl, "vertex", simulationVertex);
-    const simulationFS = Utilities.WebGL.Setup.compileShader(gl, "fragment", simulationFragment);
-    const renderVS = Utilities.WebGL.Setup.compileShader(gl, "vertex", renderVertex);
-    const renderFS = Utilities.WebGL.Setup.compileShader(gl, "fragment", renderFragment);
+    const simulationVS = WebGL.Setup.compileShader(gl, "vertex", simulationVertex);
+    const simulationFS = WebGL.Setup.compileShader(gl, "fragment", simulationFragment);
+    const renderVS = WebGL.Setup.compileShader(gl, "vertex", renderVertex);
+    const renderFS = WebGL.Setup.compileShader(gl, "fragment", renderFragment);
 
-    const simulationProgram = Utilities.WebGL.Setup.linkProgram(gl, simulationVS, simulationFS);
-    const renderProgram = Utilities.WebGL.Setup.linkProgram(gl, renderVS, renderFS);
+    const simulationProgram = WebGL.Setup.linkProgram(gl, simulationVS, simulationFS);
+    const renderProgram = WebGL.Setup.linkProgram(gl, renderVS, renderFS);
 
-    Utilities.WebGL.Canvas.resizeToDisplaySize(this.canvas);
+    WebGL.Canvas.resizeToDisplaySize(this.canvas);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
     this.main(gl, simulationProgram, renderProgram);
@@ -35,9 +38,9 @@ export class ParticlesTexture {
     const textureData: number[] = [];
 
     for (let i = 0; i < count; i++) {
-      const xPosition = Utilities.Random.rangeInt(0, 255);
-      const yPosition = Utilities.Random.rangeInt(0, 255);
-      const angle = Utilities.Random.rangeInt(0, 255);
+      const xPosition = Random.rangeInt(0, 255);
+      const yPosition = Random.rangeInt(0, 255);
+      const angle = Random.rangeInt(0, 255);
 
       textureData.push(xPosition);
       textureData.push(yPosition);
@@ -70,7 +73,7 @@ export class ParticlesTexture {
 
     // --- Attribute ---
 
-    const canvasVertices = Utilities.WebGL.Points.rectangle(0, 0, 1, 1);
+    const canvasVertices = WebGL.Points.rectangle(0, 0, 1, 1);
 
     const simulationVAO = gl.createVertexArray();
     gl.bindVertexArray(simulationVAO);

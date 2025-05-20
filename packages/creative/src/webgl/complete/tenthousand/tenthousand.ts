@@ -2,6 +2,8 @@ import updateVertex from "./update-vertex.glsl";
 import updateFragment from "./update-fragment.glsl";
 import renderVertex from "./render-vertex.glsl";
 import renderFragment from "./render-fragment.glsl";
+import { WebGL } from "@utilities/webgl";
+import { Random } from "@utilities/random";
 
 export class TenThousand {
   private readonly particlesCount = 10_000;
@@ -27,22 +29,22 @@ export class TenThousand {
   }
 
   private setupPrograms(gl: WebGL2RenderingContext) {
-    const updateVS = Utilities.WebGL.Setup.compileShader(gl, "vertex", updateVertex);
-    const updateFS = Utilities.WebGL.Setup.compileShader(gl, "fragment", updateFragment);
-    const renderVS = Utilities.WebGL.Setup.compileShader(gl, "vertex", renderVertex);
-    const renderFS = Utilities.WebGL.Setup.compileShader(gl, "fragment", renderFragment);
+    const updateVS = WebGL.Setup.compileShader(gl, "vertex", updateVertex);
+    const updateFS = WebGL.Setup.compileShader(gl, "fragment", updateFragment);
+    const renderVS = WebGL.Setup.compileShader(gl, "vertex", renderVertex);
+    const renderFS = WebGL.Setup.compileShader(gl, "fragment", renderFragment);
 
     return {
-      update: Utilities.WebGL.Setup.linkTransformFeedbackProgram(gl, updateVS, updateFS, ["newPosition"], "separate"),
-      render: Utilities.WebGL.Setup.linkProgram(gl, renderVS, renderFS),
+      update: WebGL.Setup.linkTransformFeedbackProgram(gl, updateVS, updateFS, ["newPosition"], "separate"),
+      render: WebGL.Setup.linkProgram(gl, renderVS, renderFS),
     };
   }
 
   private generatePositionData() {
     const positions: number[] = [];
     for (let i = 0; i < this.particlesCount; i++) {
-      positions.push(Utilities.Random.range(0, 1));
-      positions.push(Utilities.Random.range(0, 1));
+      positions.push(Random.range(0, 1));
+      positions.push(Random.range(0, 1));
     }
     return positions;
   }
@@ -50,10 +52,10 @@ export class TenThousand {
   private generateVelocityData() {
     const velocities: number[] = [];
     for (let i = 0; i < this.particlesCount; i++) {
-      const angle = Utilities.Random.rangeInt(0, 360);
+      const angle = Random.rangeInt(0, 360);
 
-      const sin = Utilities.TrigCache.sin(angle);
-      const cos = Utilities.TrigCache.cos(angle);
+      const sin = Math.sin(angle);
+      const cos = Math.cos(angle);
 
       velocities.push(cos);
       velocities.push(sin);
@@ -66,7 +68,7 @@ export class TenThousand {
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.image);
-    Utilities.WebGL.Texture.applyClampAndNearest(gl);
+    WebGL.Texture.applyClampAndNearest(gl);
   }
 
   private setupUniformBlock(gl: WebGL2RenderingContext, programs: { update: WebGLProgram; render: WebGLProgram }) {
@@ -204,7 +206,7 @@ export class TenThousand {
       TF: transformFeedbacks.firstPosition,
     };
 
-    Utilities.WebGL.Canvas.resizeToDisplaySize(this.canvas);
+    WebGL.Canvas.resizeToDisplaySize(this.canvas);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.clearColor(0.08, 0.08, 0.08, 1.0);
 
