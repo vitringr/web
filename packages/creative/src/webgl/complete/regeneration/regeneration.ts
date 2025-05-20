@@ -37,6 +37,7 @@ function setupPointer(canvas: HTMLCanvasElement) {
     yPointer = (canvas.height - yPointer) / canvas.height;
   });
 
+  // TODO: prevent event memory garbage
   window.addEventListener("pointerdown", () => {
     isPointerDown = true;
   });
