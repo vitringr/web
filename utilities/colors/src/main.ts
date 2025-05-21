@@ -8,11 +8,11 @@
 export function getRGB(red: number, green: number, blue: number) {
   return (
     "rgb(" +
-    ((red * 255) | 0) +
+    ((red * 0xff) | 0) +
     "," +
-    ((green * 255) | 0) +
+    ((green * 0xff) | 0) +
     "," +
-    ((blue * 255) | 0) +
+    ((blue * 0xff) | 0) +
     ")"
   );
 }
@@ -25,11 +25,11 @@ export function getRGBA(
 ) {
   return (
     "rgb(" +
-    ((red * 255) | 0) +
+    ((red * 0xff) | 0) +
     "," +
-    ((green * 255) | 0) +
+    ((green * 0xff) | 0) +
     "," +
-    ((blue * 255) | 0) +
+    ((blue * 0xff) | 0) +
     "," +
     alpha +
     ")"
@@ -37,14 +37,14 @@ export function getRGBA(
 }
 
 export function getRGBGrayscale(value: number) {
-  const byte = (value * 255) | 0;
+  const byte = (value * 0xff) | 0;
   return "rgb(" + byte + "," + byte + "," + byte + ")";
 }
 
 export function getHex(red: number, green: number, blue: number) {
-  const r = ((red * 255) | 0).toString(16).padStart(2, "0");
-  const g = ((green * 255) | 0).toString(16).padStart(2, "0");
-  const b = ((blue * 255) | 0).toString(16).padStart(2, "0");
+  const r = ((red * 0xff) | 0).toString(16).padStart(2, "0");
+  const g = ((green * 0xff) | 0).toString(16).padStart(2, "0");
+  const b = ((blue * 0xff) | 0).toString(16).padStart(2, "0");
   return "#" + r + g + b;
 }
 
@@ -54,9 +54,9 @@ export function getHexTransparent(
   blue: number,
   alpha: number,
 ) {
-  const r = ((red * 255) | 0).toString(16).padStart(2, "0");
-  const g = ((green * 255) | 0).toString(16).padStart(2, "0");
-  const b = ((blue * 255) | 0).toString(16).padStart(2, "0");
-  const a = ((alpha * 255) | 0).toString(16).padStart(2, "0");
+  const r = ((red * 0xff) | 0).toString(16).padStart(2, "0");
+  const g = ((green * 0xff) | 0).toString(16).padStart(2, "0");
+  const b = ((blue * 0xff) | 0).toString(16).padStart(2, "0");
+  const a = ((alpha * 0xff) | 0).toString(16).padStart(2, "0");
   return "#" + r + g + b + a;
 }

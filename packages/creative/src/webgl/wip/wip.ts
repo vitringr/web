@@ -29,14 +29,26 @@ export function main(canvas: HTMLCanvasElement) {
   const gl = canvas.getContext("webgl2");
   if (!gl) throw new Error("Failed to get WebGL2 context");
 
-  canvas.width = canvas.height = 600
+  canvas.width = canvas.height = 600;
 
-  const simulationVS = WebGL.Setup.compileShader(gl, "vertex", simulationVertex);
-  const simulationFS = WebGL.Setup.compileShader(gl, "fragment", simulationFragment);
+  const simulationVS = WebGL.Setup.compileShader(
+    gl,
+    "vertex",
+    simulationVertex,
+  );
+  const simulationFS = WebGL.Setup.compileShader(
+    gl,
+    "fragment",
+    simulationFragment,
+  );
   const renderVS = WebGL.Setup.compileShader(gl, "vertex", renderVertex);
   const renderFS = WebGL.Setup.compileShader(gl, "fragment", renderFragment);
 
-  const simulationProgram = WebGL.Setup.linkProgram(gl, simulationVS, simulationFS);
+  const simulationProgram = WebGL.Setup.linkProgram(
+    gl,
+    simulationVS,
+    simulationFS,
+  );
   const renderProgram = WebGL.Setup.linkProgram(gl, renderVS, renderFS);
 
   WebGL.Canvas.resizeToDisplaySize(canvas);
@@ -152,7 +164,7 @@ export function main(canvas: HTMLCanvasElement) {
     // --- Simulation ---
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
-    gl.viewport(0, 0, this.width, this.height);
+    gl.viewport(0, 0, width, height);
 
     gl.framebufferTexture2D(
       gl.FRAMEBUFFER,

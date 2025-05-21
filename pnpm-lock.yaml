@@ -219,6 +219,9 @@ importers:
       '@utilities/collision':
         specifier: workspace:*
         version: link:../../utilities/collision
+      '@utilities/colors':
+        specifier: workspace:*
+        version: link:../../utilities/colors
       '@utilities/mathematics':
         specifier: workspace:*
         version: link:../../utilities/mathematics

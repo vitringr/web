@@ -2,6 +2,7 @@
 // -- Canvas2D --
 // --------------
 
+export * as Noise2D from "./canvas2D/noise-2d";
 export * as NoiseLoop from "./canvas2D/noise-loop";
 export * as NoiseWalker from "./canvas2D/noise-walker";
 export * as NoiseBlanket from "./canvas2D/noise-blanket";

@@ -4,11 +4,11 @@ const config = {
   width: 600,
   height: 600,
 
-  count: 4000,
+  count: 10000,
 
-  range: 500,
+  range: 550,
 
-  timeIncrement: 0.0026,
+  timeIncrement: 0.0028,
 
   noiseVolatility: 0.66,
 

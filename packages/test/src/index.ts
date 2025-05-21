@@ -1,1 +1,1 @@
-export * as Test from "./noise-loop";
+export * as Test from "./test";

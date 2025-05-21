@@ -1,7 +1,10 @@
+// import { Test } from "@packages/test";
 import { Creative } from "@packages/creative";
 
 const canvasID = "mainCanvas";
 const canvas = document.getElementById(canvasID) as HTMLCanvasElement;
 if (!canvas) throw `Cannot get #${canvasID}`;
 
-Creative.NoiseBlanket.main(canvas);
+// Test.main(canvas);
+
+Creative.Noise2D.main(canvas);
