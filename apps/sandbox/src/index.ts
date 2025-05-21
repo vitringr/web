@@ -7,4 +7,4 @@ if (!canvas) throw `Cannot get #${canvasID}`;
 
 // Test.main(canvas);
 
-Creative.Noise2D.main(canvas);
+Creative.NoiseVectorField.main(canvas);

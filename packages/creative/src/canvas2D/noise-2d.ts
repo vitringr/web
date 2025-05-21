@@ -5,16 +5,16 @@ const config = {
   width: 600,
   height: 600,
 
-  cellWidth: 50,
-  cellHeight: 50,
+  cellRows: 50,
+  cellCols: 50,
 
-  noiseFrequency: 0.05,
+  noiseScale: 0.05,
 
   timeIncrement: 0.003,
 } as const;
 
-const xScale = config.width / config.cellWidth;
-const yScale = config.height / config.cellHeight;
+const xScale = config.width / config.cellRows;
+const yScale = config.height / config.cellCols;
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.width;
@@ -39,10 +39,10 @@ export function main(canvas: HTMLCanvasElement) {
   const animation = () => {
     time += config.timeIncrement;
 
-    for (let x = 0; x <= config.cellWidth; x++) {
-      for (let y = 0; y <= config.cellHeight; y++) {
-        const xNoise = x * config.noiseFrequency + time;
-        const yNoise = y * config.noiseFrequency + time;
+    for (let x = 0; x <= config.cellRows; x++) {
+      for (let y = 0; y <= config.cellCols; y++) {
+        const xNoise = x * config.noiseScale + time;
+        const yNoise = y * config.noiseScale + time;
 
         const noiseValue = Noise.get(xNoise, yNoise);
 
