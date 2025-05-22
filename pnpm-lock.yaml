@@ -94,9 +94,6 @@ importers:
       '@utilities/colors':
         specifier: workspace:*
         version: link:../../utilities/colors
-      '@utilities/easing':
-        specifier: workspace:*
-        version: link:../../utilities/easing
       '@utilities/mathematics':
         specifier: workspace:*
         version: link:../../utilities/mathematics
@@ -159,6 +156,9 @@ importers:
       '@utilities/vector':
         specifier: workspace:*
         version: link:../../utilities/vector
+      '@utilities/webgl':
+        specifier: workspace:*
+        version: link:../../utilities/webgl
     devDependencies:
       '@utilities/typescript-config':
         specifier: workspace:*
