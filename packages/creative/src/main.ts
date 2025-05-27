@@ -8,6 +8,8 @@ export * as NoiseWalker from "./canvas2D/noise-walker";
 export * as NoiseBlanket from "./canvas2D/noise-blanket";
 export * as NoiseVectorField from "./canvas2D/noise-vector-field";
 
+export * as Wip2D from "./canvas2D/wip2D";
+
 // -----------
 // -- WebGL --
 // -----------
