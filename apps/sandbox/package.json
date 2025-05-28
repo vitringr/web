@@ -12,8 +12,8 @@
     "@packages/easing-functions": "workspace:*",
     "@packages/learning-noise": "workspace:*",
     "@packages/pathfinder": "workspace:*",
-    "@packages/quadtree-simulation": "workspace:*",
     "@packages/test": "workspace:*",
+    "@packages/quadtree-simulation": "workspace:*",
     "@packages/creative": "workspace:*",
     "@packages/tsunagari": "workspace:*"
   },
