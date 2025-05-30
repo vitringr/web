@@ -1,8 +1,14 @@
 import solidPNG from "./assets/solid.png";
+import theSeerPNG from "./assets/theseer.png";
+import hummingBirdPNG from "./assets/hummingbird.png";
 
 const config = {
-  width: 600,
-  height: 600,
+  width: 640,
+  height: 800,
+
+
+  imageWidth: 320,
+  imageHeight: 400,
 
   colors: {
     background: "#111111",
@@ -30,14 +36,35 @@ export async function main(canvas: HTMLCanvasElement) {
   const context = setupContext(canvas);
 
   const img = new Image();
-  img.src = solidPNG;
+  img.src = theSeerPNG;
   img.onload = () => {
-    context.drawImage(img, 0, 0, 200, 200);
+    context.drawImage(img, 0, 0, config.imageWidth, config.imageHeight);
+    const imageData = context.getImageData(
+      0,
+      0,
+      config.imageWidth,
+      config.imageHeight,
+    ).data;
+    context.clearRect(0, 0, config.width, config.height);
+
+    const scale = config.width / config.imageWidth;
+
+    for (let i = 0; i < imageData.length; i += 4) {
+      const r = imageData[i + 0];
+      const g = imageData[i + 1];
+      const b = imageData[i + 2];
+      const a = imageData[i + 3];
+
+      const index = i / 4;
+      const x = (index % config.imageWidth) * scale;
+      const y = Math.floor(index / config.imageWidth) * scale;
+
+      context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+      context.fillRect(x, y, scale, scale);
+    }
   };
 
-  const animation = () => {
-    requestAnimationFrame(animation);
+  const loop = () => {
+    requestAnimationFrame(loop);
   };
-
-  animation();
 }
