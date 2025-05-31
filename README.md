@@ -12,7 +12,7 @@ This is a [monorepo](https://monorepo.tools) - a single repository containing mu
 
 ### `/apps/`
 
-Entry points for applications.
+Entry points for applications. Apps are the actual build outputs.
 
 Can depend on `packages/`, `utilities/`, and external modules.
 

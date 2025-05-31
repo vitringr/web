@@ -1,28 +1,26 @@
+import { Mathematics } from "@utilities/mathematics";
 import { Noise } from "@utilities/noise";
+import { Vector2 } from "@utilities/vector";
 
 const config = {
   width: 600,
   height: 600,
 
-  count: 10000,
+  rows: 36,
+  cols: 36,
 
-  range: 550,
+  gap: 60,
 
-  timeIncrement: 0.0028,
+  vectorMagnitude: 13,
 
-  noiseVolatility: 0.66,
+  noiseScale: 0.036,
 
-  orbMinRadius: 1.5,
-  orbAddedRadius: 1.5,
+  timeIncrement: 0.0016,
 
-  colors: {
-    background: "#111111",
-    orb: "#ffffff",
-  },
+  lineWidth: 1.2,
+  color: "#ACACAC",
+  background: "#111111",
 } as const;
-
-const xCenter = config.width * 0.5;
-const yCenter = config.height * 0.5;
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.width;
@@ -31,57 +29,70 @@ function setupContext(canvas: HTMLCanvasElement) {
   const context = canvas.getContext("2d");
   if (!context) throw "Cannot get 2d context";
 
+  context.strokeStyle = config.color;
+  context.lineWidth = config.lineWidth;
+
   return context;
 }
 
-function clear(context: CanvasRenderingContext2D) {
-  context.fillStyle = config.colors.background;
+function renderBackground(context: CanvasRenderingContext2D) {
+  context.fillStyle = config.background;
   context.fillRect(0, 0, config.width, config.height);
 }
 
 export function main(canvas: HTMLCanvasElement) {
   const context = setupContext(canvas);
 
-  const xSeeds: number[] = [];
-  const ySeeds: number[] = [];
+  const xScale = (config.width - config.gap * 2) / config.rows;
+  const yScale = (config.height - config.gap * 2) / config.cols;
 
-  for (let i = 0; i < config.count; i++) {
-    xSeeds.push(Math.random());
-    ySeeds.push(Math.random());
+  const points: Vector2[][] = [];
+  for (let x = 0; x <= config.rows; x++) {
+    points.push([]);
+    for (let y = 0; y <= config.cols; y++) {
+      points[x].push(Vector2.Create.zero());
+    }
   }
 
   let time = 0;
-  let counter = 0;
   const animation = () => {
     time += config.timeIncrement;
-    if (time >= Math.PI) {
-      time = 0;
-      counter++;
+
+    renderBackground(context);
+    context.fillStyle = "#FFFFFF";
+
+    for (let x = 0; x <= config.rows; x++) {
+      for (let y = 0; y <= config.cols; y++) {
+        const xOrigin = config.gap + x * xScale;
+        const yOrigin = config.gap + y * yScale;
+
+        const xNoise = x * config.noiseScale + time;
+        const yNoise = y * config.noiseScale + time;
+        const noiseValue = Noise.get(xNoise, yNoise);
+
+        const angle = noiseValue * Mathematics.TAU;
+
+        points[x][y].set(
+          xOrigin + Math.cos(angle) * config.vectorMagnitude,
+          yOrigin + Math.sin(angle) * config.vectorMagnitude,
+        );
+      }
     }
 
-    const sin = Math.sin(time);
-    const sinCubed = sin * sin * sin;
+    for (let x = 0; x <= config.rows; x++) {
+      context.beginPath();
+      for (let y = 0; y <= config.cols; y++) {
+        context.lineTo(points[x][y].x, points[x][y].y);
+      }
+      context.stroke();
+    }
 
-    clear(context);
-    context.fillStyle = config.colors.orb;
-
-    for (let i = 0; i < config.count; i++) {
-      const xNoise = Noise.get(
-        counter + xSeeds[i] * config.noiseVolatility - time,
-        counter + ySeeds[i] * config.noiseVolatility + time,
-      );
-
-      const yNoise = Noise.get(
-        counter + xSeeds[i] * config.noiseVolatility + time,
-        counter + ySeeds[i] * config.noiseVolatility + time,
-      );
-
-      const x = xCenter + (xNoise - 0.5) * config.range * sinCubed;
-      const y = yCenter + (yNoise - 0.5) * config.range * sinCubed;
-
-      const radius = config.orbMinRadius + config.orbAddedRadius * (1 - sin);
-
-      context.fillRect(x, y, radius, radius);
+    for (let y = 0; y <= config.cols; y++) {
+      context.beginPath();
+      for (let x = 0; x <= config.rows; x++) {
+        context.lineTo(points[x][y].x, points[x][y].y);
+      }
+      context.stroke();
     }
 
     requestAnimationFrame(animation);

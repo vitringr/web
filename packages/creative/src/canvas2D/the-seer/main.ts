@@ -10,7 +10,7 @@ const config = {
   width: 640,
   height: 800,
 
-  count: 500,
+  cachedParticles: 500,
   lifetime: 300,
   decay: 2.3,
   size: 0.006,
@@ -78,7 +78,7 @@ function setupInput(canvas: HTMLCanvasElement) {
 function createParticles() {
   const particles: Particle[] = [];
 
-  for (let i = 0; i < config.count; i++) {
+  for (let i = 0; i < config.cachedParticles; i++) {
     const randomAngle = Math.random() * Mathematics.TAU;
 
     particles.push({
@@ -124,7 +124,7 @@ export async function main(canvas: HTMLCanvasElement) {
   const loop = () => {
     if (input.clicked) {
       spawnIndex++;
-      spawnIndex %= config.count;
+      spawnIndex %= config.cachedParticles;
 
       const particle = particles[spawnIndex];
       particle.active = true;
@@ -137,36 +137,40 @@ export async function main(canvas: HTMLCanvasElement) {
       const particle = particles[i];
       if (!particle.active) continue;
 
+      // Lifetime
       particle.lifetime -= config.decay;
       if (particle.lifetime <= 0) {
         particle.active = false;
         continue;
       }
 
+      // Movement
       const noise = Noise.get(
         particle.x * config.noiseFrequency,
         particle.y * config.noiseFrequency,
       );
-
       particle.angle += (noise * 2 - 1) * config.noiseEffect;
-      // TODO WIP
       particle.x += Math.cos(particle.angle) * config.speed;
       particle.y += Math.sin(particle.angle) * config.speed;
 
+      // Bounds
       if (particle.x >= config.width) particle.x = config.width;
       else if (particle.x <= 0) particle.x = 0;
       if (particle.y >= config.height) particle.y = config.height;
       else if (particle.y <= 0) particle.y = 0;
 
+      // Image Index
       let xIndex = Math.floor(particle.x / xRatio);
       let yIndex = Math.floor(particle.y / yRatio);
+
+      // Image Index Bounds
       if (xIndex <= 0) xIndex = 0;
       else if (xIndex >= imageWidth) xIndex = imageWidth - 1;
       if (yIndex <= 0) yIndex = 0;
       else if (yIndex >= imageHeight) yIndex = imageHeight - 1;
 
+      // Render
       context.fillStyle = pixelData[xIndex][yIndex];
-
       const size = particle.lifetime * config.size;
       context.fillRect(particle.x, particle.y, size, size);
     }

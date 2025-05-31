@@ -28,5 +28,5 @@ export function range(from: number, to: number): number {
  * @param to The upper bound (exclusive)
  */
 export function rangeInt(from: number, to: number): number {
-  return Math.round(range(from, to));
+  return Math.floor(range(from, to));
 }
