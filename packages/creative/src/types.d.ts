@@ -1,4 +1,9 @@
 declare module "*.glsl" {
-  const content: string;
-  export default content;
+  const glsl: string;
+  export default glsl;
+}
+
+declare module "*.png" {
+  const png: string;
+  export default png;
 }
