@@ -1,41 +1,46 @@
-/*
-
-TODO: Optimize EVERYTHING lol.
-
-*/
-
 import { Mathematics } from "@utilities/mathematics";
 import { Noise } from "@utilities/noise";
 import { pixelData } from "./pixeldata-320x400";
+
+// ------------
+// -- Config --
+// ------------
 
 const config = {
   width: 640,
   height: 800,
 
-  colors: {
-    background: "#161616",
-  },
+  count: 500,
+  lifetime: 300,
+  decay: 2.3,
+  size: 0.006,
+  speed: 1,
+
+  noiseFrequency: 0.04,
+  noiseEffect: 0.14,
+
+  backgroundColor: "#161616",
 } as const;
+
+// -----------
+// -- Cache --
+// -----------
 
 const imageWidth = 320;
 const imageHeight = 400;
 const xRatio = config.width / imageWidth;
 const yRatio = config.height / imageHeight;
 
+// -----------
+// -- Logic --
+// -----------
+
 type Particle = {
   active: boolean;
-  x: number;
-  y: number;
   lifetime: number;
   angle: number;
-};
-
-type Input = { x: number; y: number; clicked: boolean };
-
-const input: Input = {
-  x: Infinity,
-  y: Infinity,
-  clicked: false,
+  x: number;
+  y: number;
 };
 
 function setupContext(canvas: HTMLCanvasElement) {
@@ -73,62 +78,57 @@ function setupInput(canvas: HTMLCanvasElement) {
 function createParticles() {
   const particles: Particle[] = [];
 
-  for (let i = 0; i < 500; i++) {
+  for (let i = 0; i < config.count; i++) {
+    const randomAngle = Math.random() * Mathematics.TAU;
+
     particles.push({
-      x: Infinity,
-      y: Infinity,
       active: false,
       lifetime: 0,
-      angle: Math.random() * Mathematics.TAU,
+      angle: randomAngle,
+      x: Infinity,
+      y: Infinity,
     });
   }
 
   return particles;
 }
 
-function renderBackground(context: CanvasRenderingContext2D) {}
-
-function renderParticle(
-  context: CanvasRenderingContext2D,
-  particle: Particle,
-  color: string,
-) {
-  context.fillStyle = color;
-  const size = particle.lifetime * 0.01;
-  context.fillRect(particle.x, particle.y, size, size);
+function renderBackground(context: CanvasRenderingContext2D) {
+  context.fillStyle = config.backgroundColor;
+  context.fillRect(0, 0, config.width, config.height);
 }
 
-function updateParticle(particle: Particle) {
-  // WIP
-  particle.x += 1;
+// -----------
+// -- State --
+// -----------
 
-  particle.lifetime--;
-  if (particle.lifetime <= 0) {
-    particle.active = false;
-  }
-}
+const input: { x: number; y: number; clicked: boolean } = {
+  x: 0,
+  y: 0,
+  clicked: false,
+};
+
+let spawnIndex = 0;
+
+// ----------
+// -- Main --
+// ----------
 
 export async function main(canvas: HTMLCanvasElement) {
-  const context = setupContext(canvas);
   setupInput(canvas);
-
-  context.fillStyle = config.colors.background;
-  context.fillRect(0, 0, config.width, config.height);
-
+  const context = setupContext(canvas);
   const particles = createParticles();
 
-  let spawnIndex = 0;
+  renderBackground(context);
 
   const loop = () => {
     if (input.clicked) {
-      console.log("click");
       spawnIndex++;
-      if (spawnIndex >= 500) spawnIndex = 0;
+      spawnIndex %= config.count;
 
       const particle = particles[spawnIndex];
-
       particle.active = true;
-      particle.lifetime = 300;
+      particle.lifetime = config.lifetime;
       particle.x = input.x;
       particle.y = input.y;
     }
@@ -137,38 +137,38 @@ export async function main(canvas: HTMLCanvasElement) {
       const particle = particles[i];
       if (!particle.active) continue;
 
-      particle.lifetime -= 2;
+      particle.lifetime -= config.decay;
       if (particle.lifetime <= 0) {
         particle.active = false;
+        continue;
       }
 
-      const xFloor = Math.floor(particle.x / xRatio);
-      const yFloor = Math.floor(particle.y / yRatio);
+      const noise = Noise.get(
+        particle.x * config.noiseFrequency,
+        particle.y * config.noiseFrequency,
+      );
 
-      context.fillStyle = pixelData[xFloor][yFloor];
-      const size = particle.lifetime * 0.01;
+      particle.angle += (noise * 2 - 1) * config.noiseEffect;
+      // TODO WIP
+      particle.x += Math.cos(particle.angle) * config.speed;
+      particle.y += Math.sin(particle.angle) * config.speed;
+
+      if (particle.x >= config.width) particle.x = config.width;
+      else if (particle.x <= 0) particle.x = 0;
+      if (particle.y >= config.height) particle.y = config.height;
+      else if (particle.y <= 0) particle.y = 0;
+
+      let xIndex = Math.floor(particle.x / xRatio);
+      let yIndex = Math.floor(particle.y / yRatio);
+      if (xIndex <= 0) xIndex = 0;
+      else if (xIndex >= imageWidth) xIndex = imageWidth - 1;
+      if (yIndex <= 0) yIndex = 0;
+      else if (yIndex >= imageHeight) yIndex = imageHeight - 1;
+
+      context.fillStyle = pixelData[xIndex][yIndex];
+
+      const size = particle.lifetime * config.size;
       context.fillRect(particle.x, particle.y, size, size);
-
-      const noise = Noise.get(particle.x * 0.1, particle.y * 0.1) * 2 - 1;
-      particle.angle += noise * 0.2;
-      particle.x += Math.cos(particle.angle);
-      particle.y += Math.sin(particle.angle);
-
-      if (particle.x >= config.width) {
-        particle.active = false;
-        continue;
-      } else if (particle.x <= 0) {
-        particle.active = false;
-        continue;
-      }
-
-      if (particle.y >= config.height) {
-        particle.active = false;
-        continue;
-      } else if (particle.y <= 0) {
-        particle.active = false;
-        continue;
-      }
     }
 
     requestAnimationFrame(loop);
