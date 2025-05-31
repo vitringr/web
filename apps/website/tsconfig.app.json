@@ -1,8 +1,0 @@
-{
-  "extends": "@utilities/typescript-config/base.json",
-  "compilerOptions": {
-    "jsx": "preserve",
-    "jsxImportSource": "solid-js"
-  },
-  "include": ["src"]
-}
