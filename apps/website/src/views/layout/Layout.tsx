@@ -1,7 +1,7 @@
 import { type ParentProps } from "solid-js";
 
-import { Navigation } from "../Navigation/Navigation";
-import { Footer } from "../Footer/Footer";
+import { Navigation } from "../navigation/Navigation";
+import { Footer } from "../footer/Footer";
 
 import css from "./Layout.module.css";
 
