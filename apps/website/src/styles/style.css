@@ -1,11 +1,4 @@
 body {
-  background-color: #222;
+  background-color: #292929;
   color: #dfdfdf;
-}
-
-canvas {
-  width: 800px;
-  height: 800px;
-  border: 1px solid #000;
-  /*cursor: none;*/
 }

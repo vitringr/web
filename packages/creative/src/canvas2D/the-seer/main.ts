@@ -1,6 +1,6 @@
 import { Mathematics } from "@utilities/mathematics";
 import { Noise } from "@utilities/noise";
-import { pixelData } from "./pixeldata-320x400";
+import theSeerPNG from "./the-seer.png";
 
 // ------------
 // -- Config --
@@ -10,9 +10,12 @@ const config = {
   width: 640,
   height: 800,
 
+  imageWidth: 320,
+  imageHeight: 400,
+
   cachedParticles: 500,
   lifetime: 300,
-  decay: 2.3,
+  decay: 2.2,
   size: 0.006,
   speed: 1,
 
@@ -22,14 +25,8 @@ const config = {
   backgroundColor: "#161616",
 } as const;
 
-// -----------
-// -- Cache --
-// -----------
-
-const imageWidth = 320;
-const imageHeight = 400;
-const xRatio = config.width / imageWidth;
-const yRatio = config.height / imageHeight;
+const xRatio = config.width / config.imageWidth;
+const yRatio = config.height / config.imageHeight;
 
 // -----------
 // -- Logic --
@@ -114,6 +111,37 @@ let spawnIndex = 0;
 // -- Main --
 // ----------
 
+function createImageData(
+  context: CanvasRenderingContext2D,
+  image: HTMLImageElement,
+) {
+  context.drawImage(image, 0, 0, config.imageWidth, config.imageHeight);
+  const imageData = context.getImageData(
+    0,
+    0,
+    config.imageWidth,
+    config.imageHeight,
+  ).data;
+  context.clearRect(0, 0, config.width, config.height);
+
+  const arr: string[][] = [];
+
+  for (let i = 0; i < imageData.length; i += 4) {
+    const r = imageData[i + 0];
+    const g = imageData[i + 1];
+    const b = imageData[i + 2];
+
+    const index = i / 4;
+    const x = index % config.imageWidth;
+    const y = Math.floor(index / config.imageWidth);
+
+    if (!arr[x]) arr[x] = [];
+    arr[x][y] = `rgb(${r},${g},${b})`;
+  }
+
+  return arr;
+}
+
 export async function main(canvas: HTMLCanvasElement) {
   setupInput(canvas);
   const context = setupContext(canvas);
@@ -121,62 +149,72 @@ export async function main(canvas: HTMLCanvasElement) {
 
   renderBackground(context);
 
-  const loop = () => {
-    if (input.clicked) {
-      spawnIndex++;
-      spawnIndex %= config.cachedParticles;
+  // -----------
+  // -- Image --
+  // -----------
 
-      const particle = particles[spawnIndex];
-      particle.active = true;
-      particle.lifetime = config.lifetime;
-      particle.x = input.x;
-      particle.y = input.y;
-    }
+  const img = new Image();
+  img.src = theSeerPNG;
+  img.onload = () => {
+    const pixelData = createImageData(context, img);
 
-    for (let i = 0; i < particles.length; i++) {
-      const particle = particles[i];
-      if (!particle.active) continue;
+    const loop = () => {
+      if (input.clicked) {
+        spawnIndex++;
+        spawnIndex %= config.cachedParticles;
 
-      // Lifetime
-      particle.lifetime -= config.decay;
-      if (particle.lifetime <= 0) {
-        particle.active = false;
-        continue;
+        const particle = particles[spawnIndex];
+        particle.active = true;
+        particle.lifetime = config.lifetime;
+        particle.x = input.x;
+        particle.y = input.y;
       }
 
-      // Movement
-      const noise = Noise.get(
-        particle.x * config.noiseFrequency,
-        particle.y * config.noiseFrequency,
-      );
-      particle.angle += (noise * 2 - 1) * config.noiseEffect;
-      particle.x += Math.cos(particle.angle) * config.speed;
-      particle.y += Math.sin(particle.angle) * config.speed;
+      for (let i = 0; i < particles.length; i++) {
+        const particle = particles[i];
+        if (!particle.active) continue;
 
-      // Bounds
-      if (particle.x >= config.width) particle.x = config.width;
-      else if (particle.x <= 0) particle.x = 0;
-      if (particle.y >= config.height) particle.y = config.height;
-      else if (particle.y <= 0) particle.y = 0;
+        // Lifetime
+        particle.lifetime -= config.decay;
+        if (particle.lifetime <= 0) {
+          particle.active = false;
+          continue;
+        }
 
-      // Image Index
-      let xIndex = Math.floor(particle.x / xRatio);
-      let yIndex = Math.floor(particle.y / yRatio);
+        // Movement
+        const noise = Noise.get(
+          particle.x * config.noiseFrequency,
+          particle.y * config.noiseFrequency,
+        );
+        particle.angle += (noise * 2 - 1) * config.noiseEffect;
+        particle.x += Math.cos(particle.angle) * config.speed;
+        particle.y += Math.sin(particle.angle) * config.speed;
 
-      // Image Index Bounds
-      if (xIndex <= 0) xIndex = 0;
-      else if (xIndex >= imageWidth) xIndex = imageWidth - 1;
-      if (yIndex <= 0) yIndex = 0;
-      else if (yIndex >= imageHeight) yIndex = imageHeight - 1;
+        // Bounds
+        if (particle.x >= config.width) particle.x = config.width;
+        else if (particle.x <= 0) particle.x = 0;
+        if (particle.y >= config.height) particle.y = config.height;
+        else if (particle.y <= 0) particle.y = 0;
 
-      // Render
-      context.fillStyle = pixelData[xIndex][yIndex];
-      const size = particle.lifetime * config.size;
-      context.fillRect(particle.x, particle.y, size, size);
-    }
+        // Image Index
+        let xIndex = Math.floor(particle.x / xRatio);
+        let yIndex = Math.floor(particle.y / yRatio);
 
-    requestAnimationFrame(loop);
+        // Image Index Bounds
+        if (xIndex <= 0) xIndex = 0;
+        else if (xIndex >= config.imageWidth) xIndex = config.imageWidth - 1;
+        if (yIndex <= 0) yIndex = 0;
+        else if (yIndex >= config.imageHeight) yIndex = config.imageHeight - 1;
+
+        // Render
+        context.fillStyle = pixelData[xIndex][yIndex];
+        const size = particle.lifetime * config.size;
+        context.fillRect(particle.x, particle.y, size, size);
+      }
+
+      requestAnimationFrame(loop);
+    };
+
+    loop();
   };
-
-  loop();
 }

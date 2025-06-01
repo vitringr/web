@@ -8,6 +8,7 @@ import { Footer } from "./components/Footer";
 
 import { Home } from "./pages/home/Home";
 import { About } from "./pages/about/About";
+import { Art } from "./pages/art/Art";
 import { NotFound } from "./pages/not-found/NotFound";
 
 import "./styles/reset.css";
@@ -26,9 +27,10 @@ const Layout = (props: ParentProps) => (
 
 const AppRouter = () => (
   <Router root={Layout}>
-    <Route path="/" component={Home}></Route>
-    <Route path="/about" component={About}></Route>
-    <Route path="*404" component={NotFound}></Route>
+    <Route path="/" component={Home} />
+    <Route path="/about" component={About} />
+    <Route path="/art" component={Art} />
+    <Route path="*404" component={NotFound} />
   </Router>
 );
 
