@@ -1,5 +1,5 @@
-.billboards_container {
-  border: 1px solid yellow;
+.cards_container {
+  border: 1px solid #000;
 
   display: flex;
   flex-direction: column;
@@ -10,29 +10,34 @@
   padding: 20px 0;
 }
 
-.billboard {
+.card {
   border: 1px solid #000;
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
 
   width: 100%;
-  max-width: 500px;
-
-  padding: 10px 0;
+  max-width: 360px;
 
   text-align: center;
 }
 
+.link {
+  width: 100%;
+}
+
+.image {
+  border: 1px solid #000;
+}
+
 .title {
   border: 1px solid #000;
+
   font-weight: bold;
 }
 
 .description {
   border: 1px solid #000;
-  max-width: 400px;
 }
