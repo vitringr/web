@@ -11,7 +11,7 @@ export const Art = () => {
 
   return (
     <>
-      <p>Art page text</p>
+      <p>Art page text.</p>
       <canvas ref={canvasRef} />
     </>
   );

@@ -1,3 +1,3 @@
 export const Writing = () => {
-  return <p>Writing page text</p>;
+  return <p>Writing page text.</p>;
 };
