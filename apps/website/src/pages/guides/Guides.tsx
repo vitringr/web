@@ -6,13 +6,13 @@ const GuideCard = (props: {
   title: string;
   href: string;
   description: string;
-  image: any;
+  image: string;
 }) => {
   return (
     <div class={css.card}>
       <A class={css.link} href={props.href}>
         <img class={css.image} src={props.image} />
-        <h3 class={css.title}>{props.title}</h3>
+        <h2 class={css.title}>{props.title}</h2>
       </A>
       <p class={css.description}>{props.description}</p>
     </div>
@@ -22,7 +22,7 @@ const GuideCard = (props: {
 export const Guides = () => {
   return (
     <div>
-      <h2>Guides</h2>
+      <h1>Guides</h1>
       <p>Creative software engineering guides.</p>
 
       <div class={css.cards_container}>

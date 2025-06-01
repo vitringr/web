@@ -1,0 +1,43 @@
+.cards_container {
+  border: 1px solid #000;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  padding: 20px 0;
+}
+
+.card {
+  border: 1px solid #000;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  max-width: 360px;
+
+  text-align: center;
+}
+
+.link {
+  width: 100%;
+}
+
+.image {
+  border: 1px solid #000;
+}
+
+.title {
+  border: 1px solid #000;
+
+  font-weight: bold;
+}
+
+.description {
+  border: 1px solid #000;
+}

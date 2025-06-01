@@ -9,7 +9,10 @@ import { Guides } from "./pages/guides/Guides";
 import { ValueNoise } from "./pages/guides/pages/value-noise/ValueNoise";
 import { SimplexNoise } from "./pages/guides/pages/simplex-noise/SimplexNoise";
 import { PerlinNoise } from "./pages/guides/pages/perlin-noise/PerlinNoise";
-import { Art } from "./pages/art/Art";
+import { Arts } from "./pages/arts/Arts";
+import { TheSeer } from "./pages/arts/pages/the-seer/TheSeer";
+import { Noise2D } from "./pages/arts/pages/noise-2d/Noise2D";
+import { NoiseLoop } from "./pages/arts/pages/noise-loop/NoiseLoop";
 import { Writing } from "./pages/writing/Writing";
 import { About } from "./pages/about/About";
 import { NotFound } from "./pages/not-found/NotFound";
@@ -31,7 +34,12 @@ const AppRouter = () => (
       <Route path="/simplex-noise" component={SimplexNoise} />
     </Route>
 
-    <Route path="/art" component={Art} />
+    <Route path="/arts">
+      <Route path="/" component={Arts} />
+      <Route path="/the-seer" component={TheSeer} />
+      <Route path="/noise-2d" component={Noise2D} />
+      <Route path="/noise-loop" component={NoiseLoop} />
+    </Route>
 
     <Route path="/writing" component={Writing} />
 

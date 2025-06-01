@@ -14,7 +14,7 @@ export const Navigation = () => {
     <nav class={css.nav}>
       <A href="/">Home</A>
       <A href="/guides">Guides</A>
-      <A href="/art">Art</A>
+      <A href="/arts">Arts</A>
       <A href="/writing">Writing</A>
       <A href="/about">About</A>
     </nav>

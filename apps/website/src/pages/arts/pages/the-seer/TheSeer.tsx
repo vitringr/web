@@ -1,7 +1,8 @@
 import { onMount } from "solid-js";
+
 import { Creative } from "@packages/creative";
 
-export const Art = () => {
+export const TheSeer = () => {
   let canvasRef: HTMLCanvasElement | undefined;
 
   onMount(() => {
@@ -10,9 +11,10 @@ export const Art = () => {
   });
 
   return (
-    <>
-      <p>Art page text.</p>
+    <article>
+      <h1>TheSeer</h1>
       <canvas ref={canvasRef} />
-    </>
+      <p>Description of TheSeer.</p>
+    </article>
   );
 };
