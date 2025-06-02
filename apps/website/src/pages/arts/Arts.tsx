@@ -42,6 +42,7 @@ export const Arts = () => {
             TagNames.Input,
             TagNames.Particles,
             TagNames.Noise,
+            TagNames.Image,
           ]}
         />
 
@@ -60,8 +61,7 @@ export const Arts = () => {
             TagNames.GPU,
             TagNames.Noise,
             TagNames["2D"],
-            TagNames.Input,
-            TagNames.GPU,
+            TagNames.Image,
           ]}
         />
 

@@ -34,18 +34,17 @@
   width: 100%;
   height: 360px;
   border-bottom: 1px solid #000;
-
-  padding: 10px;
 }
 
 .image {
+  padding: 10px;
   width: 100%;
   height: 100%;
 }
 
 .tags_overlay {
   position: absolute;
-  bottom: 10px;
+  bottom: 0px;
 }
 
 .title {
