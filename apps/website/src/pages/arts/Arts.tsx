@@ -14,7 +14,7 @@ const ArtCard = (props: {
     <div class={css.card}>
       <A class={css.link} href={props.href}>
         <div class={css.image_container}>
-          <img class={css.image} src={props.image} loading="lazy" />
+          <img class={css.image} src={props.image} />
           <div class={css.tags_overlay}>
             <TagsContainer tags={props.tags} />
           </div>
