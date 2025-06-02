@@ -1,3 +1,10 @@
+import { Quotes } from "./Quotes";
+
 export const Writing = () => {
-  return <p>Writing page text.</p>;
+  return (
+    <div>
+      <p>Writing page text.</p>
+      <Quotes />
+    </div>
+  );
 };

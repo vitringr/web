@@ -1,0 +1,27 @@
+.container {
+  /* border: 1px solid yellow; */
+
+  display: flex;
+  flex-direction: row;
+
+  max-width: 500px;
+  min-height: 200px;
+}
+
+.content {
+  border: 1px solid red;
+
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+
+
+}
+
+.button {
+  border: 1px solid red;
+
+  display: block;
+
+  margin: auto;
+}

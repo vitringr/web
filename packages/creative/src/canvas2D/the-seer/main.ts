@@ -7,11 +7,16 @@ import theSeerPNG from "./the-seer.png";
 // ------------
 
 const config = {
-  width: 640,
-  height: 800,
+  width: 960,
+  height: 1200,
 
-  imageWidth: 320,
-  imageHeight: 400,
+  imageWidth: 480,
+  imageHeight: 600,
+  // width: 640,
+  // height: 800,
+  //
+  // imageWidth: 320,
+  // imageHeight: 400,
 
   cachedParticles: 500,
   lifetime: 300,
