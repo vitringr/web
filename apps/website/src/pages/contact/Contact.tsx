@@ -1,3 +1,11 @@
+import css from "./Contact.module.css";
+
 export const Contact = () => {
-  return <p>Contact page text.</p>;
+  return (
+    <div class="page">
+
+      <h1>Contact</h1>
+      <p>Contact page text.</p>
+    </div>
+  );
 };

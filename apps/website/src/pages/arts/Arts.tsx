@@ -27,7 +27,7 @@ const ArtCard = (props: {
 
 export const Arts = () => {
   return (
-    <div class={css.page}>
+    <div class="page">
       <h1>Arts</h1>
       <p>Creative coding arts.</p>
 
