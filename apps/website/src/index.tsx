@@ -15,6 +15,7 @@ import { Noise2D } from "./pages/arts/pages/noise-2d/Noise2D";
 import { NoiseLoop } from "./pages/arts/pages/noise-loop/NoiseLoop";
 import { Writing } from "./pages/writing/Writing";
 import { About } from "./pages/about/About";
+import { Contact } from "./pages/contact/Contact";
 import { NotFound } from "./pages/not-found/NotFound";
 
 import "./styles/reset.css";
@@ -44,6 +45,8 @@ const AppRouter = () => (
     <Route path="/writing" component={Writing} />
 
     <Route path="/about" component={About} />
+
+    <Route path="/contact" component={Contact} />
 
     <Route path="*404" component={NotFound} />
   </Router>

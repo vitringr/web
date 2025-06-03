@@ -21,7 +21,7 @@ const GuideCard = (props: {
 
 export const Guides = () => {
   return (
-    <div>
+    <div class={css.page}>
       <h1>Guides</h1>
       <p>Creative software engineering guides.</p>
 

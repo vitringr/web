@@ -17,6 +17,7 @@ export const Navigation = () => {
       <A href="/arts">Arts</A>
       <A href="/writing">Writing</A>
       <A href="/about">About</A>
+      <A href="/contact">Contact</A>
     </nav>
   );
 };
