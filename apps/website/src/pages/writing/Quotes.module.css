@@ -1,10 +1,10 @@
 .container {
-  /* border: 1px solid yellow; */
+  border: 1px solid yellow;
 
   display: flex;
   flex-direction: row;
 
-  max-width: 500px;
+  max-width: 600px;
   min-height: 200px;
 }
 
@@ -15,7 +15,12 @@
   justify-content: center;
   align-items: center;
 
+  text-rendering: optimizeSpeed;
+  font-family: monospace;
 
+  margin: auto;
+
+  width: 72%;
 }
 
 .button {
@@ -23,5 +28,10 @@
 
   display: block;
 
+  background-color: transparent;
+
+  height: 100px;
   margin: auto;
+
+  width: 14%;
 }
