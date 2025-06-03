@@ -5,6 +5,11 @@ import { TextShuffle } from "@utilities/text-shuffle";
 import css from "./Quotes.module.css";
 import { quotesList } from "./quotes-data";
 
+const config = {
+  duration: 1_000,
+  steps: 40,
+};
+
 export const Quotes = () => {
   const [index, setIndex] = createSignal(
     Math.floor(Math.random() * quotesList.length),
@@ -15,29 +20,26 @@ export const Quotes = () => {
     quotesList[index()].author,
   );
 
-  function shuffle() {
+  let intervalID: number;
+
+  function reShuffle() {
     const quote = quotesList[index()];
 
     setQuoteText(quote.text);
     setQuoteAuthor(quote.author);
 
-    const duration = 1_000;
-    const steps = 40;
-    const increment = 1 / steps;
+    clearInterval(intervalID);
 
     let step = 0;
-    const interval = setInterval(() => {
-      if (step > 1) clearInterval(interval);
-      setQuoteText(TextShuffle.lerp(quote.text, (step += 1 / steps)));
+    const increment = 1 / config.steps;
+    intervalID = setInterval(() => {
+      if (step > 1) clearInterval(intervalID);
+      setQuoteText(TextShuffle.lerp(quote.text, (step += increment)));
       setQuoteAuthor(TextShuffle.lerp(quote.author, (step += increment)));
-
-      console.log(step.toFixed(2));
-    }, duration / steps);
-
-    // clearInterval(interval);
+    }, config.duration / config.steps);
   }
 
-  shuffle();
+  reShuffle();
 
   return (
     <div class={css.container}>
@@ -45,7 +47,7 @@ export const Quotes = () => {
         class={css.button}
         onclick={() => {
           setIndex((index() - 1) % quotesList.length);
-          shuffle();
+          reShuffle();
         }}
       />
 
@@ -59,7 +61,7 @@ export const Quotes = () => {
         class={css.button}
         onclick={() => {
           setIndex((index() + 1) % quotesList.length);
-          shuffle();
+          reShuffle();
         }}
       />
     </div>
