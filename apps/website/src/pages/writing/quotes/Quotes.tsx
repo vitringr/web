@@ -7,7 +7,7 @@ import { quotesList } from "./quotes-data";
 
 const config = {
   duration: 1_000,
-  steps: 40,
+  steps: 18,
 };
 
 export const Quotes = () => {
@@ -46,7 +46,7 @@ export const Quotes = () => {
       <button
         class={css.button}
         onclick={() => {
-          setIndex((index() - 1) % quotesList.length);
+          setIndex(index() - 1 < 0 ? quotesList.length - 1 : index() - 1);
           reShuffle();
         }}
       />

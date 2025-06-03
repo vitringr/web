@@ -3,7 +3,7 @@ type Quote = {
   author: string;
 };
 
-export const quotesList: Quote[] = [
+export const quotesList: readonly Quote[] = [
   {
     text: "Clarity is King.",
     author: "\- unknown",

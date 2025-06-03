@@ -1,4 +1,4 @@
-import { Quotes } from "./Quotes";
+import { Quotes } from "./quotes/Quotes";
 
 export const Writing = () => {
   return (
