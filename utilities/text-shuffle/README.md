@@ -1,27 +1,26 @@
 # Text Shuffle
 
-Recursive text shuffle effect going from left to right.
+Text shuffle effect going from left to right.
 
 **Characters**: Uses both lowercase and uppercase English alphabet, as well as the numbers from 0 to 9 included.
 
-## Performance
+> [!TIP] Font Rendering
+> In order to prevent texts from realigning themselves all the time, it is best if you **use a monospace font**.
+> Also, `text-rendering: optimizeSpeed` in the CSS might be a good idea.
 
-The function calls itself recursively using `setTimeout` after a delay of `15` milliseconds.
+## Example
 
-```typescript
-setTimeout(() => {
-  start(text, callback, step + 1);
-}, 0xf);
-```
-
-Using `requestAnimationFrame` could be a bit more performant, but its repeat rate is way too fast sometimes.
-
-If `requestAnimationFrame` calls with `60` FPS (`~16.66` milliseconds), then it should be good, as it is close to the current speed.
+Example usage with a `setInterval` function, going from `0%` to `100%` at an arbitrary duration and steps.
 
 ```typescript
-requestAnimationFrame(() => {
-  start(text, callback, step + 1);
-});
-```
+const duration = 1_000;
+const steps = 40;
 
-But some machines/browsers can go way beyond that limit, ruining the visual effect.
+const increment = 1 / steps;
+let step = 0;
+
+const interval = setInterval(() => {
+  if (step > 1) clearInterval(interval);
+  text = TextShuffle.lerp(originalText, (step += increment)));
+}, duration / steps);
+```

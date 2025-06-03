@@ -63,6 +63,9 @@ importers:
       '@solidjs/router':
         specifier: ^0.15.3
         version: 0.15.3(solid-js@1.9.7)
+      '@utilities/text-shuffle':
+        specifier: workspace:*
+        version: link:../../utilities/text-shuffle
       solid-js:
         specifier: ^1.9.7
         version: 1.9.7
@@ -355,6 +358,15 @@ importers:
         version: 5.8.3
 
   utilities/shapes:
+    devDependencies:
+      '@utilities/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: latest
+        version: 5.8.3
+
+  utilities/text-shuffle:
     devDependencies:
       '@utilities/typescript-config':
         specifier: workspace:*

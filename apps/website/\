@@ -1,0 +1,106 @@
+import { createSignal } from "solid-js";
+
+import { TextShuffle } from "@utilities/text-shuffle";
+
+import css from "./Quotes.module.css";
+import { quotesList } from "./quotes-data";
+
+const duration: number = 1000;
+
+export const Quotes = () => {
+  const [quoteIndex, setQuoteIndex] = createSignal(
+    Math.floor(Math.random() * quotesList.length),
+  );
+
+  const [quoteText, setQuoteText] = createSignal(quotesList[quoteIndex()].text);
+
+  const [quoteAuthor, setQuoteAuthor] = createSignal(
+    quotesList[quoteIndex()].author,
+  );
+
+  function shuffle() {
+    const quote = quotesList[quoteIndex()];
+    setQuoteText(quote.text);
+    setQuoteAuthor(quote.author);
+
+    let step = 0
+    // setInterval(() => {
+    //   setQuoteText(TextShuffle.lerp(quote.text, step += 0.02));
+    // }, 500);
+      setQuoteText(TextShuffle.lerp(quote.text, step += 0));
+  }
+
+  shuffle();
+
+  return (
+    <div class={css.container}>
+      <button class={css.button}>Prev</button>
+
+      <div class={css.content}>
+        <div class={css.asd}>{quoteText()}</div>
+        <br />
+        <div class={css.asd}>{quoteAuthor()}</div>
+      </div>
+
+      <button
+        class={css.button}
+        onclick={() => {
+          setQuoteIndex((quoteIndex() + 1) % quotesList.length);
+          shuffle();
+        }}
+      >
+        Next
+      </button>
+    </div>
+  );
+};
+
+// export const Quotes = () => {
+//   const [quoteIndex, setQuoteIndex] = createSignal(
+//     Math.floor(Math.random() * quotesList.length),
+//   );
+//
+//   const [quoteText, setQuoteText] = createSignal(quotesList[quoteIndex()].text);
+//
+//   const [quoteAuthor, setQuoteAuthor] = createSignal(
+//     quotesList[quoteIndex()].author,
+//   );
+//
+//   function shuffle() {
+//     const quote = quotesList[quoteIndex()];
+//     setQuoteText(quote.text);
+//     setQuoteAuthor(quote.author);
+//
+//     TextShuffle.start(quoteText(), setQuoteText, duration / quoteText().length);
+//
+//     TextShuffle.start(
+//       quoteAuthor(),
+//       setQuoteAuthor,
+//       duration / quoteAuthor().length,
+//     );
+//   }
+//
+//   shuffle()
+//
+//   return (
+//     <div class={css.container}>
+//       <button class={css.button}>Prev</button>
+//
+//       <div class={css.content}>
+//         <div class={css.asd}>{quoteText()}</div>
+//         <br />
+//         <div class={css.asd}>{quoteAuthor()}</div>
+//       </div>
+//
+//       <button
+//         class={css.button}
+//         onclick={() => {
+//           setQuoteIndex((quoteIndex() + 1) % quotesList.length);
+//           shuffle();
+//         }}
+//       >
+//         Next
+//       </button>
+//     </div>
+//   );
+// };

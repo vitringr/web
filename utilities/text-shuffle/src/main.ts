@@ -19,31 +19,17 @@ const randomCharacters: readonly string[] = [
 
 const space: string = " ";
 
-/**
- * Recursive text shuffle effect going from left to right.
- * @param text The original text.
- * @param callback Resulting callback with a string parameter.
- * @param step Used internally for the recursion.
- */
-export function start(
-  text: string,
-  callback: (result: string) => void,
-  step: number = 0,
-): void {
-  if (step > text.length) return;
+export function lerp(text: string, step: number): string {
+  if (step > 1) return text;
 
-  const textLength = text.length;
+  const percent = step <= 0 ? 0 : Math.floor(text.length * step);
 
-  const left = text.slice(0, step);
-  const right: string[] = new Array(textLength - step);
+  const left = text.slice(0, percent);
+  const right: string[] = [];
 
-  for (let i = step; i < textLength; i++) {
-    right[i - step] = text[i] === space ? space : randomCharacters[(i - step) & 0xf][i & 0x3f];
+  for (let i = percent, r = 0; i < text.length; i++, r++) {
+    right[i - percent] = text[i] === space ? space : randomCharacters[r & 0xf][i & 0x3f];
   }
 
-  callback(left + right.join(""));
-
-  setTimeout(() => {
-    start(text, callback, step + 1);
-  }, 0xf);
+  return left + right.join("");
 }
