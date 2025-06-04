@@ -96,13 +96,20 @@ export const Arts = () => {
 
         <ArtCard
           title="Layers"
-          route={Routes.arts.tenThousand}
+          route={Routes.arts.layers}
+          image="solid.svg"
+          tags={[TagNames.GPU, TagNames["2D"], TagNames.Input, TagNames.Image]}
+        />
+
+        <ArtCard
+          title="Godfather"
+          route={Routes.arts.godfather}
           image="solid.svg"
           tags={[
             TagNames.GPU,
             TagNames["2D"],
-            TagNames.Input,
             TagNames.Image,
+            TagNames.Particles,
           ]}
         />
       </div>

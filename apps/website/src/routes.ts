@@ -25,6 +25,7 @@ export namespace Routes {
     regeneration: "/regeneration",
     tenThousand: "/ten-thousand",
     layers: "/layers",
+    godfather: "/godfather",
   } as const;
 
   // export const writing = {} as const;

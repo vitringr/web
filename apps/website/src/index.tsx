@@ -21,6 +21,7 @@ import { NoiseVectorField } from "./pages/arts/pages/noise-vector-field/NoiseVec
 import { Regeneration } from "./pages/arts/pages/regeneration/Regeneration";
 import { TenThousand } from "./pages/arts/pages/ten-thousand/TenThousand";
 import { Layers } from "./pages/arts/pages/layers/Layers";
+import { Godfather } from "./pages/arts/pages/godfather/Godfather";
 
 import { Writing } from "./pages/writing/Writing";
 import { About } from "./pages/about/About";
@@ -53,6 +54,7 @@ const AppRouter = () => (
       <Route path={Routes.arts.regeneration} component={Regeneration} />
       <Route path={Routes.arts.tenThousand} component={TenThousand} />
       <Route path={Routes.arts.layers} component={Layers} />
+      <Route path={Routes.arts.godfather} component={Godfather} />
     </Route>
 
     <Route path={Routes.root.writing} component={Writing} />
