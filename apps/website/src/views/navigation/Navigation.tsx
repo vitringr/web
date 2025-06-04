@@ -13,12 +13,12 @@ import { Routes } from "../../routes";
 export const Navigation = () => {
   return (
     <nav class={css.nav}>
-      <A href={Routes.home.page}>Home</A>
-      <A href={Routes.guides.page}>Guides</A>
-      <A href={Routes.arts.page}>Arts</A>
-      <A href={Routes.writing.page}>Writing</A>
-      <A href={Routes.about.page}>About</A>
-      <A href={Routes.contact.page}>Contact</A>
+      <A href={Routes.root.home}>Home</A>
+      <A href={Routes.root.guides}>Guides</A>
+      <A href={Routes.root.arts}>Arts</A>
+      <A href={Routes.root.writing}>Writing</A>
+      <A href={Routes.root.about}>About</A>
+      <A href={Routes.root.contact}>Contact</A>
     </nav>
   );
 };

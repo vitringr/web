@@ -11,6 +11,7 @@ export enum TagNames {
   GPU,
   Particles,
   Image,
+  Draw,
 }
 
 type TagData = {
@@ -37,7 +38,7 @@ const tags: Record<TagNames, TagData> = {
   },
   [TagNames.Input]: {
     label: "Input",
-    color: "#11AA11",
+    color: "#11A011",
     fontColor: "#FFFFFF",
   },
   [TagNames.Noise]: {
@@ -58,6 +59,11 @@ const tags: Record<TagNames, TagData> = {
   [TagNames.Image]: {
     label: "Image",
     color: "#D56065",
+    fontColor: "#FFFFFF",
+  },
+  [TagNames.Draw]: {
+    label: "Draw",
+    color: "#AA7211",
     fontColor: "#FFFFFF",
   },
 };

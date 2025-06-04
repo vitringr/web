@@ -29,16 +29,16 @@ if (!root) throw "Invalid #root HTML element!";
 
 const AppRouter = () => (
   <Router root={Layout}>
-    <Route path={Routes.home.page} component={Home} />
+    <Route path={Routes.root.home} component={Home} />
 
-    <Route path={Routes.guides.page}>
+    <Route path={Routes.root.guides}>
       <Route path="/" component={Guides} />
       <Route path={Routes.guides.valueNoise} component={ValueNoise} />
       <Route path={Routes.guides.perlinNoise} component={PerlinNoise} />
       <Route path={Routes.guides.simplexNoise} component={SimplexNoise} />
     </Route>
 
-    <Route path={Routes.arts.page}>
+    <Route path={Routes.root.arts}>
       <Route path="/" component={Arts} />
       <Route path={Routes.arts.theSeer} component={TheSeer} />
       <Route path={Routes.arts.noise2D} component={Noise2D} />
@@ -46,13 +46,13 @@ const AppRouter = () => (
       <Route path={Routes.arts.noiseVectorField} component={NoiseVectorField} />
     </Route>
 
-    <Route path={Routes.writing.page} component={Writing} />
+    <Route path={Routes.root.writing} component={Writing} />
 
-    <Route path={Routes.about.page} component={About} />
+    <Route path={Routes.root.about} component={About} />
 
-    <Route path={Routes.contact.page} component={Contact} />
+    <Route path={Routes.root.contact} component={Contact} />
 
-    <Route path="*404" component={NotFound} />
+    <Route path={Routes.root.notFound} component={NotFound} />
   </Router>
 );
 
