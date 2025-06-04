@@ -27,6 +27,7 @@ import { NotFound } from "./pages/not-found/NotFound";
 
 import "./styles/reset.css";
 import "./styles/style.css";
+import { TenThousand } from "./pages/arts/pages/ten-thousand/TenThousand";
 
 const root = document.getElementById("root");
 if (!root) throw "Invalid #root HTML element!";
@@ -49,6 +50,7 @@ const AppRouter = () => (
       <Route path={Routes.arts.noiseLoop} component={NoiseLoop} />
       <Route path={Routes.arts.noiseVectorField} component={NoiseVectorField} />
       <Route path={Routes.arts.regeneration} component={Regeneration} />
+      <Route path={Routes.arts.tenThousand} component={TenThousand} />
     </Route>
 
     <Route path={Routes.root.writing} component={Writing} />

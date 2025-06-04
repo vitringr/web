@@ -2,19 +2,19 @@ import { onMount } from "solid-js";
 
 import { Creative } from "@packages/creative";
 
-export const Regeneration = () => {
+export const TenThousand = () => {
   let canvasRef: HTMLCanvasElement | undefined;
 
   onMount(() => {
     if (!canvasRef) throw "Invalid canvasRef";
-    Creative.WebGL.Regeneration.main(canvasRef);
+    Creative.WebGL.TenThousand.main(canvasRef);
   });
 
   return (
     <article>
-      <h1>Regeneration</h1>
+      <h1>Ten Thousand</h1>
       <canvas ref={canvasRef} />
-      <p>Description of Regeneration.</p>
+      <p>Description of Ten Thousand.</p>
     </article>
   );
 };

@@ -50,7 +50,7 @@ const tags: Record<TagNames, TagData> = {
   },
   [TagNames.GPU]: {
     label: "GPU",
-    color: "#AA1111",
+    color: "#DD1111",
     fontColor: "#FFFFFF",
   },
   [TagNames.Particles]: {

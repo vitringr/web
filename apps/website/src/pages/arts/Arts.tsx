@@ -74,11 +74,23 @@ export const Arts = () => {
           route={Routes.arts.regeneration}
           image="solid.svg"
           tags={[
-            TagNames["2D"],
             TagNames.GPU,
+            TagNames["2D"],
             TagNames.Input,
             TagNames.Draw,
             TagNames.Particles,
+          ]}
+        />
+
+        <ArtCard
+          title="Ten Thousand"
+          route={Routes.arts.tenThousand}
+          image="solid.svg"
+          tags={[
+            TagNames.GPU,
+            TagNames["2D"],
+            TagNames.Particles,
+            TagNames.Image,
           ]}
         />
       </div>
