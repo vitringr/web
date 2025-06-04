@@ -7,8 +7,8 @@ import css from "./Layout.module.css";
 
 export const Layout = (props: ParentProps) => (
   <div class={css.layout}>
-    {/* <Navigation /> */}
+    <Navigation />
     <main class={css.main}>{props.children}</main>
-    {/* <Footer /> */}
+    <Footer />
   </div>
 );

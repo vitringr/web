@@ -11,6 +11,8 @@
 }
 
 .content {
+  border: 1px solid #000;
+
   text-align: center;
   justify-content: center;
   align-items: center;
@@ -26,7 +28,7 @@
 }
 
 .button {
-  border: 1px solid #fff;
+  border: 1px solid #000;
 
   display: block;
 
@@ -41,7 +43,11 @@
 }
 
 .button:hover {
-  border: 1px solid #000;
+  border: 1px solid #fff;
 
   transition: 200ms;
+}
+
+.text {
+  display: block;
 }

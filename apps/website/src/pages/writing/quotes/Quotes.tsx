@@ -52,9 +52,9 @@ export const Quotes = () => {
       />
 
       <div class={css.content}>
-        <div>{quoteText()}</div>
+        <span class={css.text}>{quoteText()}</span>
         <br />
-        <div>{quoteAuthor()}</div>
+        <span class={css.text}>{quoteAuthor()}</span>
       </div>
 
       <button

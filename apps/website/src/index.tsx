@@ -2,6 +2,8 @@
 import { render } from "solid-js/web";
 import { Route, Router } from "@solidjs/router";
 
+import { Routes } from "./routes";
+
 import { Layout } from "./views/layout/Layout";
 
 import { Home } from "./pages/home/Home";
@@ -13,6 +15,7 @@ import { Arts } from "./pages/arts/Arts";
 import { TheSeer } from "./pages/arts/pages/the-seer/TheSeer";
 import { Noise2D } from "./pages/arts/pages/noise-2d/Noise2D";
 import { NoiseLoop } from "./pages/arts/pages/noise-loop/NoiseLoop";
+import { NoiseVectorField } from "./pages/arts/pages/noise-vector-field/NoiseVectorField";
 import { Writing } from "./pages/writing/Writing";
 import { About } from "./pages/about/About";
 import { Contact } from "./pages/contact/Contact";
@@ -26,27 +29,28 @@ if (!root) throw "Invalid #root HTML element!";
 
 const AppRouter = () => (
   <Router root={Layout}>
-    <Route path="/" component={Home} />
+    <Route path={Routes.home.page} component={Home} />
 
-    <Route path="/guides">
+    <Route path={Routes.guides.page}>
       <Route path="/" component={Guides} />
-      <Route path="/value-noise" component={ValueNoise} />
-      <Route path="/perlin-noise" component={PerlinNoise} />
-      <Route path="/simplex-noise" component={SimplexNoise} />
+      <Route path={Routes.guides.valueNoise} component={ValueNoise} />
+      <Route path={Routes.guides.perlinNoise} component={PerlinNoise} />
+      <Route path={Routes.guides.simplexNoise} component={SimplexNoise} />
     </Route>
 
-    <Route path="/arts">
+    <Route path={Routes.arts.page}>
       <Route path="/" component={Arts} />
-      <Route path="/the-seer" component={TheSeer} />
-      <Route path="/noise-2d" component={Noise2D} />
-      <Route path="/noise-loop" component={NoiseLoop} />
+      <Route path={Routes.arts.theSeer} component={TheSeer} />
+      <Route path={Routes.arts.noise2D} component={Noise2D} />
+      <Route path={Routes.arts.noiseLoop} component={NoiseLoop} />
+      <Route path={Routes.arts.noiseVectorField} component={NoiseVectorField} />
     </Route>
 
-    <Route path="/writing" component={Writing} />
+    <Route path={Routes.writing.page} component={Writing} />
 
-    <Route path="/about" component={About} />
+    <Route path={Routes.about.page} component={About} />
 
-    <Route path="/contact" component={Contact} />
+    <Route path={Routes.contact.page} component={Contact} />
 
     <Route path="*404" component={NotFound} />
   </Router>

@@ -84,6 +84,18 @@ export const Arts = () => {
             TagNames.Input,
           ]}
         />
+
+        <ArtCard
+          title="Noise Vector Field"
+          href="/arts/noise-vector-field"
+          image="solid.svg"
+          tags={[
+            TagNames["2D"],
+            TagNames.Canvas,
+            TagNames.Particles,
+            TagNames.Noise,
+          ]}
+        />
       </div>
     </div>
   );

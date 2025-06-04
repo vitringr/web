@@ -1,6 +1,7 @@
 import { A } from "@solidjs/router";
 
 import css from "./Navigation.module.css";
+import { Routes } from "../../routes";
 
 // TODO: Research:
 // <A href="/" activeClass="" inactiveClass="">
@@ -12,12 +13,12 @@ import css from "./Navigation.module.css";
 export const Navigation = () => {
   return (
     <nav class={css.nav}>
-      <A href="/">Home</A>
-      <A href="/guides">Guides</A>
-      <A href="/arts">Arts</A>
-      <A href="/writing">Writing</A>
-      <A href="/about">About</A>
-      <A href="/contact">Contact</A>
+      <A href={Routes.home.page}>Home</A>
+      <A href={Routes.guides.page}>Guides</A>
+      <A href={Routes.arts.page}>Arts</A>
+      <A href={Routes.writing.page}>Writing</A>
+      <A href={Routes.about.page}>About</A>
+      <A href={Routes.contact.page}>Contact</A>
     </nav>
   );
 };
