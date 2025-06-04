@@ -7,15 +7,19 @@ import { Routes } from "./routes";
 import { Layout } from "./views/layout/Layout";
 
 import { Home } from "./pages/home/Home";
+
 import { Guides } from "./pages/guides/Guides";
 import { ValueNoise } from "./pages/guides/pages/value-noise/ValueNoise";
 import { SimplexNoise } from "./pages/guides/pages/simplex-noise/SimplexNoise";
 import { PerlinNoise } from "./pages/guides/pages/perlin-noise/PerlinNoise";
+
 import { Arts } from "./pages/arts/Arts";
 import { TheSeer } from "./pages/arts/pages/the-seer/TheSeer";
 import { Noise2D } from "./pages/arts/pages/noise-2d/Noise2D";
 import { NoiseLoop } from "./pages/arts/pages/noise-loop/NoiseLoop";
 import { NoiseVectorField } from "./pages/arts/pages/noise-vector-field/NoiseVectorField";
+import { Regeneration } from "./pages/arts/pages/regeneration/Regeneration";
+
 import { Writing } from "./pages/writing/Writing";
 import { About } from "./pages/about/About";
 import { Contact } from "./pages/contact/Contact";
@@ -44,6 +48,7 @@ const AppRouter = () => (
       <Route path={Routes.arts.noise2D} component={Noise2D} />
       <Route path={Routes.arts.noiseLoop} component={NoiseLoop} />
       <Route path={Routes.arts.noiseVectorField} component={NoiseVectorField} />
+      <Route path={Routes.arts.regeneration} component={Regeneration} />
     </Route>
 
     <Route path={Routes.root.writing} component={Writing} />

@@ -22,7 +22,8 @@ export namespace Routes {
     noise2D: "/noise-2d",
     noiseLoop: "/noise-loop",
     noiseVectorField: "/noise-vector-field",
-  } as const;
+    regeneration: "/regeneration"
+} as const;
 
   // export const writing = {} as const;
 

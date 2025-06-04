@@ -41,8 +41,8 @@ export const Arts = () => {
             TagNames["2D"],
             TagNames.Canvas,
             TagNames.Input,
-            TagNames.Particles,
             TagNames.Draw,
+            TagNames.Particles,
             TagNames.Image,
             TagNames.Noise,
           ]}
@@ -67,6 +67,19 @@ export const Arts = () => {
           route={Routes.arts.noiseVectorField}
           image="solid.svg"
           tags={[TagNames["2D"], TagNames.Canvas, TagNames.Noise]}
+        />
+
+        <ArtCard
+          title="Regeneration"
+          route={Routes.arts.regeneration}
+          image="solid.svg"
+          tags={[
+            TagNames["2D"],
+            TagNames.GPU,
+            TagNames.Input,
+            TagNames.Draw,
+            TagNames.Particles,
+          ]}
         />
       </div>
     </div>
