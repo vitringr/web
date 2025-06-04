@@ -7,7 +7,7 @@ export namespace Routes {
     about: "/about",
     contact: "/contact",
     notFound: "*404",
-  };
+  } as const;
 
   // export const home = {} as const;
 

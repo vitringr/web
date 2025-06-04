@@ -12,6 +12,8 @@ export enum TagNames {
   Particles,
   Image,
   Draw,
+  Pathfinding,
+  Collision,
 }
 
 type TagData = {
@@ -64,6 +66,16 @@ const tags: Record<TagNames, TagData> = {
   [TagNames.Draw]: {
     label: "Draw",
     color: "#AA7211",
+    fontColor: "#FFFFFF",
+  },
+  [TagNames.Pathfinding]: {
+    label: "Pathfinding",
+    color: "#2040B1",
+    fontColor: "#FFFFFF",
+  },
+  [TagNames.Collision]: {
+    label: "Collision",
+    color: "#9163F2",
     fontColor: "#FFFFFF",
   },
 };

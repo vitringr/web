@@ -13,7 +13,7 @@ const ArtCard = (props: {
 }) => {
   return (
     <div class={css.card}>
-      <A class={css.link} href={"/arts" + props.route}>
+      <A class={css.link} href={Routes.root.arts + props.route}>
         <div class={css.image_container}>
           <img class={css.image} src={props.image} />
           <div class={css.tags_overlay}>
@@ -49,22 +49,10 @@ export const Arts = () => {
         />
 
         <ArtCard
-          title="Noise2D"
+          title="Noise 2D"
           route={Routes.arts.noise2D}
           image="solid.svg"
-          tags={[
-            TagNames["2D"],
-            TagNames["3D"],
-            TagNames.Canvas,
-            TagNames.Input,
-            TagNames.Particles,
-            TagNames["3D"],
-            TagNames.Canvas,
-            TagNames.GPU,
-            TagNames.Noise,
-            TagNames["2D"],
-            TagNames.Image,
-          ]}
+          tags={[TagNames["2D"], TagNames.Canvas, TagNames.Noise]}
         />
 
         <ArtCard
@@ -78,12 +66,7 @@ export const Arts = () => {
           title="Noise Vector Field"
           route={Routes.arts.noiseVectorField}
           image="solid.svg"
-          tags={[
-            TagNames["2D"],
-            TagNames.Canvas,
-            TagNames.Particles,
-            TagNames.Noise,
-          ]}
+          tags={[TagNames["2D"], TagNames.Canvas, TagNames.Noise]}
         />
       </div>
     </div>
