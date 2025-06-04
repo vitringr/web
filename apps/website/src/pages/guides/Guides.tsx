@@ -1,16 +1,17 @@
 import { A } from "@solidjs/router";
 
 import css from "./Guides.module.css";
+import { Routes } from "../../routes";
 
 const GuideCard = (props: {
   title: string;
-  href: string;
+  route: string;
   description: string;
   image: string;
 }) => {
   return (
     <div class={css.card}>
-      <A class={css.anchor} href={props.href}>
+      <A class={css.anchor} href={Routes.root.guides + props.route}>
         <span
           class={css.background}
           style={{ "background-image": "url('solid.svg')" }}
@@ -31,21 +32,21 @@ export const Guides = () => {
       <div class={css.cards_container}>
         <GuideCard
           title="Value Noise Guide"
-          href="/guides/value-noise"
+          route={Routes.guides.valueNoise}
           description="Probably the simplest and fastest noise generation method."
           image="solid.svg"
         />
 
         <GuideCard
           title="Perlin Noise Guide"
-          href="/guides/perlin-noise"
+          route={Routes.guides.perlinNoise}
           description="Classic gradient noise generation algorithm. Generates smooth, natural-looking patterns."
           image="solid.svg"
         />
 
         <GuideCard
           title="Simplex Noise Guide"
-          href="/guides/simplex-noise"
+          route={Routes.guides.simplexNoise}
           description="Advanced gradient noise generation algorithm. Works by calculating contribution for each point from nearby direction vectors in simplex space."
           image="solid.svg"
         />
