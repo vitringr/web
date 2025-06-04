@@ -10,8 +10,11 @@ const GuideCard = (props: {
 }) => {
   return (
     <div class={css.card}>
-      <A class={css.link} href={props.href}>
-        <img class={css.image} src={props.image} />
+      <A class={css.anchor} href={props.href}>
+        <span
+          class={css.background}
+          style={{ "background-image": "url('solid.svg')" }}
+        ></span>
         <h2 class={css.title}>{props.title}</h2>
       </A>
       <p class={css.description}>{props.description}</p>

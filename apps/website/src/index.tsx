@@ -20,7 +20,6 @@ import { NotFound } from "./pages/not-found/NotFound";
 
 import "./styles/reset.css";
 import "./styles/style.css";
-import "./styles/page.css";
 
 const root = document.getElementById("root");
 if (!root) throw "Invalid #root HTML element!";
