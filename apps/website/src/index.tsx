@@ -19,6 +19,8 @@ import { Noise2D } from "./pages/arts/pages/noise-2d/Noise2D";
 import { NoiseLoop } from "./pages/arts/pages/noise-loop/NoiseLoop";
 import { NoiseVectorField } from "./pages/arts/pages/noise-vector-field/NoiseVectorField";
 import { Regeneration } from "./pages/arts/pages/regeneration/Regeneration";
+import { TenThousand } from "./pages/arts/pages/ten-thousand/TenThousand";
+import { Layers } from "./pages/arts/pages/layers/Layers";
 
 import { Writing } from "./pages/writing/Writing";
 import { About } from "./pages/about/About";
@@ -27,7 +29,6 @@ import { NotFound } from "./pages/not-found/NotFound";
 
 import "./styles/reset.css";
 import "./styles/style.css";
-import { TenThousand } from "./pages/arts/pages/ten-thousand/TenThousand";
 
 const root = document.getElementById("root");
 if (!root) throw "Invalid #root HTML element!";
@@ -51,6 +52,7 @@ const AppRouter = () => (
       <Route path={Routes.arts.noiseVectorField} component={NoiseVectorField} />
       <Route path={Routes.arts.regeneration} component={Regeneration} />
       <Route path={Routes.arts.tenThousand} component={TenThousand} />
+      <Route path={Routes.arts.layers} component={Layers} />
     </Route>
 
     <Route path={Routes.root.writing} component={Writing} />

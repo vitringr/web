@@ -24,6 +24,7 @@ export namespace Routes {
     noiseVectorField: "/noise-vector-field",
     regeneration: "/regeneration",
     tenThousand: "/ten-thousand",
+    layers: "/layers",
   } as const;
 
   // export const writing = {} as const;
