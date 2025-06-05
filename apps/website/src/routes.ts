@@ -26,6 +26,7 @@ export namespace Routes {
     tenThousand: "/ten-thousand",
     layers: "/layers",
     godfather: "/godfather",
+    blockCellularSand: "/block-cellular-sand",
   } as const;
 
   // export const writing = {} as const;

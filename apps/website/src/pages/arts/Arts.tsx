@@ -90,6 +90,19 @@ export const Arts = () => {
             TagNames.Particles,
           ]}
         />
+
+        <ArtCard
+          title="Block Cellular Sand"
+          route={Routes.arts.blockCellularSand}
+          image="solid.svg"
+          tags={[
+            TagNames.GPU,
+            TagNames["2D"],
+            TagNames.Input,
+            TagNames.Draw,
+            TagNames.Particles,
+          ]}
+        />
       </div>
     </div>
   );
