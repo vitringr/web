@@ -3,6 +3,11 @@ import { WebGL } from "@utilities/webgl";
 import vertex from "./vertex.glsl";
 import fragment from "./fragment.glsl";
 
+import img0 from "./layer0.png";
+import img1 from "./layer1.png";
+import img2 from "./layer2.png";
+import img3 from "./layer3.png";
+
 const config = {
   canvasWidth: 600,
   canvasHeight: 600,
@@ -61,13 +66,7 @@ export function main(canvas: HTMLCanvasElement) {
   gl.clearColor(0, 0, 0, 1);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  // TODO: assets
-  const sources = [
-    "assets/layers/0.png",
-    "assets/layers/1.png",
-    "assets/layers/2.png",
-    "assets/layers/3.png",
-  ];
+  const sources = [img0, img1, img2, img3];
 
   loadImages(sources, images, () => {
     const aPositionLocation = gl.getAttribLocation(program, "a_position");

@@ -6,6 +6,8 @@ import updateFragment from "./update-fragment.glsl";
 import renderVertex from "./render-vertex.glsl";
 import renderFragment from "./render-fragment.glsl";
 
+import img from "./godfather.png";
+
 const config = {
   canvasWidth: 600,
   canvasHeight: 600,
@@ -279,7 +281,7 @@ export function main(canvas: HTMLCanvasElement) {
   canvas.width = config.canvasWidth;
   canvas.height = config.canvasHeight;
 
-  image.src = "assets/godfather.png";
+  image.src = img;
 
   image.onload = () => {
     const programs = setupPrograms(gl);

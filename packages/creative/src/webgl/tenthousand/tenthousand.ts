@@ -6,12 +6,14 @@ import updateFragment from "./update-fragment.glsl";
 import renderVertex from "./render-vertex.glsl";
 import renderFragment from "./render-fragment.glsl";
 
+import img from "./tenthousand.png";
+
 const config = {
   canvasWidth: 600,
   canvasHeight: 600,
   particlesCount: 10_000,
   brightness: 3,
-  speed: 0.03,
+  speed: 0.0002,
   minSize: 1.5,
   sizeScalar: 3.0,
 } as const;
@@ -108,7 +110,6 @@ function setupState(
     update: {
       aOldPosition: gl.getAttribLocation(programs.update, "a_oldPosition"),
       aVelocity: gl.getAttribLocation(programs.update, "a_velocity"),
-      uDeltaTime: gl.getUniformLocation(programs.update, "u_deltaTime"),
     },
     render: {
       aNewPosition: gl.getAttribLocation(programs.render, "a_newPosition"),
@@ -241,7 +242,7 @@ export function main(canvas: HTMLCanvasElement) {
   canvas.width = config.canvasWidth;
   canvas.height = config.canvasHeight;
 
-  image.src = "assets/tenthousand.png";
+  image.src = img;
 
   image.onload = () => {
     const programs = setupPrograms(gl);
@@ -269,10 +270,9 @@ export function main(canvas: HTMLCanvasElement) {
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.clearColor(0.08, 0.08, 0.08, 1.0);
 
-    const updateLoop = (deltaTime: number) => {
+    const updateLoop = () => {
       gl.useProgram(programs.update);
       gl.bindVertexArray(current.updateVAO);
-      gl.uniform1f(locations.update.uDeltaTime, deltaTime);
 
       gl.enable(gl.RASTERIZER_DISCARD);
       gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, current.TF);
@@ -290,13 +290,8 @@ export function main(canvas: HTMLCanvasElement) {
       gl.drawArrays(gl.POINTS, 0, config.particlesCount);
     };
 
-    let timeThen: number = 0;
-    const mainLoop = (timeNow: number) => {
-      timeNow *= 0.001;
-      const deltaTime = timeNow - timeThen;
-      timeThen = timeNow;
-
-      updateLoop(deltaTime);
+    const mainLoop = () => {
+      updateLoop();
       renderLoop();
 
       // --- Swap ---

@@ -5,7 +5,6 @@ in vec2 a_velocity;
 
 out vec2 newPosition;
 
-uniform float u_deltaTime;
 uniform GlobalStaticData {
   float u_brightness;
   float u_speed;
@@ -34,7 +33,7 @@ vec2 warp(vec2 coordinates) {
 }
 
 void main() {
-  vec2 velocity = a_velocity * u_deltaTime * u_speed;
+  vec2 velocity = a_velocity * u_speed;
 
   newPosition = warp(a_oldPosition + velocity);
 }

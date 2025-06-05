@@ -1,8 +1,9 @@
+import { A } from "@solidjs/router";
+
 import { Routes } from "../../routes";
 import { TagNames, TagsContainer } from "./Tags";
 
 import css from "./ArtCard.module.css";
-import { A } from "@solidjs/router";
 
 export const ArtCard = (props: {
   title: string;
@@ -24,4 +25,3 @@ export const ArtCard = (props: {
     </div>
   );
 };
-
