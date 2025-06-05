@@ -1,0 +1,41 @@
+.card {
+  border: 1px solid #000;
+  border-radius: 4px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 300px;
+  min-width: 300px;
+  max-width: 300px;
+
+  text-align: center;
+}
+
+.link {
+  width: 100%;
+}
+
+.image_container {
+  border-bottom: 1px solid #000;
+  position: relative;
+  width: 100%;
+  height: 300px;
+}
+
+.image {
+  padding: 10px;
+  width: 100%;
+  height: 100%;
+}
+
+.tags_overlay {
+  position: absolute;
+  bottom: 0px;
+}
+
+.title {
+  padding: 10px;
+}
