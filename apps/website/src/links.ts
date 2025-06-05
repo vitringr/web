@@ -6,12 +6,12 @@ export namespace Links {
   };
 
   export const honors = {
-    // 1
+    // Core
     amitPatel: "https://www.redblobgames.com/",
     danielShiffman: "https://natureofcode.com/",
     jasperFlick: "https://catlikecoding.com/",
 
-    // 2
+    // Mentions
     simonDev: "https://www.youtube.com/@simondev758",
     thePrimeagen: "https://www.youtube.com/@ThePrimeTimeagen",
     timRuswick: "https://www.youtube.com/channel/UC_hwKJdF3KRAy4QIaiCSMgQ",

@@ -1,13 +1,16 @@
 .cards_container {
-  border: 1px solid #000;
+  max-width: 1000px;
+
+  margin: auto;
 
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
   gap: 20px;
 
-  padding: 20px 0;
+  padding: 20px;
 }
 
 .card {
@@ -19,8 +22,9 @@
   align-items: center;
   justify-content: center;
 
-  width: 100%;
-  max-width: 360px;
+  width: 300px;
+  min-width: 300px;
+  max-width: 300px;
 
   text-align: center;
 }
@@ -30,10 +34,10 @@
 }
 
 .image_container {
+  border-bottom: 1px solid #000;
   position: relative;
   width: 100%;
-  height: 360px;
-  border-bottom: 1px solid #000;
+  height: 300px;
 }
 
 .image {
