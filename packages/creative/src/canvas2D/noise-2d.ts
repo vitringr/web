@@ -32,7 +32,7 @@ export function main(canvas: HTMLCanvasElement) {
   const colors: string[] = [];
   for (let i = 0; i < 0xff; i++) {
     const colorRange = i / 0xff;
-    colors.push(Colors.getRGB(0, colorRange, colorRange));
+    colors.push(Colors.getRGB(colorRange, colorRange, colorRange));
   }
 
   let time = 0;

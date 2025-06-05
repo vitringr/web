@@ -16,10 +16,10 @@ export const ArtCard = (props: {
       <A class={css.link} href={Routes.root.arts + props.route}>
         <div class={css.image_container}>
           <img class={css.image} src={props.image} />
-          <div class={css.tags_overlay}>
-            <TagsContainer tags={props.tags} />
-          </div>
         </div>
+
+        <TagsContainer tags={props.tags} />
+
         <h2 class={css.title}>{props.title}</h2>
       </A>
     </div>

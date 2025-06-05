@@ -12,6 +12,15 @@
   max-width: 300px;
 
   text-align: center;
+
+  will-change: opacity;
+  opacity: 75%;
+  transition: 200ms;
+}
+
+.card:hover {
+  opacity: 100%;
+  transition: 200ms;
 }
 
 .link {
@@ -31,11 +40,7 @@
   height: 100%;
 }
 
-.tags_overlay {
-  position: absolute;
-  bottom: 0px;
-}
-
 .title {
   padding: 10px;
+  color: #FFF;
 }

@@ -9,12 +9,11 @@ import theSeerPNG from "./the-seer.png";
 const config = {
   width: 960,
   height: 1200,
+  // width: 640,
+  // height: 800,
 
   imageWidth: 480,
   imageHeight: 600,
-  // width: 640,
-  // height: 800,
-  //
   // imageWidth: 320,
   // imageHeight: 400,
 
@@ -49,7 +48,7 @@ function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.width;
   canvas.height = config.height;
 
-  canvas.style.border = "2px solid gray";
+  canvas.style.border = "1.5px solid gray";
 
   const context = canvas.getContext("2d");
   if (!context) throw "Cannot get 2d context";
