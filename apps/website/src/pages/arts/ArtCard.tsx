@@ -18,9 +18,9 @@ export const ArtCard = (props: {
           <img class={css.image} src={props.image} />
         </div>
 
-        <TagsContainer tags={props.tags} />
-
         <h2 class={css.title}>{props.title}</h2>
+
+        <TagsContainer tags={props.tags} />
       </A>
     </div>
   );

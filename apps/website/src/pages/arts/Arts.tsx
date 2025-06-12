@@ -4,14 +4,13 @@ import { TagNames } from "./Tags";
 import { Routes } from "../../routes";
 import { ArtCard } from "./ArtCard";
 
-import theSeerThumbnail from "./thumbnails/theSeer.png"
-import blockCellularSandThumbnail from "./thumbnails/blockCellularSand.png"
-import layersThumbnail from "./thumbnails/layers.png"
-import noise2DThumbnail from "./thumbnails/noise2D.png"
-import noiseLoopThumbnail from "./thumbnails/noiseLoop.png"
-import noiseVectorFieldThumbnail from "./thumbnails/noiseVectorField.png"
-import tenThousandThumbnail from "./thumbnails/tenThousand.png"
-
+import theSeerThumbnail from "./thumbnails/theSeer.png";
+import blockCellularSandThumbnail from "./thumbnails/blockCellularSand.png";
+import layersThumbnail from "./thumbnails/layers.png";
+import noise2DThumbnail from "./thumbnails/noise2D.png";
+import noiseLoopThumbnail from "./thumbnails/noiseLoop.png";
+import noiseVectorFieldThumbnail from "./thumbnails/noiseVectorField.png";
+import tenThousandThumbnail from "./thumbnails/tenThousand.png";
 
 export const Arts = () => {
   return (

@@ -1,20 +1,31 @@
-.tags_container {
-  border: 1px solid #000;
-
+.wrapper {
   display: flex;
-  flex-wrap: wrap-reverse;
-  flex-direction: row;
-  gap: 6px;
   justify-content: center;
   align-items: center;
 
-  margin: 10px;
+  min-height: 60px;
+
+  padding: 10px 0;
+}
+
+.tags_container {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .tag {
+  border-radius: 4px;
   padding: 2px 4px;
 
-  border-radius: 4px;
+  height: 26px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   font-family: monospace;
   font-weight: bold;

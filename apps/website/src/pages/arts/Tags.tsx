@@ -82,32 +82,34 @@ const tags: Record<TagNames, TagData> = {
 
 const Tag = (props: TagData) => {
   return (
-    <span
+    <div
       class={css.tag}
       style={{ "background-color": props.color, color: props.fontColor }}
     >
       {props.label}
-    </span>
+    </div>
   );
 };
 
 export const TagsContainer = (props: { tags: TagNames[] }) => {
   return (
-    <div class={css.tags_container}>
-      <For each={props.tags}>
-        {(tagName) => {
-          const tag = tags[tagName];
-          if (tag) {
-            return (
-              <Tag
-                color={tag.color}
-                fontColor={tag.fontColor}
-                label={tag.label}
-              />
-            );
-          }
-        }}
-      </For>
+    <div class={css.wrapper}>
+      <div class={css.tags_container}>
+        <For each={props.tags}>
+          {(tagName) => {
+            const tag = tags[tagName];
+            if (tag) {
+              return (
+                <Tag
+                  color={tag.color}
+                  fontColor={tag.fontColor}
+                  label={tag.label}
+                />
+              );
+            }
+          }}
+        </For>
+      </div>
     </div>
   );
 };
