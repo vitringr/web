@@ -41,10 +41,19 @@ function renderCell(context: CanvasRenderingContext2D, x: number, y: number) {
   );
 }
 
-function diagonalDistance(a: Vector2, b: Vector2) {
+function getChebyshevDistance(a: Vector2, b: Vector2) {
   const xDifference = a.x - b.x;
   const yDifference = a.y - b.y;
   return Math.max(Math.abs(xDifference), Math.abs(yDifference));
+}
+
+function getLine(a: Vector2, b: Vector2, steps: number) {
+  const points: Vector2[] = [];
+  const step = 1 / steps;
+  for (let i = 1; i < steps; i++) {
+    points.push(Vector2.lerp(a, b, step * i).round());
+  }
+  return points;
 }
 
 export async function main(canvas: HTMLCanvasElement) {
@@ -52,14 +61,18 @@ export async function main(canvas: HTMLCanvasElement) {
 
   renderLattice(context);
 
+  const start = new Vector2(1, 2);
+  const end = new Vector2(11, 6);
 
-  context.fillStyle = "yellow";
+  const chebyshevDistance = getChebyshevDistance(start, end);
+  const lineCells = getLine(start, end, chebyshevDistance);
 
-  renderCell(context, 1, 2)
+  context.fillStyle = "teal";
+  renderCell(context, start.x, start.y);
+  renderCell(context, end.x, end.y);
 
-  const loop = () => {
-    requestAnimationFrame(loop);
-  };
-
-  loop();
+  context.fillStyle = "orange";
+  for (const point of lineCells) {
+    renderCell(context, point.x, point.y);
+  }
 }
