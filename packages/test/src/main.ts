@@ -5,8 +5,9 @@ import { Config } from "./config";
 
 import plantPNG from "./plant.png";
 
-const cellSize = Config.canvasSize / Config.rows;
+const cellSize = Config.canvasSize / Config.gridSize;
 const cellSizeHalf = cellSize * 0.5;
+const pixelSize = Config.canvasSize / Config.gridSize;
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = Config.canvasSize;
@@ -24,24 +25,15 @@ function renderLattice(context: CanvasRenderingContext2D) {
   context.lineWidth = 0.5;
   context.strokeStyle = Config.colors.lattice;
 
-  for (let x = 0; x < Config.rows; x++) {
+  for (let x = 0; x < Config.gridSize; x++) {
     const step = x * cellSize;
     Canvas2D.line(context, step, 0, step, Config.canvasSize);
   }
 
-  for (let y = 0; y < Config.rows; y++) {
+  for (let y = 0; y < Config.gridSize; y++) {
     const step = y * cellSize;
     Canvas2D.line(context, 0, step, Config.canvasSize, step);
   }
-}
-
-function renderCell(context: CanvasRenderingContext2D, x: number, y: number) {
-  Canvas2D.circleFill(
-    context,
-    x * cellSize + cellSizeHalf,
-    y * cellSize + cellSizeHalf,
-    Config.renderCellRadius,
-  );
 }
 
 function getChebyshevDistance(a: Vector2, b: Vector2) {
@@ -63,12 +55,12 @@ function createImageData(
   context: CanvasRenderingContext2D,
   image: HTMLImageElement,
 ) {
-  context.drawImage(image, 0, 0, Config.imageSize, Config.imageSize);
+  context.drawImage(image, 0, 0, Config.gridSize, Config.gridSize);
   const imageData = context.getImageData(
     0,
     0,
-    Config.imageSize,
-    Config.imageSize,
+    Config.gridSize,
+    Config.gridSize,
   ).data;
   context.clearRect(0, 0, Config.canvasSize, Config.canvasSize);
 
@@ -80,8 +72,8 @@ function createImageData(
     const b = imageData[i + 2];
 
     const index = i / 4;
-    const x = index % Config.imageSize;
-    const y = Math.floor(index / Config.imageSize);
+    const x = index % Config.gridSize;
+    const y = Math.floor(index / Config.gridSize);
 
     if (!arr[x]) arr[x] = [];
     arr[x][y] = r + g + b < 100 ? 0 : 1;
@@ -90,33 +82,58 @@ function createImageData(
   return arr;
 }
 
+function renderPixel(context: CanvasRenderingContext2D, x: number, y: number) {
+  context.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+}
+
+function renderPixelData(
+  context: CanvasRenderingContext2D,
+  pixelData: number[][],
+) {
+  for (let x = 0; x < Config.gridSize; x++) {
+    for (let y = 0; y < Config.gridSize; y++) {
+      context.fillStyle = Colors.getRGBGrayscale(pixelData[x][y]);
+      context.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+    }
+  }
+}
+
+type LineCell = {
+  position: Vector2;
+  color: number;
+};
+
 function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   const context = setupContext(canvas);
 
   const pixelData = createImageData(context, image);
-  for (let x = 0; x < Config.imageSize; x++) {
-    for (let y = 0; y < Config.imageSize; y++) {
-      context.fillStyle = Colors.getRGBGrayscale(pixelData[x][y]);
-      context.fillRect(x * 6, y * 6, 6, 6);
-    }
-  }
+
+  renderPixelData(context, pixelData);
 
   renderLattice(context);
 
-  const start = new Vector2(5, 0);
-  const end = new Vector2(29, 25);
+  const start = new Vector2(0, 0);
+  const end = new Vector2(99, 99);
 
   const chebyshevDistance = getChebyshevDistance(start, end);
   const lineCells = getLine(start, end, chebyshevDistance);
 
-  context.fillStyle = "teal";
-  renderCell(context, start.x, start.y);
-  renderCell(context, end.x, end.y);
+  const grayLine: LineCell[] = lineCells.map((cell) => ({
+    position: cell,
+    color: pixelData[cell.x][cell.y],
+  }));
 
-  context.fillStyle = "orange";
-  for (const point of lineCells) {
-    renderCell(context, point.x, point.y);
+  context.fillStyle = "orange"
+  for (const cell of lineCells) {
+    renderPixel(context, cell.x, cell.y);
   }
+
+  // context.clearRect(0, 0, Config.canvasSize, Config.canvasSize)
+
+  // for (const cell of grayLine) {
+  //   context.fillStyle = Colors.getRGBGrayscale(cell.color);
+  //   renderPixel(context, cell.position.x, cell.position.y);
+  // }
 }
 
 export async function main(canvas: HTMLCanvasElement) {
