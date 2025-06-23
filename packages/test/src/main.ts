@@ -1,6 +1,9 @@
 import { Canvas2D } from "@utilities/canvas2d";
-import { Config } from "./config";
 import { Vector2 } from "@utilities/vector";
+import { Colors } from "@utilities/colors";
+import { Config } from "./config";
+
+import plantPNG from "./plant.png";
 
 const cellSize = Config.canvasSize / Config.rows;
 const cellSizeHalf = cellSize * 0.5;
@@ -56,13 +59,52 @@ function getLine(a: Vector2, b: Vector2, steps: number) {
   return points;
 }
 
-export async function main(canvas: HTMLCanvasElement) {
+function createImageData(
+  context: CanvasRenderingContext2D,
+  image: HTMLImageElement,
+) {
+  context.drawImage(image, 0, 0, Config.imageSize, Config.imageSize);
+  const imageData = context.getImageData(
+    0,
+    0,
+    Config.imageSize,
+    Config.imageSize,
+  ).data;
+  context.clearRect(0, 0, Config.canvasSize, Config.canvasSize);
+
+  const arr: number[][] = [];
+
+  for (let i = 0; i < imageData.length; i += 4) {
+    const r = imageData[i + 0];
+    const g = imageData[i + 1];
+    const b = imageData[i + 2];
+
+    const index = i / 4;
+    const x = index % Config.imageSize;
+    const y = Math.floor(index / Config.imageSize);
+
+    if (!arr[x]) arr[x] = [];
+    arr[x][y] = r + g + b < 100 ? 0 : 1;
+  }
+
+  return arr;
+}
+
+function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   const context = setupContext(canvas);
+
+  const pixelData = createImageData(context, image);
+  for (let x = 0; x < Config.imageSize; x++) {
+    for (let y = 0; y < Config.imageSize; y++) {
+      context.fillStyle = Colors.getRGBGrayscale(pixelData[x][y]);
+      context.fillRect(x * 6, y * 6, 6, 6);
+    }
+  }
 
   renderLattice(context);
 
-  const start = new Vector2(1, 2);
-  const end = new Vector2(11, 6);
+  const start = new Vector2(5, 0);
+  const end = new Vector2(29, 25);
 
   const chebyshevDistance = getChebyshevDistance(start, end);
   const lineCells = getLine(start, end, chebyshevDistance);
@@ -75,4 +117,10 @@ export async function main(canvas: HTMLCanvasElement) {
   for (const point of lineCells) {
     renderCell(context, point.x, point.y);
   }
+}
+
+export async function main(canvas: HTMLCanvasElement) {
+  const img = new Image();
+  img.src = plantPNG;
+  img.onload = () => start(canvas, img);
 }
