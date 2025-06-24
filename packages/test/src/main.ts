@@ -1,11 +1,10 @@
+import { Mathematics } from "@utilities/mathematics";
 import { Canvas2D } from "@utilities/canvas2d";
 import { Vector2 } from "@utilities/vector";
 import { Colors } from "@utilities/colors";
 import { Config } from "./config";
 
 import plantPNG from "./plant.png";
-import { Mathematics } from "@utilities/mathematics";
-import { applyClampAndNearest } from "@utilities/webgl/src/webgl/texture";
 
 const cellSize = Config.canvasSize / Config.gridSize;
 const pixelSize = Config.canvasSize / Config.gridSize;
@@ -145,7 +144,7 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
     context.fillRect(pin.x * cellSize, pin.y * cellSize, cellSize, cellSize);
   }
 
-  context.lineWidth = 0.1;
+  context.lineWidth = 0.5;
   context.strokeStyle = "teal";
 
   const connectionsCount = Config.pins - Config.gap * 2;

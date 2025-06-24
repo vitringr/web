@@ -4,7 +4,7 @@ export namespace Config {
 
   export const pins = 60;
 
-  export const gap = 10;
+  export const gap = 20;
 
   export const colors = {
     background: "#111111",
