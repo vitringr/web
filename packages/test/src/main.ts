@@ -5,6 +5,7 @@ import { Config } from "./config";
 
 import plantPNG from "./plant.png";
 import { Mathematics } from "@utilities/mathematics";
+import { applyClampAndNearest } from "@utilities/webgl/src/webgl/texture";
 
 const cellSize = Config.canvasSize / Config.gridSize;
 const pixelSize = Config.canvasSize / Config.gridSize;
@@ -144,22 +145,70 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
     context.fillRect(pin.x * cellSize, pin.y * cellSize, cellSize, cellSize);
   }
 
-  context.lineWidth = 1;
+  context.lineWidth = 0.1;
   context.strokeStyle = "teal";
 
   const connectionsCount = Config.pins - Config.gap * 2;
 
+  // ---------------
+  // -- Algorithm --
+  // ---------------
+
+  const colorLines: LineCell[][][] = [];
+
   for (let a = 0; a < pins.length; a++) {
     const aIndex = a;
     const aPin = pins[aIndex];
+
+    colorLines.push([]);
 
     for (let b = 0; b < connectionsCount; b++) {
       const bIndex = a + Config.gap + b;
       const bPin = pins[bIndex % pins.length];
 
       Canvas2D.line(context, aPin.x * cellSize, aPin.y * cellSize, bPin.x * cellSize, bPin.y * cellSize);
+
+      const chebyshevDistance = getChebyshevDistance(aPin, bPin);
+      const lineCells = getLine(aPin, bPin, chebyshevDistance);
+
+      const colorLine: LineCell[] = lineCells.map((cell) => ({
+        position: cell,
+        color: pixelData[cell.x][cell.y],
+      }));
+
+      colorLines[a][b] = colorLine;
     }
   }
+
+  console.log("done");
+
+  const darkestLines: LineCell[][][] = [];
+
+  for (let a = 0; a < pins.length; a++) {
+    let darkestLine = colorLines[a][0];
+    let darkestSum = Infinity;
+
+    darkestLines.push([]);
+
+    for (let b = 0; b < connectionsCount; b++) {
+      const currentLine = colorLines[a][b];
+
+      let sumColor = 0;
+      for (let i = 0; i < currentLine.length; i++) {
+        sumColor += currentLine[i].color;
+      }
+      sumColor /= currentLine.length;
+
+      if (sumColor < darkestSum) {
+        darkestSum = sumColor;
+        darkestLine = currentLine;
+      }
+    }
+
+    darkestLines[a].push(darkestLine);
+  }
+
+  console.log("done");
 }
 
 export async function main(canvas: HTMLCanvasElement) {
