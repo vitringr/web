@@ -4,16 +4,16 @@ import { Colors } from "@utilities/colors";
 import { Config } from "./config";
 
 import plantPNG from "./plant.png";
+import { Mathematics } from "@utilities/mathematics";
 
 const cellSize = Config.canvasSize / Config.gridSize;
-const cellSizeHalf = cellSize * 0.5;
 const pixelSize = Config.canvasSize / Config.gridSize;
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = Config.canvasSize;
   canvas.height = Config.canvasSize;
 
-  canvas.style.border = "1px solid red";
+  canvas.style.border = "1px solid #111111";
 
   const context = canvas.getContext("2d");
   if (!context) throw "Cannot get 2d context";
@@ -51,17 +51,9 @@ function getLine(a: Vector2, b: Vector2, steps: number) {
   return points;
 }
 
-function createImageData(
-  context: CanvasRenderingContext2D,
-  image: HTMLImageElement,
-) {
+function createImageData(context: CanvasRenderingContext2D, image: HTMLImageElement) {
   context.drawImage(image, 0, 0, Config.gridSize, Config.gridSize);
-  const imageData = context.getImageData(
-    0,
-    0,
-    Config.gridSize,
-    Config.gridSize,
-  ).data;
+  const imageData = context.getImageData(0, 0, Config.gridSize, Config.gridSize).data;
   context.clearRect(0, 0, Config.canvasSize, Config.canvasSize);
 
   const arr: number[][] = [];
@@ -86,16 +78,34 @@ function renderPixel(context: CanvasRenderingContext2D, x: number, y: number) {
   context.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
 }
 
-function renderPixelData(
-  context: CanvasRenderingContext2D,
-  pixelData: number[][],
-) {
+function renderPixelData(context: CanvasRenderingContext2D, pixelData: number[][]) {
   for (let x = 0; x < Config.gridSize; x++) {
     for (let y = 0; y < Config.gridSize; y++) {
       context.fillStyle = Colors.getRGBGrayscale(pixelData[x][y]);
       context.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
     }
   }
+}
+
+function createPins() {
+  const pins: Vector2[] = [];
+
+  const halfSize = Config.gridSize * 0.5;
+  const center = new Vector2(halfSize, halfSize);
+  const radius = halfSize - 1;
+
+  const angleStep = Mathematics.TAU / Config.pins;
+
+  for (let i = 0; i < Config.pins; i++) {
+    const angle = angleStep * i;
+
+    const x = center.x + Math.cos(angle) * radius;
+    const y = center.y + Math.sin(angle) * radius;
+
+    pins.push(new Vector2(Math.round(x), Math.round(y)));
+  }
+
+  return pins;
 }
 
 type LineCell = {
@@ -107,8 +117,7 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   const context = setupContext(canvas);
 
   const pixelData = createImageData(context, image);
-
-  renderPixelData(context, pixelData);
+  // renderPixelData(context, pixelData);
 
   renderLattice(context);
 
@@ -123,17 +132,17 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
     color: pixelData[cell.x][cell.y],
   }));
 
-  context.fillStyle = "orange"
-  for (const cell of lineCells) {
-    renderPixel(context, cell.x, cell.y);
+  for (const cell of grayLine) {
+    context.fillStyle = Colors.getRGBGrayscale(cell.color);
+    renderPixel(context, cell.position.x, cell.position.y);
   }
 
-  // context.clearRect(0, 0, Config.canvasSize, Config.canvasSize)
+  const pins = createPins();
 
-  // for (const cell of grayLine) {
-  //   context.fillStyle = Colors.getRGBGrayscale(cell.color);
-  //   renderPixel(context, cell.position.x, cell.position.y);
-  // }
+  for (const pin of pins) {
+    context.fillStyle = "red";
+    context.fillRect(pin.x * cellSize, pin.y * cellSize, cellSize, cellSize);
+  }
 }
 
 export async function main(canvas: HTMLCanvasElement) {
