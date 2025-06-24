@@ -143,6 +143,23 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
     context.fillStyle = "red";
     context.fillRect(pin.x * cellSize, pin.y * cellSize, cellSize, cellSize);
   }
+
+  context.lineWidth = 1;
+  context.strokeStyle = "teal";
+
+  const connectionsCount = Config.pins - Config.gap * 2;
+
+  for (let a = 0; a < pins.length; a++) {
+    const aIndex = a;
+    const aPin = pins[aIndex];
+
+    for (let b = 0; b < connectionsCount; b++) {
+      const bIndex = a + Config.gap + b;
+      const bPin = pins[bIndex % pins.length];
+
+      Canvas2D.line(context, aPin.x * cellSize, aPin.y * cellSize, bPin.x * cellSize, bPin.y * cellSize);
+    }
+  }
 }
 
 export async function main(canvas: HTMLCanvasElement) {
