@@ -22,6 +22,7 @@ export namespace Routes {
     noise2D: "/noise-2d",
     noiseLoop: "/noise-loop",
     noiseVectorField: "/noise-vector-field",
+    noiseRainbow: "/noise-rainbow",
     regeneration: "/regeneration",
     tenThousand: "/ten-thousand",
     layers: "/layers",

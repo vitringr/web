@@ -1,14 +1,14 @@
 import { Noise } from "@utilities/noise";
 
 const config = {
-  width: 600,
-  height: 600,
+  width: 300,
+  height: 300,
 
   cellRows: 60,
   cellCols: 60,
 
   noiseFrequency: 0.015,
-  timeIncrement: 0.0014,
+  timeIncrement: 0.003,
   colorHSLRange: 720,
 } as const;
 
@@ -29,7 +29,7 @@ function createColors() {
   const colors: string[] = [];
 
   for (let i = 0; i < config.colorHSLRange; i++) {
-    colors.push(`hsl(${i}, 80%, 50%)`);
+    colors.push(`hsl(${i}, 90%, 50%)`);
   }
 
   return colors;

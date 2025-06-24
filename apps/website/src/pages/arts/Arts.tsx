@@ -8,6 +8,7 @@ import theSeerThumbnail from "./thumbnails/theSeer.png";
 import blockCellularSandThumbnail from "./thumbnails/blockCellularSand.png";
 import layersThumbnail from "./thumbnails/layers.png";
 import noise2DThumbnail from "./thumbnails/noise2D.png";
+import noiseRainbow from "./thumbnails/noiseRainbow.png";
 import noiseLoopThumbnail from "./thumbnails/noiseLoop.png";
 import noiseVectorFieldThumbnail from "./thumbnails/noiseVectorField.png";
 import tenThousandThumbnail from "./thumbnails/tenThousand.png";
@@ -50,6 +51,13 @@ export const Arts = () => {
           title="Noise Vector Field"
           route={Routes.arts.noiseVectorField}
           image={noiseVectorFieldThumbnail}
+          tags={[TagNames["2D"], TagNames.Noise]}
+        />
+
+        <ArtCard
+          title="Noise Rainbow"
+          route={Routes.arts.noiseRainbow}
+          image={noiseRainbow}
           tags={[TagNames["2D"], TagNames.Noise]}
         />
 
