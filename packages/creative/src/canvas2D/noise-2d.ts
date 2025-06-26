@@ -5,8 +5,8 @@ const config = {
   width: 600,
   height: 600,
 
-  cellRows: 50,
-  cellCols: 50,
+  cellRows: 60,
+  cellCols: 60,
 
   noiseScale: 0.05,
 
@@ -15,6 +15,8 @@ const config = {
 
 const xScale = config.width / config.cellRows;
 const yScale = config.height / config.cellCols;
+
+const noise = Noise.simplex();
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.width;
@@ -44,7 +46,7 @@ export function main(canvas: HTMLCanvasElement) {
         const xNoise = x * config.noiseScale + time;
         const yNoise = y * config.noiseScale + time;
 
-        const noiseValue = Noise.get(xNoise, yNoise);
+        const noiseValue = noise(xNoise, yNoise);
 
         const xPosition = x * xScale;
         const yPosition = y * yScale;

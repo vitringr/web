@@ -1,8 +1,8 @@
 import { Noise } from "@utilities/noise";
 
 const config = {
-  width: 300,
-  height: 300,
+  width: 600,
+  height: 600,
 
   cellRows: 60,
   cellCols: 60,
