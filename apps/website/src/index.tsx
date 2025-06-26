@@ -16,6 +16,7 @@ import { PerlinNoise } from "./pages/guides/pages/perlin-noise/PerlinNoise";
 import { Arts } from "./pages/arts/Arts";
 import { TheSeer } from "./pages/arts/pages/the-seer/TheSeer";
 import { Noise2D } from "./pages/arts/pages/noise-2d/Noise2D";
+import { NoiseFlow } from "./pages/arts/pages/noise-flow/NoiseFlow";
 import { NoiseLoop } from "./pages/arts/pages/noise-loop/NoiseLoop";
 import { NoiseVectorField } from "./pages/arts/pages/noise-vector-field/NoiseVectorField";
 import { NoiseRainbow } from "./pages/arts/pages/noise-rainbow/NoiseRainbow";
@@ -51,6 +52,7 @@ const AppRouter = () => (
       <Route path="/" component={Arts} />
       <Route path={Routes.arts.theSeer} component={TheSeer} />
       <Route path={Routes.arts.noise2D} component={Noise2D} />
+      <Route path={Routes.arts.noiseFlow} component={NoiseFlow} />
       <Route path={Routes.arts.noiseLoop} component={NoiseLoop} />
       <Route path={Routes.arts.noiseVectorField} component={NoiseVectorField} />
       <Route path={Routes.arts.noiseRainbow} component={NoiseRainbow} />

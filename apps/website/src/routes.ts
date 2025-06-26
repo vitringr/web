@@ -20,6 +20,7 @@ export namespace Routes {
   export const arts = {
     theSeer: "/the-seer",
     noise2D: "/noise-2d",
+    noiseFlow: "/noise-flow",
     noiseLoop: "/noise-loop",
     noiseVectorField: "/noise-vector-field",
     noiseRainbow: "/noise-rainbow",

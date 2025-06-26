@@ -43,7 +43,7 @@ export function main(canvas: HTMLCanvasElement) {
     colors.push(Colors.getRGB(1 - colorRange, (1 - colorRange) * 0.3, 0));
   }
 
-  let time = 30000;
+  let time = 31600;
   const animation = () => {
     time++;
 
