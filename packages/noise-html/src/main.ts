@@ -1,3 +1,9 @@
+/*
+
+  Needs a heavy refactor.
+
+*/
+
 import { Noise } from "@utilities/noise";
 
 const getNoise = Noise.simplex();
@@ -6,8 +12,8 @@ function getIDString(x: number, y: number) {
   return "box_" + x + "_" + y;
 }
 
-const rows = 50;
-const cols = 50;
+const rows = 40;
+const cols = 40;
 
 export function main(canvas: any) {
   canvas.width = canvas.height = "1px";
@@ -83,7 +89,7 @@ export function main(canvas: any) {
     }
   }
 
-  const frequency = 0.08
+  const frequency = 0.08;
 
   let time = 0;
   const animation = () => {
@@ -107,7 +113,7 @@ export function main(canvas: any) {
 
         if (newLetter != box.lastLetter) {
           box.div.innerText = newLetter;
-          box.lastLetter = newLetter
+          box.lastLetter = newLetter;
         }
       }
     }
