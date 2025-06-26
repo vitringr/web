@@ -8,12 +8,14 @@ const config = {
   cellCols: 60,
 
   noiseFrequency: 0.015,
-  timeIncrement: 0.003,
+  timeIncrement: 0.0025,
   colorHSLRange: 720,
 } as const;
 
 const xScale = config.width / config.cellRows;
 const yScale = config.height / config.cellCols;
+
+const noise = Noise.simplex()
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.width;
@@ -49,12 +51,12 @@ export function main(canvas: HTMLCanvasElement) {
         const xNoise = x * config.noiseFrequency + time;
         const yNoise = y * config.noiseFrequency + time;
 
-        const noiseValue = Noise.get(xNoise, yNoise);
+        const noiseValue = noise(xNoise, yNoise);
 
         const xPosition = x * xScale;
         const yPosition = y * yScale;
 
-        context.fillStyle = colors[(noiseValue * config.colorHSLRange) | 0];
+        context.fillStyle = colors[Math.floor(noiseValue * config.colorHSLRange)];
         context.fillRect(xPosition, yPosition, xScale, yScale);
       }
     }
