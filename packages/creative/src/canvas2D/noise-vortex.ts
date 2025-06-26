@@ -6,14 +6,14 @@ const config = {
 
   count: 6000,
 
-  range: 550,
+  range: 580,
 
-  timeIncrement: 0.0028,
+  timeIncrement: 0.003,
 
   noiseVolatility: 0.66,
 
-  orbMinRadius: 1.5,
-  orbAddedRadius: 1.5,
+  orbMinRadius: 2.0,
+  orbAddedRadius: 1.0,
 
   colors: {
     background: "#111111",
@@ -23,6 +23,8 @@ const config = {
 
 const xCenter = config.width * 0.5;
 const yCenter = config.height * 0.5;
+
+const getNoise = Noise.simplex();
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.width;
@@ -66,12 +68,12 @@ export function main(canvas: HTMLCanvasElement) {
     context.fillStyle = config.colors.orb;
 
     for (let i = 0; i < config.count; i++) {
-      const xNoise = Noise.get(
+      const xNoise = getNoise(
         counter + xSeeds[i] * config.noiseVolatility - time,
         counter + ySeeds[i] * config.noiseVolatility + time,
       );
 
-      const yNoise = Noise.get(
+      const yNoise = getNoise(
         counter + xSeeds[i] * config.noiseVolatility + time,
         counter + ySeeds[i] * config.noiseVolatility + time,
       );

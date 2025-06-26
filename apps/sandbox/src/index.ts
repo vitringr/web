@@ -5,4 +5,4 @@ const canvas = document.getElementById(canvasID) as HTMLCanvasElement;
 if (!canvas) throw `Cannot get #${canvasID}`;
 
 // Test.main(canvas);
-Creative.Canvas2D.Noise2D.main(canvas);
+Creative.Canvas2D.NoiseVortex.main(canvas);
