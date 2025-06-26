@@ -1,3 +1,4 @@
+import { Canvas2D } from "@utilities/canvas2d";
 import { Mathematics } from "@utilities/mathematics";
 import { Noise } from "@utilities/noise";
 
@@ -9,17 +10,21 @@ const config = {
   particleWidth: 3,
 
   radius: 200,
-  noiseRadius: 60,
+  noiseRadius: 50,
 
-  noiseFrequency: 2,
+  noiseFrequency: 1.8,
 
   timeIncrement: 0.003,
+
+  lineWidth: 3,
 
   colors: {
     background: "#111111",
     particle: "#CECECE",
   },
 } as const;
+
+const getNoise = Noise.simplex();
 
 const angleStep = Mathematics.TAU / config.particleCount;
 const xCenter = config.width * 0.5;
@@ -31,6 +36,10 @@ function setupContext(canvas: HTMLCanvasElement) {
 
   const context = canvas.getContext("2d");
   if (!context) throw "Cannot get 2d context";
+
+  context.fillStyle = config.colors.particle;
+  context.strokeStyle = config.colors.particle;
+  context.lineWidth = config.lineWidth;
 
   return context;
 }
@@ -49,7 +58,8 @@ export function main(canvas: HTMLCanvasElement) {
     time += config.timeIncrement;
 
     renderBackground(context);
-    context.fillStyle = config.colors.particle;
+
+    context.beginPath();
 
     for (let i = 0; i <= config.particleCount; i++) {
       const angle = angleStep * i;
@@ -57,15 +67,20 @@ export function main(canvas: HTMLCanvasElement) {
       const cos = Math.cos(angle);
       const sin = Math.sin(angle);
 
-      const noiseValue = config.noiseRadius * Noise.get(cos * config.noiseFrequency + time, sin * config.noiseFrequency - time);
+      const noiseValue =
+        config.noiseRadius *
+        getNoise(
+          cos * config.noiseFrequency + time,
+          sin * config.noiseFrequency - time,
+        );
 
-      context.fillRect(
+      context.lineTo(
         xCenter + cos * (config.radius + noiseValue),
         yCenter + sin * (config.radius + noiseValue),
-        config.particleWidth,
-        config.particleWidth,
       );
     }
+
+    context.stroke();
 
     requestAnimationFrame(animation);
   };

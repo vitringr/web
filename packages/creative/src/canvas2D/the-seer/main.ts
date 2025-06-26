@@ -32,6 +32,8 @@ const config = {
 const xRatio = config.width / config.imageWidth;
 const yRatio = config.height / config.imageHeight;
 
+const getNoise = Noise.simplex();
+
 // -----------
 // -- Logic --
 // -----------
@@ -186,7 +188,7 @@ export async function main(canvas: HTMLCanvasElement) {
         }
 
         // Movement
-        const noise = Noise.get(
+        const noise = getNoise(
           particle.x * config.noiseFrequency,
           particle.y * config.noiseFrequency,
         );

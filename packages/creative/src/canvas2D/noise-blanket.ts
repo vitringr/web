@@ -22,6 +22,8 @@ const config = {
   background: "#111111",
 } as const;
 
+const getNoise = Noise.simplex();
+
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.width;
   canvas.height = config.height;
@@ -68,7 +70,7 @@ export function main(canvas: HTMLCanvasElement) {
 
         const xNoise = x * config.noiseScale + time;
         const yNoise = y * config.noiseScale + time;
-        const noiseValue = Noise.get(xNoise, yNoise);
+        const noiseValue = getNoise(xNoise, yNoise);
 
         const angle = noiseValue * Mathematics.TAU;
 
