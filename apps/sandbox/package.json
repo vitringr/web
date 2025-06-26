@@ -15,6 +15,7 @@
     "@packages/test": "workspace:*",
     "@packages/quadtree-simulation": "workspace:*",
     "@packages/creative": "workspace:*",
+    "@packages/noise-html": "workspace:*",
     "@packages/tsunagari": "workspace:*"
   },
   "devDependencies": {

@@ -45,7 +45,6 @@ export function main(canvas: HTMLCanvasElement) {
       for (let y = 0; y <= config.cellCols; y++) {
         const xNoise = x * config.noiseScale + time;
         const yNoise = y * config.noiseScale + time;
-
         const noiseValue = noise(xNoise, yNoise);
 
         const xPosition = x * xScale;

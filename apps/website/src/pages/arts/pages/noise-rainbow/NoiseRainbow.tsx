@@ -13,7 +13,7 @@ export const NoiseRainbow = () => {
   return (
     <article>
       <h1>NoiseRainbow</h1>
-      <canvas ref={canvasRef} />
+      <canvas style={{filter: "blur(4px)"}} ref={canvasRef} />
       <p>Description of NoiseRainbow.</p>
     </article>
   );

@@ -26,6 +26,9 @@ importers:
       '@packages/learning-noise':
         specifier: workspace:*
         version: link:../../packages/learning-noise
+      '@packages/noise-html':
+        specifier: workspace:*
+        version: link:../../packages/noise-html
       '@packages/pathfinder':
         specifier: workspace:*
         version: link:../../packages/pathfinder
@@ -162,6 +165,19 @@ importers:
       '@utilities/webgl':
         specifier: workspace:*
         version: link:../../utilities/webgl
+    devDependencies:
+      '@utilities/typescript-config':
+        specifier: workspace:*
+        version: link:../../utilities/typescript-config
+      typescript:
+        specifier: latest
+        version: 5.8.3
+
+  packages/noise-html:
+    dependencies:
+      '@utilities/noise':
+        specifier: workspace:*
+        version: link:../../utilities/noise
     devDependencies:
       '@utilities/typescript-config':
         specifier: workspace:*
