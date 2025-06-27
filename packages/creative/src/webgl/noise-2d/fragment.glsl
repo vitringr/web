@@ -4,6 +4,9 @@ precision highp float;
 
 out vec4 outColor;
 
+uniform float u_time;
+uniform float u_noiseFrequency;
+
 const float F = 0.3660254037844386;
 const float G = 0.2113248654051871;
 
@@ -127,7 +130,7 @@ float getNoise(vec2 inputs) {
 }
 
 void main() {
-  float color = getNoise(gl_FragCoord.xy * 0.01);
+  float color = getNoise(gl_FragCoord.xy * u_noiseFrequency + u_time);
 
-  outColor = vec4(color, color * 0.5, 0, 1.0) * 0.2;
+  outColor = vec4(color, color, color, 1.0);
 }

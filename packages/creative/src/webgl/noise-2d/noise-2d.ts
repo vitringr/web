@@ -4,8 +4,11 @@ import vertexShader from "./vertex.glsl";
 import fragmentShader from "./fragment.glsl";
 
 const config = {
-  canvasWidth: 1000,
-  canvasHeight: 1000,
+  canvasWidth: 600,
+  canvasHeight: 600,
+
+  timeIncrement: 0.002,
+  noiseFrequency: 0.004,
 } as const;
 
 function setupGL(canvas: HTMLCanvasElement) {
@@ -36,6 +39,8 @@ export function main(canvas: HTMLCanvasElement) {
 
   const locations = {
     aCanvasVertices: gl.getAttribLocation(program, "a_canvasVertices"),
+    uTime: gl.getUniformLocation(program, "u_time"),
+    uNoiseFrequency: gl.getUniformLocation(program, "u_noiseFrequency"),
   };
 
   const vertexArray = gl.createVertexArray();
@@ -57,8 +62,20 @@ export function main(canvas: HTMLCanvasElement) {
   gl.useProgram(program);
   gl.bindVertexArray(vertexArray);
 
-  gl.clearColor(0, 0, 0, 1);
-  gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.uniform1f(locations.uNoiseFrequency, config.noiseFrequency);
 
-  gl.drawArrays(gl.TRIANGLES, 0, 6);
+  gl.clearColor(0, 0, 0, 1);
+
+  let time = 3000;
+  const animation = () => {
+    time += config.timeIncrement;
+
+    gl.uniform1f(locations.uTime, time);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+    requestAnimationFrame(animation);
+  };
+
+  requestAnimationFrame(animation);
 }
