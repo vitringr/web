@@ -1,5 +1,5 @@
-import { Random } from "@utilities/random";
 import { WebGL } from "@utilities/webgl";
+import { Random } from "@utilities/random";
 
 import updateVertex from "./update-vertex.glsl";
 import updateFragment from "./update-fragment.glsl";
@@ -23,19 +23,19 @@ const image = new Image();
 function setupPrograms(gl: WebGL2RenderingContext) {
   const updateVS = WebGL.Setup.compileShader(gl, "vertex", updateVertex);
   const updateFS = WebGL.Setup.compileShader(gl, "fragment", updateFragment);
+  const updateProgram = WebGL.Setup.linkTransformFeedbackProgram(
+    gl,
+    updateVS,
+    updateFS,
+    ["newPosition"],
+    "separate",
+  );
+
   const renderVS = WebGL.Setup.compileShader(gl, "vertex", renderVertex);
   const renderFS = WebGL.Setup.compileShader(gl, "fragment", renderFragment);
+  const renderProgram = WebGL.Setup.linkProgram(gl, renderVS, renderFS);
 
-  return {
-    update: WebGL.Setup.linkTransformFeedbackProgram(
-      gl,
-      updateVS,
-      updateFS,
-      ["newPosition"],
-      "separate",
-    ),
-    render: WebGL.Setup.linkProgram(gl, renderVS, renderFS),
-  };
+  return { update: updateProgram, render: renderProgram };
 }
 
 function generatePositionData() {
@@ -106,6 +106,8 @@ function setupState(
   gl: WebGL2RenderingContext,
   programs: { update: WebGLProgram; render: WebGLProgram },
 ) {
+  setupUniformBlock(gl, programs);
+
   const locations = {
     update: {
       aOldPosition: gl.getAttribLocation(programs.update, "a_oldPosition"),
@@ -116,8 +118,6 @@ function setupState(
       uTextureIndex: gl.getUniformLocation(programs.render, "u_textureIndex"),
     },
   };
-
-  setupUniformBlock(gl, programs);
 
   const data = {
     positions: new Float32Array(generatePositionData()),
@@ -232,7 +232,7 @@ function setupState(
   gl.bindBuffer(gl.ARRAY_BUFFER, null);
   gl.bindBuffer(gl.TRANSFORM_FEEDBACK_BUFFER, null);
 
-  return { locations, vertexArrayObjects, transformFeedbacks };
+  return { vertexArrayObjects, transformFeedbacks };
 }
 
 export function main(canvas: HTMLCanvasElement) {
@@ -247,7 +247,7 @@ export function main(canvas: HTMLCanvasElement) {
   image.onload = () => {
     const programs = setupPrograms(gl);
 
-    const { locations, vertexArrayObjects, transformFeedbacks } = setupState(
+    const { vertexArrayObjects, transformFeedbacks } = setupState(
       gl,
       programs,
     );
