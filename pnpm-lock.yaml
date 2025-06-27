@@ -53,7 +53,7 @@ importers:
         version: 6.3.5
       vite-plugin-glsl:
         specifier: ^1.4.1
-        version: 1.4.2(rollup@4.42.0)(vite@6.3.5)
+        version: 1.5.1(rollup@4.42.0)(vite@6.3.5)
       vite-plugin-singlefile:
         specifier: ^2.2.0
         version: 2.2.0(rollup@4.42.0)(vite@6.3.5)
@@ -84,10 +84,10 @@ importers:
         version: 6.3.5
       vite-plugin-glsl:
         specifier: ^1.4.2
-        version: 1.4.2(rollup@4.42.0)(vite@6.3.5)
+        version: 1.5.1(rollup@4.42.0)(vite@6.3.5)
       vite-plugin-solid:
         specifier: ^2.11.6
-        version: 2.11.6(solid-js@1.9.7)(vite@6.3.5)
+        version: 2.11.7(solid-js@1.9.7)(vite@6.3.5)
 
   packages/creative:
     dependencies:
@@ -1026,11 +1026,11 @@ packages:
   validate-html-nesting@1.2.2:
     resolution: {integrity: sha512-hGdgQozCsQJMyfK5urgFcWEqsSSrK63Awe0t/IMR0bZ0QMtnuaiHzThW81guu3qx9abLi99NEuiaN6P9gVYsNg==}
 
-  vite-plugin-glsl@1.4.2:
-    resolution: {integrity: sha512-GQHx5tUPFna1zOrX9tbpSHLSVEv/wXZGPEey3Pk8ktHR/OJCEg82Vx2oE9d8mOeMhLfelrtpXg0TBD4riRs39Q==}
+  vite-plugin-glsl@1.5.1:
+    resolution: {integrity: sha512-kFI8rUItruG2Dfltyhr6tP3jlgCBGda2TnIvUodBHbpdQ7KT0NWyKpS1EqV47DoAl4woKzer7GWd1fiEvzf4nQ==}
     engines: {node: '>= 20.17.0', npm: '>= 10.8.3'}
     peerDependencies:
-      vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
+      vite: '>= 3.x'
 
   vite-plugin-singlefile@2.2.0:
     resolution: {integrity: sha512-Ik1wXmJaGzeQtUeIV7JprDUqqy6DlLzXAY27Blei5peE4c9VJF+Kp9xWDJeuX0RJUZmFbIAuw1/RAh06A+Ql7w==}
@@ -1039,8 +1039,8 @@ packages:
       rollup: ^4.35.0
       vite: ^5.4.11 || ^6.0.0
 
-  vite-plugin-solid@2.11.6:
-    resolution: {integrity: sha512-Sl5CTqJTGyEeOsmdH6BOgalIZlwH3t4/y0RQuFLMGnvWMBvxb4+lq7x3BSiAw6etf0QexfNJW7HSOO/Qf7pigg==}
+  vite-plugin-solid@2.11.7:
+    resolution: {integrity: sha512-5TgK1RnE449g0Ryxb9BXqem89RSy7fE8XGVCo+Gw84IHgPuPVP7nYNP6WBVAaY/0xw+OqfdQee+kusL0y3XYNg==}
     peerDependencies:
       '@testing-library/jest-dom': ^5.16.6 || ^5.17.0 || ^6.*
       solid-js: ^1.7.2
@@ -1636,7 +1636,7 @@ snapshots:
 
   validate-html-nesting@1.2.2: {}
 
-  vite-plugin-glsl@1.4.2(rollup@4.42.0)(vite@6.3.5):
+  vite-plugin-glsl@1.5.1(rollup@4.42.0)(vite@6.3.5):
     dependencies:
       '@rollup/pluginutils': 5.1.4(rollup@4.42.0)
       vite: 6.3.5
@@ -1649,7 +1649,7 @@ snapshots:
       rollup: 4.42.0
       vite: 6.3.5
 
-  vite-plugin-solid@2.11.6(solid-js@1.9.7)(vite@6.3.5):
+  vite-plugin-solid@2.11.7(solid-js@1.9.7)(vite@6.3.5):
     dependencies:
       '@babel/core': 7.27.4
       '@types/babel__core': 7.20.5

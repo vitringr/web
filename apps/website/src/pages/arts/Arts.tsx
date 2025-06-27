@@ -1,8 +1,8 @@
-import css from "./Arts.module.css";
-
-import { TagNames } from "./Tags";
 import { Routes } from "../../routes";
 import { ArtCard } from "./ArtCard";
+import { TagNames } from "./Tags";
+
+import css from "./Arts.module.css";
 
 import theSeerThumbnail from "./thumbnails/theSeer.png";
 import blockCellularSandThumbnail from "./thumbnails/blockCellularSand.png";
