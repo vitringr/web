@@ -4,8 +4,8 @@ import vertexShader from "./vertex.glsl";
 import fragmentShader from "./fragment.glsl";
 
 const config = {
-  canvasWidth: 600,
-  canvasHeight: 600,
+  canvasWidth: 1000,
+  canvasHeight: 1000,
 } as const;
 
 function setupGL(canvas: HTMLCanvasElement) {

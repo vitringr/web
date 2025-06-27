@@ -55,130 +55,79 @@ int hash(int x, int y) {
   return PERMUTATIONS[(x & 0xff) + PERMUTATIONS[y & 0xff]];
 }
 
-float noise(float input_x, float input_y) {
-  float S = (input_x + input_y) * F;
-  float input_square_x = input_x + S;
-  float input_square_y = input_y + S;
+float getNoise(vec2 inputs) {
+  float S = (inputs.x + inputs.y) * F;
+  vec2 input_square = inputs + S; 
 
-  // ---------------------------------
-  // -- Floor to find square origin --
-  // ---------------------------------
+  vec2 square_A = floor(input_square);
 
-  float square_A_x = floor(input_square_x);
-  float square_A_y = floor(input_square_y);
+  vec2 fraction = input_square - square_A;
+  bool isBotTriangle = fraction.x > fraction.y;
 
-  // -----------------------------------------------------
-  // -- Find cell fraction and determine which triangle --
-  // -----------------------------------------------------
-
-  float fraction_x = input_square_x - square_A_x;
-  float fraction_y = input_square_y - square_A_y;
-  bool isBotTriangle = fraction_x > fraction_y;
-
-  // --------------------------------
-  // -- Find other square vertices --
-  // --------------------------------
-
-  float offset_B_x;
-  float offset_B_y;
+  vec2 offset_B;
   if (isBotTriangle) {
-    offset_B_x = 1.0;
-    offset_B_y = 0.0;
+    offset_B.x = 1.0;
+    offset_B.y = 0.0;
   } else {
-    offset_B_x = 0.0;
-    offset_B_y = 1.0;
+    offset_B.x = 0.0;
+    offset_B.y = 1.0;
   }
 
-  float square_B_x = square_A_x + offset_B_x;
-  float square_B_y = square_A_y + offset_B_y;
+  vec2 square_B = square_A + offset_B;
 
-  float square_C_x = square_A_x + 1.0;
-  float square_C_y = square_A_y + 1.0;
+  vec2 square_C = square_A + 1.0;
 
-  // ----------------------------------------------
-  // -- Unskew square vertices to triangle space --
-  // ----------------------------------------------
+  float TA = (square_A.x + square_A.y) * G;
+  vec2 triangle_A = square_A - TA;
 
-  float TA = (square_A_x + square_A_y) * G;
-  float triangle_A_x = square_A_x - TA;
-  float triangle_A_y = square_A_y - TA;
+  float TB = (square_B.x + square_B.y) * G;
+  vec2 triangle_B = square_B - TB;
 
-  float TB = (square_B_x + square_B_y) * G;
-  float triangle_B_x = square_B_x - TB;
-  float triangle_B_y = square_B_y - TB;
+  float TC = (square_C.x + square_C.y) * G;
+  vec2 triangle_C = square_C - TC;
 
-  float TC = (square_C_x + square_C_y) * G;
-  float triangle_C_x = square_C_x - TC;
-  float triangle_C_y = square_C_y - TC;
+  vec2 delta_A = inputs - triangle_A;
+  vec2 delta_B = inputs - triangle_B;
+  vec2 delta_C = inputs - triangle_C;
 
-  // -------------------------------------------
-  // -- Difference between input and vertices --
-  // -------------------------------------------
+  vec3 distances_squared = vec3(
+    delta_A.x * delta_A.x + delta_A.y * delta_A.y,
+    delta_B.x * delta_B.x + delta_B.y * delta_B.y,
+    delta_C.x * delta_C.x + delta_C.y * delta_C.y
+  );
 
-  float delta_A_x = input_x - triangle_A_x;
-  float delta_A_y = input_y - triangle_A_y;
+  vec3 influences = 0.5 - distances_squared;
 
-  float delta_B_x = input_x - triangle_B_x;
-  float delta_B_y = input_y - triangle_B_y;
+  vec3 contributions = vec3(0.0, 0.0, 0.0);
 
-  float delta_C_x = input_x - triangle_C_x;
-  float delta_C_y = input_y - triangle_C_y;
-
-  // ---------------------------------
-  // -- Influence based on distance --
-  // ---------------------------------
-
-  float distance_A_squared = delta_A_x * delta_A_x + delta_A_y * delta_A_y;
-  float distance_B_squared = delta_B_x * delta_B_x + delta_B_y * delta_B_y;
-  float distance_C_squared = delta_C_x * delta_C_x + delta_C_y * delta_C_y;
-
-  float influence_A = 0.5 - distance_A_squared;
-  float influence_B = 0.5 - distance_B_squared;
-  float influence_C = 0.5 - distance_C_squared;
-
-  // -------------------
-  // -- Contributions --
-  // -------------------
-
-  float contribution_A = 0.0;
-  float contribution_B = 0.0;
-  float contribution_C = 0.0;
-
-  if (influence_A > 0.0) {
-    int index = hash(int(square_A_x), int(square_A_y)) & 0xf;
-    float dot = GRADIENTS_X[index] * delta_A_x + GRADIENTS_Y[index] * delta_A_y;
-    float influence_quartic = influence_A * influence_A * influence_A * influence_A;
-    contribution_A = dot * influence_quartic;
+  if (influences.r > 0.0) {
+    int index = hash(int(square_A.x), int(square_A.y)) & 0xf;
+    float dot = GRADIENTS_X[index] * delta_A.x + GRADIENTS_Y[index] * delta_A.y;
+    float influence_quartic = influences.r * influences.r * influences.r * influences.r;
+    contributions.r = dot * influence_quartic;
   }
 
-  if (influence_B > 0.0) {
-    int index = hash(int(square_B_x), int(square_B_y)) & 0xf;
-    float dot = GRADIENTS_X[index] * delta_B_x + GRADIENTS_Y[index] * delta_B_y;
-    float influence_quartic = influence_B * influence_B * influence_B * influence_B;
-    contribution_B = dot * influence_quartic;
+  if (influences.g > 0.0) {
+    int index = hash(int(square_B.x), int(square_B.y)) & 0xf;
+    float dot = GRADIENTS_X[index] * delta_B.x + GRADIENTS_Y[index] * delta_B.y;
+    float influence_quartic = influences.g * influences.g * influences.g * influences.g;
+    contributions.g = dot * influence_quartic;
   }
 
-  if (influence_C > 0.0) {
-    int index = hash(int(square_C_x), int(square_C_y)) & 0xf;
-    float dot = GRADIENTS_X[index] * delta_C_x + GRADIENTS_Y[index] * delta_C_y;
-    float influence_quartic = influence_C * influence_C * influence_C * influence_C;
-    contribution_C = dot * influence_quartic;
+  if (influences.b > 0.0) {
+    int index = hash(int(square_C.x), int(square_C.y)) & 0xf;
+    float dot = GRADIENTS_X[index] * delta_C.x + GRADIENTS_Y[index] * delta_C.y;
+    float influence_quartic = influences.b * influences.b * influences.b * influences.b;
+    contributions.b = dot * influence_quartic;
   }
 
-  float result = contribution_A + contribution_B + contribution_C;
-
-  // ---------------------------------------------------------------
-  // -- Arbitrary numbers that fit the output into the [0, 1] range --
-  // ---------------------------------------------------------------
+  float result = contributions.r + contributions.g + contributions.b;
 
   return result * 35.0 + 0.5;
 }
 
 void main() {
-  float x = gl_FragCoord.x * 0.001;
-  float y = gl_FragCoord.y * 0.001;
+  float color = getNoise(gl_FragCoord.xy * 0.01);
 
-  float color = noise(x, y);
-
-  outColor = vec4(color, color, color, 1.0);
+  outColor = vec4(color, color * 0.5, 0, 1.0) * 0.2;
 }
