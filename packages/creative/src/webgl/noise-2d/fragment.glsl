@@ -130,7 +130,10 @@ float getNoise(vec2 inputs) {
 }
 
 void main() {
-  float color = getNoise(gl_FragCoord.xy * u_noiseFrequency + u_time);
+  float x = gl_FragCoord.x + u_time;
+  float y = gl_FragCoord.y - u_time;
+
+  float color = getNoise(vec2(x, y) * u_noiseFrequency);
 
   outColor = vec4(color, color, color, 1.0);
 }

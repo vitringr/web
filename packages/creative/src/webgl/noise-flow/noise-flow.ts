@@ -7,7 +7,7 @@ const config = {
   width: 600,
   height: 600,
 
-  noiseFrequency: 0.004,
+  noiseFrequency: 0.0038,
   noiseContrast: 10,
 
   timeLoopNoise: 0.004,
@@ -79,7 +79,7 @@ export function main(canvas: HTMLCanvasElement) {
 
   gl.clearColor(0, 0, 0, 1);
 
-  let time = 31600;
+  let time = 15000;
   const animation = () => {
     time++;
 

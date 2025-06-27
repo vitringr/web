@@ -7,8 +7,8 @@ const config = {
   canvasWidth: 600,
   canvasHeight: 600,
 
-  timeIncrement: 0.002,
-  noiseFrequency: 0.004,
+  timeIncrement: 0.5,
+  noiseFrequency: 0.0046,
 } as const;
 
 function setupGL(canvas: HTMLCanvasElement) {
@@ -66,7 +66,7 @@ export function main(canvas: HTMLCanvasElement) {
 
   gl.clearColor(0, 0, 0, 1);
 
-  let time = 3000;
+  let time = 35100;
   const animation = () => {
     time += config.timeIncrement;
 

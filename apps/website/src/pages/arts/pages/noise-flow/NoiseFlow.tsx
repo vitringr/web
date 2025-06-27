@@ -7,7 +7,7 @@ export const NoiseFlow = () => {
 
   onMount(() => {
     if (!canvasRef) throw "Invalid canvasRef";
-    Creative.Canvas2D.NoiseFlow.main(canvasRef);
+    Creative.WebGL.NoiseFlow.main(canvasRef);
   });
 
   return (
