@@ -4,19 +4,24 @@ import vertexShader from "./vertex.glsl";
 import fragmentShader from "./fragment.glsl";
 
 const config = {
-  canvasWidth: 600,
-  canvasHeight: 600,
+  width: 600,
+  height: 600,
 
-  timeIncrement: 0.002,
   noiseFrequency: 0.004,
+  noiseContrast: 10,
+
+  timeLoopNoise: 0.004,
+
+  timeFlowHorizontal: 0.0,
+  timeFlowVertical: -0.0006,
 } as const;
 
 function setupGL(canvas: HTMLCanvasElement) {
   const gl = canvas.getContext("webgl2");
   if (!gl) throw new Error("Failed to get WebGL2 context");
 
-  canvas.width = config.canvasWidth;
-  canvas.height = config.canvasHeight;
+  canvas.width = config.width;
+  canvas.height = config.height;
 
   WebGL.Canvas.resizeToDisplaySize(canvas);
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -39,8 +44,12 @@ export function main(canvas: HTMLCanvasElement) {
 
   const locations = {
     aCanvasVertices: gl.getAttribLocation(program, "a_canvasVertices"),
-    uNoiseFrequency: gl.getUniformLocation(program, "u_noiseFrequency"),
     uTime: gl.getUniformLocation(program, "u_time"),
+    uNoiseFrequency: gl.getUniformLocation(program, "u_noiseFrequency"),
+    uNoiseContrast: gl.getUniformLocation(program, "u_noiseContrast"),
+    uTimeLoopNoise: gl.getUniformLocation(program, "u_timeLoopNoise"),
+    uTimeFlowHorizontal: gl.getUniformLocation(program, "u_timeFlowHorizontal"),
+    uTimeFlowVertical: gl.getUniformLocation(program, "u_timeFlowVertical"),
   };
 
   const vertexArray = gl.createVertexArray();
@@ -63,12 +72,16 @@ export function main(canvas: HTMLCanvasElement) {
   gl.bindVertexArray(vertexArray);
 
   gl.uniform1f(locations.uNoiseFrequency, config.noiseFrequency);
+  gl.uniform1f(locations.uNoiseContrast, config.noiseContrast);
+  gl.uniform1f(locations.uTimeLoopNoise, config.timeLoopNoise);
+  gl.uniform1f(locations.uTimeFlowHorizontal, config.timeFlowHorizontal);
+  gl.uniform1f(locations.uTimeFlowVertical, config.timeFlowVertical);
 
   gl.clearColor(0, 0, 0, 1);
 
-  let time = 3000;
+  let time = 31600;
   const animation = () => {
-    time += config.timeIncrement;
+    time++;
 
     gl.uniform1f(locations.uTime, time);
     gl.clear(gl.COLOR_BUFFER_BIT);
