@@ -8,6 +8,7 @@ import theSeerThumbnail from "./thumbnails/theSeer.png";
 import blockCellularSandThumbnail from "./thumbnails/blockCellularSand.png";
 import layersThumbnail from "./thumbnails/layers.png";
 import noise2DThumbnail from "./thumbnails/noise2D.png";
+import randomWalkersThumbnail from "./thumbnails/randomWalkers.png";
 import noiseFlowThumbnail from "./thumbnails/noiseFlow.png";
 import noiseRainbow from "./thumbnails/noiseRainbow.png";
 import noiseLoopThumbnail from "./thumbnails/noiseLoop.png";
@@ -32,6 +33,13 @@ export const Arts = () => {
             TagNames.Image,
             TagNames.Noise,
           ]}
+        />
+
+        <ArtCard
+          title="Random Walkers"
+          route={Routes.arts.randomWalkers}
+          image={randomWalkersThumbnail}
+          tags={[TagNames["2D"], TagNames.Random]}
         />
 
         <ArtCard
