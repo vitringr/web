@@ -28,7 +28,7 @@ export const Arts = () => {
           image={theSeerThumbnail}
           tags={[
             TagNames["2D"],
-            TagNames.Draw,
+            TagNames.Input,
             TagNames.Particles,
             TagNames.Image,
             TagNames.Noise,
@@ -43,17 +43,29 @@ export const Arts = () => {
         />
 
         <ArtCard
+          title="Overgrowth"
+          route={Routes.arts.noise2D}
+          image="solidjs"
+          tags={[
+            TagNames["2D"],
+            TagNames.Input,
+            TagNames.Particles,
+            TagNames.Noise,
+          ]}
+        />
+
+        <ArtCard
           title="Noise 2D"
           route={Routes.arts.noise2D}
           image={noise2DThumbnail}
-          tags={[TagNames.GPU, TagNames["2D"], TagNames.Noise]}
+          tags={[TagNames["2D"], TagNames.GPU, TagNames.Noise]}
         />
 
         <ArtCard
           title="Noise Flow"
           route={Routes.arts.noiseFlow}
           image={noiseFlowThumbnail}
-          tags={[TagNames.GPU, TagNames["2D"], TagNames.Noise]}
+          tags={[TagNames["2D"], TagNames.GPU, TagNames.Noise]}
         />
 
         <ArtCard
@@ -82,9 +94,9 @@ export const Arts = () => {
           route={Routes.arts.regeneration}
           image="solid.svg"
           tags={[
-            TagNames.GPU,
             TagNames["2D"],
-            TagNames.Draw,
+            TagNames.Input,
+            TagNames.GPU,
             TagNames.Particles,
           ]}
         />
@@ -94,8 +106,8 @@ export const Arts = () => {
           route={Routes.arts.tenThousand}
           image={tenThousandThumbnail}
           tags={[
-            TagNames.GPU,
             TagNames["2D"],
+            TagNames.GPU,
             TagNames.Particles,
             TagNames.Image,
           ]}
@@ -105,7 +117,7 @@ export const Arts = () => {
           title="Layers"
           route={Routes.arts.layers}
           image={layersThumbnail}
-          tags={[TagNames.GPU, TagNames["2D"], TagNames.Input, TagNames.Image]}
+          tags={[TagNames["2D"], TagNames.Input, TagNames.GPU, TagNames.Image]}
         />
 
         <ArtCard
@@ -113,10 +125,10 @@ export const Arts = () => {
           route={Routes.arts.godfather}
           image="solid.svg"
           tags={[
-            TagNames.GPU,
             TagNames["2D"],
-            TagNames.Image,
+            TagNames.GPU,
             TagNames.Particles,
+            TagNames.Image,
           ]}
         />
 
@@ -125,9 +137,9 @@ export const Arts = () => {
           route={Routes.arts.blockCellularSand}
           image={blockCellularSandThumbnail}
           tags={[
-            TagNames.GPU,
             TagNames["2D"],
             TagNames.Input,
+            TagNames.GPU,
             TagNames.Particles,
           ]}
         />

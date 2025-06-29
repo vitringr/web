@@ -19,6 +19,7 @@ export namespace Routes {
 
   export const arts = {
     theSeer: "/the-seer",
+    overgrowth: "/overgrowth",
     randomWalkers: "/random-walkers",
     noise2D: "/noise-2d",
     noiseFlow: "/noise-flow",

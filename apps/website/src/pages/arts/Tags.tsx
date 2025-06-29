@@ -6,13 +6,11 @@ import css from "./Tags.module.css";
 export enum TagNames {
   "2D",
   "3D",
-  Canvas,
   Input,
-  Noise,
   GPU,
+  Noise,
   Particles,
   Image,
-  Draw,
   Pathfinding,
   Collision,
   Random,
@@ -35,24 +33,19 @@ const tags: Record<TagNames, TagData> = {
     color: "#118888",
     fontColor: "#FFFFFF",
   },
-  [TagNames.Canvas]: {
-    label: "Canvas",
-    color: "#BB9911",
-    fontColor: "#FFFFFF",
-  },
   [TagNames.Input]: {
     label: "Input",
     color: "#11A011",
     fontColor: "#FFFFFF",
   },
-  [TagNames.Noise]: {
-    label: "Noise",
-    color: "#A08070",
-    fontColor: "#FFFFFF",
-  },
   [TagNames.GPU]: {
     label: "GPU",
     color: "#DD1111",
+    fontColor: "#FFFFFF",
+  },
+  [TagNames.Noise]: {
+    label: "Noise",
+    color: "#A08070",
     fontColor: "#FFFFFF",
   },
   [TagNames.Particles]: {
@@ -63,11 +56,6 @@ const tags: Record<TagNames, TagData> = {
   [TagNames.Image]: {
     label: "Image",
     color: "#D56065",
-    fontColor: "#FFFFFF",
-  },
-  [TagNames.Draw]: {
-    label: "Draw",
-    color: "#AA7211",
     fontColor: "#FFFFFF",
   },
   [TagNames.Pathfinding]: {
