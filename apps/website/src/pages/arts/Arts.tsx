@@ -15,6 +15,7 @@ import noiseLoopThumbnail from "./thumbnails/noiseLoop.png";
 import noiseVectorFieldThumbnail from "./thumbnails/noiseVectorField.png";
 import tenThousandThumbnail from "./thumbnails/tenThousand.png";
 import overgrowthThumbnail from "./thumbnails/overgrowth.png";
+import sparksThumbnail from "./thumbnails/sparks.png";
 
 export const Arts = () => {
   return (
@@ -32,6 +33,18 @@ export const Arts = () => {
             TagNames.Input,
             TagNames.Particles,
             TagNames.Image,
+            TagNames.Noise,
+          ]}
+        />
+
+        <ArtCard
+          title="Sparks"
+          route={Routes.arts.sparks}
+          image={sparksThumbnail}
+          tags={[
+            TagNames["2D"],
+            TagNames.Input,
+            TagNames.Particles,
             TagNames.Noise,
           ]}
         />

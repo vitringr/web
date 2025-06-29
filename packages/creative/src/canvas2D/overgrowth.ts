@@ -21,7 +21,8 @@ const config = {
   lineWidth: 0.5,
 
   colors: {
-    strokeColor: "#202020",
+    stroke: "#202020",
+    background: "#161616",
     palette: [
       { color: "#f9651f", weight: 2 },
       { color: "#ed4f06", weight: 1 },
@@ -58,7 +59,7 @@ function setupContext(canvas: HTMLCanvasElement) {
   const context = canvas.getContext("2d");
   if (!context) throw "Cannot get 2d context";
 
-  context.strokeStyle = config.colors.strokeColor;
+  context.strokeStyle = config.colors.stroke;
   context.lineWidth = config.lineWidth;
 
   return context;
@@ -155,12 +156,19 @@ function renderOrb(orb: Orb, context: CanvasRenderingContext2D) {
   Canvas2D.circle(context, orb.x, orb.y, orb.radius);
 }
 
+function renderBackground(context: CanvasRenderingContext2D) {
+  context.fillStyle = config.colors.background;
+  context.fillRect(0, 0, config.width, config.height);
+}
+
 export function main(canvas: HTMLCanvasElement) {
   setupInput(canvas);
 
   const context = setupContext(canvas);
 
   const orbs = createOrbsPool();
+
+  renderBackground(context);
 
   let time = 0;
   let orbIndex = 0;
