@@ -7,5 +7,7 @@ export * as NoiseVectorField from "./noise-vector-field";
 export * as NoiseBlanket from "./noise-blanket";
 export * as TheSeer from "./the-seer/main";
 export * as RandomWalkers from "./random-walkers";
+export * as Overgrowth from "./overgrowth";
+export * as Sparks from "./sparks";
 
-export * as New from "./new2D";
+export * as New from "./overgrowth";
