@@ -1,3 +1,5 @@
+// IMPROVE: To work with min/max config values
+
 import { Noise } from "@utilities/noise";
 import { Canvas2D } from "@utilities/canvas2d";
 import { Mathematics } from "@utilities/mathematics";
@@ -19,7 +21,6 @@ const config = {
   lineWidth: 0.5,
 
   colors: {
-    backgroundColor: "#111111",
     strokeColor: "#202020",
     palette: [
       { color: "#f9651f", weight: 2 },
