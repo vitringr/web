@@ -14,6 +14,7 @@ import noiseRainbow from "./thumbnails/noiseRainbow.png";
 import noiseLoopThumbnail from "./thumbnails/noiseLoop.png";
 import noiseVectorFieldThumbnail from "./thumbnails/noiseVectorField.png";
 import tenThousandThumbnail from "./thumbnails/tenThousand.png";
+import overgrowthThumbnail from "./thumbnails/overgrowth.png";
 
 export const Arts = () => {
   return (
@@ -36,22 +37,22 @@ export const Arts = () => {
         />
 
         <ArtCard
-          title="Random Walkers"
-          route={Routes.arts.randomWalkers}
-          image={randomWalkersThumbnail}
-          tags={[TagNames["2D"], TagNames.Random]}
-        />
-
-        <ArtCard
           title="Overgrowth"
-          route={Routes.arts.noise2D}
-          image="solidjs"
+          route={Routes.arts.overgrowth}
+          image={overgrowthThumbnail}
           tags={[
             TagNames["2D"],
             TagNames.Input,
             TagNames.Particles,
             TagNames.Noise,
           ]}
+        />
+
+        <ArtCard
+          title="Random Walkers"
+          route={Routes.arts.randomWalkers}
+          image={randomWalkersThumbnail}
+          tags={[TagNames["2D"], TagNames.Random]}
         />
 
         <ArtCard
