@@ -23,6 +23,7 @@ import { NoiseFlow } from "./pages/arts/pages/noise-flow/NoiseFlow";
 import { NoiseLoop } from "./pages/arts/pages/noise-loop/NoiseLoop";
 import { NoiseVectorField } from "./pages/arts/pages/noise-vector-field/NoiseVectorField";
 import { NoiseBlanket } from "./pages/arts/pages/noise-blanket/NoiseBlanket";
+import { NoiseAscii } from "./pages/arts/pages/noise-ascii/NoiseAscii";
 import { NoiseRainbow } from "./pages/arts/pages/noise-rainbow/NoiseRainbow";
 import { Regeneration } from "./pages/arts/pages/regeneration/Regeneration";
 import { TenThousand } from "./pages/arts/pages/ten-thousand/TenThousand";
@@ -63,6 +64,7 @@ const AppRouter = () => (
       <Route path={Routes.arts.noiseLoop} component={NoiseLoop} />
       <Route path={Routes.arts.noiseVectorField} component={NoiseVectorField} />
       <Route path={Routes.arts.noiseBlanket} component={NoiseBlanket} />
+      <Route path={Routes.arts.noiseAscii} component={NoiseAscii} />
       <Route path={Routes.arts.noiseRainbow} component={NoiseRainbow} />
       <Route path={Routes.arts.regeneration} component={Regeneration} />
       <Route path={Routes.arts.tenThousand} component={TenThousand} />

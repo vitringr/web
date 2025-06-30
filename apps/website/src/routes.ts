@@ -27,6 +27,7 @@ export namespace Routes {
     noiseLoop: "/noise-loop",
     noiseVectorField: "/noise-vector-field",
     noiseBlanket: "/noise-blanket",
+    noiseAscii: "/noise-ascii",
     noiseRainbow: "/noise-rainbow",
     regeneration: "/regeneration",
     tenThousand: "/ten-thousand",

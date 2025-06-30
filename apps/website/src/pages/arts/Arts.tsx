@@ -14,6 +14,7 @@ import noiseRainbow from "./thumbnails/noiseRainbow.png";
 import noiseLoopThumbnail from "./thumbnails/noiseLoop.png";
 import noiseVectorFieldThumbnail from "./thumbnails/noiseVectorField.png";
 import noiseBlanketThumbnail from "./thumbnails/noiseBlanket.png";
+import noiseAsciiThumbnail from "./thumbnails/noiseAscii.png";
 import tenThousandThumbnail from "./thumbnails/tenThousand.png";
 import overgrowthThumbnail from "./thumbnails/overgrowth.png";
 import sparksThumbnail from "./thumbnails/sparks.png";
@@ -102,6 +103,13 @@ export const Arts = () => {
           route={Routes.arts.noiseBlanket}
           image={noiseBlanketThumbnail}
           tags={[TagNames["2D"], TagNames.Noise]}
+        />
+
+        <ArtCard
+          title="Noise Ascii"
+          route={Routes.arts.noiseAscii}
+          image={noiseAsciiThumbnail}
+          tags={[TagNames["2D"], TagNames.Noise, TagNames.ASCII]}
         />
 
         <ArtCard

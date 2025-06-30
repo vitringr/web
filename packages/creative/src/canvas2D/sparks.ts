@@ -12,10 +12,10 @@ const config = {
   orbsPooled: 500,
 
   radius: 7,
-  decayRate: 0.08,
+  decayRate: 0.09,
 
   noiseFrequency: 0.01,
-  velocityScalar: 9,
+  velocityScalar: 10,
 
   timeIncrement: 1,
 

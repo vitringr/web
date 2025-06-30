@@ -2,7 +2,6 @@ import { For } from "solid-js";
 
 import css from "./Tags.module.css";
 
-// TODO: random
 export enum TagNames {
   "2D",
   "3D",
@@ -14,6 +13,7 @@ export enum TagNames {
   Pathfinding,
   Collision,
   Random,
+  ASCII
 }
 
 type TagData = {
@@ -71,6 +71,11 @@ const tags: Record<TagNames, TagData> = {
   [TagNames.Random]: {
     label: "Random",
     color: "#6E915F",
+    fontColor: "#FFFFFF",
+  },
+  [TagNames.ASCII]: {
+    label: "ASCII",
+    color: "#666666",
     fontColor: "#FFFFFF",
   },
 };
