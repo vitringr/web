@@ -8,7 +8,8 @@ const config = {
   width: 600,
   height: 600,
 
-  orbsPooled: 500,
+  spawnCount: 12,
+  orbsPooled: 300,
 
   radius: 8,
   decayRate: 0.045,
@@ -74,14 +75,6 @@ function setupInput(canvas: HTMLCanvasElement) {
 
   canvas.addEventListener("pointerdown", () => {
     input.clicked = true;
-  });
-
-  window.addEventListener("pointerup", () => {
-    input.clicked = false;
-  });
-
-  window.addEventListener("blur", () => {
-    input.clicked = false;
   });
 }
 
@@ -176,10 +169,13 @@ export function main(canvas: HTMLCanvasElement) {
     time += config.timeIncrement;
 
     if (input.clicked) {
-      const orb = orbs[orbIndex];
-      spawnOrb(orb);
-      orbIndex++;
-      orbIndex %= config.orbsPooled;
+      input.clicked = false;
+      for (let i = 0; i < config.spawnCount; i++) {
+        const orb = orbs[orbIndex];
+        spawnOrb(orb);
+        orbIndex++;
+        orbIndex %= config.orbsPooled;
+      }
     }
 
     for (let i = 0; i < orbs.length; i++) {
