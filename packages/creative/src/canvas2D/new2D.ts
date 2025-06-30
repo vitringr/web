@@ -1,47 +1,38 @@
 import { Mathematics } from "@utilities/mathematics";
 
-type PhaseConfig = {
-  spawnCount: number;
-  poolCount: number;
-
-  minSize: number;
-  maxSize: number;
-  decayRate: number;
-
-  speed: number;
-
-  color: string;
-};
-
 const config = {
   width: 800,
   height: 800,
 
   phase1: {
-    spawnCount: 4,
+    spawnCount: 10,
     poolCount: 400,
 
     minSize: 6,
     maxSize: 8,
-    decayRate: 0.06,
+    decayRate: 0.03,
 
-    speed: 2,
+    minSpeed: 0.2,
+    maxSpeed: 1,
 
     color: "teal",
   } as PhaseConfig,
 
   phase2: {
-    spawnCount: 10,
-    poolCount: 1000,
+    spawnCount: 30,
+    poolCount: 3000,
 
-    minSize: 8,
-    maxSize: 12,
-    decayRate: 0.08,
+    minSize: 12,
+    maxSize: 20,
+    decayRate: 0.3,
 
-    speed: 4,
+    minSpeed: 1,
+    maxSpeed: 8,
 
     color: "#FFAA00",
   } as PhaseConfig,
+
+  gravityRate: 0.0012,
 
   timeIncrement: 0.01,
 
@@ -52,15 +43,34 @@ const input = { x: -99999, y: -99999, clicked: false };
 let particleIndex1 = 0;
 let particleIndex2 = 0;
 
+type PhaseConfig = {
+  spawnCount: number;
+  poolCount: number;
+
+  minSize: number;
+  maxSize: number;
+  decayRate: number;
+
+  minSpeed: number;
+  maxSpeed: number;
+
+  color: string;
+};
+
 type Particle = {
   isAlive: boolean;
   toNext: boolean;
   originalSize: number;
   size: number;
+  speed: number;
   x: number;
   y: number;
   xDirection: number;
   yDirection: number;
+  xAcceleration: number;
+  yAcceleration: number;
+  xVelocity: number;
+  yVelocity: number;
   color: string;
 };
 
@@ -105,15 +115,26 @@ function createParticlesPool(phaseConfig: PhaseConfig) {
       Math.random(),
     );
 
+    const speed = Mathematics.lerp(
+      phaseConfig.minSpeed,
+      phaseConfig.maxSpeed,
+      Math.random(),
+    );
+
     const particle: Particle = {
       isAlive: false,
       toNext: false,
       originalSize: size,
       size: size,
+      speed: speed,
       x: 0,
       y: 0,
       xDirection: xDirection,
       yDirection: yDirection,
+      xAcceleration: xDirection,
+      yAcceleration: yDirection,
+      xVelocity: 0,
+      yVelocity: 0,
       color: phaseConfig.color,
     };
 
@@ -123,9 +144,25 @@ function createParticlesPool(phaseConfig: PhaseConfig) {
   return particles;
 }
 
-function moveParticle(particle: Particle, phaseConfig: PhaseConfig) {
-  particle.x += particle.xDirection * phaseConfig.speed;
-  particle.y += particle.yDirection * phaseConfig.speed;
+function moveParticle(particle: Particle) {
+  particle.xVelocity += particle.xAcceleration;
+  particle.yVelocity += particle.yAcceleration;
+
+  const gravity = particle.size * config.gravityRate;
+  particle.yAcceleration += gravity;
+
+  const magnitude = Mathematics.hypotenuse(
+    particle.xVelocity,
+    particle.yVelocity,
+  );
+
+  if (magnitude > 0) {
+    particle.xVelocity /= magnitude;
+    particle.yVelocity /= magnitude;
+  }
+
+  particle.x += particle.xVelocity * particle.speed;
+  particle.y += particle.yVelocity * particle.speed;
 }
 
 function decayParticle(particle: Particle, phaseConfig: PhaseConfig) {
@@ -142,7 +179,7 @@ function renderParticle(particle: Particle, context: CanvasRenderingContext2D) {
   context.fillRect(particle.x, particle.y, particle.size, particle.size);
 }
 
-function spawnParticleP1(
+function spawnParticle(
   particle: Particle,
   x: number,
   y: number,
@@ -153,20 +190,8 @@ function spawnParticleP1(
   particle.size = particle.originalSize;
   particle.x = x;
   particle.y = y;
-  particle.color = phaseConfig.color;
-}
-
-function spawnParticleP2(
-  particle: Particle,
-  x: number,
-  y: number,
-  phaseConfig: PhaseConfig,
-) {
-  particle.isAlive = true;
-  particle.toNext = false;
-  particle.size = particle.originalSize;
-  particle.x = x;
-  particle.y = y;
+  particle.xAcceleration = particle.xDirection;
+  particle.yAcceleration = particle.yDirection;
   particle.color = phaseConfig.color;
 }
 
@@ -188,7 +213,7 @@ export function main(canvas: HTMLCanvasElement) {
       input.clicked = false;
       for (let i = 0; i < config.phase1.spawnCount; i++) {
         const particle = particles1[particleIndex1];
-        spawnParticleP1(particle, input.x, input.y, config.phase1);
+        spawnParticle(particle, input.x, input.y, config.phase1);
         particleIndex1++;
         particleIndex1 %= config.phase1.poolCount;
       }
@@ -196,7 +221,7 @@ export function main(canvas: HTMLCanvasElement) {
 
     for (const particle of particles1) {
       if (particle.isAlive) {
-        moveParticle(particle, config.phase1);
+        moveParticle(particle);
         renderParticle(particle, context);
         decayParticle(particle, config.phase1);
       } else {
@@ -204,12 +229,7 @@ export function main(canvas: HTMLCanvasElement) {
           particle.toNext = false;
           for (let i = 0; i < config.phase2.spawnCount; i++) {
             const newParticle2 = particles2[particleIndex2];
-            spawnParticleP2(
-              newParticle2,
-              particle.x,
-              particle.y,
-              config.phase2,
-            );
+            spawnParticle(newParticle2, particle.x, particle.y, config.phase2);
             particleIndex2++;
             particleIndex2 %= config.phase2.poolCount;
           }
@@ -219,7 +239,7 @@ export function main(canvas: HTMLCanvasElement) {
 
     for (const particle of particles2) {
       if (particle.isAlive) {
-        moveParticle(particle, config.phase2);
+        moveParticle(particle);
         renderParticle(particle, context);
         decayParticle(particle, config.phase2);
       }
