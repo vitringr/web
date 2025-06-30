@@ -10,5 +10,6 @@ export * as NoiseAscii from "./noise-ascii";
 export * as RandomWalkers from "./random-walkers";
 export * as Overgrowth from "./overgrowth";
 export * as Sparks from "./sparks";
+export * as Fireworks from "./fireworks";
 
 export * as New from "./new2D";

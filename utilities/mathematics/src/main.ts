@@ -129,6 +129,10 @@ export function euclideanDistance(
   return Math.sqrt(xDifference * xDifference + yDifference * yDifference);
 }
 
+export function hypotenuse(a: number, b: number) {
+  return Math.sqrt(a * a + b * b);
+}
+
 /**
  *
  * Calculates Manhattan distance between two 2D points.

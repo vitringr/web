@@ -1,7 +1,3 @@
-One row scrollable arts tags design.
+# Input
 
----
-
-`src/styles` to `src/views`
-
----
+Figure out what to do about the input.
