@@ -7,7 +7,7 @@ const config = {
 
   colors: {
     background: "#111111",
-    font: "#ccc",
+    font: "#cccccc",
   },
 } as const;
 
@@ -22,7 +22,6 @@ const characters = [
   "7",
   "8",
   "9",
-
   "A",
   "B",
   "C",
@@ -49,7 +48,6 @@ const characters = [
   "X",
   "Y",
   "Z",
-
   "a",
   "b",
   "c",
@@ -133,11 +131,19 @@ export function main(canvas: HTMLCanvasElement) {
 
   const sprites = setupSprites();
 
-  context.drawImage(sprites[3], 300, 300);
+  const xGap = config.width / 7;
+  const yGap = config.height / 7;
+  for (let x = 0; x < 7; x++) {
+    for (let y = 0; y < 7; y++) {
+      const index = y + x * 7;
+      const xPosition = xGap * 0.5 + xGap * x;
+      const yPosition = xGap * 0.5 + yGap * y;
+      context.drawImage(sprites[index], xPosition, yPosition);
+    }
+  }
 
-  const animation = () => {
-    requestAnimationFrame(animation);
-  };
-
-  animation();
+  // const animation = () => {
+  //   requestAnimationFrame(animation);
+  // };
+  // animation();
 }
