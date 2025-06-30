@@ -12,7 +12,6 @@ export const NoiseAscii = () => {
 
   return (
     <article>
-      <h1>NoiseAscii</h1>
       <canvas ref={canvasRef} />
       <p>Description of NoiseAscii.</p>
     </article>
