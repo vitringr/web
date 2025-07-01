@@ -11,5 +11,6 @@ export * as RandomWalkers from "./random-walkers";
 export * as Overgrowth from "./overgrowth";
 export * as Sparks from "./sparks";
 export * as Fireworks from "./fireworks";
+export * as SystemShock from "./system-shock/main";
 
 export * as New from "./new2D";
