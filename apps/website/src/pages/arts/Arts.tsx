@@ -4,20 +4,21 @@ import { TagNames } from "./Tags";
 
 import css from "./Arts.module.css";
 
-import theSeerThumbnail from "./thumbnails/theSeer.png";
-import blockCellularSandThumbnail from "./thumbnails/blockCellularSand.png";
-import layersThumbnail from "./thumbnails/layers.png";
-import noise2DThumbnail from "./thumbnails/noise2D.png";
-import randomWalkersThumbnail from "./thumbnails/randomWalkers.png";
-import noiseFlowThumbnail from "./thumbnails/noiseFlow.png";
+import theSeerPNG from "./thumbnails/theSeer.png";
+import blockCellularSandPNG from "./thumbnails/blockCellularSand.png";
+import layersPNG from "./thumbnails/layers.png";
+import noise2DPNG from "./thumbnails/noise2D.png";
 import noiseRainbow from "./thumbnails/noiseRainbow.png";
-import noiseLoopThumbnail from "./thumbnails/noiseLoop.png";
-import noiseVectorFieldThumbnail from "./thumbnails/noiseVectorField.png";
-import noiseBlanketThumbnail from "./thumbnails/noiseBlanket.png";
-import noiseAsciiThumbnail from "./thumbnails/noiseAscii.png";
-import tenThousandThumbnail from "./thumbnails/tenThousand.png";
-import overgrowthThumbnail from "./thumbnails/overgrowth.png";
-import sparksThumbnail from "./thumbnails/sparks.png";
+import randomWalkersPNG from "./thumbnails/randomWalkers.png";
+import noiseFlowPNG from "./thumbnails/noiseFlow.png";
+import noiseLoopPNG from "./thumbnails/noiseLoop.png";
+import noiseVectorFieldPNG from "./thumbnails/noiseVectorField.png";
+import noiseBlanketPNG from "./thumbnails/noiseBlanket.png";
+import noiseAsciiPNG from "./thumbnails/noiseAscii.png";
+import tenThousandPNG from "./thumbnails/tenThousand.png";
+import overgrowthPNG from "./thumbnails/overgrowth.png";
+import sparksPNG from "./thumbnails/sparks.png";
+import systemShockPNG from "./thumbnails/systemShock.png";
 
 export const Arts = () => {
   return (
@@ -29,7 +30,7 @@ export const Arts = () => {
         <ArtCard
           title="The Seer"
           route={Routes.arts.theSeer}
-          image={theSeerThumbnail}
+          image={theSeerPNG}
           tags={[
             TagNames["2D"],
             TagNames.Input,
@@ -40,9 +41,22 @@ export const Arts = () => {
         />
 
         <ArtCard
+          title="System Shock"
+          route={Routes.arts.systemShock}
+          image={systemShockPNG}
+          tags={[
+            TagNames["2D"],
+            TagNames.ASCII,
+            TagNames.Image,
+            TagNames.Noise,
+            TagNames.Random,
+          ]}
+        />
+
+        <ArtCard
           title="Sparks"
           route={Routes.arts.sparks}
-          image={sparksThumbnail}
+          image={sparksPNG}
           tags={[
             TagNames["2D"],
             TagNames.Input,
@@ -54,7 +68,7 @@ export const Arts = () => {
         <ArtCard
           title="Overgrowth"
           route={Routes.arts.overgrowth}
-          image={overgrowthThumbnail}
+          image={overgrowthPNG}
           tags={[
             TagNames["2D"],
             TagNames.Input,
@@ -66,49 +80,49 @@ export const Arts = () => {
         <ArtCard
           title="Random Walkers"
           route={Routes.arts.randomWalkers}
-          image={randomWalkersThumbnail}
+          image={randomWalkersPNG}
           tags={[TagNames["2D"], TagNames.Random]}
         />
 
         <ArtCard
           title="Noise 2D"
           route={Routes.arts.noise2D}
-          image={noise2DThumbnail}
+          image={noise2DPNG}
           tags={[TagNames["2D"], TagNames.GPU, TagNames.Noise]}
         />
 
         <ArtCard
           title="Noise Flow"
           route={Routes.arts.noiseFlow}
-          image={noiseFlowThumbnail}
+          image={noiseFlowPNG}
           tags={[TagNames["2D"], TagNames.GPU, TagNames.Noise]}
         />
 
         <ArtCard
           title="Noise Loop"
           route={Routes.arts.noiseLoop}
-          image={noiseLoopThumbnail}
+          image={noiseLoopPNG}
           tags={[TagNames["2D"], TagNames.Noise]}
         />
 
         <ArtCard
           title="Noise Vector Field"
           route={Routes.arts.noiseVectorField}
-          image={noiseVectorFieldThumbnail}
+          image={noiseVectorFieldPNG}
           tags={[TagNames["2D"], TagNames.Noise]}
         />
 
         <ArtCard
           title="Noise Blanket"
           route={Routes.arts.noiseBlanket}
-          image={noiseBlanketThumbnail}
+          image={noiseBlanketPNG}
           tags={[TagNames["2D"], TagNames.Noise]}
         />
 
         <ArtCard
           title="Noise Ascii"
           route={Routes.arts.noiseAscii}
-          image={noiseAsciiThumbnail}
+          image={noiseAsciiPNG}
           tags={[TagNames["2D"], TagNames.Noise, TagNames.ASCII]}
         />
 
@@ -134,7 +148,7 @@ export const Arts = () => {
         <ArtCard
           title="Ten Thousand"
           route={Routes.arts.tenThousand}
-          image={tenThousandThumbnail}
+          image={tenThousandPNG}
           tags={[
             TagNames["2D"],
             TagNames.GPU,
@@ -146,7 +160,7 @@ export const Arts = () => {
         <ArtCard
           title="Layers"
           route={Routes.arts.layers}
-          image={layersThumbnail}
+          image={layersPNG}
           tags={[TagNames["2D"], TagNames.Input, TagNames.GPU, TagNames.Image]}
         />
 
@@ -165,7 +179,7 @@ export const Arts = () => {
         <ArtCard
           title="Block Cellular Sand"
           route={Routes.arts.blockCellularSand}
-          image={blockCellularSandThumbnail}
+          image={blockCellularSandPNG}
           tags={[
             TagNames["2D"],
             TagNames.Input,
