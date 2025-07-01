@@ -1,4 +1,5 @@
 import { Colors } from "@utilities/colors";
+import { Noise } from "@utilities/noise";
 import systemShockPNG from "./system-shock.png";
 
 const config = {
@@ -18,10 +19,6 @@ const config = {
 } as const;
 
 const characters = [
-  " ",
-  ".",
-  "-",
-  "~",
   "1",
   "2",
   "3",
@@ -30,8 +27,10 @@ const characters = [
   "c",
   "A",
   "B",
-  "S",
+  "X",
 ] as const;
+
+const getNoise = Noise.simplex();
 
 const xRatio = config.width / config.imageWidth;
 const yRatio = config.height / config.imageHeight;
@@ -128,27 +127,36 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   const imageData = createImageData(context, image);
 
   const allSprites: HTMLImageElement[][] = [];
-
   for (let i = 0; i < characters.length; i++) {
+    // TODO: magic
     const color = Colors.getRGBGrayscale(0.2 + i * (0.8 / characters.length));
     const sprites = createSprites(color);
     allSprites.push(sprites);
   }
 
-  for (let x = 0; x < imageData.length; x++) {
-    for (let y = 0; y < imageData[x].length; y++) {
-      const brightness = imageData[x][y];
-
-      context.drawImage(
-        allSprites[brightness][brightness],
-        x * xRatio,
-        y * yRatio,
-      );
-    }
-  }
-
+  let time = 0;
   const animation = () => {
-    // renderBackground(context);
+    time += 0.003;
+
+    renderBackground(context);
+    const a = 0.4;
+
+    for (let x = 0; x < imageData.length; x++) {
+      for (let y = 0; y < imageData[x].length; y++) {
+        const noise = Math.floor(
+          getNoise(x * a, (y + time) * a) * characters.length,
+        );
+
+        const brightness = imageData[x][y];
+
+        context.drawImage(
+          allSprites[brightness][noise],
+          x * xRatio,
+          y * yRatio,
+        );
+      }
+    }
+
     requestAnimationFrame(animation);
   };
 
