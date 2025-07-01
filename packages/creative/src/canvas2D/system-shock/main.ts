@@ -1,6 +1,7 @@
 import { Colors } from "@utilities/colors";
 import { Noise } from "@utilities/noise";
 import systemShockPNG from "./system-shock.png";
+import { Random } from "../../../../../utilities/random/src";
 
 const config = {
   width: 1152,
@@ -12,23 +13,19 @@ const config = {
   spriteWidth: 15,
   spriteHeight: 15,
 
+  minBrightness: 0.2,
+
+  noiseFrequency: 0.4,
+
+  timeIncrement: 0.003,
+
   colors: {
     background: "#111111",
     font: "#999999",
   },
-} as const;
 
-const characters = [
-  "1",
-  "2",
-  "3",
-  "a",
-  "b",
-  "c",
-  "A",
-  "B",
-  "X",
-] as const;
+  characters: ["1", "2", "3", "a", "b", "c", "A", "B", "X"],
+} as const;
 
 const getNoise = Noise.simplex();
 
@@ -67,7 +64,7 @@ function createImageData(
 
   const arr: number[][] = [];
 
-  const step = (255 * 3) / characters.length;
+  const step = (255 * 3) / config.characters.length;
 
   for (let i = 0; i < imageData.length; i += 4) {
     const r = imageData[i + 0];
@@ -108,9 +105,13 @@ function createSprites(color: string) {
   offscreenContext.textBaseline = "middle";
   offscreenContext.textRendering = "optimizeLegibility";
 
-  for (let i = 0; i < characters.length; i++) {
+  for (let i = 0; i < config.characters.length; i++) {
     offscreenContext.clearRect(0, 0, width, height);
-    offscreenContext.fillText(characters[i], halfWidth, halfHeight + yOffset);
+    offscreenContext.fillText(
+      config.characters[i],
+      halfWidth,
+      halfHeight + yOffset,
+    );
 
     const img = new Image();
     img.src = offscreenCanvas.toDataURL();
@@ -127,32 +128,46 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   const imageData = createImageData(context, image);
 
   const allSprites: HTMLImageElement[][] = [];
-  for (let i = 0; i < characters.length; i++) {
-    // TODO: magic
-    const color = Colors.getRGBGrayscale(0.2 + i * (0.8 / characters.length));
+  for (let i = 0; i < config.characters.length; i++) {
+    const brightness =
+      config.minBrightness +
+      (i * (1 - config.minBrightness)) / config.characters.length;
+    const color = Colors.getRGBGrayscale(brightness);
     const sprites = createSprites(color);
     allSprites.push(sprites);
   }
 
+  const marks: boolean[][] = [];
+  for (let x = 0; x < imageData.length; x++) {
+    marks.push([]);
+    for (let y = 0; y < imageData[x].length; y++) {
+      marks[x].push(Random.bool());
+    }
+  }
+
   let time = 0;
   const animation = () => {
-    time += 0.003;
+    time += config.timeIncrement;
 
     renderBackground(context);
-    const a = 0.4;
 
     for (let x = 0; x < imageData.length; x++) {
       for (let y = 0; y < imageData[x].length; y++) {
-        const noise = Math.floor(
-          getNoise(x * a, (y + time) * a) * characters.length,
-        );
-
         const brightness = imageData[x][y];
 
+        const xNoise = x * config.noiseFrequency;
+        const yNoise = (y + time) * config.noiseFrequency;
+        const character = Math.floor(
+          getNoise(xNoise, yNoise) * config.characters.length,
+        );
+
+        const xPosition = x * xRatio;
+        const yPosition = y * yRatio;
+
         context.drawImage(
-          allSprites[brightness][noise],
-          x * xRatio,
-          y * yRatio,
+          allSprites[brightness][character],
+          xPosition,
+          yPosition,
         );
       }
     }
