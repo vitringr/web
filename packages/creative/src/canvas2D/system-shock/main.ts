@@ -14,7 +14,7 @@ const config = {
 
   minBrightness: 0.1,
 
-  updateChance: 0.01,
+  updateChance: 0.008,
 
   noiseFrequency: 0.3,
 
@@ -41,11 +41,6 @@ function setupContext(canvas: HTMLCanvasElement) {
   if (!context) throw "Cannot get 2d context";
 
   return context;
-}
-
-function renderBackground(context: CanvasRenderingContext2D) {
-  context.fillStyle = config.colors.background;
-  context.fillRect(0, 0, config.width, config.height);
 }
 
 function createImageData(
@@ -177,7 +172,7 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
     requestAnimationFrame(animation);
   };
 
-  animation();
+  requestAnimationFrame(animation);
 }
 
 export function main(canvas: HTMLCanvasElement) {
