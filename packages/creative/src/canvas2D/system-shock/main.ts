@@ -1,23 +1,24 @@
 import { Colors } from "@utilities/colors";
 import { Noise } from "@utilities/noise";
 import systemShockPNG from "./system-shock.png";
-import { Random } from "../../../../../utilities/random/src";
 
 const config = {
-  width: 1152,
+  width: 780,
   height: 648,
 
-  imageWidth: 128,
+  imageWidth: 86,
   imageHeight: 72,
 
-  spriteWidth: 15,
-  spriteHeight: 15,
+  spriteWidth: 11,
+  spriteHeight: 11,
 
-  minBrightness: 0.2,
+  minBrightness: 0.1,
 
-  noiseFrequency: 0.4,
+  updateChance: 0.01,
 
-  timeIncrement: 0.003,
+  noiseFrequency: 0.3,
+
+  timeIncrement: 0.01,
 
   colors: {
     background: "#111111",
@@ -106,7 +107,9 @@ function createSprites(color: string) {
   offscreenContext.textRendering = "optimizeLegibility";
 
   for (let i = 0; i < config.characters.length; i++) {
-    offscreenContext.clearRect(0, 0, width, height);
+    offscreenContext.fillStyle = config.colors.background;
+    offscreenContext.fillRect(0, 0, width, height);
+    offscreenContext.fillStyle = color;
     offscreenContext.fillText(
       config.characters[i],
       halfWidth,
@@ -122,12 +125,9 @@ function createSprites(color: string) {
   return sprites;
 }
 
-function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
-  const context = setupContext(canvas);
-
-  const imageData = createImageData(context, image);
-
+function createAllSprites() {
   const allSprites: HTMLImageElement[][] = [];
+
   for (let i = 0; i < config.characters.length; i++) {
     const brightness =
       config.minBrightness +
@@ -137,22 +137,24 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
     allSprites.push(sprites);
   }
 
-  const marks: boolean[][] = [];
-  for (let x = 0; x < imageData.length; x++) {
-    marks.push([]);
-    for (let y = 0; y < imageData[x].length; y++) {
-      marks[x].push(Random.bool());
-    }
-  }
+  return allSprites;
+}
+
+function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
+  const context = setupContext(canvas);
+
+  const imageData = createImageData(context, image);
+
+  const allSprites = createAllSprites();
 
   let time = 0;
   const animation = () => {
     time += config.timeIncrement;
 
-    renderBackground(context);
-
     for (let x = 0; x < imageData.length; x++) {
       for (let y = 0; y < imageData[x].length; y++) {
+        if (Math.random() > config.updateChance) continue;
+
         const brightness = imageData[x][y];
 
         const xNoise = x * config.noiseFrequency;
