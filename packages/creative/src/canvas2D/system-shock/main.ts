@@ -124,9 +124,7 @@ function createAllSprites() {
   const allSprites: HTMLImageElement[][] = [];
 
   for (let i = 0; i < config.characters.length; i++) {
-    const brightness =
-      config.minBrightness +
-      (i * (1 - config.minBrightness)) / config.characters.length;
+    const brightness = config.minBrightness + (i * (1 - config.minBrightness)) / config.characters.length;
     const color = Colors.getRGBGrayscale(brightness);
     const sprites = createSprites(color);
     allSprites.push(sprites);
