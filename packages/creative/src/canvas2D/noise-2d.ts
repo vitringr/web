@@ -16,7 +16,7 @@ const config = {
 const xScale = config.width / config.cellRows;
 const yScale = config.height / config.cellCols;
 
-const noise = Noise.simplex();
+const getNoise = Noise.Simplex.create();
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.width;
@@ -45,12 +45,12 @@ export function main(canvas: HTMLCanvasElement) {
       for (let y = 0; y <= config.cellCols; y++) {
         const xNoise = x * config.noiseScale + time;
         const yNoise = y * config.noiseScale + time;
-        const noiseValue = noise(xNoise, yNoise);
+        const noise = getNoise(xNoise, yNoise);
 
         const xPosition = x * xScale;
         const yPosition = y * yScale;
 
-        context.fillStyle = colors[(noiseValue * 0xff) | 0];
+        context.fillStyle = colors[(noise * 0xff) | 0];
         context.fillRect(xPosition, yPosition, xScale, yScale);
       }
     }

@@ -23,7 +23,7 @@ const config = {
   },
 } as const;
 
-const getNoise = Noise.simplex();
+const getNoise = Noise.Simplex.create();
 
 const angleStep = Mathematics.TAU / config.particleCount;
 const xCenter = config.width * 0.5;

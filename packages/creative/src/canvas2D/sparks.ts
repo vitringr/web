@@ -34,7 +34,7 @@ const config = {
   },
 } as const;
 
-const getNoise = Noise.simplex();
+const getNoise = Noise.Simplex.create();
 const input = { x: -99999, y: -99999, clicked: false };
 
 type Orb = {

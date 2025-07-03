@@ -1,1 +1,1 @@
-export * as Noise from "./noise";
+export * as Noise from "./main";

@@ -20,7 +20,7 @@ const config = {
   },
 } as const;
 
-const getNoise = Noise.simplex();
+const getNoise = Noise.Simplex.create();
 
 const characters = [
   "0",

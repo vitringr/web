@@ -28,7 +28,7 @@ const config = {
   characters: ["1", "2", "3", "a", "b", "c", "A", "B", "X"],
 } as const;
 
-const getNoise = Noise.simplex();
+const getNoise = Noise.Simplex.create();
 
 const xRatio = config.width / config.imageWidth;
 const yRatio = config.height / config.imageHeight;

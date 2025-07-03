@@ -24,7 +24,7 @@ const config = {
 const xCenter = config.width * 0.5;
 const yCenter = config.height * 0.5;
 
-const getNoise = Noise.simplex();
+const getNoise = Noise.Simplex.create();
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.width;

@@ -32,7 +32,7 @@ const config = {
 const xRatio = config.width / config.imageWidth;
 const yRatio = config.height / config.imageHeight;
 
-const getNoise = Noise.simplex();
+const getNoise = Noise.Simplex.create();
 
 // -----------
 // -- Logic --

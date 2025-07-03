@@ -22,7 +22,7 @@ const config = {
   background: "#111111",
 } as const;
 
-const getNoise = Noise.simplex();
+const getNoise = Noise.Simplex.create();
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.width;

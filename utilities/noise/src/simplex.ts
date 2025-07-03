@@ -1,4 +1,4 @@
-export function simplex() {
+export function create() {
   const F = 0.3660254037844386;
   const G = 0.2113248654051871;
 
