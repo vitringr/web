@@ -10,9 +10,9 @@ const config = {
   canvasWidth: 600,
   canvasHeight: 600,
 
-  particlesCount: 8000,
-
+  particlesCount: 10000,
   speed: 0.0002,
+  size: 2.0,
 } as const;
 
 function setupPrograms(gl: WebGL2RenderingContext) {
@@ -65,6 +65,7 @@ function setupState(
 
     render: {
       aNewPosition: gl.getAttribLocation(programs.render, "a_newPosition"),
+      uSize: gl.getUniformLocation(programs.render, "u_size"),
     },
   };
 
@@ -189,6 +190,10 @@ export function main(canvas: HTMLCanvasElement) {
   canvas.width = config.canvasWidth;
   canvas.height = config.canvasHeight;
 
+  WebGL.Canvas.resizeToDisplaySize(canvas);
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+  gl.clearColor(0.08, 0.08, 0.08, 1.0);
+
   const programs = setupPrograms(gl);
 
   const { vertexArrayObjects, transformFeedbacks, locations } = setupState(
@@ -208,15 +213,22 @@ export function main(canvas: HTMLCanvasElement) {
     TF: transformFeedbacks.first,
   };
 
-  WebGL.Canvas.resizeToDisplaySize(canvas);
-  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-  gl.clearColor(0.08, 0.08, 0.08, 1.0);
+  // ---------------------
+  // -- Static Uniforms --
+  // ---------------------
+
+  gl.useProgram(programs.compute);
+  gl.uniform1f(locations.compute.uSpeed, config.speed);
+  gl.useProgram(programs.render);
+  gl.uniform1f(locations.render.uSize, config.size);
+
+  // -----------
+  // -- Loops --
+  // -----------
 
   const computeLoop = () => {
     gl.useProgram(programs.compute);
     gl.bindVertexArray(auxA.computeVAO);
-
-    gl.uniform1f(locations.compute.uSpeed, config.speed);
 
     gl.enable(gl.RASTERIZER_DISCARD);
     gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, auxA.TF);
