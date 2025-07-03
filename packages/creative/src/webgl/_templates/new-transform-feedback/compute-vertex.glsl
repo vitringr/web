@@ -1,34 +1,23 @@
 #version 300 es
 
 in vec2 a_position;
-in vec2 a_velocity;
 
-out vec2 newPosition;
+out vec2 tf_position;
 
 uniform float u_speed;
-
-const vec2 DIMENSIONS = vec2(0.0, 1.0);
 
 vec2 warp(vec2 coordinates) {
   vec2 warped = coordinates;
 
-  if(warped.x >= DIMENSIONS.y) {
-    warped.x = DIMENSIONS.x;
-  } else if (warped.x <= DIMENSIONS.x) {
-    warped.x = DIMENSIONS.y;
-  }
+  if      (warped.x >= 1.0) warped.x = 0.0;
+  else if (warped.x <= 0.0) warped.x = 1.0;
 
-  if(warped.y >= DIMENSIONS.y) {
-    warped.y = DIMENSIONS.x;
-  } else if (warped.y <= DIMENSIONS.x) {
-    warped.y = DIMENSIONS.y;
-  }
+  if      (warped.y >= 1.0) warped.y = 0.0;
+  else if (warped.y <= 0.0) warped.y = 1.0;
 
   return warped;
 }
 
 void main() {
-  vec2 velocity = a_velocity * u_speed;
-
-  newPosition = warp(a_position + velocity);
+  tf_position = warp(a_position + 1.0 * u_speed);
 }
