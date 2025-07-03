@@ -16,22 +16,8 @@ vec2 warp(vec2 coordinates) {
   return warped;
 }
 
-const float PI  = 3.14159;
-const float TAU = 6.28318;
-
 void main() {
   float noise = getNoise(a_position * 8.0);
 
-  float angle = noise * TAU;
-
-  vec2 noiseVelocity = vec2(
-    cos(angle),
-    sin(angle)
-  );
-
-  tf_position = a_position;
-
-  tf_position += noiseVelocity * 0.0001;
-
-  tf_position = warp(tf_position);
+  tf_position = warp(a_position + noise * 0.001);
 }
