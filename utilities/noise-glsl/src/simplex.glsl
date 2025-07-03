@@ -1,3 +1,6 @@
+// #version 300 es
+// precision highp float;
+
 const float F = 0.3660254037844386;
 const float G = 0.2113248654051871;
 

@@ -15,6 +15,7 @@
     "@utilities/random": "workspace:*",
     "@utilities/vector": "workspace:*",
     "@utilities/noise": "workspace:*",
+    "@utilities/noise-glsl": "workspace:*",
     "@utilities/webgl": "workspace:*"
   },
   "devDependencies": {

@@ -1,5 +1,6 @@
 import { WebGL } from "@utilities/webgl";
 import { Random } from "@utilities/random";
+import { NoiseGLSL } from "@utilities/noise-glsl";
 
 import computeVertex from "./compute-vertex.glsl";
 import computeFragment from "./compute-fragment.glsl";
@@ -11,12 +12,15 @@ const config = {
   canvasHeight: 600,
 
   particlesCount: 10000,
+  noiseFrequency: 0.001,
   speed: 0.0002,
   size: 2.0,
 } as const;
 
 function setupPrograms(gl: WebGL2RenderingContext) {
-  const computeVS = WebGL.Setup.compileShader(gl, "vertex", computeVertex);
+  const fullComputeVertexShader = "#version 300 es\nprecision highp float;" + NoiseGLSL.Simplex.default + computeVertex;
+
+  const computeVS = WebGL.Setup.compileShader(gl, "vertex", fullComputeVertexShader);
   const computeFS = WebGL.Setup.compileShader(gl, "fragment", computeFragment);
   const computeProgram = WebGL.Setup.linkTransformFeedbackProgram(
     gl,
@@ -52,15 +56,13 @@ function generateVelocityData() {
   return velocities;
 }
 
-function setupState(
-  gl: WebGL2RenderingContext,
-  programs: { compute: WebGLProgram; render: WebGLProgram },
-) {
+function setupState(gl: WebGL2RenderingContext, programs: { compute: WebGLProgram; render: WebGLProgram }) {
   const locations = {
     compute: {
       aPosition: gl.getAttribLocation(programs.compute, "a_position"),
       aVelocity: gl.getAttribLocation(programs.compute, "a_velocity"),
       uSpeed: gl.getUniformLocation(programs.compute, "u_speed"),
+      uNoiseFrequency: gl.getUniformLocation(programs.compute, "u_noiseFrequency"),
     },
 
     render: {
@@ -132,14 +134,7 @@ function setupState(
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
   gl.enableVertexAttribArray(locations.render.aNewPosition);
-  gl.vertexAttribPointer(
-    locations.render.aNewPosition,
-    2,
-    gl.FLOAT,
-    false,
-    0,
-    0,
-  );
+  gl.vertexAttribPointer(locations.render.aNewPosition, 2, gl.FLOAT, false, 0, 0);
 
   // ---------------------
   // -- Render VAO next --
@@ -149,14 +144,7 @@ function setupState(
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.positionSwap);
   gl.enableVertexAttribArray(locations.render.aNewPosition);
-  gl.vertexAttribPointer(
-    locations.render.aNewPosition,
-    2,
-    gl.FLOAT,
-    false,
-    0,
-    0,
-  );
+  gl.vertexAttribPointer(locations.render.aNewPosition, 2, gl.FLOAT, false, 0, 0);
 
   // -------------------------
   // -- Transform Feedbacks --
@@ -196,10 +184,7 @@ export function main(canvas: HTMLCanvasElement) {
 
   const programs = setupPrograms(gl);
 
-  const { vertexArrayObjects, transformFeedbacks, locations } = setupState(
-    gl,
-    programs,
-  );
+  const { vertexArrayObjects, transformFeedbacks, locations } = setupState(gl, programs);
 
   let auxA = {
     computeVAO: vertexArrayObjects.computeFirst,

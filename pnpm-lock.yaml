@@ -106,6 +106,9 @@ importers:
       '@utilities/noise':
         specifier: workspace:*
         version: link:../../utilities/noise
+      '@utilities/noise-glsl':
+        specifier: workspace:*
+        version: link:../../utilities/noise-glsl
       '@utilities/random':
         specifier: workspace:*
         version: link:../../utilities/random
@@ -347,6 +350,15 @@ importers:
         version: 5.8.3
 
   utilities/noise:
+    devDependencies:
+      '@utilities/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: latest
+        version: 5.8.3
+
+  utilities/noise-glsl:
     devDependencies:
       '@utilities/typescript-config':
         specifier: workspace:*
