@@ -42,7 +42,7 @@ export function main(canvas: HTMLCanvasElement) {
 
   const program = setupProgram(gl);
 
-  const locations = {
+  const uniforms = {
     aCanvasVertices: gl.getAttribLocation(program, "a_canvasVertices"),
     uTime: gl.getUniformLocation(program, "u_time"),
     uNoiseFrequency: gl.getUniformLocation(program, "u_noiseFrequency"),
@@ -65,17 +65,17 @@ export function main(canvas: HTMLCanvasElement) {
     gl.STATIC_DRAW,
   );
 
-  gl.enableVertexAttribArray(locations.aCanvasVertices);
-  gl.vertexAttribPointer(locations.aCanvasVertices, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(uniforms.aCanvasVertices);
+  gl.vertexAttribPointer(uniforms.aCanvasVertices, 2, gl.FLOAT, false, 0, 0);
 
   gl.useProgram(program);
   gl.bindVertexArray(vertexArray);
 
-  gl.uniform1f(locations.uNoiseFrequency, config.noiseFrequency);
-  gl.uniform1f(locations.uNoiseContrast, config.noiseContrast);
-  gl.uniform1f(locations.uTimeLoopNoise, config.timeLoopNoise);
-  gl.uniform1f(locations.uTimeFlowHorizontal, config.timeFlowHorizontal);
-  gl.uniform1f(locations.uTimeFlowVertical, config.timeFlowVertical);
+  gl.uniform1f(uniforms.uNoiseFrequency, config.noiseFrequency);
+  gl.uniform1f(uniforms.uNoiseContrast, config.noiseContrast);
+  gl.uniform1f(uniforms.uTimeLoopNoise, config.timeLoopNoise);
+  gl.uniform1f(uniforms.uTimeFlowHorizontal, config.timeFlowHorizontal);
+  gl.uniform1f(uniforms.uTimeFlowVertical, config.timeFlowVertical);
 
   gl.clearColor(0, 0, 0, 1);
 
@@ -83,7 +83,7 @@ export function main(canvas: HTMLCanvasElement) {
   const animation = () => {
     time++;
 
-    gl.uniform1f(locations.uTime, time);
+    gl.uniform1f(uniforms.uTime, time);
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 

@@ -1,7 +1,7 @@
 #version 300 es
 
-in vec2  a_currentPosition;
-in vec2  a_originalPosition;
+in vec2 a_currentPosition;
+in vec2 a_originalPosition;
 
 out vec2 tf_newPosition;
 out float tf_distanceFromOrigin;

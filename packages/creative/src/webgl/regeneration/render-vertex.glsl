@@ -1,7 +1,7 @@
 #version 300 es
 
 in vec2 a_newPosition;
-in float a_distanceFromOrigin;
+in vec2 a_originalPosition;
 
 uniform GlobalStaticData {
   float u_originPullScalar;
@@ -14,7 +14,9 @@ uniform GlobalStaticData {
 };
 
 void main() {
-  gl_PointSize = u_minPointSize + a_distanceFromOrigin * u_pointSizeByOriginDistance;
+  float distanceFromOrigin = distance(a_newPosition, a_originalPosition);
+  gl_PointSize = u_minPointSize + distanceFromOrigin * u_pointSizeByOriginDistance;
+  // gl_PointSize = 1.0;
 
   vec2 clipSpace = a_newPosition * 2.0 - 1.0;
   gl_Position = vec4(clipSpace, 0.0, 1.0);

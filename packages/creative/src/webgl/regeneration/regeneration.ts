@@ -58,13 +58,7 @@ function setupPrograms(gl: WebGL2RenderingContext) {
   const renderFS = WebGL.Setup.compileShader(gl, "fragment", renderFragment);
 
   return {
-    update: WebGL.Setup.linkTransformFeedbackProgram(
-      gl,
-      updateVS,
-      updateFS,
-      ["tf_newPosition", "tf_distanceFromOrigin"],
-      "separate",
-    ),
+    update: WebGL.Setup.linkTransformFeedbackProgram(gl, updateVS, updateFS, ["tf_newPosition"], "separate"),
     render: WebGL.Setup.linkProgram(gl, renderVS, renderFS),
   };
 }
@@ -74,10 +68,8 @@ function generatePositions() {
 
   for (let x = 0; x < config.xCount; x++) {
     for (let y = 0; y < config.yCount; y++) {
-      const xPosition =
-        config.offset + ((1 - config.offset * 2) / config.xCount) * x;
-      const yPosition =
-        config.offset + ((1 - config.offset * 2) / config.yCount) * y;
+      const xPosition = config.offset + ((1 - config.offset * 2) / config.xCount) * x;
+      const yPosition = config.offset + ((1 - config.offset * 2) / config.yCount) * y;
       positions.push(xPosition);
       positions.push(yPosition);
     }
@@ -86,18 +78,9 @@ function generatePositions() {
   return positions;
 }
 
-function setupUniformBlock(
-  gl: WebGL2RenderingContext,
-  programs: { update: WebGLProgram; render: WebGLProgram },
-) {
-  const blockIndexInUpdate = gl.getUniformBlockIndex(
-    programs.update,
-    "GlobalStaticData",
-  );
-  const blockIndexInRender = gl.getUniformBlockIndex(
-    programs.render,
-    "GlobalStaticData",
-  );
+function setupUniformBlock(gl: WebGL2RenderingContext, programs: { update: WebGLProgram; render: WebGLProgram }) {
+  const blockIndexInUpdate = gl.getUniformBlockIndex(programs.update, "GlobalStaticData");
+  const blockIndexInRender = gl.getUniformBlockIndex(programs.render, "GlobalStaticData");
 
   gl.uniformBlockBinding(programs.update, blockIndexInUpdate, 0);
   gl.uniformBlockBinding(programs.render, blockIndexInRender, 0);
@@ -122,34 +105,18 @@ function setupUniformBlock(
   gl.bufferSubData(gl.UNIFORM_BUFFER, 0, globalStaticData);
 }
 
-function setupState(
-  gl: WebGL2RenderingContext,
-  programs: { update: WebGLProgram; render: WebGLProgram },
-) {
+function setupState(gl: WebGL2RenderingContext, programs: { update: WebGLProgram; render: WebGLProgram }) {
   const locations = {
     update: {
-      aCurrentPosition: gl.getAttribLocation(
-        programs.update,
-        "a_currentPosition",
-      ),
-      aOriginalPosition: gl.getAttribLocation(
-        programs.update,
-        "a_originalPosition",
-      ),
-      aVelocity: gl.getAttribLocation(programs.update, "a_velocity"),
-      uPointerPosition: gl.getUniformLocation(
-        programs.update,
-        "u_pointerPosition",
-      ),
+      aCurrentPosition: gl.getAttribLocation(programs.update, "a_currentPosition"),
+      aOriginalPosition: gl.getAttribLocation(programs.update, "a_originalPosition"),
+      uPointerPosition: gl.getUniformLocation(programs.update, "u_pointerPosition"),
       uPointerDown: gl.getUniformLocation(programs.update, "u_pointerDown"),
       uDeltaTime: gl.getUniformLocation(programs.update, "u_deltaTime"),
     },
     render: {
       aNewPosition: gl.getAttribLocation(programs.render, "a_newPosition"),
-      aDistanceFromOrigin: gl.getAttribLocation(
-        programs.render,
-        "a_distanceFromOrigin",
-      ),
+      aOriginalPosition: gl.getAttribLocation(programs.render, "a_originalPosition"),
       uTextureIndex: gl.getUniformLocation(programs.render, "u_textureIndex"),
     },
   };
@@ -161,11 +128,9 @@ function setupState(
   };
 
   const buffers = {
-    firstPosition: gl.createBuffer()!,
-    nextPosition: gl.createBuffer()!,
-    originalPosition: gl.createBuffer()!,
-    firstDistanceFromOrigin: gl.createBuffer()!,
-    nextDistanceFromOrigin: gl.createBuffer()!,
+    firstPosition: gl.createBuffer(),
+    nextPosition: gl.createBuffer(),
+    originalPosition: gl.createBuffer(),
   };
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.firstPosition);
@@ -176,20 +141,6 @@ function setupState(
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.originalPosition);
   gl.bufferData(gl.ARRAY_BUFFER, data.positions, gl.STREAM_DRAW);
-
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.firstDistanceFromOrigin);
-  gl.bufferData(
-    gl.ARRAY_BUFFER,
-    particleCount * Float32Array.BYTES_PER_ELEMENT,
-    gl.STREAM_DRAW,
-  );
-
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.nextDistanceFromOrigin);
-  gl.bufferData(
-    gl.ARRAY_BUFFER,
-    particleCount * Float32Array.BYTES_PER_ELEMENT,
-    gl.STREAM_DRAW,
-  );
 
   const vertexArrayObjects = {
     updateFirst: gl.createVertexArray(),
@@ -203,100 +154,44 @@ function setupState(
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.firstPosition);
   gl.enableVertexAttribArray(locations.update.aCurrentPosition);
-  gl.vertexAttribPointer(
-    locations.update.aCurrentPosition,
-    2,
-    gl.FLOAT,
-    false,
-    0,
-    0,
-  );
+  gl.vertexAttribPointer(locations.update.aCurrentPosition, 2, gl.FLOAT, false, 0, 0);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.originalPosition);
   gl.enableVertexAttribArray(locations.update.aOriginalPosition);
-  gl.vertexAttribPointer(
-    locations.update.aOriginalPosition,
-    2,
-    gl.FLOAT,
-    false,
-    0,
-    0,
-  );
+  gl.vertexAttribPointer(locations.update.aOriginalPosition, 2, gl.FLOAT, false, 0, 0);
 
   // update VAO next data
   gl.bindVertexArray(vertexArrayObjects.updateNext);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.nextPosition);
   gl.enableVertexAttribArray(locations.update.aCurrentPosition);
-  gl.vertexAttribPointer(
-    locations.update.aCurrentPosition,
-    2,
-    gl.FLOAT,
-    false,
-    0,
-    0,
-  );
+  gl.vertexAttribPointer(locations.update.aCurrentPosition, 2, gl.FLOAT, false, 0, 0);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.originalPosition);
   gl.enableVertexAttribArray(locations.update.aOriginalPosition);
-  gl.vertexAttribPointer(
-    locations.update.aOriginalPosition,
-    2,
-    gl.FLOAT,
-    false,
-    0,
-    0,
-  );
+  gl.vertexAttribPointer(locations.update.aOriginalPosition, 2, gl.FLOAT, false, 0, 0);
 
   // render VAO first data
   gl.bindVertexArray(vertexArrayObjects.renderFirst);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.firstPosition);
   gl.enableVertexAttribArray(locations.render.aNewPosition);
-  gl.vertexAttribPointer(
-    locations.render.aNewPosition,
-    2,
-    gl.FLOAT,
-    false,
-    0,
-    0,
-  );
+  gl.vertexAttribPointer(locations.render.aNewPosition, 2, gl.FLOAT, false, 0, 0);
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.firstDistanceFromOrigin);
-  gl.enableVertexAttribArray(locations.render.aDistanceFromOrigin);
-  gl.vertexAttribPointer(
-    locations.render.aDistanceFromOrigin,
-    1,
-    gl.FLOAT,
-    false,
-    0,
-    0,
-  );
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.originalPosition);
+  gl.enableVertexAttribArray(locations.render.aOriginalPosition);
+  gl.vertexAttribPointer(locations.render.aOriginalPosition, 2, gl.FLOAT, false, 0, 0);
 
   // render VAO next data
   gl.bindVertexArray(vertexArrayObjects.renderNext);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.nextPosition);
   gl.enableVertexAttribArray(locations.render.aNewPosition);
-  gl.vertexAttribPointer(
-    locations.render.aNewPosition,
-    2,
-    gl.FLOAT,
-    false,
-    0,
-    0,
-  );
+  gl.vertexAttribPointer(locations.render.aNewPosition, 2, gl.FLOAT, false, 0, 0);
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.nextDistanceFromOrigin);
-  gl.enableVertexAttribArray(locations.render.aDistanceFromOrigin);
-  gl.vertexAttribPointer(
-    locations.render.aDistanceFromOrigin,
-    1,
-    gl.FLOAT,
-    false,
-    0,
-    0,
-  );
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.originalPosition);
+  gl.enableVertexAttribArray(locations.render.aOriginalPosition);
+  gl.vertexAttribPointer(locations.render.aOriginalPosition, 2, gl.FLOAT, false, 0, 0);
 
   const transformFeedbacks = {
     first: gl.createTransformFeedback(),
@@ -305,19 +200,9 @@ function setupState(
 
   gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, transformFeedbacks.first);
   gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 0, buffers.firstPosition);
-  gl.bindBufferBase(
-    gl.TRANSFORM_FEEDBACK_BUFFER,
-    1,
-    buffers.firstDistanceFromOrigin,
-  );
 
   gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, transformFeedbacks.next);
   gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 0, buffers.nextPosition);
-  gl.bindBufferBase(
-    gl.TRANSFORM_FEEDBACK_BUFFER,
-    1,
-    buffers.nextDistanceFromOrigin,
-  );
 
   // --- Unbind leftovers ---
 
@@ -338,10 +223,7 @@ export function main(canvas: HTMLCanvasElement) {
 
   const programs = setupPrograms(gl);
 
-  const { locations, vertexArrayObjects, transformFeedbacks } = setupState(
-    gl,
-    programs,
-  );
+  const { locations, vertexArrayObjects, transformFeedbacks } = setupState(gl, programs);
 
   let current = {
     updateVAO: vertexArrayObjects.updateFirst,

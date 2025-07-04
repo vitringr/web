@@ -92,8 +92,8 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   } as const;
 
   const buffers = {
-    positionHeads: gl.createBuffer()!,
-    positionTails: gl.createBuffer()!,
+    positionHeads: gl.createBuffer(),
+    positionTails: gl.createBuffer(),
   } as const;
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.positionHeads);
