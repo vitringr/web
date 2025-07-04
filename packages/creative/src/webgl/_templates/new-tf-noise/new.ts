@@ -66,13 +66,13 @@ function generateData() {
 function setupUniforms(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, renderProgram: WebGLProgram) {
   const compute = {
     u_speed: gl.getUniformLocation(computeProgram, "u_speed"),
-  } as const;
+  };
 
   const render = {
     u_size: gl.getUniformLocation(renderProgram, "u_size"),
-  } as const;
+  };
 
-  return { compute, render };
+  return { compute, render } as const;
 }
 
 function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, renderProgram: WebGLProgram) {
@@ -175,7 +175,7 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   gl.bindBuffer(gl.ARRAY_BUFFER, null);
   gl.bindBuffer(gl.TRANSFORM_FEEDBACK_BUFFER, null);
 
-  return { vertexArrayObjects, transformFeedbacks };
+  return { vertexArrayObjects, transformFeedbacks } as const;
 }
 
 export function main(canvas: HTMLCanvasElement) {

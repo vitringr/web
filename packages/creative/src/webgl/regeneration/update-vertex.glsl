@@ -4,20 +4,18 @@ in vec2 a_currentPosition;
 in vec2 a_originalPosition;
 
 out vec2 tf_newPosition;
-out float tf_distanceFromOrigin;
 
 uniform vec2 u_pointerPosition;
 uniform bool u_pointerDown;
 uniform float u_deltaTime;
-uniform GlobalStaticData {
-  float u_originPullScalar;
-  float u_toggleOriginPullScalar;
-  float u_repelScalar;
-  float u_repelNearestScalar;
-  float u_maxRepelDistance;
-  float u_minPointSize;
-  float u_pointSizeByOriginDistance;
-};
+
+uniform float u_originPullScalar;
+uniform float u_toggleOriginPullScalar;
+uniform float u_repelScalar;
+uniform float u_repelNearestScalar;
+uniform float u_maxRepelDistance;
+uniform float u_minPointSize;
+uniform float u_pointSizeByOriginDistance;
 
 const vec2 ZERO = vec2(0.0, 0.0);
 
@@ -47,6 +45,5 @@ void main() {
   velocity += repel(a_currentPosition, u_pointerPosition);
   velocity = u_deltaTime * clamp(velocity, vec2(-1.0, -1.0), vec2(1.0, 1.0));
 
-  tf_distanceFromOrigin = distance(a_currentPosition, a_originalPosition);
   tf_newPosition = a_currentPosition + velocity;
 }
