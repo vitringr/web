@@ -19,6 +19,7 @@ import tenThousandPNG from "./thumbnails/tenThousand.png";
 import overgrowthPNG from "./thumbnails/overgrowth.png";
 import sparksPNG from "./thumbnails/sparks.png";
 import systemShockPNG from "./thumbnails/systemShock.png";
+import regenerationPNG from "./thumbnails/regeneration.png";
 
 export const Arts = () => {
   return (
@@ -136,7 +137,7 @@ export const Arts = () => {
         <ArtCard
           title="Regeneration"
           route={Routes.arts.regeneration}
-          image="solid.svg"
+          image={regenerationPNG}
           tags={[
             TagNames["2D"],
             TagNames.Input,
@@ -162,18 +163,6 @@ export const Arts = () => {
           route={Routes.arts.layers}
           image={layersPNG}
           tags={[TagNames["2D"], TagNames.Input, TagNames.GPU, TagNames.Image]}
-        />
-
-        <ArtCard
-          title="Godfather"
-          route={Routes.arts.godfather}
-          image="solid.svg"
-          tags={[
-            TagNames["2D"],
-            TagNames.GPU,
-            TagNames.Particles,
-            TagNames.Image,
-          ]}
         />
 
         <ArtCard

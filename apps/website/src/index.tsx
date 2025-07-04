@@ -29,7 +29,6 @@ import { NoiseRainbow } from "./pages/arts/pages/noise-rainbow/NoiseRainbow";
 import { Regeneration } from "./pages/arts/pages/regeneration/Regeneration";
 import { TenThousand } from "./pages/arts/pages/ten-thousand/TenThousand";
 import { Layers } from "./pages/arts/pages/layers/Layers";
-import { Godfather } from "./pages/arts/pages/godfather/Godfather";
 import { BlockCellularSand } from "./pages/arts/pages/block-cellular-sand/BlockCellularSand";
 
 import { Writing } from "./pages/writing/Writing";
@@ -71,7 +70,6 @@ const AppRouter = () => (
       <Route path={Routes.arts.regeneration} component={Regeneration} />
       <Route path={Routes.arts.tenThousand} component={TenThousand} />
       <Route path={Routes.arts.layers} component={Layers} />
-      <Route path={Routes.arts.godfather} component={Godfather} />
       <Route
         path={Routes.arts.blockCellularSand}
         component={BlockCellularSand}

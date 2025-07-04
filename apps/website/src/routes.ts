@@ -33,7 +33,6 @@ export namespace Routes {
     regeneration: "/regeneration",
     tenThousand: "/ten-thousand",
     layers: "/layers",
-    godfather: "/godfather",
     blockCellularSand: "/block-cellular-sand",
   } as const;
 
