@@ -34,7 +34,7 @@ function setupPrograms(gl: WebGL2RenderingContext) {
       gl,
       updateVS,
       updateFS,
-      ["newPosition", "texelColor"],
+      ["newPosition"],
       "separate",
     ),
     render: WebGL.Setup.linkProgram(gl, renderVS, renderFS),

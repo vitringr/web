@@ -12,7 +12,6 @@ function setupProgram(gl: WebGL2RenderingContext) {
   const vs = WebGL.Setup.compileShader(gl, "vertex", vertexShader);
   const fs = WebGL.Setup.compileShader(gl, "fragment", fragmentShader);
   const program = WebGL.Setup.linkProgram(gl, vs, fs);
-
   return program;
 }
 
@@ -29,33 +28,37 @@ function setupGL(canvas: HTMLCanvasElement) {
   return gl;
 }
 
+function setupState(gl: WebGL2RenderingContext, program: WebGLProgram) {
+  const attributes = {
+    a_canvasVertices: gl.getAttribLocation(program, "a_canvasVertices"),
+  };
+
+  const canvasVertices = new Float32Array(WebGL.Points.rectangle(0, 0, 1, 1));
+
+  const vertexArrayObject = gl.createVertexArray();
+
+  const buffer = gl.createBuffer();
+
+  gl.bindVertexArray(vertexArrayObject);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  gl.bufferData(gl.ARRAY_BUFFER, canvasVertices, gl.STATIC_DRAW);
+
+  gl.enableVertexAttribArray(attributes.a_canvasVertices);
+  gl.vertexAttribPointer(attributes.a_canvasVertices, 2, gl.FLOAT, false, 0, 0);
+
+  return vertexArrayObject;
+}
+
 export function main(canvas: HTMLCanvasElement) {
   const gl = setupGL(canvas);
 
   const program = setupProgram(gl);
 
-  const locations = {
-    aCanvasVertices: gl.getAttribLocation(program, "a_canvasVertices"),
-  };
-
-  const vertexArray = gl.createVertexArray();
-  gl.bindVertexArray(vertexArray);
-
-  const buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-
-  const canvasVertices = WebGL.Points.rectangle(0, 0, 1, 1);
-  gl.bufferData(
-    gl.ARRAY_BUFFER,
-    new Float32Array(canvasVertices),
-    gl.STATIC_DRAW,
-  );
-
-  gl.enableVertexAttribArray(locations.aCanvasVertices);
-  gl.vertexAttribPointer(locations.aCanvasVertices, 2, gl.FLOAT, false, 0, 0);
+  const vertexArrayObject = setupState(gl, program);
 
   gl.useProgram(program);
-  gl.bindVertexArray(vertexArray);
+  gl.bindVertexArray(vertexArrayObject);
 
   gl.clearColor(0, 0, 0, 1);
   gl.clear(gl.COLOR_BUFFER_BIT);
