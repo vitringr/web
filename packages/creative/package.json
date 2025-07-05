@@ -10,6 +10,7 @@
   "dependencies": {
     "@utilities/mathematics": "workspace:*",
     "@utilities/canvas2d": "workspace:*",
+    "@utilities/easing": "workspace:*",
     "@utilities/collision": "workspace:*",
     "@utilities/colors": "workspace:*",
     "@utilities/random": "workspace:*",
