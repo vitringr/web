@@ -182,5 +182,5 @@ float getNoise(vec2 inputs) {
 
   float result = contributions.r + contributions.g + contributions.b;
 
-  return result * 35.0 + 0.5;
+  return result * 49.0 + 0.5;
 }
