@@ -31,19 +31,27 @@ export function main(canvas: HTMLCanvasElement) {
 
   const getNoise = Noise.Simplex.create();
 
-  const frequency = 0.01;
+  const frequency = 0.0123;
 
-  for (let x = 0; x < 600; x++) {
-    for (let y = 0; y < 600; y++) {
+  let min = Infinity;
+  let max = 0;
+  let sum = 0;
+  for (let x = 0; x < 1000; x++) {
+    for (let y = 0; y < 1000; y++) {
       let noise = getNoise(x * frequency, y * frequency);
-      context.fillStyle = noise < 0.5 ? Colors.getRGBGrayscale(0.5) : Colors.getRGBGrayscale(0);
+
+      if (noise < min) min = noise;
+      if (noise > max) max = noise;
+      sum += noise;
+
+      context.fillStyle = Colors.getRGBGrayscale(noise);
       context.fillRect(x, y, 1, 1);
     }
   }
 
-  const animation = () => {
-    requestAnimationFrame(animation);
-  };
+  const average = sum / 1_000_000;
+  console.log("average", average);
 
-  animation();
+  console.log("min", min);
+  console.log("max", max);
 }

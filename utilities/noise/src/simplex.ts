@@ -188,6 +188,6 @@ export function create() {
     // -- Arbitrary numbers that fit the output into the [0, 1] range --
     // ---------------------------------------------------------------
 
-    return result * 35 + 0.5;
+    return result * 49 + 0.5;
   };
 }

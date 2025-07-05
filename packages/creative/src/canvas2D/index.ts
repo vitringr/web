@@ -13,4 +13,4 @@ export * as Sparks from "./sparks";
 export * as Fireworks from "./fireworks";
 export * as SystemShock from "./system-shock/main";
 
-export * as New from "./new2D";
+export * as New from "./new-2d";
