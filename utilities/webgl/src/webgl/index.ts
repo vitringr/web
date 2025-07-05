@@ -3,3 +3,4 @@ export * as Kernels from "./kernels";
 export * as Points from "./points";
 export * as Setup from "./setup";
 export * as Texture from "./texture";
+export * as GLSL from "./glsl";

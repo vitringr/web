@@ -1,12 +1,12 @@
 import { WebGL } from "@utilities/webgl";
+import { NoiseGLSL } from "@utilities/noise-glsl";
 
 import vertexShader from "./vertex.glsl";
 import fragmentShader from "./fragment.glsl";
-import { NoiseGLSL } from "@utilities/noise-glsl";
 
 const config = {
-  canvasWidth: 900,
-  canvasHeight: 900,
+  canvasWidth: 600,
+  canvasHeight: 600,
 } as const;
 
 function setupProgram(gl: WebGL2RenderingContext) {
