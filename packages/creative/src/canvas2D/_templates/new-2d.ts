@@ -27,6 +27,7 @@ export function main(canvas: HTMLCanvasElement) {
 
   const animation = () => {
     renderBackground(context);
+
     requestAnimationFrame(animation);
   };
 

@@ -1,9 +1,11 @@
+#version 300 es
+
+precision highp float;
+
 out vec4 outColor;
 
-const float FREQUENCY = 0.01234;
-
 void main() {
-  float noise = getNoise(gl_FragCoord.xy * FREQUENCY);
+  outColor = vec4(0.0, 0.3, 0.4, 1.0);
 
-  outColor = vec4(vec3(noise), 1.0);
+  if(gl_FragCoord.x < 300.0) outColor = vec4(0.6, 0.3, 0.4, 1.0);
 }

@@ -1,7 +1,3 @@
-import { Colors } from "@utilities/colors";
-import { Easing } from "@utilities/easing";
-import { Noise } from "@utilities/noise";
-
 const config = {
   width: 600,
   height: 600,
@@ -29,29 +25,11 @@ function renderBackground(context: CanvasRenderingContext2D) {
 export function main(canvas: HTMLCanvasElement) {
   const context = setupContext(canvas);
 
-  const getNoise = Noise.Simplex.create();
+  const animation = () => {
+    renderBackground(context);
 
-  const frequency = 0.0123;
+    requestAnimationFrame(animation);
+  };
 
-  let min = Infinity;
-  let max = 0;
-  let sum = 0;
-  for (let x = 0; x < 1000; x++) {
-    for (let y = 0; y < 1000; y++) {
-      let noise = getNoise(x * frequency, y * frequency);
-
-      if (noise < min) min = noise;
-      if (noise > max) max = noise;
-      sum += noise;
-
-      context.fillStyle = Colors.getRGBGrayscale(noise);
-      context.fillRect(x, y, 1, 1);
-    }
-  }
-
-  const average = sum / 1_000_000;
-  console.log("average", average);
-
-  console.log("min", min);
-  console.log("max", max);
+  animation();
 }
