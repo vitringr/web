@@ -20,6 +20,7 @@ import overgrowthPNG from "./thumbnails/overgrowth.png";
 import sparksPNG from "./thumbnails/sparks.png";
 import systemShockPNG from "./thumbnails/systemShock.png";
 import regenerationPNG from "./thumbnails/regeneration.png";
+import angerPNG from "./thumbnails/anger.png";
 
 export const Arts = () => {
   return (
@@ -53,6 +54,18 @@ export const Arts = () => {
             TagNames.Random,
           ]}
         />
+
+        <ArtCard
+          title="Anger"
+          route={Routes.arts.anger}
+          image={angerPNG}
+          tags={[
+            TagNames["2D"],
+            TagNames.GPU,
+            TagNames.Noise,
+          ]}
+        />
+
 
         <ArtCard
           title="Sparks"

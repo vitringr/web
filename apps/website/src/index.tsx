@@ -16,6 +16,7 @@ import { PerlinNoise } from "./pages/guides/pages/perlin-noise/PerlinNoise";
 import { Arts } from "./pages/arts/Arts";
 import { TheSeer } from "./pages/arts/pages/the-seer/TheSeer";
 import { SystemShock } from "./pages/arts/pages/system-shock/SystemShock";
+import { Anger } from "./pages/arts/pages/anger/Anger";
 import { Sparks } from "./pages/arts/pages/sparks/Sparks";
 import { Overgrowth } from "./pages/arts/pages/overgrowth/Overgrowth";
 import { RandomWalkers } from "./pages/arts/pages/random-walkers/RandomWalkers";
@@ -57,6 +58,7 @@ const AppRouter = () => (
       <Route path="/" component={Arts} />
       <Route path={Routes.arts.theSeer} component={TheSeer} />
       <Route path={Routes.arts.systemShock} component={SystemShock} />
+      <Route path={Routes.arts.anger} component={Anger} />
       <Route path={Routes.arts.sparks} component={Sparks} />
       <Route path={Routes.arts.overgrowth} component={Overgrowth} />
       <Route path={Routes.arts.randomWalkers} component={RandomWalkers} />

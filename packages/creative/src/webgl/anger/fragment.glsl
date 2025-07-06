@@ -84,7 +84,6 @@ void main() {
   float r = 1.0 - abs(fractalNoise);
   r = pow(r, u_contrast);
   color = vec3(r, 0.0, 0.0);
-  // color = vec3(r, r, r);
 
   outColor = vec4(color, 1.0);
 }
