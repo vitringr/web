@@ -55,10 +55,12 @@ void main() {
 
   float random = getRandom(point);
 
-  float valueNoise = getValueNoise(point * 10.0);
-  float fractalNoise = getFractalNoise(point * 10.0, 5);
+  point *= 10.0;
 
-  color = vec3(vec2(fractalNoise), 0.0);
+  float valueNoise = getValueNoise(point * 10.0);
+  float fractalNoise = getFractalNoise(point, 5);
+
+  color = vec3(vec3(fractalNoise));
 
   outColor = vec4(color, 1.0);
 }
