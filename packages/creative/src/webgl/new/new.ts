@@ -1,16 +1,16 @@
 import { WebGL } from "@utilities/webgl";
+import { NoiseGLSL } from "@utilities/noise-glsl";
 
 import vertexShader from "./vertex.glsl";
 import fragmentShader from "./fragment.glsl";
-import { NoiseGLSL } from "@utilities/noise-glsl";
 
 const config = {
-  canvasWidth: 600,
-  canvasHeight: 600,
+  canvasWidth: 800,
+  canvasHeight: 800,
 } as const;
 
 function setupProgram(gl: WebGL2RenderingContext) {
-  const fullFS = WebGL.GLSL.getBegin() + NoiseGLSL.Simplex.default + fragmentShader;
+  const fullFS = WebGL.GLSL.getBegin() + NoiseGLSL.Perlin.default + fragmentShader;
 
   const vs = WebGL.Setup.compileShader(gl, "vertex", vertexShader);
   const fs = WebGL.Setup.compileShader(gl, "fragment", fullFS);

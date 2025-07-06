@@ -1,11 +1,11 @@
 out vec4 outColor;
 
-const float FREQUENCY = 3.0;
+const float FREQUENCY = 10.0;
 
 void main() {
-  vec2 point = gl_FragCoord.xy / 600.0;
+  vec2 point = gl_FragCoord.xy / 800.0;
 
-  float noise = getNoise(point * FREQUENCY);
+  float noise = getFractalNoise(point * FREQUENCY, 5);
 
-  outColor = vec4(vec3(noise), 1.0);
+  outColor = vec4(noise);
 }
