@@ -23,8 +23,6 @@ const config = {
   },
 } as const;
 
-const getNoise = Noise.Simplex.create();
-
 const angleStep = Mathematics.TAU / config.particleCount;
 const xCenter = config.width * 0.5;
 const yCenter = config.height * 0.5;
@@ -68,7 +66,7 @@ export function main(canvas: HTMLCanvasElement) {
 
       const noiseValue =
         config.noiseRadius *
-        getNoise(
+        Noise.Simplex.get(
           cos * config.noiseFrequency + time,
           sin * config.noiseFrequency - time,
         );

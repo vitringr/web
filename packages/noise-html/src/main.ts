@@ -6,8 +6,6 @@
 
 import { Noise } from "@utilities/noise";
 
-const getNoise = Noise.simplex();
-
 function getIDString(x: number, y: number) {
   return "box_" + x + "_" + y;
 }
@@ -101,7 +99,7 @@ export function main(canvas: any) {
 
         const xNoise = x * frequency + time;
         const yNoise = y * frequency + time;
-        const noise = getNoise(xNoise, yNoise);
+        const noise = Noise.Simplex.get(xNoise, yNoise);
 
         let newLetter: Letters;
 

@@ -24,8 +24,6 @@ const config = {
 const xCenter = config.width * 0.5;
 const yCenter = config.height * 0.5;
 
-const getNoise = Noise.Simplex.create();
-
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.width;
   canvas.height = config.height;
@@ -68,12 +66,12 @@ export function main(canvas: HTMLCanvasElement) {
     context.fillStyle = config.colors.orb;
 
     for (let i = 0; i < config.count; i++) {
-      const xNoise = getNoise(
+      const xNoise = Noise.Simplex.get(
         counter + xSeeds[i] * config.noiseVolatility - time,
         counter + ySeeds[i] * config.noiseVolatility + time,
       );
 
-      const yNoise = getNoise(
+      const yNoise = Noise.Simplex.get(
         counter + xSeeds[i] * config.noiseVolatility + time,
         counter + ySeeds[i] * config.noiseVolatility + time,
       );

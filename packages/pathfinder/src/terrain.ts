@@ -36,7 +36,7 @@ export namespace Terrain {
 
     for (const row of cells) {
       for (const cell of row) {
-        const value = Noise.get(
+        const value = Noise.Simplex.get(
           (cell.x + seed) * Config.terrain.noiseScalar,
           (cell.y + seed) * Config.terrain.noiseScalar,
         );

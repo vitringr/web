@@ -1,5 +1,6 @@
 import { Colors } from "@utilities/colors";
 import { Noise } from "@utilities/noise";
+
 import systemShockPNG from "./system-shock.png";
 
 const config = {
@@ -27,8 +28,6 @@ const config = {
 
   characters: ["1", "2", "3", "a", "b", "c", "A", "B", "X"],
 } as const;
-
-const getNoise = Noise.Simplex.create();
 
 const xRatio = config.width / config.imageWidth;
 const yRatio = config.height / config.imageHeight;
@@ -153,7 +152,7 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
         const xNoise = x * config.noiseFrequency;
         const yNoise = (y + time) * config.noiseFrequency;
         const character = Math.floor(
-          getNoise(xNoise, yNoise) * config.characters.length,
+          Noise.Simplex.get(xNoise, yNoise) * config.characters.length,
         );
 
         const xPosition = x * xRatio;

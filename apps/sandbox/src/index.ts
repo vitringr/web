@@ -7,4 +7,4 @@ const canvas = document.getElementById(canvasID) as HTMLCanvasElement;
 if (!canvas) throw `Cannot get #${canvasID}`;
 
 // LearningNoise.PerlinNoise.main(canvas)
-Creative.WebGL.New.main(canvas)
+Creative.Canvas2D.New.main(canvas)

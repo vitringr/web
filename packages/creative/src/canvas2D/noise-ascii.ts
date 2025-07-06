@@ -20,8 +20,6 @@ const config = {
   },
 } as const;
 
-const getNoise = Noise.Simplex.create();
-
 const characters = [
   "0",
   "1",
@@ -157,7 +155,7 @@ export function main(canvas: HTMLCanvasElement) {
         const xPosition = gap + x * config.spriteWidth;
         const yPosition = gap + y * config.spriteHeight;
 
-        const noiseValue = getNoise(
+        const noiseValue = Noise.Simplex.get(
           x * config.noiseFrequency + time,
           y * config.noiseFrequency + time,
         );

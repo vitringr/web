@@ -34,7 +34,6 @@ const config = {
   },
 } as const;
 
-const getNoise = Noise.Simplex.create();
 const input = { x: -99999, y: -99999, clicked: false };
 
 type Orb = {
@@ -119,13 +118,13 @@ function createOrbsPool() {
 
 function moveOrb(orb: Orb, time: number) {
   const xNoise =
-    getNoise(
+    Noise.Simplex.get(
       (orb.xNoise + time) * config.noiseFrequency,
       (orb.yNoise + time) * config.noiseFrequency,
     ) - 0.5;
 
   const yNoise =
-    getNoise(
+    Noise.Simplex.get(
       (orb.xNoise + time) * config.noiseFrequency,
       (orb.yNoise - time) * config.noiseFrequency,
     ) - 0.5;
