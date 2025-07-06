@@ -2,67 +2,28 @@
 
 precision highp float;
 
-out vec4 outColor;
-
 uniform float u_time;
 uniform float u_resolution;
+uniform float u_cells;
+uniform float u_contrast;
+uniform float u_fractalAmplitude;
+uniform int u_noiseOctaves;
 
-const float GRID_RESOLUTION = 8.0;
+out vec4 outColor;
 
-const vec2 GRADIENTS[32] = vec2[32](
-  vec2( 1.0,                 0.0               ),
-  vec2( 0.9807852804032304,  0.1950903220161282),
-  vec2( 0.9238795325112867,  0.3826834323650898),
-  vec2( 0.8314696123025452,  0.5555702330196022),
-  vec2( 0.7071067811865476,  0.7071067811865475),
-  vec2( 0.5555702330196023,  0.8314696123025452),
-  vec2( 0.3826834323650898,  0.9238795325112867),
-  vec2( 0.1950903220161283,  0.9807852804032304),
-  vec2( 0.0,                 1.0               ),
-  vec2(-0.1950903220161282,  0.9807852804032304),
-  vec2(-0.3826834323650897,  0.9238795325112867),
-  vec2(-0.5555702330196020,  0.8314696123025453),
-  vec2(-0.7071067811865475,  0.7071067811865476),
-  vec2(-0.8314696123025453,  0.5555702330196022),
-  vec2(-0.9238795325112867,  0.3826834323650899),
-  vec2(-0.9807852804032304,  0.1950903220161286),
-  vec2(-1.0,                 0.0               ),
-  vec2(-0.9807852804032304, -0.1950903220161283),
-  vec2(-0.9238795325112868, -0.3826834323650896),
-  vec2(-0.8314696123025455, -0.5555702330196020),
-  vec2(-0.7071067811865477, -0.7071067811865475),
-  vec2(-0.5555702330196022, -0.8314696123025452),
-  vec2(-0.3826834323650903, -0.9238795325112865),
-  vec2(-0.1950903220161286, -0.9807852804032303),
-  vec2( 0.0,                -1.0               ),
-  vec2( 0.1950903220161283, -0.9807852804032304),
-  vec2( 0.3826834323650900, -0.9238795325112866),
-  vec2( 0.5555702330196018, -0.8314696123025455),
-  vec2( 0.7071067811865474, -0.7071067811865477),
-  vec2( 0.8314696123025452, -0.5555702330196022),
-  vec2( 0.9238795325112865, -0.3826834323650904),
-  vec2( 0.9807852804032303  -0.1950903220161287)
-);
-
-vec2 fade(vec2 t) {
-    return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
-}
+const float TAU = 6.283185307179586;
 
 float getRandom(vec2 coordinates) {
   return fract(sin(dot(coordinates, vec2(12.9898, 78.233))) * 43758.5453);
 }
 
-vec2 getRandomGradient(vec2 coordinates) {
-  float randomValue = getRandom(coordinates);
-  int index = int(randomValue * 32.0) & 31;
-  return GRADIENTS[index];
+vec2 fade(vec2 t) {
+  return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
 }
 
-vec2 grg(vec2 coordinates) {
-  float randomValue = getRandom(coordinates) + u_time * 0.001;
-
-  float angle = randomValue * 6.28318;
-
+vec2 getRandomGradient(vec2 coordinates) {
+  float randomValue = getRandom(coordinates) + u_time;
+  float angle = randomValue * TAU;
   return vec2(cos(angle), sin(angle));
 }
 
@@ -70,10 +31,10 @@ float getPerlinNoise(vec2 point) {
   vec2 gridIndex    = floor(point);
   vec2 gridFraction = fract(point);
 
-  vec2 gradient_BL = grg(gridIndex);
-  vec2 gradient_BR = grg(gridIndex + vec2(1.0, 0.0)); 
-  vec2 gradient_TL = grg(gridIndex + vec2(0.0, 1.0));
-  vec2 gradient_TR = grg(gridIndex + vec2(1.0, 1.0));
+  vec2 gradient_BL = getRandomGradient(gridIndex);
+  vec2 gradient_BR = getRandomGradient(gridIndex + vec2(1.0, 0.0)); 
+  vec2 gradient_TL = getRandomGradient(gridIndex + vec2(0.0, 1.0));
+  vec2 gradient_TR = getRandomGradient(gridIndex + vec2(1.0, 1.0));
 
   vec2 to_BL = gridFraction - vec2(0.0, 0.0);
   vec2 to_BR = gridFraction - vec2(1.0, 0.0);
@@ -104,7 +65,7 @@ float getFractalNoise(vec2 point, int octaves) {
   for(int i = 0; i < octaves; i++) {
     total += getPerlinNoise(point * frequency) * amplitude;
     maxValue += amplitude;
-    amplitude *= 0.5;
+    amplitude *= u_fractalAmplitude;
     frequency *= 2.0;
   }
 
@@ -115,13 +76,13 @@ void main() {
   vec3 color = vec3(0.0);
   vec2 point = gl_FragCoord.xy / u_resolution;
 
-  point *= 3.0;
+  point *= u_cells;
 
   float perlinNoise = getPerlinNoise(point);
-  float fractalNoise = getFractalNoise(point, 7);
+  float fractalNoise = getFractalNoise(point, u_noiseOctaves);
 
   float r = 1.0 - abs(fractalNoise);
-  r = pow(r, 14.0);
+  r = pow(r, u_contrast);
   color = vec3(r, 0.0, 0.0);
   // color = vec3(r, r, r);
 

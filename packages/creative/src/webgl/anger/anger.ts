@@ -6,6 +6,12 @@ import fragmentShader from "./fragment.glsl";
 const config = {
   canvasWidth: 600,
   canvasHeight: 600,
+
+  cells: 3,
+  noiseOctaves: 8,
+  contrast: 14,
+  fractalAmplitude: 0.60,
+  timeIncrement: 0.0006,
 } as const;
 
 function setupProgram(gl: WebGL2RenderingContext) {
@@ -61,19 +67,27 @@ export function main(canvas: HTMLCanvasElement) {
     u_time: gl.getUniformLocation(program, "u_time"),
 
     u_resolution: gl.getUniformLocation(program, "u_resolution"),
+    u_cells: gl.getUniformLocation(program, "u_cells"),
+    u_contrast: gl.getUniformLocation(program, "u_contrast"),
+    u_fractalAmplitude: gl.getUniformLocation(program, "u_fractalAmplitude"),
+    u_noiseOctaves: gl.getUniformLocation(program, "u_noiseOctaves"),
   };
 
   gl.useProgram(program);
   gl.bindVertexArray(vertexArrayObject);
 
   gl.uniform1f(uniforms.u_resolution, config.canvasWidth);
+  gl.uniform1f(uniforms.u_cells, config.cells);
+  gl.uniform1f(uniforms.u_contrast, config.contrast);
+  gl.uniform1f(uniforms.u_fractalAmplitude, config.fractalAmplitude);
+  gl.uniform1i(uniforms.u_noiseOctaves, config.noiseOctaves);
 
   gl.clearColor(0, 0, 0, 1);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
   let time = 0;
   const animation = () => {
-    time++;
+    time += config.timeIncrement;
 
     gl.uniform1f(uniforms.u_time, time);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
