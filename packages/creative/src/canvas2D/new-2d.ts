@@ -23,8 +23,8 @@ export function main(canvas: HTMLCanvasElement) {
 
   for (let x = 0; x < config.width; x++) {
     for (let y = 0; y < config.height; y++) {
-      const noise = Noise.Simplex.get(x * config.frequency, y * config.frequency);
-      const fractal = Noise.Simplex.getFractal(x * config.frequency, y * config.frequency, 5);
+      const noise = Noise.Value.get(x * config.frequency, y * config.frequency);
+      const fractal = Noise.Value.getFractal(x * config.frequency, y * config.frequency, 5);
 
       context.fillStyle = Colors.getRGBGrayscale(fractal);
       context.fillRect(x, y, 1, 1);
