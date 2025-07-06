@@ -119,7 +119,7 @@ float getNoise(vec2 inputs) {
 
   vec3 influences = 0.5 - distances_squared;
 
-  vec3 contributions = vec3(0.0, 0.0, 0.0);
+  vec3 contributions = vec3(0.0);
 
   if (influences.r > 0.0) {
     int index = hash(ivec2(square_A)) & 31;
@@ -145,4 +145,20 @@ float getNoise(vec2 inputs) {
   float result = contributions.r + contributions.g + contributions.b;
 
   return result * 49.0 + 0.5;
+}
+
+float getFractalNoise(vec2 point, int octaves) {
+  float total = 0.0;
+  float frequency = 1.0;
+  float amplitude = 1.0;
+  float maxValue = 0.0;
+
+  for(int i = 0; i < octaves; i++) {
+    total += getNoise(point * frequency) * amplitude;
+    maxValue += amplitude;
+    amplitude *= 0.5;
+    frequency *= 2.0;
+  }
+
+  return total / maxValue;
 }

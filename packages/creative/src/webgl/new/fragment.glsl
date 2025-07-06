@@ -1,6 +1,6 @@
 out vec4 outColor;
 
-const float FREQUENCY = 10.0;
+const float FREQUENCY = 5.0;
 
 void main() {
   vec2 point = gl_FragCoord.xy / 800.0;
