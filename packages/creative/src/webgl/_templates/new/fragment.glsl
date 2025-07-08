@@ -11,5 +11,7 @@ void main() {
   outColor = vec4(0.0, 0.3, 0.4, 1.0);
   vec2 point = gl_FragCoord.xy / u_resolution;
 
-  if(gl_FragCoord.x < 300.0) outColor = vec4(0.6, 0.3, 0.4, 1.0);
+  if(point.x > sin(u_time) * 0.5 + 0.5) {
+    outColor = vec4(0.3, 0.3, 0.4, 1.0);
+  }
 }

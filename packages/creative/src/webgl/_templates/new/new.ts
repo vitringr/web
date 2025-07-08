@@ -4,8 +4,8 @@ import vertexShader from "./vertex.glsl";
 import fragmentShader from "./fragment.glsl";
 
 const config = {
-  canvasWidth: 600,
-  canvasHeight: 600,
+  canvasWidth: 800,
+  canvasHeight: 800,
 
   timeIncrement: 0.01,
 } as const;
@@ -55,7 +55,7 @@ function setupState(gl: WebGL2RenderingContext, program: WebGLProgram) {
 function setupUniforms(gl: WebGL2RenderingContext, program: WebGLProgram) {
   return {
     u_time: gl.getUniformLocation(program, "u_time"),
-    u_resolution: gl.getUniformLocation(program, "u_time"),
+    u_resolution: gl.getUniformLocation(program, "u_resolution"),
   } as const;
 }
 
