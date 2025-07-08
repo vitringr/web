@@ -73,13 +73,10 @@ float getFractalNoise(vec2 point, int octaves) {
 }
 
 void main() {
-  vec3 color = vec3(0.0);
+  vec3 color = vec3(0.5);
   vec2 point = gl_FragCoord.xy / u_resolution;
 
-  point *= u_cells;
-
-  float perlinNoise = getPerlinNoise(point);
-  float fractalNoise = getFractalNoise(point, u_noiseOctaves);
+  float fractalNoise = getFractalNoise(point * u_cells, u_noiseOctaves);
 
   float r = 1.0 - abs(fractalNoise);
   r = pow(r, u_contrast);

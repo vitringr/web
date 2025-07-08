@@ -6,6 +6,8 @@ import fragmentShader from "./fragment.glsl";
 const config = {
   canvasWidth: 600,
   canvasHeight: 600,
+
+  timeIncrement: 0.01,
 } as const;
 
 function setupProgram(gl: WebGL2RenderingContext) {
@@ -31,7 +33,7 @@ function setupGL(canvas: HTMLCanvasElement) {
 function setupState(gl: WebGL2RenderingContext, program: WebGLProgram) {
   const attributes = {
     a_canvasVertices: gl.getAttribLocation(program, "a_canvasVertices"),
-  };
+  } as const;
 
   const canvasVertices = new Float32Array(WebGL.Points.rectangle(0, 0, 1, 1));
 
@@ -50,18 +52,37 @@ function setupState(gl: WebGL2RenderingContext, program: WebGLProgram) {
   return vertexArrayObject;
 }
 
+function setupUniforms(gl: WebGL2RenderingContext, program: WebGLProgram) {
+  return {
+    u_time: gl.getUniformLocation(program, "u_time"),
+    u_resolution: gl.getUniformLocation(program, "u_time"),
+  } as const;
+}
+
 export function main(canvas: HTMLCanvasElement) {
   const gl = setupGL(canvas);
-
   const program = setupProgram(gl);
-
+  const uniforms = setupUniforms(gl, program);
   const vertexArrayObject = setupState(gl, program);
 
   gl.useProgram(program);
   gl.bindVertexArray(vertexArrayObject);
 
+  gl.uniform1f(uniforms.u_resolution, config.canvasWidth);
+
   gl.clearColor(0, 0, 0, 1);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  gl.drawArrays(gl.TRIANGLES, 0, 6);
+  let time = 0;
+  const animation = () => {
+    time += config.timeIncrement;
+
+    gl.uniform1f(uniforms.u_time, time);
+
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+    requestAnimationFrame(animation);
+  };
+
+  requestAnimationFrame(animation);
 }
