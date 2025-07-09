@@ -7,7 +7,7 @@ const config = {
   canvasWidth: 800,
   canvasHeight: 800,
 
-  timeIncrement: 0.01,
+  timeIncrement: 1,
 } as const;
 
 function setupProgram(gl: WebGL2RenderingContext) {

@@ -17,14 +17,14 @@ float getRandom(vec2 coordinates) {
   return fract(sin(dot(coordinates, vec2(12.9898, 78.233))) * 43758.5453);
 }
 
-vec2 fade(vec2 t) {
-  return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
-}
-
 vec2 getRandomGradient(vec2 coordinates) {
   float randomValue = getRandom(coordinates) + u_time;
   float angle = randomValue * TAU;
   return vec2(cos(angle), sin(angle));
+}
+
+vec2 fade(vec2 t) {
+  return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
 }
 
 float getPerlinNoise(vec2 point) {
