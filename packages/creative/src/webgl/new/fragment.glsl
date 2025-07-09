@@ -1,83 +1,26 @@
-#version 300 es
-
-precision highp float;
-
 uniform float u_time;
 uniform float u_resolution;
 
 out vec4 outColor;
 
-const float TAU = 6.283185307179586;
-
-float getRandom(vec2 coordinates) {
-  return fract(sin(dot(coordinates, vec2(12.9898, 78.233))) * 43758.5453);
-}
-
-vec2 getRandomGradient(vec2 coordinates) {
-  float randomValue = getRandom(coordinates) + u_time * 0.0005;
-  float angle = randomValue * TAU;
-  return vec2(cos(angle), sin(angle));
-}
-
-vec2 fade(vec2 t) {
-  return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
-}
-
-float getPerlinNoise(vec2 point) {
-  vec2 gridIndex    = floor(point);
-  vec2 gridFraction = fract(point);
-
-  vec2 gradient_BL = getRandomGradient(gridIndex);
-  vec2 gradient_BR = getRandomGradient(gridIndex + vec2(1.0, 0.0)); 
-  vec2 gradient_TL = getRandomGradient(gridIndex + vec2(0.0, 1.0));
-  vec2 gradient_TR = getRandomGradient(gridIndex + vec2(1.0, 1.0));
-
-  vec2 to_BL = gridFraction - vec2(0.0, 0.0);
-  vec2 to_BR = gridFraction - vec2(1.0, 0.0);
-  vec2 to_TL = gridFraction - vec2(0.0, 1.0);
-  vec2 to_TR = gridFraction - vec2(1.0, 1.0);
-
-  float dot_BL = dot(to_BL, gradient_BL);
-  float dot_BR = dot(to_BR, gradient_BR);
-  float dot_TL = dot(to_TL, gradient_TL);
-  float dot_TR = dot(to_TR, gradient_TR);
-
-  gridFraction = fade(gridFraction);
-
-  float bot = mix(dot_BL, dot_BR, gridFraction.x);
-  float top = mix(dot_TL, dot_TR, gridFraction.x);
-
-  float perlinNoise = mix(bot, top, gridFraction.y);
-
-  return perlinNoise * 0.70710678 + 0.5;
-}
-
-float getFractalNoise(vec2 point, int octaves) {
-  float total = 0.0;
-  float frequency = 1.0;
-  float amplitude = 1.0;
-  float maxValue = 0.0;
-
-  for(int i = 0; i < octaves; i++) {
-    total += getPerlinNoise(point * frequency) * amplitude;
-    maxValue += amplitude;
-    amplitude *= 0.5;
-    frequency *= 2.0;
-  }
-
-  return total / maxValue;
-}
+const vec3 WATER1 = vec3(0.1, 0.5, 0.5);
+const vec3 WATER2 = vec3(0.4, 0.8, 1.0);
 
 void main() {
   vec3 color = vec3(0.0);
   vec2 point = gl_FragCoord.xy / u_resolution;
 
-  float n1 = getFractalNoise(point * 6.0 + vec2(0.0), 8);
-  float n2 = getFractalNoise(point * 6.0 + vec2(3.6), 8);
+  vec2 velocity1 = vec2(0.0, u_time * 0.001);
+  float botWater = getFractalNoise((point * vec2(1.0, 3.5) + vec2(0.0, 0.0) + velocity1) * 3.0, 3);
 
-  float all = getFractalNoise(vec2(n1, n2) * 5.0, 1);
+  vec2 velocity2 = vec2(0.0, u_time * 0.0014);
+  float topWater = getFractalNoise((point * vec2(1.0, 3.5) + vec2(12.34567) + velocity2) * 3.0, 3);
 
-  color = vec3(all);
+  float noise = getFractalNoise(vec2(botWater, topWater), 5);
+
+  color = mix(vec3(1.0), WATER1, noise);
+
+  color = mix(color, vec3(1.0), step(noise, 0.16));
 
   outColor = vec4(color, 1.0);
 }
