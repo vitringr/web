@@ -19,8 +19,8 @@ type Config = {
 };
 
 const defaultConfig: Config = {
-  canvasWidth: 600,
-  canvasHeight: 600,
+  canvasWidth: 800,
+  canvasHeight: 800,
   particlesCount: 10_000,
   brightness: 3,
   speed: 0.0002,
