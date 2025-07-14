@@ -1,40 +1,9 @@
 import { Mathematics } from "@utilities/mathematics";
 import { Noise } from "@utilities/noise";
+import { Config, defaultConfig } from "./config";
 import theSeerPNG from "./the-seer.png";
 
-// ------------
-// -- Config --
-// ------------
-
-const config = {
-  width: 960,
-  height: 1200,
-  // width: 640,
-  // height: 800,
-
-  imageWidth: 480,
-  imageHeight: 600,
-  // imageWidth: 320,
-  // imageHeight: 400,
-
-  cachedParticles: 500,
-  lifetime: 300,
-  decay: 2.2,
-  size: 0.006,
-  speed: 1,
-
-  noiseFrequency: 0.04,
-  noiseEffect: 0.14,
-
-  backgroundColor: "#161616",
-} as const;
-
-const xRatio = config.width / config.imageWidth;
-const yRatio = config.height / config.imageHeight;
-
-// -----------
-// -- Logic --
-// -----------
+let config: Config;
 
 type Particle = {
   active: boolean;
@@ -115,17 +84,9 @@ let spawnIndex = 0;
 // -- Main --
 // ----------
 
-function createImageData(
-  context: CanvasRenderingContext2D,
-  image: HTMLImageElement,
-) {
+function createImageData(context: CanvasRenderingContext2D, image: HTMLImageElement) {
   context.drawImage(image, 0, 0, config.imageWidth, config.imageHeight);
-  const imageData = context.getImageData(
-    0,
-    0,
-    config.imageWidth,
-    config.imageHeight,
-  ).data;
+  const imageData = context.getImageData(0, 0, config.imageWidth, config.imageHeight).data;
   context.clearRect(0, 0, config.width, config.height);
 
   const arr: string[][] = [];
@@ -146,7 +107,9 @@ function createImageData(
   return arr;
 }
 
-export async function main(canvas: HTMLCanvasElement) {
+export async function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+  config = { ...defaultConfig, ...settings };
+
   setupInput(canvas);
   const context = setupContext(canvas);
   const particles = createParticles();
@@ -161,6 +124,9 @@ export async function main(canvas: HTMLCanvasElement) {
   img.src = theSeerPNG;
   img.onload = () => {
     const pixelData = createImageData(context, img);
+
+    const xRatio = config.width / config.imageWidth;
+    const yRatio = config.height / config.imageHeight;
 
     const loop = () => {
       if (input.clicked) {
@@ -186,10 +152,7 @@ export async function main(canvas: HTMLCanvasElement) {
         }
 
         // Movement
-        const noise = Noise.Simplex.get(
-          particle.x * config.noiseFrequency,
-          particle.y * config.noiseFrequency,
-        );
+        const noise = Noise.Simplex.get(particle.x * config.noiseFrequency, particle.y * config.noiseFrequency);
         particle.angle += (noise * 2 - 1) * config.noiseEffect;
         particle.x += Math.cos(particle.angle) * config.speed;
         particle.y += Math.sin(particle.angle) * config.speed;

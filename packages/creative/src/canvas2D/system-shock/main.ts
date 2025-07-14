@@ -29,7 +29,7 @@ type Config = {
   characters: string[];
 };
 
-const defaultConfig = {
+const defaultConfig: Config = {
   width: 780,
   height: 648,
 
@@ -146,12 +146,12 @@ function createAllSprites(config: Config) {
 function start(canvas: HTMLCanvasElement, image: HTMLImageElement, config: Config) {
   const context = setupContext(canvas, config);
 
-  const xRatio = config.width / config.imageWidth;
-  const yRatio = config.height / config.imageHeight;
-
   const imageData = createImageData(context, image, config);
 
   const allSprites = createAllSprites(config);
+
+  const xRatio = config.width / config.imageWidth;
+  const yRatio = config.height / config.imageHeight;
 
   let time = 0;
   const animation = () => {

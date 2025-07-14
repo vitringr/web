@@ -1,7 +1,28 @@
 import { Noise } from "@utilities/noise";
 import { Mathematics } from "../../../../utilities/mathematics/src";
 
-const config = {
+type Config = {
+  width: number;
+  height: number;
+
+  gap: number;
+  gapOffset: number;
+
+  spriteWidth: number;
+  spriteHeight: number;
+
+  noiseFrequency: number;
+  timeIncrement: number;
+
+  colors: {
+    background: string;
+    font: string;
+  };
+
+  characters: string[];
+};
+
+const defaultConfig: Config = {
   width: 600,
   height: 600,
 
@@ -18,72 +39,74 @@ const config = {
     background: "#111111",
     font: "#999999",
   },
+
+  characters: [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z",
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+  ],
 } as const;
 
-const characters = [
-  "0",
-  "1",
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-  "a",
-  "b",
-  "c",
-  "d",
-  "e",
-  "f",
-  "g",
-  "h",
-  "i",
-  "j",
-  "k",
-  "l",
-  "m",
-  "n",
-  "o",
-  "p",
-  "q",
-  "r",
-  "s",
-  "t",
-  "u",
-  "v",
-  "w",
-  "x",
-  "y",
-  "z",
-  "A",
-  "B",
-  "C",
-  "D",
-  "E",
-  "F",
-  "G",
-  "H",
-  "I",
-  "J",
-  "K",
-  "L",
-  "M",
-  "N",
-  "O",
-  "P",
-  "Q",
-  "R",
-  "S",
-  "T",
-  "U",
-  "V",
-  "W",
-  "X",
-  "Y",
-  "Z",
-] as const;
+let config: Config;
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.width;
@@ -122,9 +145,9 @@ function setupSprites() {
   offscreenContext.textBaseline = "middle";
   offscreenContext.textRendering = "optimizeLegibility";
 
-  for (let i = 0; i < characters.length; i++) {
+  for (let i = 0; i < config.characters.length; i++) {
     offscreenContext.clearRect(0, 0, width, height);
-    offscreenContext.fillText(characters[i], halfWidth, halfHeight + yOffset);
+    offscreenContext.fillText(config.characters[i], halfWidth, halfHeight + yOffset);
 
     const img = new Image();
     img.src = offscreenCanvas.toDataURL();
@@ -135,14 +158,16 @@ function setupSprites() {
   return sprites;
 }
 
-export function main(canvas: HTMLCanvasElement) {
+export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+  config = { ...defaultConfig, ...settings };
+
   const context = setupContext(canvas);
 
   const sprites = setupSprites();
 
   const size = (config.width - 2 * config.gap) / config.spriteWidth;
   const gap = config.gap * config.gapOffset;
-  const charactersLength = characters.length;
+  const charactersLength = config.characters.length;
 
   let time = 0;
   const animation = () => {
@@ -155,10 +180,7 @@ export function main(canvas: HTMLCanvasElement) {
         const xPosition = gap + x * config.spriteWidth;
         const yPosition = gap + y * config.spriteHeight;
 
-        const noiseValue = Noise.Simplex.get(
-          x * config.noiseFrequency + time,
-          y * config.noiseFrequency + time,
-        );
+        const noiseValue = Noise.Simplex.get(x * config.noiseFrequency + time, y * config.noiseFrequency + time);
 
         const noiseIndex = Math.floor(Mathematics.lerp(0, charactersLength, noiseValue)) | 0;
 
