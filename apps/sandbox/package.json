@@ -13,6 +13,7 @@
     "@packages/learning-noise": "workspace:*",
     "@packages/learning-sdf": "workspace:*",
     "@packages/pathfinder": "workspace:*",
+    "@packages/sandfall": "workspace:*",
     "@packages/test": "workspace:*",
     "@packages/quadtree-simulation": "workspace:*",
     "@packages/creative": "workspace:*",

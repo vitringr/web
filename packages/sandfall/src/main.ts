@@ -1,4 +1,3 @@
-import { Random, WebGL } from "./utilities/utilities";
 import { Generator } from "./generator";
 import { Config } from "./config";
 import { Input } from "./input";
