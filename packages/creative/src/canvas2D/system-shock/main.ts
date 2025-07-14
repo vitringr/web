@@ -3,7 +3,33 @@ import { Noise } from "@utilities/noise";
 
 import systemShockPNG from "./system-shock.png";
 
-const config = {
+type Config = {
+  width: number;
+  height: number;
+
+  imageWidth: number;
+  imageHeight: number;
+
+  spriteWidth: number;
+  spriteHeight: number;
+
+  minBrightness: number;
+
+  updateChance: number;
+
+  noiseFrequency: number;
+
+  timeIncrement: number;
+
+  colors: {
+    background: string;
+    font: string;
+  };
+
+  characters: string[];
+};
+
+const defaultConfig = {
   width: 780,
   height: 648,
 
@@ -27,12 +53,9 @@ const config = {
   },
 
   characters: ["1", "2", "3", "a", "b", "c", "A", "B", "X"],
-} as const;
+} as const satisfies Config;
 
-const xRatio = config.width / config.imageWidth;
-const yRatio = config.height / config.imageHeight;
-
-function setupContext(canvas: HTMLCanvasElement) {
+function setupContext(canvas: HTMLCanvasElement, config: Config) {
   canvas.width = config.width;
   canvas.height = config.height;
 
@@ -42,18 +65,10 @@ function setupContext(canvas: HTMLCanvasElement) {
   return context;
 }
 
-function createImageData(
-  context: CanvasRenderingContext2D,
-  image: HTMLImageElement,
-) {
+function createImageData(context: CanvasRenderingContext2D, image: HTMLImageElement, config: Config) {
   context.drawImage(image, 0, 0, config.imageWidth, config.imageHeight);
 
-  const imageData = context.getImageData(
-    0,
-    0,
-    config.imageWidth,
-    config.imageHeight,
-  ).data;
+  const imageData = context.getImageData(0, 0, config.imageWidth, config.imageHeight).data;
 
   context.clearRect(0, 0, config.width, config.height);
 
@@ -78,7 +93,7 @@ function createImageData(
   return arr;
 }
 
-function createSprites(color: string) {
+function createSprites(color: string, config: Config) {
   const sprites: HTMLImageElement[] = [];
 
   const width = config.spriteWidth;
@@ -104,11 +119,7 @@ function createSprites(color: string) {
     offscreenContext.fillStyle = config.colors.background;
     offscreenContext.fillRect(0, 0, width, height);
     offscreenContext.fillStyle = color;
-    offscreenContext.fillText(
-      config.characters[i],
-      halfWidth,
-      halfHeight + yOffset,
-    );
+    offscreenContext.fillText(config.characters[i], halfWidth, halfHeight + yOffset);
 
     const img = new Image();
     img.src = offscreenCanvas.toDataURL();
@@ -119,25 +130,28 @@ function createSprites(color: string) {
   return sprites;
 }
 
-function createAllSprites() {
+function createAllSprites(config: Config) {
   const allSprites: HTMLImageElement[][] = [];
 
   for (let i = 0; i < config.characters.length; i++) {
     const brightness = config.minBrightness + (i * (1 - config.minBrightness)) / config.characters.length;
     const color = Colors.getRGBGrayscale(brightness);
-    const sprites = createSprites(color);
+    const sprites = createSprites(color, config);
     allSprites.push(sprites);
   }
 
   return allSprites;
 }
 
-function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
-  const context = setupContext(canvas);
+function start(canvas: HTMLCanvasElement, image: HTMLImageElement, config: Config) {
+  const context = setupContext(canvas, config);
 
-  const imageData = createImageData(context, image);
+  const xRatio = config.width / config.imageWidth;
+  const yRatio = config.height / config.imageHeight;
 
-  const allSprites = createAllSprites();
+  const imageData = createImageData(context, image, config);
+
+  const allSprites = createAllSprites(config);
 
   let time = 0;
   const animation = () => {
@@ -151,18 +165,12 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
 
         const xNoise = x * config.noiseFrequency;
         const yNoise = (y + time) * config.noiseFrequency;
-        const character = Math.floor(
-          Noise.Simplex.get(xNoise, yNoise) * config.characters.length,
-        );
+        const character = Math.floor(Noise.Simplex.get(xNoise, yNoise) * config.characters.length);
 
         const xPosition = x * xRatio;
         const yPosition = y * yRatio;
 
-        context.drawImage(
-          allSprites[brightness][character],
-          xPosition,
-          yPosition,
-        );
+        context.drawImage(allSprites[brightness][character], xPosition, yPosition);
       }
     }
 
@@ -172,10 +180,12 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   requestAnimationFrame(animation);
 }
 
-export function main(canvas: HTMLCanvasElement) {
+export function main(canvas: HTMLCanvasElement, config: Partial<Config> = {}) {
+  const cfg: Config = { ...defaultConfig, ...config };
+
   const image = new Image();
   image.src = systemShockPNG;
   image.onload = () => {
-    start(canvas, image);
+    start(canvas, image, cfg);
   };
 }
