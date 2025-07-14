@@ -5,7 +5,24 @@ import computeFragment from "./update-fragment.glsl";
 import renderVertex from "./render-vertex.glsl";
 import renderFragment from "./render-fragment.glsl";
 
-const config = {
+type Config = {
+  width: number,
+  height: number,
+
+  xCount: number,
+  yCount: number,
+  offset: number,
+
+  originPullScalar: number,
+  toggleOriginPullScalar: number,
+  repelScalar: number,
+  repelNearestScalar: number,
+  maxRepelDistance: number,
+  minPointSize: number,
+  pointSizeByOriginDistance: number,
+};
+
+const defaultConfig: Config = {
   width: 600,
   height: 600,
 
@@ -22,8 +39,9 @@ const config = {
   pointSizeByOriginDistance: 24,
 } as const;
 
+let config: Config;
+
 const input = { x: -99999, y: -99999, clicked: false };
-const particleCount = config.xCount * config.yCount;
 
 function setupInput(canvas: HTMLCanvasElement) {
   const canvasBounds = canvas.getBoundingClientRect();
@@ -240,7 +258,9 @@ function setupGL(canvas: HTMLCanvasElement) {
   return gl;
 }
 
-export function main(canvas: HTMLCanvasElement) {
+export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+  config = { ...defaultConfig, ...settings };
+
   const gl = setupGL(canvas);
 
   setupInput(canvas);
@@ -262,6 +282,8 @@ export function main(canvas: HTMLCanvasElement) {
     TF: transformFeedbacks.heads,
     renderVAO: vertexArrayObjects.render.heads,
   };
+
+  const particleCount = config.xCount * config.yCount;
 
   // ---------------------
   // -- Static Uniforms --

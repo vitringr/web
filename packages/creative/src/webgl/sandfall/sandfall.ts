@@ -1,3 +1,5 @@
+// TODO: refactor
+
 import { Vector2 } from "@utilities/vector";
 import { Random } from "@utilities/random";
 import { WebGL } from "@utilities/webgl";
@@ -16,10 +18,8 @@ enum InputKeys {
 }
 
 export class Sandfall {
-  ///* */ private readonly width = 40;
-  ///**/ private readonly height = 40;
-  /* */ private readonly width = 100;
-  /**/ private readonly height = 100;
+  private readonly width = 100;
+  private readonly height = 100;
 
   private readonly percent = 30;
   private readonly FPS: number = 30; // Temporary; -1 for full

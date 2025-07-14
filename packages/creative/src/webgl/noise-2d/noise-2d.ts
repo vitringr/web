@@ -4,13 +4,23 @@ import { NoiseGLSL } from "@utilities/noise-glsl";
 import vertexShader from "./vertex.glsl";
 import fragmentShader from "./fragment.glsl";
 
-const config = {
+type Config = {
+  canvasWidth: number,
+  canvasHeight: number,
+
+  timeIncrement: number,
+  noiseFrequency: number,
+};
+
+const defaultConfig: Config = {
   canvasWidth: 600,
   canvasHeight: 600,
 
   timeIncrement: 0.5,
   noiseFrequency: 0.0046,
 } as const;
+
+let config: Config;
 
 function setupGL(canvas: HTMLCanvasElement) {
   const gl = canvas.getContext("webgl2");
@@ -35,7 +45,9 @@ function setupProgram(gl: WebGL2RenderingContext) {
   return program;
 }
 
-export function main(canvas: HTMLCanvasElement) {
+export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+  config = { ...defaultConfig, ...settings };
+
   const gl = setupGL(canvas);
 
   const program = setupProgram(gl);
@@ -53,11 +65,7 @@ export function main(canvas: HTMLCanvasElement) {
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
   const canvasVertices = WebGL.Points.rectangle(0, 0, 1, 1);
-  gl.bufferData(
-    gl.ARRAY_BUFFER,
-    new Float32Array(canvasVertices),
-    gl.STATIC_DRAW,
-  );
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(canvasVertices), gl.STATIC_DRAW);
 
   gl.enableVertexAttribArray(locations.aCanvasVertices);
   gl.vertexAttribPointer(locations.aCanvasVertices, 2, gl.FLOAT, false, 0, 0);

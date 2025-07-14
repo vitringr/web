@@ -1,10 +1,23 @@
 import { WebGL } from "@utilities/webgl";
+import { NoiseGLSL } from "@utilities/noise-glsl";
 
 import vertexShader from "./vertex.glsl";
 import fragmentShader from "./fragment.glsl";
-import { NoiseGLSL } from "@utilities/noise-glsl";
 
-const config = {
+type Config = {
+  width: number,
+  height: number,
+
+  noiseFrequency: number,
+  noiseContrast: number,
+
+  timeLoopNoise: number,
+
+  timeFlowHorizontal: number,
+  timeFlowVertical: number,
+};
+
+const defaultConfig: Config = {
   width: 600,
   height: 600,
 
@@ -16,6 +29,8 @@ const config = {
   timeFlowHorizontal: 0.0001,
   timeFlowVertical: -0.0006,
 } as const;
+
+let config: Config;
 
 function setupGL(canvas: HTMLCanvasElement) {
   const gl = canvas.getContext("webgl2");
@@ -40,7 +55,9 @@ function setupProgram(gl: WebGL2RenderingContext) {
   return program;
 }
 
-export function main(canvas: HTMLCanvasElement) {
+export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+  config = { ...defaultConfig, ...settings };
+
   const gl = setupGL(canvas);
 
   const program = setupProgram(gl);
@@ -81,7 +98,7 @@ export function main(canvas: HTMLCanvasElement) {
 
   gl.clearColor(0, 0, 0, 1);
 
-  let time = 1337
+  let time = 1337;
   const animation = () => {
     time++;
 
