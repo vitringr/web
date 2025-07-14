@@ -1,6 +1,18 @@
 import { Mathematics } from "@utilities/mathematics";
 
-const config = {
+type Config = {
+  width: number;
+  height: number;
+
+  spawnRadius: number;
+
+  size: number;
+
+  backgroundColor: string;
+  walkerColors: string[];
+};
+
+const defaultConfig: Config = {
   width: 600,
   height: 600,
 
@@ -29,8 +41,7 @@ const config = {
   ],
 } as const;
 
-const wallWidth = config.width - config.size;
-const wallHeight = config.height - config.size;
+let config: Config;
 
 type Walker = {
   x: number;
@@ -53,6 +64,9 @@ function setupContext(canvas: HTMLCanvasElement) {
 
 function moveWalker(walker: Walker) {
   const rng = Math.random();
+
+  const wallWidth = config.width - config.size;
+  const wallHeight = config.height - config.size;
 
   if (rng < 0.25) {
     if (walker.x < wallWidth) walker.x += config.size;
@@ -86,7 +100,9 @@ function createWalkers() {
   return walkers;
 }
 
-export function main(canvas: HTMLCanvasElement) {
+export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+  config = { ...defaultConfig, ...settings };
+
   const context = setupContext(canvas);
 
   const walkers = createWalkers();

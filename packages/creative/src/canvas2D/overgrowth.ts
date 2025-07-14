@@ -2,7 +2,31 @@ import { Noise } from "@utilities/noise";
 import { Canvas2D } from "@utilities/canvas2d";
 import { Mathematics } from "@utilities/mathematics";
 
-const config = {
+type Config = {
+  width: number;
+  height: number;
+
+  spawnCount: number;
+  orbsPooled: number;
+
+  radius: number;
+  decayRate: number;
+
+  noiseFrequency: number;
+  velocityScalar: number;
+
+  timeIncrement: number;
+
+  lineWidth: number;
+
+  colors: {
+    stroke: string;
+    background: string;
+    palette: { color: string; weight: number }[];
+  };
+};
+
+const defaultConfig: Config = {
   width: 600,
   height: 600,
 
@@ -35,6 +59,8 @@ const config = {
     ],
   },
 } as const;
+
+let config: Config;
 
 const input = { x: -99999, y: -99999, clicked: false };
 
@@ -112,16 +138,10 @@ function createOrbsPool() {
 
 function moveOrb(orb: Orb, time: number) {
   const xNoise =
-    Noise.Simplex.get(
-      (orb.xNoise + time) * config.noiseFrequency,
-      (orb.yNoise + time) * config.noiseFrequency,
-    ) - 0.5;
+    Noise.Simplex.get((orb.xNoise + time) * config.noiseFrequency, (orb.yNoise + time) * config.noiseFrequency) - 0.5;
 
   const yNoise =
-    Noise.Simplex.get(
-      (orb.xNoise + time) * config.noiseFrequency,
-      (orb.yNoise - time) * config.noiseFrequency,
-    ) - 0.5;
+    Noise.Simplex.get((orb.xNoise + time) * config.noiseFrequency, (orb.yNoise - time) * config.noiseFrequency) - 0.5;
 
   orb.x += xNoise * config.velocityScalar;
   orb.y += yNoise * config.velocityScalar;
@@ -151,7 +171,9 @@ function renderBackground(context: CanvasRenderingContext2D) {
   context.fillRect(0, 0, config.width, config.height);
 }
 
-export function main(canvas: HTMLCanvasElement) {
+export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+  config = { ...defaultConfig, ...settings };
+
   setupInput(canvas);
 
   const context = setupContext(canvas);

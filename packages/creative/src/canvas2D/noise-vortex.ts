@@ -1,6 +1,27 @@
 import { Noise } from "@utilities/noise";
 
-const config = {
+type Config = {
+  width: number;
+  height: number;
+
+  count: number;
+
+  range: number;
+
+  timeIncrement: number;
+
+  noiseVolatility: number;
+
+  orbMinRadius: number;
+  orbAddedRadius: number;
+
+  colors: {
+    background: string;
+    orb: string;
+  };
+};
+
+const defaultConfig: Config = {
   width: 600,
   height: 600,
 
@@ -21,8 +42,7 @@ const config = {
   },
 } as const;
 
-const xCenter = config.width * 0.5;
-const yCenter = config.height * 0.5;
+let config: Config;
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.width;
@@ -39,7 +59,9 @@ function clear(context: CanvasRenderingContext2D) {
   context.fillRect(0, 0, config.width, config.height);
 }
 
-export function main(canvas: HTMLCanvasElement) {
+export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+  config = { ...defaultConfig, ...settings };
+
   const context = setupContext(canvas);
 
   const xSeeds: number[] = [];
@@ -49,6 +71,9 @@ export function main(canvas: HTMLCanvasElement) {
     xSeeds.push(Math.random());
     ySeeds.push(Math.random());
   }
+
+  const xCenter = config.width * 0.5;
+  const yCenter = config.height * 0.5;
 
   let time = 0;
   let counter = 0;

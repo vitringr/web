@@ -12,7 +12,7 @@ type Config = {
   colorHSLRange: number;
 };
 
-const defaultConfig = {
+const defaultConfig: Config = {
   width: 600,
   height: 600,
 

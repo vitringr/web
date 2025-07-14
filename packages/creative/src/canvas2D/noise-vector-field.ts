@@ -2,7 +2,27 @@ import { Canvas2D } from "@utilities/canvas2d";
 import { Mathematics } from "@utilities/mathematics";
 import { Noise } from "@utilities/noise";
 
-const config = {
+type Config = {
+  width: number;
+  height: number;
+
+  rows: number;
+  cols: number;
+
+  gap: number;
+
+  vectorMagnitude: number;
+
+  noiseScale: number;
+
+  timeIncrement: number;
+
+  lineWidth: number;
+  color: string;
+  background: string;
+};
+
+const defaultConfig: Config = {
   width: 600,
   height: 600,
 
@@ -22,6 +42,8 @@ const config = {
   background: "#111111",
 } as const;
 
+let config: Config;
+
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.width;
   canvas.height = config.height;
@@ -37,7 +59,9 @@ function renderBackground(context: CanvasRenderingContext2D) {
   context.fillRect(0, 0, config.width, config.height);
 }
 
-export function main(canvas: HTMLCanvasElement) {
+export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+  config = { ...defaultConfig, ...settings };
+
   const context = setupContext(canvas);
 
   context.strokeStyle = config.color;
