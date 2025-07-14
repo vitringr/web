@@ -1,6 +1,18 @@
 import { Noise } from "@utilities/noise";
 
-const config = {
+type Config = {
+  width: number;
+  height: number;
+
+  cellRows: number;
+  cellCols: number;
+
+  noiseFrequency: number;
+  timeIncrement: number;
+  colorHSLRange: number;
+};
+
+const defaultConfig = {
   width: 600,
   height: 600,
 
@@ -12,8 +24,7 @@ const config = {
   colorHSLRange: 720,
 } as const;
 
-const xScale = config.width / config.cellRows;
-const yScale = config.height / config.cellCols;
+let config: Config;
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.width;
@@ -35,10 +46,15 @@ function createColors() {
   return colors;
 }
 
-export function main(canvas: HTMLCanvasElement) {
+export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+  config = { ...defaultConfig, ...settings };
+
   const context = setupContext(canvas);
 
   const colors = createColors();
+
+  const xScale = config.width / config.cellRows;
+  const yScale = config.height / config.cellCols;
 
   let time = 0;
   const animation = () => {

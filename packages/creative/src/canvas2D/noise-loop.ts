@@ -1,7 +1,29 @@
 import { Mathematics } from "@utilities/mathematics";
 import { Noise } from "@utilities/noise";
 
-const config = {
+type Config = {
+  width: number;
+  height: number;
+
+  particleCount: number;
+  particleWidth: number;
+
+  radius: number;
+  noiseRadius: number;
+
+  noiseFrequency: number;
+
+  timeIncrement: number;
+
+  lineWidth: number;
+
+  colors: {
+    background: string;
+    particle: string;
+  };
+};
+
+const defaultConfig = {
   width: 600,
   height: 600,
 
@@ -23,9 +45,7 @@ const config = {
   },
 } as const;
 
-const angleStep = Mathematics.TAU / config.particleCount;
-const xCenter = config.width * 0.5;
-const yCenter = config.height * 0.5;
+let config: Config;
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.width;
@@ -46,11 +66,16 @@ function renderBackground(context: CanvasRenderingContext2D) {
   context.fillRect(0, 0, config.width, config.height);
 }
 
-export function main(canvas: HTMLCanvasElement) {
+export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+  config = { ...defaultConfig, ...settings };
+
   const context = setupContext(canvas);
 
-  let time = 0;
+  const angleStep = Mathematics.TAU / config.particleCount;
+  const xCenter = config.width * 0.5;
+  const yCenter = config.height * 0.5;
 
+  let time = 0;
   const animation = () => {
     time += config.timeIncrement;
 
@@ -65,16 +90,9 @@ export function main(canvas: HTMLCanvasElement) {
       const sin = Math.sin(angle);
 
       const noiseValue =
-        config.noiseRadius *
-        Noise.Simplex.get(
-          cos * config.noiseFrequency + time,
-          sin * config.noiseFrequency - time,
-        );
+        config.noiseRadius * Noise.Simplex.get(cos * config.noiseFrequency + time, sin * config.noiseFrequency - time);
 
-      context.lineTo(
-        xCenter + cos * (config.radius + noiseValue),
-        yCenter + sin * (config.radius + noiseValue),
-      );
+      context.lineTo(xCenter + cos * (config.radius + noiseValue), yCenter + sin * (config.radius + noiseValue));
     }
 
     context.stroke();
