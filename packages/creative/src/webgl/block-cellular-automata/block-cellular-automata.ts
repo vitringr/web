@@ -7,7 +7,18 @@ import updateFragment from "./update-fragment.glsl";
 import renderVertex from "./render-vertex.glsl";
 import renderFragment from "./render-fragment.glsl";
 
-const config = {
+type Config = {
+  canvasWidth: number;
+  canvasHeight: number;
+
+  width: number;
+  height: number;
+
+  spawnChancePercent: number;
+  pointerArea: number;
+};
+
+const defaultConfig: Config = {
   canvasWidth: 600,
   canvasHeight: 600,
 
@@ -18,7 +29,7 @@ const config = {
   pointerArea: 0.01,
 } as const;
 
-const totalCells = config.width * config.height;
+let config: Config;
 
 const pointer = {
   coordinates: Vector2.Create.zero(),
@@ -30,10 +41,7 @@ function setupPointer(canvas: HTMLCanvasElement) {
   canvas.addEventListener("pointermove", (ev: PointerEvent) => {
     const x = ev.clientX - canvasBounds.left;
     const y = ev.clientY - canvasBounds.top;
-    pointer.coordinates.set(
-      x / canvas.width,
-      (canvas.height - y) / canvas.height,
-    );
+    pointer.coordinates.set(x / canvas.width, (canvas.height - y) / canvas.height);
   });
 
   // TODO: memory garbage
@@ -82,10 +90,7 @@ function setupUniformBlock(
   const blockIndices = {
     update: {},
     render: {
-      dimensions: gl.getUniformBlockIndex(
-        programs.render,
-        "DimensionsStaticData",
-      ),
+      dimensions: gl.getUniformBlockIndex(programs.render, "DimensionsStaticData"),
     },
   };
 
@@ -94,20 +99,11 @@ function setupUniformBlock(
   };
 
   const data = {
-    dimensions: new Float32Array([
-      config.width,
-      config.height,
-      canvas.width,
-      canvas.height,
-    ]),
+    dimensions: new Float32Array([config.width, config.height, canvas.width, canvas.height]),
   };
 
   const dimensionsIndex = 0;
-  gl.uniformBlockBinding(
-    programs.render,
-    blockIndices.render.dimensions,
-    dimensionsIndex,
-  );
+  gl.uniformBlockBinding(programs.render, blockIndices.render.dimensions, dimensionsIndex);
   gl.bindBuffer(gl.UNIFORM_BUFFER, buffers.dimensions);
   gl.bufferData(gl.UNIFORM_BUFFER, data.dimensions, gl.STATIC_DRAW);
   gl.bindBufferBase(gl.UNIFORM_BUFFER, dimensionsIndex, buffers.dimensions);
@@ -120,27 +116,15 @@ function setupState(
 ) {
   const locations = {
     update: {
-      aCanvasVertices: gl.getAttribLocation(
-        programs.update,
-        "a_canvasVertices",
-      ),
-      uInputTextureIndex: gl.getUniformLocation(
-        programs.update,
-        "u_inputTextureIndex",
-      ),
-      uPointerPosition: gl.getUniformLocation(
-        programs.update,
-        "u_pointerPosition",
-      ),
+      aCanvasVertices: gl.getAttribLocation(programs.update, "a_canvasVertices"),
+      uInputTextureIndex: gl.getUniformLocation(programs.update, "u_inputTextureIndex"),
+      uPointerPosition: gl.getUniformLocation(programs.update, "u_pointerPosition"),
       uIsPointerDown: gl.getUniformLocation(programs.update, "u_isPointerDown"),
       uPointerArea: gl.getUniformLocation(programs.update, "u_pointerArea"),
       uPartition: gl.getUniformLocation(programs.update, "u_partition"),
     },
     render: {
-      uOutputTextureIndex: gl.getUniformLocation(
-        programs.render,
-        "u_outputTextureIndex",
-      ),
+      uOutputTextureIndex: gl.getUniformLocation(programs.render, "u_outputTextureIndex"),
     },
   };
 
@@ -170,47 +154,22 @@ function setupState(
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
   gl.bufferData(gl.ARRAY_BUFFER, data.canvasVertices, gl.STATIC_DRAW);
   gl.enableVertexAttribArray(locations.update.aCanvasVertices);
-  gl.vertexAttribPointer(
-    locations.update.aCanvasVertices,
-    2,
-    gl.FLOAT,
-    false,
-    0,
-    0,
-  );
+  gl.vertexAttribPointer(locations.update.aCanvasVertices, 2, gl.FLOAT, false, 0, 0);
 
   gl.bindTexture(gl.TEXTURE_2D, textures.input);
-  gl.texImage2D(
-    gl.TEXTURE_2D,
-    0,
-    gl.R8I,
-    config.width,
-    config.height,
-    0,
-    gl.RED_INTEGER,
-    gl.BYTE,
-    data.state,
-  );
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8I, config.width, config.height, 0, gl.RED_INTEGER, gl.BYTE, data.state);
   WebGL.Texture.applyClampAndNearest(gl);
 
   gl.bindTexture(gl.TEXTURE_2D, textures.output);
-  gl.texImage2D(
-    gl.TEXTURE_2D,
-    0,
-    gl.R8I,
-    config.width,
-    config.height,
-    0,
-    gl.RED_INTEGER,
-    gl.BYTE,
-    data.state,
-  );
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8I, config.width, config.height, 0, gl.RED_INTEGER, gl.BYTE, data.state);
   WebGL.Texture.applyClampAndNearest(gl);
 
   return { locations, vertexArrayObjects, textures, framebuffers };
 }
 
-export function main(canvas: HTMLCanvasElement) {
+export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+  config = { ...defaultConfig, ...settings };
+
   const gl = canvas.getContext("webgl2");
   if (!gl) throw new Error("Failed to get WebGL2 context");
 
@@ -225,24 +184,14 @@ export function main(canvas: HTMLCanvasElement) {
 
   const programs = setupPrograms(gl);
 
-  const { locations, vertexArrayObjects, textures, framebuffers } = setupState(
-    gl,
-    programs,
-    canvas,
-  );
+  const { locations, vertexArrayObjects, textures, framebuffers } = setupState(gl, programs, canvas);
 
   let partition: boolean = false;
 
   const updateLoop = () => {
     gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffers.update);
     gl.viewport(0, 0, config.width, config.height);
-    gl.framebufferTexture2D(
-      gl.FRAMEBUFFER,
-      gl.COLOR_ATTACHMENT0,
-      gl.TEXTURE_2D,
-      textures.output,
-      0,
-    );
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, textures.output, 0);
 
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, textures.input);
@@ -252,11 +201,7 @@ export function main(canvas: HTMLCanvasElement) {
 
     gl.uniform1i(locations.update.uInputTextureIndex, 0);
     gl.uniform1i(locations.update.uPartition, partition ? 1 : 0);
-    gl.uniform2f(
-      locations.update.uPointerPosition,
-      pointer.coordinates.x,
-      pointer.coordinates.y,
-    );
+    gl.uniform2f(locations.update.uPointerPosition, pointer.coordinates.x, pointer.coordinates.y);
     gl.uniform1i(locations.update.uIsPointerDown, pointer.isDown);
     gl.uniform1f(locations.update.uPointerArea, config.pointerArea);
 
@@ -275,6 +220,7 @@ export function main(canvas: HTMLCanvasElement) {
 
     gl.uniform1i(locations.render.uOutputTextureIndex, 0);
 
+    const totalCells = config.width * config.height;
     gl.drawArrays(gl.POINTS, 0, totalCells);
   };
 

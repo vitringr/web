@@ -6,7 +6,16 @@ import computeFragment from "./compute-fragment.glsl";
 import renderVertex from "./render-vertex.glsl";
 import renderFragment from "./render-fragment.glsl";
 
-const config = {
+type Config = {
+  canvasWidth: number;
+  canvasHeight: number;
+
+  particles: number;
+  size: number;
+  speed: number;
+};
+
+const defaultConfig: Config = {
   canvasWidth: 600,
   canvasHeight: 600,
 
@@ -14,6 +23,8 @@ const config = {
   size: 3.0,
   speed: 0.001,
 } as const;
+
+let config: Config;
 
 function setupGL(canvas: HTMLCanvasElement) {
   const gl = canvas.getContext("webgl2");
@@ -174,7 +185,9 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   return { vertexArrayObjects, transformFeedbacks };
 }
 
-export function main(canvas: HTMLCanvasElement) {
+export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+  config = { ...defaultConfig, ...settings };
+
   const gl = setupGL(canvas);
 
   const programs = setupPrograms(gl);

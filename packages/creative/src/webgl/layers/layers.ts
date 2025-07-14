@@ -8,10 +8,17 @@ import img1 from "./layer1.png";
 import img2 from "./layer2.png";
 import img3 from "./layer3.png";
 
-const config = {
+type Config = {
+  canvasWidth: number;
+  canvasHeight: number;
+};
+
+const defaultConfig: Config = {
   canvasWidth: 600,
   canvasHeight: 600,
 };
+
+let config: Config;
 
 const images: HTMLImageElement[] = [];
 let pointerX: number = 0;
@@ -33,11 +40,7 @@ function loadImage(source: string, onLoad: () => void) {
   return image;
 }
 
-function loadImages(
-  sources: string[],
-  target: HTMLImageElement[],
-  onAllLoaded: () => void,
-) {
+function loadImages(sources: string[], target: HTMLImageElement[], onAllLoaded: () => void) {
   let toLoadCount = sources.length;
 
   const onImageLoaded = () => {
@@ -51,7 +54,9 @@ function loadImages(
   }
 }
 
-export function main(canvas: HTMLCanvasElement) {
+export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+  config = { ...defaultConfig, ...settings };
+
   const gl = canvas.getContext("webgl2");
   if (!gl) throw new Error("Failed to get WebGL2 context");
 
@@ -70,10 +75,7 @@ export function main(canvas: HTMLCanvasElement) {
 
   loadImages(sources, images, () => {
     const aPositionLocation = gl.getAttribLocation(program, "a_position");
-    const aTextureCoordinatesLocation = gl.getAttribLocation(
-      program,
-      "a_textureCoordinates",
-    );
+    const aTextureCoordinatesLocation = gl.getAttribLocation(program, "a_textureCoordinates");
     const uResolutionLocation = gl.getUniformLocation(program, "u_resolution");
     const uPointerLocation = gl.getUniformLocation(program, "u_pointer");
     const uImage0Location = gl.getUniformLocation(program, "u_image0");
@@ -88,9 +90,7 @@ export function main(canvas: HTMLCanvasElement) {
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
     gl.bufferData(
       gl.ARRAY_BUFFER,
-      new Float32Array(
-        WebGL.Points.rectangle(0, 0, gl.canvas.width, gl.canvas.height),
-      ),
+      new Float32Array(WebGL.Points.rectangle(0, 0, gl.canvas.width, gl.canvas.height)),
       gl.STATIC_DRAW,
     );
     gl.enableVertexAttribArray(aPositionLocation);
@@ -98,20 +98,9 @@ export function main(canvas: HTMLCanvasElement) {
 
     // aTextureCoordinates
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array(WebGL.Points.rectangle(0, 0, 1, 1)),
-      gl.STATIC_DRAW,
-    );
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(WebGL.Points.rectangle(0, 0, 1, 1)), gl.STATIC_DRAW);
     gl.enableVertexAttribArray(aTextureCoordinatesLocation);
-    gl.vertexAttribPointer(
-      aTextureCoordinatesLocation,
-      2,
-      gl.FLOAT,
-      false,
-      0,
-      0,
-    );
+    gl.vertexAttribPointer(aTextureCoordinatesLocation, 2, gl.FLOAT, false, 0, 0);
 
     // Texture.
     for (let i = 0; i < 4; i++) {
@@ -124,14 +113,7 @@ export function main(canvas: HTMLCanvasElement) {
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
-      gl.texImage2D(
-        gl.TEXTURE_2D,
-        0,
-        gl.RGBA,
-        gl.RGBA,
-        gl.UNSIGNED_BYTE,
-        images[i],
-      );
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, images[i]);
     }
 
     gl.useProgram(program);

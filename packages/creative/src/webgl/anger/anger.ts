@@ -3,16 +3,29 @@ import { WebGL } from "@utilities/webgl";
 import vertexShader from "./vertex.glsl";
 import fragmentShader from "./fragment.glsl";
 
-const config = {
-  canvasWidth: 600,
-  canvasHeight: 600,
+type Config = {
+  canvasWidth: number,
+  canvasHeight: number,
+
+  cells: number,
+  noiseOctaves: number,
+  contrast: number,
+  fractalAmplitude: number,
+  timeIncrement: number,
+};
+
+const defaultConfig: Config = {
+  canvasWidth: 800,
+  canvasHeight: 800,
 
   cells: 3,
   noiseOctaves: 8,
   contrast: 14,
-  fractalAmplitude: 0.60,
+  fractalAmplitude: 0.6,
   timeIncrement: 0.0006,
 } as const;
+
+let config: Config;
 
 function setupProgram(gl: WebGL2RenderingContext) {
   const vs = WebGL.Setup.compileShader(gl, "vertex", vertexShader);
@@ -56,7 +69,9 @@ function setupState(gl: WebGL2RenderingContext, program: WebGLProgram) {
   return vertexArrayObject;
 }
 
-export function main(canvas: HTMLCanvasElement) {
+export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+  config = { ...defaultConfig, ...settings };
+
   const gl = setupGL(canvas);
 
   const program = setupProgram(gl);

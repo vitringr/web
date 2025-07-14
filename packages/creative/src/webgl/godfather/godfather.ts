@@ -8,7 +8,20 @@ import renderFragment from "./render-fragment.glsl";
 
 import img from "./godfather.png";
 
-const config = {
+type Config = {
+  canvasWidth: number,
+  canvasHeight: number,
+  particlesCount: number,
+  minColor: number,
+  minPointSize: number,
+  colorPointSizeScalar: number,
+  colorSlowScalar: number,
+  minGravity: number,
+  minLimitGravity: number,
+  maxLimitGravity: number,
+};
+
+const defaultConfig: Config = {
   canvasWidth: 600,
   canvasHeight: 600,
   particlesCount: 6_000,
@@ -21,6 +34,8 @@ const config = {
   maxLimitGravity: 0.6,
 } as const;
 
+let config: Config;
+
 const image = new Image();
 
 function setupPrograms(gl: WebGL2RenderingContext) {
@@ -30,13 +45,7 @@ function setupPrograms(gl: WebGL2RenderingContext) {
   const renderFS = WebGL.Setup.compileShader(gl, "fragment", renderFragment);
 
   return {
-    update: WebGL.Setup.linkTransformFeedbackProgram(
-      gl,
-      updateVS,
-      updateFS,
-      ["newPosition"],
-      "separate",
-    ),
+    update: WebGL.Setup.linkTransformFeedbackProgram(gl, updateVS, updateFS, ["newPosition"], "separate"),
     render: WebGL.Setup.linkProgram(gl, renderVS, renderFS),
   };
 }
@@ -66,18 +75,9 @@ function setupTexture(gl: WebGL2RenderingContext) {
   WebGL.Texture.applyClampAndNearest(gl);
 }
 
-function setupUniformBlock(
-  gl: WebGL2RenderingContext,
-  programs: { update: WebGLProgram; render: WebGLProgram },
-) {
-  const blockIndexInUpdate = gl.getUniformBlockIndex(
-    programs.update,
-    "GlobalStaticData",
-  );
-  const blockIndexInRender = gl.getUniformBlockIndex(
-    programs.render,
-    "GlobalStaticData",
-  );
+function setupUniformBlock(gl: WebGL2RenderingContext, programs: { update: WebGLProgram; render: WebGLProgram }) {
+  const blockIndexInUpdate = gl.getUniformBlockIndex(programs.update, "GlobalStaticData");
+  const blockIndexInRender = gl.getUniformBlockIndex(programs.render, "GlobalStaticData");
 
   gl.uniformBlockBinding(programs.update, blockIndexInUpdate, 0);
   gl.uniformBlockBinding(programs.render, blockIndexInRender, 0);
@@ -102,16 +102,10 @@ function setupUniformBlock(
   gl.bufferSubData(gl.UNIFORM_BUFFER, 0, globalStaticData);
 }
 
-function setupState(
-  gl: WebGL2RenderingContext,
-  programs: { update: WebGLProgram; render: WebGLProgram },
-) {
+function setupState(gl: WebGL2RenderingContext, programs: { update: WebGLProgram; render: WebGLProgram }) {
   const locations = {
     update: {
-      aCurrentPosition: gl.getAttribLocation(
-        programs.update,
-        "a_currentPosition",
-      ),
+      aCurrentPosition: gl.getAttribLocation(programs.update, "a_currentPosition"),
       aWeight: gl.getAttribLocation(programs.update, "a_weight"),
       uTextureIndex: gl.getUniformLocation(programs.update, "u_textureIndex"),
       uDeltaTime: gl.getUniformLocation(programs.update, "u_deltaTime"),
@@ -144,18 +138,10 @@ function setupState(
   gl.bufferData(gl.ARRAY_BUFFER, data.positions, gl.STREAM_DRAW);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.firstTexelColor);
-  gl.bufferData(
-    gl.ARRAY_BUFFER,
-    new Float32Array(config.particlesCount * 3).fill(0),
-    gl.STREAM_DRAW,
-  );
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(config.particlesCount * 3).fill(0), gl.STREAM_DRAW);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.nextTexelColor);
-  gl.bufferData(
-    gl.ARRAY_BUFFER,
-    new Float32Array(config.particlesCount * 3).fill(0),
-    gl.STREAM_DRAW,
-  );
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(config.particlesCount * 3).fill(0), gl.STREAM_DRAW);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.weight);
   gl.bufferData(gl.ARRAY_BUFFER, data.weights, gl.STREAM_DRAW);
@@ -172,14 +158,7 @@ function setupState(
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.firstPosition);
   gl.enableVertexAttribArray(locations.update.aCurrentPosition);
-  gl.vertexAttribPointer(
-    locations.update.aCurrentPosition,
-    2,
-    gl.FLOAT,
-    false,
-    0,
-    0,
-  );
+  gl.vertexAttribPointer(locations.update.aCurrentPosition, 2, gl.FLOAT, false, 0, 0);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.weight);
   gl.enableVertexAttribArray(locations.update.aWeight);
@@ -190,14 +169,7 @@ function setupState(
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.nextPosition);
   gl.enableVertexAttribArray(locations.update.aCurrentPosition);
-  gl.vertexAttribPointer(
-    locations.update.aCurrentPosition,
-    2,
-    gl.FLOAT,
-    false,
-    0,
-    0,
-  );
+  gl.vertexAttribPointer(locations.update.aCurrentPosition, 2, gl.FLOAT, false, 0, 0);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.weight);
   gl.enableVertexAttribArray(locations.update.aWeight);
@@ -208,50 +180,22 @@ function setupState(
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.firstPosition);
   gl.enableVertexAttribArray(locations.render.aNewPosition);
-  gl.vertexAttribPointer(
-    locations.render.aNewPosition,
-    2,
-    gl.FLOAT,
-    false,
-    0,
-    0,
-  );
+  gl.vertexAttribPointer(locations.render.aNewPosition, 2, gl.FLOAT, false, 0, 0);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.firstTexelColor);
   gl.enableVertexAttribArray(locations.render.aTexelColor);
-  gl.vertexAttribPointer(
-    locations.render.aTexelColor,
-    3,
-    gl.FLOAT,
-    false,
-    0,
-    0,
-  );
+  gl.vertexAttribPointer(locations.render.aTexelColor, 3, gl.FLOAT, false, 0, 0);
 
   // render VAO next
   gl.bindVertexArray(vertexArrayObjects.renderNext);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.nextPosition);
   gl.enableVertexAttribArray(locations.render.aNewPosition);
-  gl.vertexAttribPointer(
-    locations.render.aNewPosition,
-    2,
-    gl.FLOAT,
-    false,
-    0,
-    0,
-  );
+  gl.vertexAttribPointer(locations.render.aNewPosition, 2, gl.FLOAT, false, 0, 0);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.nextTexelColor);
   gl.enableVertexAttribArray(locations.render.aTexelColor);
-  gl.vertexAttribPointer(
-    locations.render.aTexelColor,
-    3,
-    gl.FLOAT,
-    false,
-    0,
-    0,
-  );
+  gl.vertexAttribPointer(locations.render.aTexelColor, 3, gl.FLOAT, false, 0, 0);
 
   const transformFeedbacks = {
     first: gl.createTransformFeedback(),
@@ -274,7 +218,9 @@ function setupState(
   return { locations, vertexArrayObjects, transformFeedbacks };
 }
 
-export function main(canvas: HTMLCanvasElement) {
+export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+  config = { ...defaultConfig, ...settings };
+
   const gl = canvas.getContext("webgl2");
   if (!gl) throw new Error("Failed to get WebGL2 context");
 
@@ -286,10 +232,7 @@ export function main(canvas: HTMLCanvasElement) {
   image.onload = () => {
     const programs = setupPrograms(gl);
 
-    const { locations, vertexArrayObjects, transformFeedbacks } = setupState(
-      gl,
-      programs,
-    );
+    const { locations, vertexArrayObjects, transformFeedbacks } = setupState(gl, programs);
 
     setupTexture(gl);
 

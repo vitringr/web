@@ -1,4 +1,13 @@
-const config = {
+type Config = {
+  width: 600;
+  height: 600;
+
+  colors: {
+    background: "#111111";
+  };
+};
+
+const defaultConfig: Config = {
   width: 600,
   height: 600,
 
@@ -6,6 +15,8 @@ const config = {
     background: "#111111",
   },
 } as const;
+
+let config: Config;
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.width;
@@ -22,7 +33,9 @@ function renderBackground(context: CanvasRenderingContext2D) {
   context.fillRect(0, 0, config.width, config.height);
 }
 
-export function main(canvas: HTMLCanvasElement) {
+export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+  config = { ...defaultConfig, ...settings };
+
   const context = setupContext(canvas);
 
   const animation = () => {
