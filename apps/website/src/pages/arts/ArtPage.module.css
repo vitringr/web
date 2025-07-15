@@ -1,0 +1,30 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  padding: 10px 0;
+}
+
+.title {
+  margin: 10px auto;
+}
+
+.tags {
+  opacity: 80%;
+}
+
+.canvas {
+  margin: 10px auto;
+
+  border-radius: 10px;
+  /* border-radius: 50%; */
+}
+
+.description {
+  margin: 10px auto;
+  max-width: 600px;
+  text-align: center;
+}

@@ -1,5 +1,6 @@
-import { onMount } from "solid-js";
+import { onMount, Show } from "solid-js";
 import { ArtData } from "./art-data/art-data";
+import { TagsContainer } from "./TagsContainer";
 
 import css from "./ArtPage.module.css";
 
@@ -21,13 +22,21 @@ export const ArtPage = (props: ArtPageProps) => {
   // TODO: onCleanup
 
   return (
-    <main>
+    <main class={css.main}>
       <article>
-        <h1>{props.art.title}</h1>
+        <h1 class={css.title}>{props.art.title}</h1>
+
+        <div class={css.tags}>
+          <TagsContainer tags={props.art.tags} />
+        </div>
 
         <figure>
-          <canvas ref={canvasRef} />
-          <figcaption>{props.art.description}</figcaption>
+          <canvas class={css.canvas} ref={canvasRef} />
+          <Show when={props.art.description}>
+            <figcaption class={css.description}>
+              {props.art.description}
+            </figcaption>
+          </Show>
         </figure>
       </article>
     </main>

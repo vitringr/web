@@ -23,12 +23,14 @@ import angerPNG from "./thumbnails/anger.png";
 export interface ArtData<T> {
   title: string;
   route: string;
+
   thumbnail: string;
   tags: ArtTagNames[];
-  description: string;
 
   artMain: (canvas: HTMLCanvasElement, settings?: Partial<T>) => void;
   artConfig?: Partial<T>;
+
+  description?: string;
 }
 
 function defineArt<T>(art: ArtData<T>): ArtData<T> {
@@ -47,7 +49,6 @@ export const artData: ArtData<any>[] = [
       ArtTagNames.Image,
       ArtTagNames.Noise,
     ],
-    description: "",
     artMain: Creative.Canvas2D.TheSeer.main,
   }),
 
@@ -62,8 +63,8 @@ export const artData: ArtData<any>[] = [
       ArtTagNames.Noise,
       ArtTagNames.Random,
     ],
-    description: "Description of System Shock",
     artMain: Creative.Canvas2D.SystemShock.main,
+    description: "Description of System Shock",
   }),
 
   defineArt({
@@ -71,8 +72,8 @@ export const artData: ArtData<any>[] = [
     route: Routes.arts.anger,
     thumbnail: angerPNG,
     tags: [ArtTagNames["2D"], ArtTagNames.GPU, ArtTagNames.Noise],
-    description: "",
     artMain: Creative.WebGL.Anger.main,
+    artConfig: { width: 600, height: 600 },
   }),
 
   defineArt({
@@ -85,7 +86,6 @@ export const artData: ArtData<any>[] = [
       ArtTagNames.Particles,
       ArtTagNames.Noise,
     ],
-    description: "",
     artMain: Creative.Canvas2D.Sparks.main,
   }),
 
@@ -99,8 +99,8 @@ export const artData: ArtData<any>[] = [
       ArtTagNames.Particles,
       ArtTagNames.Noise,
     ],
-    description: "",
     artMain: Creative.Canvas2D.Overgrowth.main,
+    description: "Description of Overgrowth.",
   }),
 
   defineArt({
@@ -108,7 +108,6 @@ export const artData: ArtData<any>[] = [
     route: Routes.arts.randomWalkers,
     thumbnail: randomWalkersPNG,
     tags: [ArtTagNames["2D"], ArtTagNames.Random],
-    description: "",
     artMain: Creative.Canvas2D.RandomWalkers.main,
   }),
 
@@ -117,7 +116,6 @@ export const artData: ArtData<any>[] = [
     route: Routes.arts.noise2D,
     thumbnail: noise2DPNG,
     tags: [ArtTagNames["2D"], ArtTagNames.GPU, ArtTagNames.Noise],
-    description: "",
     artMain: Creative.WebGL.Noise2D.main,
   }),
 
@@ -126,7 +124,6 @@ export const artData: ArtData<any>[] = [
     route: Routes.arts.noiseFlow,
     thumbnail: noiseFlowPNG,
     tags: [ArtTagNames["2D"], ArtTagNames.GPU, ArtTagNames.Noise],
-    description: "",
     artMain: Creative.WebGL.NoiseFlow.main,
   }),
 
@@ -135,7 +132,6 @@ export const artData: ArtData<any>[] = [
     route: Routes.arts.noiseLoop,
     thumbnail: noiseLoopPNG,
     tags: [ArtTagNames["2D"], ArtTagNames.Noise],
-    description: "",
     artMain: Creative.Canvas2D.NoiseLoop.main,
   }),
 
@@ -144,7 +140,6 @@ export const artData: ArtData<any>[] = [
     route: Routes.arts.noiseVectorField,
     thumbnail: noiseVectorFieldPNG,
     tags: [ArtTagNames["2D"], ArtTagNames.Noise],
-    description: "",
     artMain: Creative.Canvas2D.NoiseVectorField.main,
   }),
 
@@ -153,7 +148,6 @@ export const artData: ArtData<any>[] = [
     route: Routes.arts.noiseBlanket,
     thumbnail: noiseBlanketPNG,
     tags: [ArtTagNames["2D"], ArtTagNames.Noise],
-    description: "",
     artMain: Creative.Canvas2D.NoiseBlanket.main,
   }),
 
@@ -162,7 +156,6 @@ export const artData: ArtData<any>[] = [
     route: Routes.arts.noiseAscii,
     thumbnail: noiseAsciiPNG,
     tags: [ArtTagNames["2D"], ArtTagNames.Noise, ArtTagNames.ASCII],
-    description: "",
     artMain: Creative.Canvas2D.NoiseAscii.main,
   }),
 
@@ -171,7 +164,6 @@ export const artData: ArtData<any>[] = [
     route: Routes.arts.noiseRainbow,
     thumbnail: noiseRainbow,
     tags: [ArtTagNames["2D"], ArtTagNames.Noise],
-    description: "",
     artMain: Creative.Canvas2D.NoiseRainbow.main,
   }),
 
@@ -185,7 +177,6 @@ export const artData: ArtData<any>[] = [
       ArtTagNames.GPU,
       ArtTagNames.Particles,
     ],
-    description: "",
     artMain: Creative.WebGL.Regeneration.main,
   }),
 
@@ -199,7 +190,6 @@ export const artData: ArtData<any>[] = [
       ArtTagNames.Particles,
       ArtTagNames.Image,
     ],
-    description: "",
     artMain: Creative.WebGL.TenThousand.main,
   }),
 
@@ -213,7 +203,6 @@ export const artData: ArtData<any>[] = [
       ArtTagNames.GPU,
       ArtTagNames.Image,
     ],
-    description: "",
     artMain: Creative.WebGL.Layers.main,
   }),
 
@@ -227,7 +216,6 @@ export const artData: ArtData<any>[] = [
       ArtTagNames.GPU,
       ArtTagNames.Particles,
     ],
-    description: "",
     artMain: Creative.WebGL.BlockCellularAutomata.main,
   }),
 ] as const;
