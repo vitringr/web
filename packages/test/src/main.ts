@@ -5,6 +5,7 @@ import { Colors } from "@utilities/colors";
 import { Config } from "./config";
 
 import plantPNG from "./plant.png";
+import godfatherPNG from "./godfather.png"
 
 const cellSize = Config.canvasSize / Config.gridSize;
 const pixelSize = Config.canvasSize / Config.gridSize;
@@ -22,7 +23,7 @@ function setupContext(canvas: HTMLCanvasElement) {
 }
 
 function renderLattice(context: CanvasRenderingContext2D) {
-  context.lineWidth = 0.5;
+  context.lineWidth = 0.2;
   context.strokeStyle = Config.colors.lattice;
 
   for (let x = 0; x < Config.gridSize; x++) {
@@ -208,10 +209,12 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   }
 
   console.log("done");
+
+  renderPixelData(context, pixelData)
 }
 
 export async function main(canvas: HTMLCanvasElement) {
   const img = new Image();
-  img.src = plantPNG;
+  img.src = godfatherPNG;
   img.onload = () => start(canvas, img);
 }
