@@ -17,13 +17,15 @@ export class Input {
   }
 
   private setupPointer(canvas: HTMLCanvasElement) {
-    const canvasBounds = canvas.getBoundingClientRect();
-
     canvas.addEventListener("pointermove", (ev: PointerEvent) => {
+      const canvasBounds = canvas.getBoundingClientRect();
       const x = ev.clientX - canvasBounds.left;
       const y = ev.clientY - canvasBounds.top;
 
-      this.pointerCoordinates.set(x / canvas.width, (canvas.height - y) / canvas.height);
+      this.pointerCoordinates.set(
+        x / canvas.width,
+        (canvas.height - y) / canvas.height,
+      );
     });
 
     window.addEventListener("pointerdown", () => {

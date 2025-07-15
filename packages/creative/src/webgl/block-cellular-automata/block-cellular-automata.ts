@@ -37,8 +37,8 @@ const pointer = {
 };
 
 function setupPointer(canvas: HTMLCanvasElement) {
-  const canvasBounds = canvas.getBoundingClientRect();
   canvas.addEventListener("pointermove", (ev: PointerEvent) => {
+    const canvasBounds = canvas.getBoundingClientRect();
     const x = ev.clientX - canvasBounds.left;
     const y = ev.clientY - canvasBounds.top;
     pointer.coordinates.set(x / canvas.width, (canvas.height - y) / canvas.height);

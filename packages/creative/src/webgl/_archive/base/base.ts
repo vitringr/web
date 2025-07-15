@@ -29,8 +29,8 @@ export class Base {
     gl.clearColor(0, 0, 0, 1);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    const canvasBounds = this.canvas.getBoundingClientRect();
     this.canvas.addEventListener("mousemove", (ev: MouseEvent) => {
+      const canvasBounds = this.canvas.getBoundingClientRect();
       this.pointerX = ev.clientX - canvasBounds.left;
       this.pointerY = ev.clientY - canvasBounds.top;
     });
@@ -60,14 +60,7 @@ export class Base {
     // Provides data to the current ARRAY_BUFFER.
     gl.bufferData(
       gl.ARRAY_BUFFER,
-      new Float32Array(
-        WebGL.Points.rectangle(
-          10,
-          10,
-          gl.canvas.width - 20,
-          gl.canvas.height - 20,
-        ),
-      ),
+      new Float32Array(WebGL.Points.rectangle(10, 10, gl.canvas.width - 20, gl.canvas.height - 20)),
       gl.STATIC_DRAW,
     );
 

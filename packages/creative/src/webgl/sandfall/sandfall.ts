@@ -32,7 +32,7 @@ export class Sandfall {
   };
   private initialized = false;
 
-  constructor(private readonly canvas: HTMLCanvasElement) {}
+  constructor(private readonly canvas: HTMLCanvasElement) { }
 
   init() {
     if (this.initialized) throw "Already initialized";
@@ -47,10 +47,9 @@ export class Sandfall {
   }
 
   private setupInput() {
-    const canvasBounds = this.canvas.getBoundingClientRect();
-
     // Pointer events
     this.canvas.addEventListener("pointermove", (ev: PointerEvent) => {
+      const canvasBounds = this.canvas.getBoundingClientRect();
       const x = ev.clientX - canvasBounds.left;
       const y = ev.clientY - canvasBounds.top;
       this.input.pointer.coordinates.set(x / this.canvas.width, (this.canvas.height - y) / this.canvas.height);

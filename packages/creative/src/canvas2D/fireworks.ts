@@ -33,15 +33,7 @@ const config = {
 
     gravity: 0.009,
 
-    colors: [
-      "#0eee1e",
-      "#f8d11a",
-      "#ff560c",
-      "#d91617",
-      "#39b4ff",
-      "#d12bfb",
-      "#f8f8fe",
-    ],
+    colors: ["#0eee1e", "#f8d11a", "#ff560c", "#d91617", "#39b4ff", "#d12bfb", "#f8f8fe"],
   } as PhaseConfig,
 
   renderSize: 0.7,
@@ -105,8 +97,8 @@ function renderBackground(context: CanvasRenderingContext2D) {
 }
 
 function setupInput(canvas: HTMLCanvasElement) {
-  const bounds = canvas.getBoundingClientRect();
   canvas.addEventListener("pointermove", (event: PointerEvent) => {
+    const bounds = canvas.getBoundingClientRect();
     input.x = event.clientX - bounds.left;
     input.y = event.clientY - bounds.top;
   });
@@ -124,20 +116,11 @@ function createParticlesPool(phaseConfig: PhaseConfig) {
     const xDirection = Math.cos(angle);
     const yDirection = Math.sin(angle);
 
-    const size = Mathematics.lerp(
-      phaseConfig.minSize,
-      phaseConfig.maxSize,
-      Math.random(),
-    );
+    const size = Mathematics.lerp(phaseConfig.minSize, phaseConfig.maxSize, Math.random());
 
-    const speed = Mathematics.lerp(
-      phaseConfig.minSpeed,
-      phaseConfig.maxSpeed,
-      Math.random(),
-    );
+    const speed = Mathematics.lerp(phaseConfig.minSpeed, phaseConfig.maxSpeed, Math.random());
 
-    const color =
-      phaseConfig.colors[Math.floor(Math.random() * phaseConfig.colors.length)];
+    const color = phaseConfig.colors[Math.floor(Math.random() * phaseConfig.colors.length)];
 
     const gravity = phaseConfig.gravity;
 
@@ -171,10 +154,7 @@ function moveParticle(particle: Particle) {
 
   particle.yAcceleration += particle.gravity;
 
-  const magnitude = Mathematics.hypotenuse(
-    particle.xVelocity,
-    particle.yVelocity,
-  );
+  const magnitude = Mathematics.hypotenuse(particle.xVelocity, particle.yVelocity);
 
   if (magnitude > 0) {
     particle.xVelocity /= magnitude;
@@ -197,12 +177,7 @@ function decayParticle(particle: Particle, phaseConfig: PhaseConfig) {
 function renderParticle(particle: Particle, context: CanvasRenderingContext2D) {
   context.fillStyle = particle.color;
 
-  context.fillRect(
-    particle.x,
-    particle.y,
-    particle.size * config.renderSize,
-    particle.size * config.renderSize,
-  );
+  context.fillRect(particle.x, particle.y, particle.size * config.renderSize, particle.size * config.renderSize);
 }
 
 function spawnParticle(particle: Particle, x: number, y: number) {

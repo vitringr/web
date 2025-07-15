@@ -12,8 +12,6 @@ export class Input {
   targetedNodeID: number | null = null;
 
   constructor(target: HTMLElement) {
-    const bounds = target.getBoundingClientRect();
-
     target.addEventListener("pointerdown", () => {
       this.isClicked = true;
     });
@@ -23,6 +21,7 @@ export class Input {
     });
 
     target.addEventListener("pointermove", (event: PointerEvent) => {
+      const bounds = target.getBoundingClientRect();
       this.position.x = event.clientX - bounds.left;
       this.position.y = event.clientY - bounds.top;
     });

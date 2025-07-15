@@ -6,20 +6,20 @@ import renderVertex from "./render-vertex.glsl";
 import renderFragment from "./render-fragment.glsl";
 
 type Config = {
-  width: number,
-  height: number,
+  width: number;
+  height: number;
 
-  xCount: number,
-  yCount: number,
-  offset: number,
+  xCount: number;
+  yCount: number;
+  offset: number;
 
-  originPullScalar: number,
-  toggleOriginPullScalar: number,
-  repelScalar: number,
-  repelNearestScalar: number,
-  maxRepelDistance: number,
-  minPointSize: number,
-  pointSizeByOriginDistance: number,
+  originPullScalar: number;
+  toggleOriginPullScalar: number;
+  repelScalar: number;
+  repelNearestScalar: number;
+  maxRepelDistance: number;
+  minPointSize: number;
+  pointSizeByOriginDistance: number;
 };
 
 const defaultConfig: Config = {
@@ -44,8 +44,8 @@ let config: Config;
 const input = { x: -99999, y: -99999, clicked: false };
 
 function setupInput(canvas: HTMLCanvasElement) {
-  const canvasBounds = canvas.getBoundingClientRect();
   canvas.addEventListener("pointermove", (ev: PointerEvent) => {
+    const canvasBounds = canvas.getBoundingClientRect();
     input.x = ev.clientX - canvasBounds.left;
     input.y = ev.clientY - canvasBounds.top;
 

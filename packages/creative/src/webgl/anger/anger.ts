@@ -4,8 +4,8 @@ import vertexShader from "./vertex.glsl";
 import fragmentShader from "./fragment.glsl";
 
 type Config = {
-  canvasWidth: number,
-  canvasHeight: number,
+  width: number,
+  height: number,
 
   cells: number,
   noiseOctaves: number,
@@ -15,8 +15,8 @@ type Config = {
 };
 
 const defaultConfig: Config = {
-  canvasWidth: 800,
-  canvasHeight: 800,
+  width: 800,
+  height: 800,
 
   cells: 3,
   noiseOctaves: 8,
@@ -38,8 +38,8 @@ function setupGL(canvas: HTMLCanvasElement) {
   const gl = canvas.getContext("webgl2");
   if (!gl) throw new Error("Failed to get WebGL2 context");
 
-  canvas.width = config.canvasWidth;
-  canvas.height = config.canvasHeight;
+  canvas.width = config.width;
+  canvas.height = config.height;
 
   WebGL.Canvas.resizeToDisplaySize(canvas);
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -91,7 +91,7 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
   gl.useProgram(program);
   gl.bindVertexArray(vertexArrayObject);
 
-  gl.uniform1f(uniforms.u_resolution, config.canvasWidth);
+  gl.uniform1f(uniforms.u_resolution, config.width);
   gl.uniform1f(uniforms.u_cells, config.cells);
   gl.uniform1f(uniforms.u_contrast, config.contrast);
   gl.uniform1f(uniforms.u_fractalAmplitude, config.fractalAmplitude);

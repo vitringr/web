@@ -26,8 +26,8 @@ function setupContext(canvas: HTMLCanvasElement) {
 }
 
 function setupInput(canvas: HTMLCanvasElement) {
-  const bounds = canvas.getBoundingClientRect();
   canvas.addEventListener("pointermove", (event: PointerEvent) => {
+    const bounds = canvas.getBoundingClientRect();
     input.x = event.clientX - bounds.left;
     input.y = event.clientY - bounds.top;
   });

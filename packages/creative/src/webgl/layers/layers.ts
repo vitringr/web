@@ -25,8 +25,8 @@ let pointerX: number = 0;
 let pointerY: number = 0;
 
 function setupPointer(onMove: () => void, canvas: HTMLCanvasElement) {
-  const canvasBounds = canvas.getBoundingClientRect();
   canvas.addEventListener("mousemove", (ev: MouseEvent) => {
+    const canvasBounds = canvas.getBoundingClientRect();
     pointerX = ev.clientX - canvasBounds.left;
     pointerY = ev.clientY - canvasBounds.top;
     onMove();
