@@ -1,5 +1,5 @@
 import { Creative } from "@packages/creative";
-import { TagNames } from "../Tags";
+import { ArtTagNames } from "./art-tags";
 import { Routes } from "../../../routes";
 
 import theSeerPNG from "./thumbnails/theSeer.png";
@@ -20,12 +20,13 @@ import systemShockPNG from "./thumbnails/systemShock.png";
 import regenerationPNG from "./thumbnails/regeneration.png";
 import angerPNG from "./thumbnails/anger.png";
 
-interface ArtData<T> {
+export interface ArtData<T> {
   title: string;
   route: string;
   thumbnail: string;
-  tags: TagNames[];
+  tags: ArtTagNames[];
   description: string;
+
   artMain: (canvas: HTMLCanvasElement, settings?: Partial<T>) => void;
   artConfig?: Partial<T>;
 }
@@ -40,11 +41,11 @@ export const artData: ArtData<any>[] = [
     route: Routes.arts.theSeer,
     thumbnail: theSeerPNG,
     tags: [
-      TagNames["2D"],
-      TagNames.Input,
-      TagNames.Particles,
-      TagNames.Image,
-      TagNames.Noise,
+      ArtTagNames["2D"],
+      ArtTagNames.Input,
+      ArtTagNames.Particles,
+      ArtTagNames.Image,
+      ArtTagNames.Noise,
     ],
     description: "",
     artMain: Creative.Canvas2D.TheSeer.main,
@@ -55,11 +56,11 @@ export const artData: ArtData<any>[] = [
     route: Routes.arts.systemShock,
     thumbnail: systemShockPNG,
     tags: [
-      TagNames["2D"],
-      TagNames.ASCII,
-      TagNames.Image,
-      TagNames.Noise,
-      TagNames.Random,
+      ArtTagNames["2D"],
+      ArtTagNames.ASCII,
+      ArtTagNames.Image,
+      ArtTagNames.Noise,
+      ArtTagNames.Random,
     ],
     description: "",
     artMain: Creative.Canvas2D.SystemShock.main,
@@ -69,7 +70,7 @@ export const artData: ArtData<any>[] = [
     title: "Anger",
     route: Routes.arts.anger,
     thumbnail: angerPNG,
-    tags: [TagNames["2D"], TagNames.GPU, TagNames.Noise],
+    tags: [ArtTagNames["2D"], ArtTagNames.GPU, ArtTagNames.Noise],
     description: "",
     artMain: Creative.WebGL.Anger.main,
   }),
@@ -78,7 +79,7 @@ export const artData: ArtData<any>[] = [
     title: "Sparks",
     route: Routes.arts.sparks,
     thumbnail: sparksPNG,
-    tags: [TagNames["2D"], TagNames.Input, TagNames.Particles, TagNames.Noise],
+    tags: [ArtTagNames["2D"], ArtTagNames.Input, ArtTagNames.Particles, ArtTagNames.Noise],
     description: "",
     artMain: Creative.Canvas2D.Sparks.main,
   }),
@@ -87,7 +88,7 @@ export const artData: ArtData<any>[] = [
     title: "Overgrowth",
     route: Routes.arts.overgrowth,
     thumbnail: overgrowthPNG,
-    tags: [TagNames["2D"], TagNames.Input, TagNames.Particles, TagNames.Noise],
+    tags: [ArtTagNames["2D"], ArtTagNames.Input, ArtTagNames.Particles, ArtTagNames.Noise],
     description: "",
     artMain: Creative.Canvas2D.Overgrowth.main,
   }),
@@ -96,7 +97,7 @@ export const artData: ArtData<any>[] = [
     title: "Random Walkers",
     route: Routes.arts.randomWalkers,
     thumbnail: randomWalkersPNG,
-    tags: [TagNames["2D"], TagNames.Random],
+    tags: [ArtTagNames["2D"], ArtTagNames.Random],
     description: "",
     artMain: Creative.Canvas2D.RandomWalkers.main,
   }),
@@ -105,7 +106,7 @@ export const artData: ArtData<any>[] = [
     title: "Noise 2D",
     route: Routes.arts.noise2D,
     thumbnail: noise2DPNG,
-    tags: [TagNames["2D"], TagNames.GPU, TagNames.Noise],
+    tags: [ArtTagNames["2D"], ArtTagNames.GPU, ArtTagNames.Noise],
     description: "",
     artMain: Creative.WebGL.Noise2D.main,
   }),
@@ -114,7 +115,7 @@ export const artData: ArtData<any>[] = [
     title: "Noise Flow",
     route: Routes.arts.noiseFlow,
     thumbnail: noiseFlowPNG,
-    tags: [TagNames["2D"], TagNames.GPU, TagNames.Noise],
+    tags: [ArtTagNames["2D"], ArtTagNames.GPU, ArtTagNames.Noise],
     description: "",
     artMain: Creative.WebGL.NoiseFlow.main,
   }),
@@ -123,7 +124,7 @@ export const artData: ArtData<any>[] = [
     title: "Noise Loop",
     route: Routes.arts.noiseLoop,
     thumbnail: noiseLoopPNG,
-    tags: [TagNames["2D"], TagNames.Noise],
+    tags: [ArtTagNames["2D"], ArtTagNames.Noise],
     description: "",
     artMain: Creative.Canvas2D.NoiseLoop.main,
   }),
@@ -132,7 +133,7 @@ export const artData: ArtData<any>[] = [
     title: "Noise Vector Field",
     route: Routes.arts.noiseVectorField,
     thumbnail: noiseVectorFieldPNG,
-    tags: [TagNames["2D"], TagNames.Noise],
+    tags: [ArtTagNames["2D"], ArtTagNames.Noise],
     description: "",
     artMain: Creative.Canvas2D.NoiseVectorField.main,
   }),
@@ -141,7 +142,7 @@ export const artData: ArtData<any>[] = [
     title: "Noise Blanket",
     route: Routes.arts.noiseBlanket,
     thumbnail: noiseBlanketPNG,
-    tags: [TagNames["2D"], TagNames.Noise],
+    tags: [ArtTagNames["2D"], ArtTagNames.Noise],
     description: "",
     artMain: Creative.Canvas2D.NoiseBlanket.main,
   }),
@@ -150,7 +151,7 @@ export const artData: ArtData<any>[] = [
     title: "Noise Ascii",
     route: Routes.arts.noiseAscii,
     thumbnail: noiseAsciiPNG,
-    tags: [TagNames["2D"], TagNames.Noise, TagNames.ASCII],
+    tags: [ArtTagNames["2D"], ArtTagNames.Noise, ArtTagNames.ASCII],
     description: "",
     artMain: Creative.Canvas2D.NoiseAscii.main,
   }),
@@ -159,7 +160,7 @@ export const artData: ArtData<any>[] = [
     title: "Noise Rainbow",
     route: Routes.arts.noiseRainbow,
     thumbnail: noiseRainbow,
-    tags: [TagNames["2D"], TagNames.Noise],
+    tags: [ArtTagNames["2D"], ArtTagNames.Noise],
     description: "",
     artMain: Creative.Canvas2D.NoiseRainbow.main,
   }),
@@ -168,7 +169,7 @@ export const artData: ArtData<any>[] = [
     title: "Regeneration",
     route: Routes.arts.regeneration,
     thumbnail: regenerationPNG,
-    tags: [TagNames["2D"], TagNames.Input, TagNames.GPU, TagNames.Particles],
+    tags: [ArtTagNames["2D"], ArtTagNames.Input, ArtTagNames.GPU, ArtTagNames.Particles],
     description: "",
     artMain: Creative.WebGL.Regeneration.main,
   }),
@@ -177,7 +178,7 @@ export const artData: ArtData<any>[] = [
     title: "Ten Thousand",
     route: Routes.arts.tenThousand,
     thumbnail: tenThousandPNG,
-    tags: [TagNames["2D"], TagNames.GPU, TagNames.Particles, TagNames.Image],
+    tags: [ArtTagNames["2D"], ArtTagNames.GPU, ArtTagNames.Particles, ArtTagNames.Image],
     description: "",
     artMain: Creative.WebGL.TenThousand.main,
   }),
@@ -186,7 +187,7 @@ export const artData: ArtData<any>[] = [
     title: "Layers",
     route: Routes.arts.layers,
     thumbnail: layersPNG,
-    tags: [TagNames["2D"], TagNames.Input, TagNames.GPU, TagNames.Image],
+    tags: [ArtTagNames["2D"], ArtTagNames.Input, ArtTagNames.GPU, ArtTagNames.Image],
     description: "",
     artMain: Creative.WebGL.Layers.main,
   }),
@@ -195,7 +196,7 @@ export const artData: ArtData<any>[] = [
     title: "Block Cellular Sand",
     route: Routes.arts.blockCellularSand,
     thumbnail: blockCellularSandPNG,
-    tags: [TagNames["2D"], TagNames.Input, TagNames.GPU, TagNames.Particles],
+    tags: [ArtTagNames["2D"], ArtTagNames.Input, ArtTagNames.GPU, ArtTagNames.Particles],
     description: "",
     artMain: Creative.WebGL.BlockCellularAutomata.main,
   }),
