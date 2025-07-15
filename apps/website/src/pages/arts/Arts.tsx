@@ -1,3 +1,4 @@
+import { For } from "solid-js";
 import { ArtCard } from "./ArtCard";
 import { artData } from "./art-data/art-data";
 
@@ -11,14 +12,16 @@ export const Arts = () => {
       <p>Creative coding arts.</p>
 
       <div class={css.cards_container}>
-        {artData.map((art) => (
-          <ArtCard
-            title={art.title}
-            route={art.route}
-            thumbnail={art.thumbnail}
-            tags={art.tags}
-          />
-        ))}
+        <For each={artData}>
+          {(art) => (
+            <ArtCard
+              title={art.title}
+              route={art.route}
+              thumbnail={art.thumbnail}
+              tags={art.tags}
+            />
+          )}
+        </For>
       </div>
     </div>
   );

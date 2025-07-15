@@ -1,7 +1,7 @@
 import { For } from "solid-js";
 import { ArtTagFields, ArtTagNames, artTags } from "./art-data/art-tags";
 
-import css from "./Tags.module.css";
+import css from "./TagsContainer.module.css";
 
 const Tag = (props: ArtTagFields) => {
   return (

@@ -1,12 +1,12 @@
 import { A } from "@solidjs/router";
 
 import { Routes } from "../../routes";
-import { TagsContainer } from "./Tags";
+import { TagsContainer } from "./TagsContainer";
 import { ArtTagNames } from "./art-data/art-tags";
 
 import css from "./ArtCard.module.css";
 
-export interface ArtCardProps {
+interface ArtCardProps {
   title: string;
   route: string;
   thumbnail: string;
