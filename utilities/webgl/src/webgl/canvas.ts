@@ -16,5 +16,3 @@ export function resizeToDisplaySize(
 
   return needsResize;
 }
-
-export type Keker = { a: number; b: string };
