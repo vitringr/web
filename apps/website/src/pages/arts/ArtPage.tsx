@@ -20,12 +20,18 @@ export const ArtPage = <T extends {}>(props: ArtPageProps<T>) => {
     props.artMain(canvasRef, props.artConfig);
   });
 
+  // TODO: onCleanup
+
   return (
-    // TODO: article..?
-    <article>
-      <h1>{props.title}</h1>
-      <canvas ref={canvasRef} />
-      <p>{props.description}</p>
-    </article>
+    <main>
+      <article>
+        <h1>{props.title}</h1>
+
+        <figure>
+          <canvas ref={canvasRef} />
+          <figcaption>{props.description}</figcaption>
+        </figure>
+      </article>
+    </main>
   );
 };

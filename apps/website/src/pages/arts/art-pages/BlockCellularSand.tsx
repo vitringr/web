@@ -1,20 +1,11 @@
-import { onMount } from "solid-js";
-
 import { Creative } from "@packages/creative";
+import { ArtPage } from "../ArtPage";
 
 export const BlockCellularSand = () => {
-  let canvasRef: HTMLCanvasElement | undefined;
-
-  onMount(() => {
-    if (!canvasRef) throw "Invalid canvasRef";
-    Creative.WebGL.BlockCellularAutomata.main(canvasRef);
+  return ArtPage({
+    title: "Block Cellular Sand",
+    artMain: Creative.WebGL.BlockCellularAutomata.main,
+    artConfig: { canvasWidth: 800, canvasHeight: 800 },
+    description: "Dalsdna KEKEKEKe beae idnas dj",
   });
-
-  return (
-    <article>
-      <h1>BlockCellularSand</h1>
-      <canvas ref={canvasRef} />
-      <p>Description of BlockCellularSand.</p>
-    </article>
-  );
 };

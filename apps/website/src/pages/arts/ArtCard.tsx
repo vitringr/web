@@ -5,12 +5,14 @@ import { TagNames, TagsContainer } from "./Tags";
 
 import css from "./ArtCard.module.css";
 
-export const ArtCard = (props: {
+export interface ArtCardProps {
   title: string;
   route: string;
   image: string;
   tags: TagNames[];
-}) => {
+}
+
+export const ArtCard = (props: ArtCardProps) => {
   return (
     <div class={css.card}>
       <A class={css.link} href={Routes.root.arts + props.route}>
