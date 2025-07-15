@@ -1,6 +1,7 @@
 /* @refresh reload */
 import { render } from "solid-js/web";
 import { Route, Router } from "@solidjs/router";
+import { For } from "solid-js";
 
 import { Routes } from "./routes";
 
@@ -39,10 +40,11 @@ const AppRouter = () => (
 
     <Route path={Routes.root.arts}>
       <Route path="/" component={Arts} />
-
-      {artData.map((art) => (
-        <Route path={art.route} component={() => <ArtPage art={art} />} />
-      ))}
+      <For each={artData}>
+        {(art) => (
+          <Route path={art.route} component={() => <ArtPage art={art} />} />
+        )}
+      </For>
     </Route>
 
     <Route path={Routes.root.writing} component={Writing} />
