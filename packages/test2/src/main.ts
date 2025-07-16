@@ -1,21 +1,8 @@
-import { Colors } from "@utilities/colors";
-import { Noise } from "@utilities/noise";
+import { Config } from "./config";
 
-type Config = {
-  width: number;
-  height: number;
-  frequency: number;
-};
-
-const defaultConfig: Config = {
-  width: 800,
-  height: 800,
-  frequency: 0.02,
-} as const satisfies Config;
-
-function setupContext(canvas: HTMLCanvasElement, config: Config) {
-  canvas.width = config.width;
-  canvas.height = config.height;
+function setupContext(canvas: HTMLCanvasElement) {
+  canvas.width = Config.width;
+  canvas.height = Config.height;
 
   const context = canvas.getContext("2d");
   if (!context) throw "Cannot get 2d context";
@@ -23,32 +10,19 @@ function setupContext(canvas: HTMLCanvasElement, config: Config) {
   return context;
 }
 
-export function main(canvas: HTMLCanvasElement, config: Partial<Config> = {}) {
-  const cfg: Config = { ...defaultConfig, ...config };
+function renderBackground(context: CanvasRenderingContext2D) {
+  context.fillStyle = Config.colors.background;
+  context.fillRect(0, 0, Config.width, Config.height);
+}
 
-  const context = setupContext(canvas, cfg);
+export function main(canvas: HTMLCanvasElement) {
+  const context = setupContext(canvas);
 
-  let min = Infinity;
-  let max = -1000;
-  let sum = 0;
+  const animation = () => {
+    renderBackground(context);
 
-  for (let x = 0; x < cfg.width; x++) {
-    for (let y = 0; y < cfg.height; y++) {
-      const noise = Noise.Perlin.get(x * cfg.frequency, y * cfg.frequency);
-      const fractal = Noise.Perlin.getFractal(x * cfg.frequency, y * cfg.frequency, 5);
+    requestAnimationFrame(animation);
+  };
 
-      if (noise < min) min = noise;
-      if (noise > max) max = noise;
-      sum += noise;
-
-      context.fillStyle = Colors.getRGBGrayscale(fractal);
-      context.fillRect(x, y, 1, 1);
-    }
-  }
-
-  const average = sum / (cfg.width * cfg.height);
-
-  console.log("min", min);
-  console.log("max", max);
-  console.log("average", average);
+  animation();
 }

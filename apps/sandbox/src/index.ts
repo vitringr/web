@@ -1,8 +1,9 @@
 import { Creative } from "@packages/creative";
 import { Test } from "@packages/test";
+import { Test2 } from "@packages/test2";
 
 const canvasID = "mainCanvas";
 const canvas = document.getElementById(canvasID) as HTMLCanvasElement;
 if (!canvas) throw `Cannot get #${canvasID}`;
 
-Test.main(canvas);
+Test2.main(canvas);

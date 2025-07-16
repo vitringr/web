@@ -15,6 +15,7 @@
     "@packages/pathfinder": "workspace:*",
     "@packages/sandfall": "workspace:*",
     "@packages/test": "workspace:*",
+    "@packages/test2": "workspace:*",
     "@packages/quadtree-simulation": "workspace:*",
     "@packages/creative": "workspace:*",
     "@packages/noise-html": "workspace:*",
