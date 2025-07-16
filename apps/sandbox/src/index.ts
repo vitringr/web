@@ -7,3 +7,4 @@ const canvas = document.getElementById(canvasID) as HTMLCanvasElement;
 if (!canvas) throw `Cannot get #${canvasID}`;
 
 Test2.main(canvas);
+

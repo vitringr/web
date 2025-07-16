@@ -1,6 +1,7 @@
 import { Mathematics } from "@utilities/mathematics";
 import { Noise } from "@utilities/noise";
 import { Config, defaultConfig } from "./config";
+
 import theSeerPNG from "./the-seer.png";
 
 let config: Config;
