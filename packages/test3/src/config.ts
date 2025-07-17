@@ -2,15 +2,15 @@ export const defaultConfig = {
   width: 800,
   height: 800,
 
-  particles: 5817,
-  minSize: 0.5,
-  maxSize: 3.0,
-  minSpeed: 0.0002,
-  maxSpeed: 0.0008,
+  minSize: 1.0,
+  maxSize: 2.0,
+  // minSpeed: 0.0002,
+  // maxSpeed: 0.0008,
+  minSpeed: 0.002,
+  maxSpeed: 0.008,
 
-  text: "Random",
-  textSize: 80,
-  auxCanvasScale: 1.0,
+  text: "Cognitive bias about how people with limited competence in a particular domainan misjudge their abilities.",
+  textSize: 30,
 } as const;
 
 export type Config = typeof defaultConfig;

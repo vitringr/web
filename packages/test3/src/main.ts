@@ -63,18 +63,10 @@ function createParticleOrigins() {
   const image = new Image();
   image.src = auxCanvas.toDataURL();
 
-  // ---------
-  // -- wip --
-  // ---------
+  auxContext.drawImage(image, 0, 0, config.width, config.height);
+  const imageData = auxContext.getImageData(0, 0, config.width, config.height).data;
 
-  const width = config.width * config.auxCanvasScale;
-  const height = config.height * config.auxCanvasScale;
-  const auxCanvasScale = 1 / config.auxCanvasScale;
-
-  auxContext.drawImage(image, 0, 0, width, height);
-  const imageData = auxContext.getImageData(0, 0, width, height).data;
-
-  auxContext.clearRect(0, 0, width, height);
+  auxContext.clearRect(0, 0, config.width, config.height);
 
   const particleOrigins: { x: number; y: number }[] = [];
 
@@ -84,14 +76,11 @@ function createParticleOrigins() {
     const b = imageData[i + 2];
 
     const index = i / 4;
-    const x = index % width;
-    const y = Math.floor(index / height);
+    const x = index % config.width;
+    const y = Math.floor(index / config.height);
 
     if (r + g + b > 100) {
-      particleOrigins.push({
-        x: x * auxCanvasScale,
-        y: y * auxCanvasScale,
-      });
+      particleOrigins.push({ x, y });
     }
   }
 
@@ -122,6 +111,7 @@ function generateData() {
   }
 
   return {
+    particleCount: count,
     positions: new Float32Array(positions),
     origins: new Float32Array(origins),
     random: new Float32Array(random),
@@ -270,7 +260,7 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   gl.bindBuffer(gl.ARRAY_BUFFER, null);
   gl.bindBuffer(gl.TRANSFORM_FEEDBACK_BUFFER, null);
 
-  return { uniforms, vertexArrayObjects, transformFeedbacks };
+  return { particleCount: data.particleCount, uniforms, vertexArrayObjects, transformFeedbacks };
 }
 
 export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
@@ -280,7 +270,13 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
 
   const programs = setupPrograms(gl);
 
-  const { uniforms, vertexArrayObjects, transformFeedbacks } = setupState(gl, programs.compute, programs.render);
+  const { particleCount, uniforms, vertexArrayObjects, transformFeedbacks } = setupState(
+    gl,
+    programs.compute,
+    programs.render,
+  );
+
+  console.log("particleCount", particleCount);
 
   let swapOne = {
     computeVAO: vertexArrayObjects.compute.heads,
@@ -308,7 +304,7 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
     gl.enable(gl.RASTERIZER_DISCARD);
     gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, swapOne.TF);
     gl.beginTransformFeedback(gl.POINTS);
-    gl.drawArrays(gl.POINTS, 0, config.particles);
+    gl.drawArrays(gl.POINTS, 0, particleCount);
     gl.endTransformFeedback();
     gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, null);
     gl.disable(gl.RASTERIZER_DISCARD);
@@ -318,7 +314,7 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
     gl.useProgram(programs.render);
     gl.bindVertexArray(swapOne.renderVAO);
 
-    gl.drawArrays(gl.POINTS, 0, config.particles);
+    gl.drawArrays(gl.POINTS, 0, particleCount);
   };
 
   const mainLoop = () => {

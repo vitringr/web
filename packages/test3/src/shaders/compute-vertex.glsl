@@ -25,7 +25,11 @@ vec2 warp(vec2 coordinates) {
 void main() {
   float speed = mix(u_minSpeed, u_maxSpeed, a_random);
 
-  vec2 velocity = vec2(1.0) * speed;
+  vec2 differenceFromOrigin = a_origin - a_position;
+  float distanceFromOrigin = distance(a_origin, a_position);
+  vec2 directionToOrigin = differenceFromOrigin / distanceFromOrigin;
+  float slowdown = min(distanceFromOrigin, 1.0);
+  vec2 velocity = directionToOrigin * speed * slowdown;
 
-  tf_position = warp(a_origin + (0.0001 * a_position) + velocity);
+  tf_position = warp(a_position + velocity);
 }
