@@ -9,8 +9,8 @@ import renderFragment from "./shaders/render-fragment.glsl";
 
 let config: Config;
 const input: { x: number; y: number; clicked: boolean } = {
-  x: 0,
-  y: 0,
+  x: -99999,
+  y: -99999,
   clicked: false,
 };
 
@@ -71,7 +71,6 @@ function drawWrappedText(
       line = testLine;
     }
   }
-  console.log("lines", lines);
   context.fillText(line, x, y);
 }
 
@@ -361,7 +360,7 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
 
   gl.useProgram(programs.compute);
   gl.uniform2f(uniforms.compute.u_returnSpeed, config.returnSpeed.min, config.returnSpeed.max);
-  gl.uniform2f(uniforms.compute.u_repelSpeed, config.repelSpeed.min, config.repelSpeed.max);
+  gl.uniform1f(uniforms.compute.u_repelSpeed, config.repelSpeed);
   gl.uniform1f(uniforms.compute.u_repelRadius, config.repelRadius);
   gl.useProgram(programs.render);
   gl.uniform2f(uniforms.render.u_size, config.size.min, config.size.max);

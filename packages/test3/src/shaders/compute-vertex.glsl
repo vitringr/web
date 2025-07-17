@@ -1,18 +1,19 @@
 #version 300 es
 precision highp float;
 
+out vec2 tf_position;
+
 in vec2 a_position;
 in vec2 a_origin;
 in float a_random;
 
 uniform vec2 u_input;
 uniform vec2 u_returnSpeed;
-uniform vec2 u_repelSpeed;
+uniform float u_repelSpeed;
 uniform float u_repelRadius;
 
-out vec2 tf_position;
-
 const vec2 ZERO = vec2(0.0);
+const float MIN = 0.0000000001;
 
 vec2 warp(vec2 coordinates) {
   vec2 warped = coordinates;
@@ -30,38 +31,37 @@ vec2 getReturnVelocity() {
   float speed = mix(u_returnSpeed.r, u_returnSpeed.g, a_random);
 
   vec2 difference = a_origin - a_position;
-  float magnitude = sqrt(difference.x * difference.x + difference.y * difference.y);
-  if(magnitude <= 0.00001) return ZERO;
+  float magnitudeSquared = difference.x * difference.x + difference.y * difference.y;
+  if(magnitudeSquared <= MIN)
+    return ZERO;
+
+  float magnitude = sqrt(magnitudeSquared);
 
   vec2 direction = difference / magnitude;
-
   vec2 velocity = direction * magnitude * speed;
 
   return velocity;
 }
 
-// vec2 getRepelVelocity(vec2 position, vec2 pointer) {
-//   float speed = mix(u_repelSpeed.r, u_repelSpeed.g, a_random);
-//
-//   float distanceToPointer = distance(position, pointer);
-//   if(distanceToPointer >= u_repelRadius)
-//     return ZERO;
-//
-//   vec2 direction = normalize(position - pointer);
-//   vec2 velocity = direction * speed;
-//
-//   // float inverse = 1.0 / distanceToPointer;
-//   // float repelByDistance = clamp(inverse, 1.0, 1.0 + u_repelNearestScalar);
-//
-//   // return u_repelScalar * direction * repelByDistance;
-//
-//   return velocity;
-// }
+vec2 getRepelVelocity() {
+  vec2 difference = a_position - u_input;
+  float magnitudeSquared = difference.x * difference.x + difference.y * difference.y;
+  if(magnitudeSquared >= u_repelRadius * u_repelRadius)
+    return ZERO;
+
+  float magnitude = sqrt(magnitudeSquared);
+
+  vec2 direction = difference / magnitude;
+  vec2 velocity = direction * magnitude * u_repelSpeed;
+
+  return velocity;
+}
 
 void main() {
   vec2 velocity = ZERO;
   velocity += getReturnVelocity();
-  // velocity += getRepelVelocity(a_position, u_input) * 0.01;
+  velocity += getRepelVelocity();
 
   tf_position = warp(a_position + velocity);
 }
+
