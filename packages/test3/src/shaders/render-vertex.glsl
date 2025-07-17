@@ -6,11 +6,10 @@ in float a_random;
 
 out float passRandom;
 
-uniform float u_minSize;
-uniform float u_maxSize;
+uniform vec2 u_size;
 
 void main() {
-  float size = mix(u_minSize, u_maxSize, a_random);
+  float size = mix(u_size.r, u_size.g, a_random);
   gl_PointSize = size;
 
   vec2 clipSpace = tf_position * 2.0 - 1.0;

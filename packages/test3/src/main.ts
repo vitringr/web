@@ -8,6 +8,11 @@ import renderVertex from "./shaders/render-vertex.glsl";
 import renderFragment from "./shaders/render-fragment.glsl";
 
 let config: Config;
+const input: { x: number; y: number; clicked: boolean } = {
+  x: 0,
+  y: 0,
+  clicked: false,
+};
 
 function setupGL(canvas: HTMLCanvasElement) {
   const gl = canvas.getContext("webgl2");
@@ -41,7 +46,6 @@ function setupPrograms(gl: WebGL2RenderingContext) {
   return { compute: computeProgram, render: renderProgram };
 }
 
-// TODO: Optimize
 function drawWrappedText(
   context: CanvasRenderingContext2D,
   text: string,
@@ -50,15 +54,16 @@ function drawWrappedText(
   maxWidth: number,
   lineHeight: number,
 ) {
+  // TODO: Optimize
   const words = text.split(" ");
   let line = "";
 
-  let lines = 0
+  let lines = 0;
   for (const word of words) {
     const testLine = line + word + " ";
     const metrics = context.measureText(testLine);
     if (metrics.width > maxWidth && line.length > 0) {
-      lines++
+      lines++;
       context.fillText(line, x, y);
       line = word + " ";
       y += lineHeight;
@@ -87,7 +92,14 @@ function createParticleOrigins() {
   auxContext.fillRect(0, 0, config.width, config.height);
 
   auxContext.fillStyle = "#FFFFFF";
-  drawWrappedText(auxContext, config.text, config.width * 0.5, config.height * config.textY, 600, config.textLineHeight);
+  drawWrappedText(
+    auxContext,
+    config.text,
+    config.width * 0.5,
+    config.height * config.textY,
+    config.textMaxWidth,
+    config.textLineHeight,
+  );
 
   const image = new Image();
   image.src = auxCanvas.toDataURL();
@@ -152,12 +164,13 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
 
   const uniforms = {
     compute: {
-      u_minSpeed: gl.getUniformLocation(computeProgram, "u_minSpeed"),
-      u_maxSpeed: gl.getUniformLocation(computeProgram, "u_maxSpeed"),
+      u_input: gl.getUniformLocation(computeProgram, "u_input"),
+      u_returnSpeed: gl.getUniformLocation(computeProgram, "u_returnSpeed"),
+      u_repelSpeed: gl.getUniformLocation(computeProgram, "u_repelSpeed"),
+      u_repelRadius: gl.getUniformLocation(computeProgram, "u_repelRadius"),
     },
     render: {
-      u_minSize: gl.getUniformLocation(renderProgram, "u_minSize"),
-      u_maxSize: gl.getUniformLocation(renderProgram, "u_maxSize"),
+      u_size: gl.getUniformLocation(renderProgram, "u_size"),
     },
   } as const;
 
@@ -292,8 +305,35 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   return { particleCount: data.particleCount, uniforms, vertexArrayObjects, transformFeedbacks };
 }
 
+function setupInput(canvas: HTMLCanvasElement) {
+  canvas.addEventListener("pointermove", (event: PointerEvent) => {
+    const bounds = canvas.getBoundingClientRect();
+    input.x = event.clientX - bounds.left;
+    input.y = event.clientY - bounds.top;
+
+    input.x /= config.width;
+    input.y /= config.height;
+
+    input.y = 1 - input.y;
+  });
+
+  canvas.addEventListener("pointerdown", () => {
+    input.clicked = true;
+  });
+
+  window.addEventListener("pointerup", () => {
+    input.clicked = false;
+  });
+
+  window.addEventListener("blur", () => {
+    input.clicked = false;
+  });
+}
+
 export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
   config = { ...defaultConfig, ...settings };
+
+  setupInput(canvas);
 
   const gl = setupGL(canvas);
 
@@ -320,15 +360,17 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
   };
 
   gl.useProgram(programs.compute);
-  gl.uniform1f(uniforms.compute.u_minSpeed, config.minSpeed);
-  gl.uniform1f(uniforms.compute.u_maxSpeed, config.maxSpeed);
+  gl.uniform2f(uniforms.compute.u_returnSpeed, config.returnSpeed.min, config.returnSpeed.max);
+  gl.uniform2f(uniforms.compute.u_repelSpeed, config.repelSpeed.min, config.repelSpeed.max);
+  gl.uniform1f(uniforms.compute.u_repelRadius, config.repelRadius);
   gl.useProgram(programs.render);
-  gl.uniform1f(uniforms.render.u_minSize, config.minSize);
-  gl.uniform1f(uniforms.render.u_maxSize, config.maxSize);
+  gl.uniform2f(uniforms.render.u_size, config.size.min, config.size.max);
 
   const computeLoop = () => {
     gl.useProgram(programs.compute);
     gl.bindVertexArray(swapOne.computeVAO);
+
+    gl.uniform2f(uniforms.compute.u_input, input.x, input.y);
 
     gl.enable(gl.RASTERIZER_DISCARD);
     gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, swapOne.TF);
