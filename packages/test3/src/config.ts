@@ -3,15 +3,19 @@ export type Config = {
   canvasHeight: number;
 
   particles: number;
-  size: number;
-  speed: number;
+  minSize: number,
+  maxSize: number,
+  minSpeed: number;
+  maxSpeed: number;
 };
 
 export const defaultConfig: Config = {
-  canvasWidth: 600,
-  canvasHeight: 600,
+  canvasWidth: 800,
+  canvasHeight: 800,
 
-  particles: 10_000,
-  size: 3.0,
-  speed: 0.001,
+  particles: 100000,
+  minSize: 1.0,
+  maxSize: 2.0,
+  minSpeed: 0.001,
+  maxSpeed: 0.006,
 } as const;

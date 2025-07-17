@@ -48,49 +48,56 @@ function generateData() {
     positions.push(Random.range(0, 1));
   }
 
+  const sizes: number[] = [];
+  for (let i = 0; i < config.particles; i++) {
+    sizes.push(Random.range(config.minSize, config.maxSize));
+  }
+
+  const speeds: number[] = [];
+  for (let i = 0; i < config.particles; i++) {
+    speeds.push(Random.range(config.minSpeed, config.maxSpeed));
+  }
+
   return {
-    position: new Float32Array(positions),
+    positions: new Float32Array(positions),
+    speeds: new Float32Array(speeds),
+    sizes: new Float32Array(sizes),
   };
 }
 
-function setupUniforms(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, renderProgram: WebGLProgram) {
-  const compute = {
-    u_speed: gl.getUniformLocation(computeProgram, "u_speed"),
-  } as const;
-
-  const render = {
-    u_size: gl.getUniformLocation(renderProgram, "u_size"),
-  } as const;
-
-  return { compute, render };
-}
-
 function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, renderProgram: WebGLProgram) {
-  // ----------
-  // -- Data --
-  // ----------
-
   const data = generateData();
 
   const attributes = {
     compute: {
       a_position: gl.getAttribLocation(computeProgram, "a_position"),
+      // a_speed: gl.getAttribLocation(computeProgram, "a_speed"),
     },
     render: {
       tf_position: gl.getAttribLocation(renderProgram, "tf_position"),
+      // a_size: gl.getAttribLocation(renderProgram, "a_size"),
     },
   } as const;
 
   const buffers = {
     positionHeads: gl.createBuffer(),
     positionTails: gl.createBuffer(),
+
+    speed: gl.createBuffer(),
+    size: gl.createBuffer(),
   } as const;
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.positionHeads);
-  gl.bufferData(gl.ARRAY_BUFFER, data.position, gl.STREAM_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, data.positions, gl.STREAM_DRAW);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.positionTails);
-  gl.bufferData(gl.ARRAY_BUFFER, data.position, gl.STREAM_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, data.positions, gl.STREAM_DRAW);
+
+  // gl.bindBuffer(gl.ARRAY_BUFFER, buffers.speed);
+  // gl.bufferData(gl.ARRAY_BUFFER, data.speeds, gl.STATIC_DRAW);
+  //
+  // gl.bindBuffer(gl.ARRAY_BUFFER, buffers.size);
+  // gl.bufferData(gl.ARRAY_BUFFER, data.sizes, gl.STATIC_DRAW);
 
   const vertexArrayObjects = {
     compute: {
@@ -113,6 +120,10 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   gl.enableVertexAttribArray(attributes.compute.a_position);
   gl.vertexAttribPointer(attributes.compute.a_position, 2, gl.FLOAT, false, 0, 0);
 
+  // gl.bindBuffer(gl.ARRAY_BUFFER, buffers.speed);
+  // gl.enableVertexAttribArray(attributes.compute.a_speed);
+  // gl.vertexAttribPointer(attributes.compute.a_speed, 1, gl.FLOAT, false, 0, 0);
+
   // -----------------------
   // -- VAO Compute Tails --
   // -----------------------
@@ -122,6 +133,10 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.positionTails);
   gl.enableVertexAttribArray(attributes.compute.a_position);
   gl.vertexAttribPointer(attributes.compute.a_position, 2, gl.FLOAT, false, 0, 0);
+
+  // gl.bindBuffer(gl.ARRAY_BUFFER, buffers.speed);
+  // gl.enableVertexAttribArray(attributes.compute.a_speed);
+  // gl.vertexAttribPointer(attributes.compute.a_speed, 1, gl.FLOAT, false, 0, 0);
 
   // ----------------------
   // -- VAO Render Heads --
@@ -133,6 +148,10 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   gl.enableVertexAttribArray(attributes.render.tf_position);
   gl.vertexAttribPointer(attributes.render.tf_position, 2, gl.FLOAT, false, 0, 0);
 
+  // gl.bindBuffer(gl.ARRAY_BUFFER, buffers.size);
+  // gl.enableVertexAttribArray(attributes.render.a_size);
+  // gl.vertexAttribPointer(attributes.render.a_size, 1, gl.FLOAT, false, 0, 0);
+
   // ----------------------
   // -- Vao Render Tails --
   // ----------------------
@@ -142,6 +161,10 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.positionTails);
   gl.enableVertexAttribArray(attributes.render.tf_position);
   gl.vertexAttribPointer(attributes.render.tf_position, 2, gl.FLOAT, false, 0, 0);
+  //
+  // gl.bindBuffer(gl.ARRAY_BUFFER, buffers.size);
+  // gl.enableVertexAttribArray(attributes.render.a_size);
+  // gl.vertexAttribPointer(attributes.render.a_size, 1, gl.FLOAT, false, 0, 0);
 
   // -------------------------
   // -- Transform Feedbacks --
@@ -175,8 +198,6 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
 
   const programs = setupPrograms(gl);
 
-  const uniforms = setupUniforms(gl, programs.compute, programs.render);
-
   const { vertexArrayObjects, transformFeedbacks } = setupState(gl, programs.compute, programs.render);
 
   let swapOne = {
@@ -190,19 +211,6 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
     TF: transformFeedbacks.heads,
     renderVAO: vertexArrayObjects.render.heads,
   };
-
-  // ---------------------
-  // -- Static Uniforms --
-  // ---------------------
-
-  gl.useProgram(programs.compute);
-  gl.uniform1f(uniforms.compute.u_speed, config.speed);
-  gl.useProgram(programs.render);
-  gl.uniform1f(uniforms.render.u_size, config.size);
-
-  // -----------
-  // -- Loops --
-  // -----------
 
   const computeLoop = () => {
     gl.useProgram(programs.compute);

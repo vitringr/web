@@ -1,10 +1,9 @@
 #version 300 es
 
 in vec2 a_position;
+in float a_speed;
 
 out vec2 tf_position;
-
-uniform float u_speed;
 
 vec2 warp(vec2 coordinates) {
   vec2 warped = coordinates;
@@ -19,5 +18,5 @@ vec2 warp(vec2 coordinates) {
 }
 
 void main() {
-  tf_position = warp(a_position + 1.0 * u_speed);
+  tf_position = warp(a_position + 1.0 * a_speed);
 }
