@@ -47,6 +47,9 @@ importers:
       '@packages/test2':
         specifier: workspace:*
         version: link:../../packages/test2
+      '@packages/test3':
+        specifier: workspace:*
+        version: link:../../packages/test3
       '@packages/tsunagari':
         specifier: workspace:*
         version: link:../../packages/tsunagari
@@ -327,6 +330,40 @@ importers:
         version: 5.8.3
 
   packages/test2:
+    dependencies:
+      '@utilities/canvas2d':
+        specifier: workspace:*
+        version: link:../../utilities/canvas2d
+      '@utilities/collision':
+        specifier: workspace:*
+        version: link:../../utilities/collision
+      '@utilities/colors':
+        specifier: workspace:*
+        version: link:../../utilities/colors
+      '@utilities/mathematics':
+        specifier: workspace:*
+        version: link:../../utilities/mathematics
+      '@utilities/noise':
+        specifier: workspace:*
+        version: link:../../utilities/noise
+      '@utilities/random':
+        specifier: workspace:*
+        version: link:../../utilities/random
+      '@utilities/vector':
+        specifier: workspace:*
+        version: link:../../utilities/vector
+      '@utilities/webgl':
+        specifier: workspace:*
+        version: link:../../utilities/webgl
+    devDependencies:
+      '@utilities/typescript-config':
+        specifier: workspace:*
+        version: link:../../utilities/typescript-config
+      typescript:
+        specifier: latest
+        version: 5.8.3
+
+  packages/test3:
     dependencies:
       '@utilities/canvas2d':
         specifier: workspace:*
