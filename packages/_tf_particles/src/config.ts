@@ -14,8 +14,8 @@ export const defaultConfig: Config = {
   canvasHeight: 800,
 
   particles: 10000,
-  minSize: 0.5,
-  maxSize: 3.0,
-  minSpeed: 0.0002,
-  maxSpeed: 0.0008,
+  minSize: 1.0,
+  maxSize: 2.0,
+  minSpeed: 0.0005,
+  maxSpeed: 0.001,
 } as const;

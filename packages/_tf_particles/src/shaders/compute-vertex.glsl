@@ -24,7 +24,5 @@ vec2 warp(vec2 coordinates) {
 void main() {
   float speed = mix(u_minSpeed, u_maxSpeed, a_random);
 
-  vec2 velocity = vec2(1.0) * speed;
-
-  tf_position = warp(a_position + velocity);
+  tf_position = warp(a_position + 1.0 * speed);
 }
