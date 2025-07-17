@@ -1,7 +1,10 @@
 #version 300 es
 
 in vec2 a_position;
-in float a_speed;
+in float a_random;
+
+uniform float u_minSpeed;
+uniform float u_maxSpeed;
 
 out vec2 tf_position;
 
@@ -18,5 +21,7 @@ vec2 warp(vec2 coordinates) {
 }
 
 void main() {
-  tf_position = warp(a_position + 1.0 * a_speed);
+  float speed = mix(u_minSpeed, u_maxSpeed, a_random);
+
+  tf_position = warp(a_position + 1.0 * speed);
 }

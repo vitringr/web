@@ -17,5 +17,5 @@ export const defaultConfig: Config = {
   minSize: 1.0,
   maxSize: 2.0,
   minSpeed: 0.001,
-  maxSpeed: 0.006,
+  maxSpeed: 0.002,
 } as const;
