@@ -41,6 +41,35 @@ function setupPrograms(gl: WebGL2RenderingContext) {
   return { compute: computeProgram, render: renderProgram };
 }
 
+// TODO: Optimize
+function drawWrappedText(
+  context: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  y: number,
+  maxWidth: number,
+  lineHeight: number,
+) {
+  const words = text.split(" ");
+  let line = "";
+
+  let lines = 0
+  for (const word of words) {
+    const testLine = line + word + " ";
+    const metrics = context.measureText(testLine);
+    if (metrics.width > maxWidth && line.length > 0) {
+      lines++
+      context.fillText(line, x, y);
+      line = word + " ";
+      y += lineHeight;
+    } else {
+      line = testLine;
+    }
+  }
+  console.log("lines", lines);
+  context.fillText(line, x, y);
+}
+
 function createParticleOrigins() {
   const auxCanvas = document.createElement("canvas");
   auxCanvas.width = config.width;
@@ -58,7 +87,7 @@ function createParticleOrigins() {
   auxContext.fillRect(0, 0, config.width, config.height);
 
   auxContext.fillStyle = "#FFFFFF";
-  auxContext.fillText(config.text, config.width * 0.5, config.height * 0.5);
+  drawWrappedText(auxContext, config.text, config.width * 0.5, config.height * config.textY, 600, config.textLineHeight);
 
   const image = new Image();
   image.src = auxCanvas.toDataURL();

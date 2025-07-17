@@ -28,7 +28,7 @@ void main() {
   vec2 differenceFromOrigin = a_origin - a_position;
   float distanceFromOrigin = distance(a_origin, a_position);
   vec2 directionToOrigin = differenceFromOrigin / distanceFromOrigin;
-  float slowdown = min(distanceFromOrigin, 1.0);
+  float slowdown = min(distanceFromOrigin + 0.01, 1.0);
   vec2 velocity = directionToOrigin * speed * slowdown;
 
   tf_position = warp(a_position + velocity);
