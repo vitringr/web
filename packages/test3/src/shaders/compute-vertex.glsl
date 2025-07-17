@@ -2,6 +2,7 @@
 precision highp float;
 
 in vec2 a_position;
+in vec2 a_origin;
 in float a_random;
 
 uniform float u_minSpeed;
@@ -26,5 +27,5 @@ void main() {
 
   vec2 velocity = vec2(1.0) * speed;
 
-  tf_position = warp(a_position + velocity);
+  tf_position = warp(a_origin + (0.0001 * a_position) + velocity);
 }

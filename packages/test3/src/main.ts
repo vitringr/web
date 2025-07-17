@@ -13,8 +13,8 @@ function setupGL(canvas: HTMLCanvasElement) {
   const gl = canvas.getContext("webgl2");
   if (!gl) throw new Error("Failed to get WebGL2 context");
 
-  canvas.width = config.canvasWidth;
-  canvas.height = config.canvasHeight;
+  canvas.width = config.width;
+  canvas.height = config.height;
 
   WebGL.Canvas.resizeToDisplaySize(canvas);
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -41,20 +41,89 @@ function setupPrograms(gl: WebGL2RenderingContext) {
   return { compute: computeProgram, render: renderProgram };
 }
 
+function createParticleOrigins() {
+  const auxCanvas = document.createElement("canvas");
+  auxCanvas.width = config.width;
+  auxCanvas.height = config.height;
+
+  const auxContext = auxCanvas.getContext("2d");
+  if (!auxContext) throw "Cannot get aux 2d context!";
+
+  auxContext.font = `${config.textSize}px Arial, sans-serif`;
+  auxContext.textAlign = "center";
+  auxContext.textBaseline = "middle";
+  auxContext.textRendering = "optimizeLegibility";
+
+  auxContext.fillStyle = "#000000";
+  auxContext.fillRect(0, 0, config.width, config.height);
+
+  auxContext.fillStyle = "#FFFFFF";
+  auxContext.fillText(config.text, config.width * 0.5, config.height * 0.5);
+
+  const image = new Image();
+  image.src = auxCanvas.toDataURL();
+
+  // ---------
+  // -- wip --
+  // ---------
+
+  const width = config.width * config.auxCanvasScale;
+  const height = config.height * config.auxCanvasScale;
+  const auxCanvasScale = 1 / config.auxCanvasScale;
+
+  auxContext.drawImage(image, 0, 0, width, height);
+  const imageData = auxContext.getImageData(0, 0, width, height).data;
+
+  auxContext.clearRect(0, 0, width, height);
+
+  const particleOrigins: { x: number; y: number }[] = [];
+
+  for (let i = 0; i < imageData.length; i += 4) {
+    const r = imageData[i + 0];
+    const g = imageData[i + 1];
+    const b = imageData[i + 2];
+
+    const index = i / 4;
+    const x = index % width;
+    const y = Math.floor(index / height);
+
+    if (r + g + b > 100) {
+      particleOrigins.push({
+        x: x * auxCanvasScale,
+        y: y * auxCanvasScale,
+      });
+    }
+  }
+
+  return particleOrigins;
+}
+
 function generateData() {
+  const particleOrigins = createParticleOrigins();
+
+  const count = particleOrigins.length;
+
+  const origins: number[] = [];
+  for (let i = 0; i < count; i++) {
+    const origin = particleOrigins[i];
+    origins.push(origin.x / config.width);
+    origins.push((config.height - origin.y) / config.height);
+  }
+
   const positions: number[] = [];
-  for (let i = 0; i < config.particles; i++) {
+  for (let i = 0; i < count; i++) {
     positions.push(Random.range(0, 1));
     positions.push(Random.range(0, 1));
   }
 
   const random: number[] = [];
-  for (let i = 0; i < config.particles; i++) {
+  for (let i = 0; i < count; i++) {
     random.push(Math.random());
   }
 
   return {
     positions: new Float32Array(positions),
+    origins: new Float32Array(origins),
     random: new Float32Array(random),
   };
 }
@@ -76,6 +145,7 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   const attributes = {
     compute: {
       a_position: gl.getAttribLocation(computeProgram, "a_position"),
+      a_origin: gl.getAttribLocation(computeProgram, "a_origin"),
       a_random: gl.getAttribLocation(computeProgram, "a_random"),
     },
     render: {
@@ -87,7 +157,7 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   const buffers = {
     positionHeads: gl.createBuffer(),
     positionTails: gl.createBuffer(),
-
+    origin: gl.createBuffer(),
     random: gl.createBuffer(),
   } as const;
 
@@ -96,6 +166,9 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.positionTails);
   gl.bufferData(gl.ARRAY_BUFFER, data.positions, gl.STREAM_DRAW);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.origin);
+  gl.bufferData(gl.ARRAY_BUFFER, data.origins, gl.STATIC_DRAW);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.random);
   gl.bufferData(gl.ARRAY_BUFFER, data.random, gl.STATIC_DRAW);
@@ -121,6 +194,10 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   gl.enableVertexAttribArray(attributes.compute.a_position);
   gl.vertexAttribPointer(attributes.compute.a_position, 2, gl.FLOAT, false, 0, 0);
 
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.origin);
+  gl.enableVertexAttribArray(attributes.compute.a_origin);
+  gl.vertexAttribPointer(attributes.compute.a_origin, 2, gl.FLOAT, false, 0, 0);
+
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.random);
   gl.enableVertexAttribArray(attributes.compute.a_random);
   gl.vertexAttribPointer(attributes.compute.a_random, 1, gl.FLOAT, false, 0, 0);
@@ -134,6 +211,10 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.positionTails);
   gl.enableVertexAttribArray(attributes.compute.a_position);
   gl.vertexAttribPointer(attributes.compute.a_position, 2, gl.FLOAT, false, 0, 0);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.origin);
+  gl.enableVertexAttribArray(attributes.compute.a_origin);
+  gl.vertexAttribPointer(attributes.compute.a_origin, 2, gl.FLOAT, false, 0, 0);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.random);
   gl.enableVertexAttribArray(attributes.compute.a_random);
