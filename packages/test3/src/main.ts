@@ -82,9 +82,8 @@ function createParticleOrigins() {
   const auxContext = auxCanvas.getContext("2d");
   if (!auxContext) throw "Cannot get aux 2d context!";
 
-  auxContext.font = `${config.textSize}px Arial, sans-serif`;
+  auxContext.font = `${config.textSize}px sans-serif`;
   auxContext.textAlign = "center";
-  auxContext.textBaseline = "middle";
   auxContext.textRendering = "optimizeLegibility";
 
   auxContext.fillStyle = "#000000";
