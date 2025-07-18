@@ -1,1 +1,1 @@
-export * as Test3 from "./main";
+export * as Test4 from "./main";

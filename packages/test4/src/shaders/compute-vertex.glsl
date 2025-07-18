@@ -1,6 +1,3 @@
-#version 300 es
-precision highp float;
-
 out vec2 tf_position;
 
 in vec2 a_position;
@@ -9,8 +6,11 @@ in float a_random;
 
 uniform vec2 u_input;
 uniform vec2 u_returnSpeed;
+uniform float u_time;
 uniform float u_repelRadius;
 uniform float u_repelSpeed;
+uniform float u_noiseEffect;
+uniform float u_noiseFrequency;
 
 const vec2 ZERO = vec2(0.0);
 const float MIN = 0.00000000001;
@@ -55,6 +55,9 @@ void main() {
   vec2 velocity = ZERO;
   velocity += getReturnVelocity();
   velocity += getRepelVelocity();
+
+  float noise = getNoise(a_position * u_noiseFrequency + u_time);
+  velocity += noise * u_noiseEffect;
 
   tf_position = a_position + velocity;
 }

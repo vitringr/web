@@ -1,5 +1,6 @@
 import { WebGL } from "@utilities/webgl";
 import { Random } from "@utilities/random";
+import { NoiseGLSL } from "@utilities/noise-glsl";
 import { Config, defaultConfig } from "./config";
 
 import computeVertex from "./shaders/compute-vertex.glsl";
@@ -8,7 +9,7 @@ import renderVertex from "./shaders/render-vertex.glsl";
 import renderFragment from "./shaders/render-fragment.glsl";
 
 let config: Config;
-const input: { x: number; y: number; clicked: boolean } = {
+const input = {
   x: -99999,
   y: -99999,
   clicked: false,
@@ -29,7 +30,8 @@ function setupGL(canvas: HTMLCanvasElement) {
 }
 
 function setupPrograms(gl: WebGL2RenderingContext) {
-  const computeVS = WebGL.Setup.compileShader(gl, "vertex", computeVertex);
+  const fullComputeVS = WebGL.GLSL.getBegin() + NoiseGLSL.Simplex.default + computeVertex;
+  const computeVS = WebGL.Setup.compileShader(gl, "vertex", fullComputeVS);
   const computeFS = WebGL.Setup.compileShader(gl, "fragment", computeFragment);
   const computeProgram = WebGL.Setup.linkTransformFeedbackProgram(
     gl,
@@ -162,10 +164,13 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
 
   const uniforms = {
     compute: {
+      u_time: gl.getUniformLocation(computeProgram, "u_time"),
       u_input: gl.getUniformLocation(computeProgram, "u_input"),
       u_returnSpeed: gl.getUniformLocation(computeProgram, "u_returnSpeed"),
       u_repelRadius: gl.getUniformLocation(computeProgram, "u_repelRadius"),
       u_repelSpeed: gl.getUniformLocation(computeProgram, "u_repelSpeed"),
+      u_noiseEffect: gl.getUniformLocation(computeProgram, "u_noiseEffect"),
+      u_noiseFrequency: gl.getUniformLocation(computeProgram, "u_noiseFrequency"),
     },
     render: {
       u_size: gl.getUniformLocation(renderProgram, "u_size"),
@@ -364,10 +369,17 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
   gl.useProgram(programs.render);
   gl.uniform2f(uniforms.render.u_size, config.size.min, config.size.max);
 
+  let time = 0;
+
   const computeLoop = () => {
+    time += config.timeIncrement;
+
     gl.useProgram(programs.compute);
     gl.bindVertexArray(swapOne.computeVAO);
 
+    gl.uniform1f(uniforms.compute.u_time, time);
+    gl.uniform1f(uniforms.compute.u_noiseFrequency, config.noiseFrequency);
+    gl.uniform1f(uniforms.compute.u_noiseEffect, config.noiseEffect);
     gl.uniform2f(uniforms.compute.u_input, input.x, input.y);
 
     gl.enable(gl.RASTERIZER_DISCARD);

@@ -15,11 +15,15 @@ export const defaultConfig = {
   repelRadius: 0.08,
   repelSpeed: 0.01,
 
-  textSize: 38,
-  textLineHeight: 48,
-  textY: 0.13,
-  textMaxWidth: 680,
-  text: "The question is not what you look at, but what you truly see. For the eye observes only what the mind is prepared to comprehend. Light and shadow, shape and color, are meaningless until interpreted. We do not perceive the world as it is; we perceive it as we are. Our knowledge becomes the lens through which reality is filtered. To see more, then, is not to look harder, but to understand more deeply. For vision is not a gift of the eyes alone, but of the mind behind them.",
+  noiseFrequency: 5,
+  noiseEffect: 0.00028,
+  timeIncrement: 0.001,
+
+  textSize: 48,
+  textLineHeight: 58,
+  textY: 0.16,
+  textMaxWidth: 640,
+  text: "The necessity of concealing the Art is one of the chief anxieties of alchemists. We are sworn to secrecy by heaven and earth.  An oath has been required of us to reveal nothing clearly to any uninitiated being. The sacrifice of oneself to the pursuit of knowledge is the highest tribute to the gods.",
 } as const;
 
 export type Config = typeof defaultConfig;
