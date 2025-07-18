@@ -7,6 +7,7 @@ import computeVertex from "./shaders/compute-vertex.glsl";
 import computeFragment from "./shaders/compute-fragment.glsl";
 import renderVertex from "./shaders/render-vertex.glsl";
 import renderFragment from "./shaders/render-fragment.glsl";
+import { Noise } from "@utilities/noise";
 
 let config: Config;
 const input = {
@@ -76,7 +77,7 @@ function drawWrappedText(
   context.fillText(line, x, y);
 }
 
-function createParticleOrigins() {
+function createTextOrigins() {
   const auxCanvas = document.createElement("canvas");
   auxCanvas.width = config.width;
   auxCanvas.height = config.height;
@@ -129,21 +130,29 @@ function createParticleOrigins() {
 }
 
 function generateData() {
-  const particleOrigins = createParticleOrigins();
+  const particleTextOrigins = createTextOrigins();
 
-  const count = particleOrigins.length;
+  const count = particleTextOrigins.length;
 
-  const origins: number[] = [];
+  const textOrigins: number[] = [];
   for (let i = 0; i < count; i++) {
-    const origin = particleOrigins[i];
-    origins.push(origin.x / config.width);
-    origins.push((config.height - origin.y) / config.height);
+    const origin = particleTextOrigins[i];
+    textOrigins.push(origin.x / config.width);
+    textOrigins.push((config.height - origin.y) / config.height);
   }
 
-  const positions: number[] = [];
+  const messOrigins: number[] = [];
   for (let i = 0; i < count; i++) {
-    positions.push(Random.range(0, 1));
-    positions.push(Random.range(0, 1));
+    const xNoise = Noise.Simplex.getFractal((i + 1.2345) * 0.5, (i - 1.2345) * 0.1, 2);
+    const yNoise = Noise.Simplex.getFractal((i + 9.8765) * 0.5, (i + 6.3719) * 0.1, 2);
+    messOrigins.push(xNoise);
+    messOrigins.push(yNoise);
+  }
+
+  const spawnPositions: number[] = [];
+  for (let i = 0; i < count; i++) {
+    spawnPositions.push(Random.range(0, 1));
+    spawnPositions.push(Random.range(0, 1));
   }
 
   const random: number[] = [];
@@ -153,8 +162,9 @@ function generateData() {
 
   return {
     particleCount: count,
-    positions: new Float32Array(positions),
-    origins: new Float32Array(origins),
+    spawnPositions: new Float32Array(spawnPositions),
+    textOrigins: new Float32Array(textOrigins),
+    messOrigins: new Float32Array(messOrigins),
     random: new Float32Array(random),
   };
 }
@@ -166,10 +176,12 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
     compute: {
       u_time: gl.getUniformLocation(computeProgram, "u_time"),
       u_input: gl.getUniformLocation(computeProgram, "u_input"),
+      u_isPressed: gl.getUniformLocation(computeProgram, "u_isPressed"),
       u_returnSpeed: gl.getUniformLocation(computeProgram, "u_returnSpeed"),
       u_repelRadius: gl.getUniformLocation(computeProgram, "u_repelRadius"),
       u_repelSpeed: gl.getUniformLocation(computeProgram, "u_repelSpeed"),
-      u_noiseEffect: gl.getUniformLocation(computeProgram, "u_noiseEffect"),
+      u_textNoiseEffect: gl.getUniformLocation(computeProgram, "u_textNoiseEffect"),
+      u_messNoiseEffect: gl.getUniformLocation(computeProgram, "u_messNoiseEffect"),
       u_noiseFrequency: gl.getUniformLocation(computeProgram, "u_noiseFrequency"),
     },
     render: {
@@ -180,7 +192,8 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   const attributes = {
     compute: {
       a_position: gl.getAttribLocation(computeProgram, "a_position"),
-      a_origin: gl.getAttribLocation(computeProgram, "a_origin"),
+      a_textOrigin: gl.getAttribLocation(computeProgram, "a_textOrigin"),
+      a_messOrigin: gl.getAttribLocation(computeProgram, "a_messOrigin"),
       a_random: gl.getAttribLocation(computeProgram, "a_random"),
     },
     render: {
@@ -192,18 +205,22 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   const buffers = {
     positionHeads: gl.createBuffer(),
     positionTails: gl.createBuffer(),
-    origin: gl.createBuffer(),
+    textOrigin: gl.createBuffer(),
+    noiseOrigin: gl.createBuffer(),
     random: gl.createBuffer(),
   } as const;
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.positionHeads);
-  gl.bufferData(gl.ARRAY_BUFFER, data.positions, gl.STREAM_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, data.spawnPositions, gl.STREAM_DRAW);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.positionTails);
-  gl.bufferData(gl.ARRAY_BUFFER, data.positions, gl.STREAM_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, data.spawnPositions, gl.STREAM_DRAW);
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.origin);
-  gl.bufferData(gl.ARRAY_BUFFER, data.origins, gl.STATIC_DRAW);
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.textOrigin);
+  gl.bufferData(gl.ARRAY_BUFFER, data.textOrigins, gl.STATIC_DRAW);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.noiseOrigin);
+  gl.bufferData(gl.ARRAY_BUFFER, data.messOrigins, gl.STATIC_DRAW);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.random);
   gl.bufferData(gl.ARRAY_BUFFER, data.random, gl.STATIC_DRAW);
@@ -229,9 +246,13 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   gl.enableVertexAttribArray(attributes.compute.a_position);
   gl.vertexAttribPointer(attributes.compute.a_position, 2, gl.FLOAT, false, 0, 0);
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.origin);
-  gl.enableVertexAttribArray(attributes.compute.a_origin);
-  gl.vertexAttribPointer(attributes.compute.a_origin, 2, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.textOrigin);
+  gl.enableVertexAttribArray(attributes.compute.a_textOrigin);
+  gl.vertexAttribPointer(attributes.compute.a_textOrigin, 2, gl.FLOAT, false, 0, 0);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.noiseOrigin);
+  gl.enableVertexAttribArray(attributes.compute.a_messOrigin);
+  gl.vertexAttribPointer(attributes.compute.a_messOrigin, 2, gl.FLOAT, false, 0, 0);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.random);
   gl.enableVertexAttribArray(attributes.compute.a_random);
@@ -247,9 +268,13 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   gl.enableVertexAttribArray(attributes.compute.a_position);
   gl.vertexAttribPointer(attributes.compute.a_position, 2, gl.FLOAT, false, 0, 0);
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.origin);
-  gl.enableVertexAttribArray(attributes.compute.a_origin);
-  gl.vertexAttribPointer(attributes.compute.a_origin, 2, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.textOrigin);
+  gl.enableVertexAttribArray(attributes.compute.a_textOrigin);
+  gl.vertexAttribPointer(attributes.compute.a_textOrigin, 2, gl.FLOAT, false, 0, 0);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.noiseOrigin);
+  gl.enableVertexAttribArray(attributes.compute.a_messOrigin);
+  gl.vertexAttribPointer(attributes.compute.a_messOrigin, 2, gl.FLOAT, false, 0, 0);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.random);
   gl.enableVertexAttribArray(attributes.compute.a_random);
@@ -348,8 +373,6 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
     programs.render,
   );
 
-  console.log("particleCount", particleCount);
-
   let swapOne = {
     computeVAO: vertexArrayObjects.compute.heads,
     TF: transformFeedbacks.tails,
@@ -379,7 +402,9 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
 
     gl.uniform1f(uniforms.compute.u_time, time);
     gl.uniform1f(uniforms.compute.u_noiseFrequency, config.noiseFrequency);
-    gl.uniform1f(uniforms.compute.u_noiseEffect, config.noiseEffect);
+    gl.uniform1f(uniforms.compute.u_textNoiseEffect, config.textNoiseEffect);
+    gl.uniform1f(uniforms.compute.u_messNoiseEffect, config.messNoiseEffect);
+    gl.uniform1f(uniforms.compute.u_isPressed, input.clicked ? 1 : 0);
     gl.uniform2f(uniforms.compute.u_input, input.x, input.y);
 
     gl.enable(gl.RASTERIZER_DISCARD);

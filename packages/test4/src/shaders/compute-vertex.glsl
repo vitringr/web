@@ -1,22 +1,25 @@
 out vec2 tf_position;
 
 in vec2 a_position;
-in vec2 a_origin;
+in vec2 a_textOrigin;
 in float a_random;
+in vec2 a_messOrigin;
 
 uniform vec2 u_input;
+uniform bool u_isPressed;
 uniform vec2 u_returnSpeed;
 uniform float u_time;
 uniform float u_repelRadius;
 uniform float u_repelSpeed;
-uniform float u_noiseEffect;
+uniform float u_textNoiseEffect;
+uniform float u_messNoiseEffect;
 uniform float u_noiseFrequency;
 
 const vec2 ZERO = vec2(0.0);
 const float MIN = 0.00000000001;
 
-vec2 getReturnVelocity() {
-  vec2 difference = a_origin - a_position;
+vec2 getReturnVelocity(vec2 targetOrigin) {
+  vec2 difference = targetOrigin - a_position;
   float magnitudeSquared = difference.x * difference.x + difference.y * difference.y;
   if(magnitudeSquared <= MIN)
     return ZERO;
@@ -53,12 +56,19 @@ vec2 getRepelVelocity() {
 
 void main() {
   vec2 velocity = ZERO;
-  velocity += getReturnVelocity();
+
+  float noise = getNoise(a_position * u_noiseFrequency + u_time) * 2.0 - 1.0;
+
+  if(u_isPressed) {
+    velocity += getReturnVelocity(a_textOrigin);
+    velocity += noise * u_textNoiseEffect;
+  } else {
+    velocity += getReturnVelocity(a_messOrigin);
+    velocity += noise * u_messNoiseEffect;
+  }
+
   velocity += getRepelVelocity();
 
-  float noise = getNoise(a_position * u_noiseFrequency + u_time);
-  velocity += noise * u_noiseEffect;
-
-  tf_position = a_position + velocity;
+  tf_position = a_position + velocity ;
 }
 

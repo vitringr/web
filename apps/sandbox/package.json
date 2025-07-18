@@ -17,6 +17,7 @@
     "@packages/test": "workspace:*",
     "@packages/test2": "workspace:*",
     "@packages/test3": "workspace:*",
+    "@packages/test4": "workspace:*",
     "@packages/quadtree-simulation": "workspace:*",
     "@packages/creative": "workspace:*",
     "@packages/noise-html": "workspace:*",

@@ -8,16 +8,17 @@ export const defaultConfig = {
   },
 
   returnSpeed: {
-    min: 0.008,
-    max: 0.024,
+    min: 0.004,
+    max: 0.012,
   },
 
-  repelRadius: 0.08,
+  repelRadius: 0.07,
   repelSpeed: 0.01,
 
-  noiseFrequency: 5,
-  noiseEffect: 0.00028,
+  noiseFrequency: 4,
   timeIncrement: 0.001,
+  textNoiseEffect: 0.0001,
+  messNoiseEffect: 0.00004,
 
   textSize: 48,
   textLineHeight: 58,
