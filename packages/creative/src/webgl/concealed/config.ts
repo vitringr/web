@@ -1,6 +1,6 @@
 export const defaultConfig = {
-  width: 800,
-  height: 800,
+  width: 600,
+  height: 600,
 
   size: {
     min: 0.3,
@@ -12,19 +12,19 @@ export const defaultConfig = {
     max: 0.012,
   },
 
-  repelRadius: 0.07,
-  repelSpeed: 0.01,
+  repelRadius: 0.06,
+  repelSpeed: 0.003,
 
   noiseFrequency: 4,
   timeIncrement: 0.001,
   textNoiseEffect: 0.0001,
   messNoiseEffect: 0.00004,
 
-  textSize: 48,
-  textLineHeight: 58,
-  textY: 0.16,
-  textMaxWidth: 640,
-  text: "The necessity of concealing the Art is one of the chief anxieties of alchemists. We are sworn to secrecy by heaven and earth.  An oath has been required of us to reveal nothing clearly to any uninitiated being. The sacrifice of oneself to the pursuit of knowledge is the highest tribute to the gods.",
+  textSize: 38,
+  textLineHeight: 50,
+  textY: 0.1,
+  textMaxWidth: 540,
+  text: "The necessity of concealing the Art is one of the chief anxieties of alchemists. We are sworn to secrecy by heaven and earth. An oath has been required of us to reveal nothing clearly to uninitiated beings. The sacrifice of oneself to the pursuit of knowledge is the highest tribute to the gods.",
 } as const;
 
 export type Config = typeof defaultConfig;

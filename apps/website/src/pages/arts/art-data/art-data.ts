@@ -19,6 +19,7 @@ import sparksPNG from "./thumbnails/sparks.png";
 import systemShockPNG from "./thumbnails/systemShock.png";
 import regenerationPNG from "./thumbnails/regeneration.png";
 import angerPNG from "./thumbnails/anger.png";
+import concealedPNG from "./thumbnails/concealed.png";
 
 export interface ArtData<T> {
   title: string;
@@ -68,6 +69,20 @@ export const artData: ArtData<any>[] = [
   }),
 
   defineArt({
+    title: "Concealed",
+    route: Routes.arts.concealed,
+    thumbnail: concealedPNG,
+    tags: [
+      ArtTagNames["2D"],
+      ArtTagNames.Input,
+      ArtTagNames.GPU,
+      ArtTagNames.Particles,
+      ArtTagNames.Noise,
+    ],
+    artMain: Creative.WebGL.Concealed.main,
+  }),
+
+  defineArt({
     title: "Anger",
     route: Routes.arts.anger,
     thumbnail: angerPNG,
@@ -77,16 +92,16 @@ export const artData: ArtData<any>[] = [
   }),
 
   defineArt({
-    title: "Sparks",
-    route: Routes.arts.sparks,
-    thumbnail: sparksPNG,
+    title: "Layers",
+    route: Routes.arts.layers,
+    thumbnail: layersPNG,
     tags: [
       ArtTagNames["2D"],
       ArtTagNames.Input,
-      ArtTagNames.Particles,
-      ArtTagNames.Noise,
+      ArtTagNames.GPU,
+      ArtTagNames.Image,
     ],
-    artMain: Creative.Canvas2D.Sparks.main,
+    artMain: Creative.WebGL.Layers.main,
   }),
 
   defineArt({
@@ -104,11 +119,32 @@ export const artData: ArtData<any>[] = [
   }),
 
   defineArt({
+    title: "Sparks",
+    route: Routes.arts.sparks,
+    thumbnail: sparksPNG,
+    tags: [
+      ArtTagNames["2D"],
+      ArtTagNames.Input,
+      ArtTagNames.Particles,
+      ArtTagNames.Noise,
+    ],
+    artMain: Creative.Canvas2D.Sparks.main,
+  }),
+
+  defineArt({
     title: "Random Walkers",
     route: Routes.arts.randomWalkers,
     thumbnail: randomWalkersPNG,
     tags: [ArtTagNames["2D"], ArtTagNames.Random],
     artMain: Creative.Canvas2D.RandomWalkers.main,
+  }),
+
+  defineArt({
+    title: "Noise Loop",
+    route: Routes.arts.noiseLoop,
+    thumbnail: noiseLoopPNG,
+    tags: [ArtTagNames["2D"], ArtTagNames.Noise],
+    artMain: Creative.Canvas2D.NoiseLoop.main,
   }),
 
   defineArt({
@@ -125,14 +161,6 @@ export const artData: ArtData<any>[] = [
     thumbnail: noiseFlowPNG,
     tags: [ArtTagNames["2D"], ArtTagNames.GPU, ArtTagNames.Noise],
     artMain: Creative.WebGL.NoiseFlow.main,
-  }),
-
-  defineArt({
-    title: "Noise Loop",
-    route: Routes.arts.noiseLoop,
-    thumbnail: noiseLoopPNG,
-    tags: [ArtTagNames["2D"], ArtTagNames.Noise],
-    artMain: Creative.Canvas2D.NoiseLoop.main,
   }),
 
   defineArt({
@@ -191,19 +219,6 @@ export const artData: ArtData<any>[] = [
       ArtTagNames.Image,
     ],
     artMain: Creative.WebGL.TenThousand.main,
-  }),
-
-  defineArt({
-    title: "Layers",
-    route: Routes.arts.layers,
-    thumbnail: layersPNG,
-    tags: [
-      ArtTagNames["2D"],
-      ArtTagNames.Input,
-      ArtTagNames.GPU,
-      ArtTagNames.Image,
-    ],
-    artMain: Creative.WebGL.Layers.main,
   }),
 
   defineArt({
