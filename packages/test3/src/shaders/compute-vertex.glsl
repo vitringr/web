@@ -9,26 +9,13 @@ in float a_random;
 
 uniform vec2 u_input;
 uniform vec2 u_returnSpeed;
-uniform float u_repelSpeed;
 uniform float u_repelRadius;
+uniform float u_repelSpeed;
 
 const vec2 ZERO = vec2(0.0);
-const float MIN = 0.0000000001;
-
-vec2 warp(vec2 coordinates) {
-  vec2 warped = coordinates;
-
-  if      (warped.x >= 1.0) warped.x = 0.0;
-  else if (warped.x <= 0.0) warped.x = 1.0;
-
-  if      (warped.y >= 1.0) warped.y = 0.0;
-  else if (warped.y <= 0.0) warped.y = 1.0;
-
-  return warped;
-}
+const float MIN = 0.00000000001;
 
 vec2 getReturnVelocity() {
-  float speed = mix(u_returnSpeed.r, u_returnSpeed.g, a_random);
 
   vec2 difference = a_origin - a_position;
   float magnitudeSquared = difference.x * difference.x + difference.y * difference.y;
@@ -38,7 +25,11 @@ vec2 getReturnVelocity() {
   float magnitude = sqrt(magnitudeSquared);
 
   vec2 direction = difference / magnitude;
-  vec2 velocity = direction * magnitude * speed;
+
+  float randomSpeed = mix(u_returnSpeed.r, u_returnSpeed.g, a_random);
+  float speed = magnitude * randomSpeed;
+
+  vec2 velocity = direction * speed;
 
   return velocity;
 }
@@ -50,9 +41,13 @@ vec2 getRepelVelocity() {
     return ZERO;
 
   float magnitude = sqrt(magnitudeSquared);
-
   vec2 direction = difference / magnitude;
-  vec2 velocity = direction * magnitude * u_repelSpeed;
+
+  float speed = (1.0 / magnitude) * u_repelSpeed;
+  float distanceToBounds = u_repelRadius - magnitude;
+  speed = min(speed, distanceToBounds);
+
+  vec2 velocity = direction * speed;
 
   return velocity;
 }
@@ -62,6 +57,6 @@ void main() {
   velocity += getReturnVelocity();
   velocity += getRepelVelocity();
 
-  tf_position = warp(a_position + velocity);
+  tf_position = a_position + velocity;
 }
 

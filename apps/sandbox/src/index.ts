@@ -8,4 +8,3 @@ const canvas = document.getElementById(canvasID) as HTMLCanvasElement;
 if (!canvas) throw `Cannot get #${canvasID}`;
 
 Test3.main(canvas);
-

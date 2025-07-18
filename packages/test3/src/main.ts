@@ -165,8 +165,8 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
     compute: {
       u_input: gl.getUniformLocation(computeProgram, "u_input"),
       u_returnSpeed: gl.getUniformLocation(computeProgram, "u_returnSpeed"),
-      u_repelSpeed: gl.getUniformLocation(computeProgram, "u_repelSpeed"),
       u_repelRadius: gl.getUniformLocation(computeProgram, "u_repelRadius"),
+      u_repelSpeed: gl.getUniformLocation(computeProgram, "u_repelSpeed"),
     },
     render: {
       u_size: gl.getUniformLocation(renderProgram, "u_size"),
@@ -360,8 +360,8 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
 
   gl.useProgram(programs.compute);
   gl.uniform2f(uniforms.compute.u_returnSpeed, config.returnSpeed.min, config.returnSpeed.max);
-  gl.uniform1f(uniforms.compute.u_repelSpeed, config.repelSpeed);
   gl.uniform1f(uniforms.compute.u_repelRadius, config.repelRadius);
+  gl.uniform1f(uniforms.compute.u_repelSpeed, config.repelSpeed);
   gl.useProgram(programs.render);
   gl.uniform2f(uniforms.render.u_size, config.size.min, config.size.max);
 
