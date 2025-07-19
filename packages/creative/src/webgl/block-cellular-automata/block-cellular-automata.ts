@@ -239,3 +239,4 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
 
   mainLoop();
 }
+

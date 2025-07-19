@@ -14,9 +14,9 @@ uniform bool u_isPointerDown;
 uniform float u_pointerArea;
 
 // Neighbor Offsets.
-const ivec2 NORTH      = ivec2( 0,  1);
-const ivec2 NORTH_EAST = ivec2( 1,  1);
-const ivec2 EAST       = ivec2( 1,  0);
+const ivec2 NORTH      = ivec2(0, 1);
+const ivec2 NORTH_EAST = ivec2(1, 1);
+const ivec2 EAST       = ivec2(1, 0);
 
 // Block Pattern Transforms.
 const int identity[16] = int[16]( 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15);

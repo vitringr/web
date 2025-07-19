@@ -1,5 +1,6 @@
 import { WebGL } from "@utilities/webgl";
 import { Random } from "@utilities/random";
+import { Noise } from "@utilities/noise";
 import { NoiseGLSL } from "@utilities/noise-glsl";
 import { Config, defaultConfig } from "./config";
 
@@ -7,7 +8,6 @@ import computeVertex from "./shaders/compute-vertex.glsl";
 import computeFragment from "./shaders/compute-fragment.glsl";
 import renderVertex from "./shaders/render-vertex.glsl";
 import renderFragment from "./shaders/render-fragment.glsl";
-import { Noise } from "@utilities/noise";
 
 let config: Config;
 const input = {

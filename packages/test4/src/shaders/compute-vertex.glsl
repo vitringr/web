@@ -18,6 +18,18 @@ uniform float u_noiseFrequency;
 const vec2 ZERO = vec2(0.0);
 const float MIN = 0.00000000001;
 
+vec2 warp(vec2 coordinates) {
+  vec2 warped = coordinates;
+
+  if      (warped.x >= 1.0) warped.x = 0.0;
+  else if (warped.x <= 0.0) warped.x = 1.0;
+
+  if      (warped.y >= 1.0) warped.y = 0.0;
+  else if (warped.y <= 0.0) warped.y = 1.0;
+
+  return warped;
+}
+
 vec2 getReturnVelocity(vec2 targetOrigin) {
   vec2 difference = targetOrigin - a_position;
   float magnitudeSquared = difference.x * difference.x + difference.y * difference.y;
@@ -57,18 +69,10 @@ vec2 getRepelVelocity() {
 void main() {
   vec2 velocity = ZERO;
 
-  float noise = getNoise(a_position * u_noiseFrequency + u_time) * 2.0 - 1.0;
+  // float noise = getNoise(a_position * u_noiseFrequency + u_time) * 2.0 - 1.0;
 
-  if(u_isPressed) {
-    velocity += getReturnVelocity(a_textOrigin);
-    velocity += noise * u_textNoiseEffect;
-  } else {
-    velocity += getReturnVelocity(a_messOrigin);
-    velocity += noise * u_messNoiseEffect;
-  }
 
-  velocity += getRepelVelocity();
 
-  tf_position = a_position + velocity ;
+  tf_position = warp(a_position + vec2(0.0, -0.001));
 }
 
