@@ -1,28 +1,7 @@
 import { Noise } from "@utilities/noise";
 import { Mathematics } from "../../../../utilities/mathematics/src";
 
-type Config = {
-  width: number;
-  height: number;
-
-  gap: number;
-  gapOffset: number;
-
-  spriteWidth: number;
-  spriteHeight: number;
-
-  noiseFrequency: number;
-  timeIncrement: number;
-
-  colors: {
-    background: string;
-    font: string;
-  };
-
-  characters: string[];
-};
-
-const defaultConfig: Config = {
+const defaultConfig = {
   width: 600,
   height: 600,
 
@@ -105,6 +84,8 @@ const defaultConfig: Config = {
     "Z",
   ],
 } as const;
+
+type Config = typeof defaultConfig;
 
 let config: Config;
 

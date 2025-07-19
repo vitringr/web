@@ -5,24 +5,7 @@ import computeFragment from "./update-fragment.glsl";
 import renderVertex from "./render-vertex.glsl";
 import renderFragment from "./render-fragment.glsl";
 
-type Config = {
-  width: number;
-  height: number;
-
-  xCount: number;
-  yCount: number;
-  offset: number;
-
-  originPullScalar: number;
-  toggleOriginPullScalar: number;
-  repelScalar: number;
-  repelNearestScalar: number;
-  maxRepelDistance: number;
-  minPointSize: number;
-  pointSizeByOriginDistance: number;
-};
-
-const defaultConfig: Config = {
+const defaultConfig = {
   width: 600,
   height: 600,
 
@@ -38,6 +21,8 @@ const defaultConfig: Config = {
   minPointSize: 0.8,
   pointSizeByOriginDistance: 24,
 } as const;
+
+type Config = typeof defaultConfig;
 
 let config: Config;
 

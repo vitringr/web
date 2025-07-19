@@ -3,19 +3,14 @@ import { WebGL } from "@utilities/webgl";
 import vertexShader from "./vertex.glsl";
 import fragmentShader from "./fragment.glsl";
 
-type Config = {
-  canvasWidth: number,
-  canvasHeight: number,
-
-  timeIncrement: number,
-};
-
-const defaultConfig: Config = {
+const defaultConfig = {
   canvasWidth: 800,
   canvasHeight: 800,
 
   timeIncrement: 0.01,
 } as const;
+
+type Config = typeof defaultConfig;
 
 let config: Config;
 

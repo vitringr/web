@@ -8,17 +8,7 @@ import renderFragment from "./render-fragment.glsl";
 
 import img from "./tenthousand.png";
 
-type Config = {
-  canvasWidth: number;
-  canvasHeight: number;
-  particlesCount: number;
-  brightness: number;
-  speed: number;
-  minSize: number;
-  sizeScalar: number;
-};
-
-const defaultConfig: Config = {
+const defaultConfig = {
   canvasWidth: 800,
   canvasHeight: 800,
   particlesCount: 10_000,
@@ -27,6 +17,8 @@ const defaultConfig: Config = {
   minSize: 1.5,
   sizeScalar: 3.0,
 } as const;
+
+type Config = typeof defaultConfig;
 
 let config: Config;
 

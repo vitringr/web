@@ -8,20 +8,7 @@ import renderFragment from "./render-fragment.glsl";
 
 import img from "./godfather.png";
 
-type Config = {
-  canvasWidth: number,
-  canvasHeight: number,
-  particlesCount: number,
-  minColor: number,
-  minPointSize: number,
-  colorPointSizeScalar: number,
-  colorSlowScalar: number,
-  minGravity: number,
-  minLimitGravity: number,
-  maxLimitGravity: number,
-};
-
-const defaultConfig: Config = {
+const defaultConfig = {
   canvasWidth: 600,
   canvasHeight: 600,
   particlesCount: 6_000,
@@ -33,6 +20,8 @@ const defaultConfig: Config = {
   minLimitGravity: 0.1,
   maxLimitGravity: 0.6,
 } as const;
+
+type Config = typeof defaultConfig;
 
 let config: Config;
 

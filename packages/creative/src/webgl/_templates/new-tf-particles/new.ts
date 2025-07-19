@@ -2,10 +2,10 @@ import { WebGL } from "@utilities/webgl";
 import { Random } from "@utilities/random";
 import { Config, defaultConfig } from "./config";
 
-import computeVertex from "./shaders/compute-vertex.glsl";
-import computeFragment from "./shaders/compute-fragment.glsl";
-import renderVertex from "./shaders/render-vertex.glsl";
-import renderFragment from "./shaders/render-fragment.glsl";
+import computeVertex from "./compute-vertex.glsl";
+import computeFragment from "./compute-fragment.glsl";
+import renderVertex from "./render-vertex.glsl";
+import renderFragment from "./render-fragment.glsl";
 
 let config: Config;
 

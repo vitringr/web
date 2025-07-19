@@ -1,29 +1,7 @@
 import { Mathematics } from "@utilities/mathematics";
 import { Noise } from "@utilities/noise";
 
-type Config = {
-  width: number;
-  height: number;
-
-  particleCount: number;
-  particleWidth: number;
-
-  radius: number;
-  noiseRadius: number;
-
-  noiseFrequency: number;
-
-  timeIncrement: number;
-
-  lineWidth: number;
-
-  colors: {
-    background: string;
-    particle: string;
-  };
-};
-
-const defaultConfig: Config = {
+const defaultConfig = {
   width: 600,
   height: 600,
 
@@ -44,6 +22,8 @@ const defaultConfig: Config = {
     particle: "#CECECE",
   },
 } as const;
+
+type Config = typeof defaultConfig;
 
 let config: Config;
 

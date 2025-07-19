@@ -3,33 +3,7 @@ import { Noise } from "@utilities/noise";
 
 import systemShockPNG from "./system-shock.png";
 
-type Config = {
-  width: number;
-  height: number;
-
-  imageWidth: number;
-  imageHeight: number;
-
-  spriteWidth: number;
-  spriteHeight: number;
-
-  minBrightness: number;
-
-  updateChance: number;
-
-  noiseFrequency: number;
-
-  timeIncrement: number;
-
-  colors: {
-    background: string;
-    font: string;
-  };
-
-  characters: string[];
-};
-
-const defaultConfig: Config = {
+const defaultConfig = {
   width: 780,
   height: 648,
 
@@ -53,7 +27,9 @@ const defaultConfig: Config = {
   },
 
   characters: ["1", "2", "3", "a", "b", "c", "A", "B", "X"],
-} as const satisfies Config;
+} as const;
+
+type Config = typeof defaultConfig;
 
 function setupContext(canvas: HTMLCanvasElement, config: Config) {
   canvas.width = config.width;

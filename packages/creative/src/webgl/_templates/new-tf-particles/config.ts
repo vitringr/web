@@ -1,15 +1,4 @@
-export type Config = {
-  canvasWidth: number;
-  canvasHeight: number;
-
-  particles: number;
-  minSize: number,
-  maxSize: number,
-  minSpeed: number;
-  maxSpeed: number;
-};
-
-export const defaultConfig: Config = {
+export const defaultConfig = {
   canvasWidth: 800,
   canvasHeight: 800,
 
@@ -19,3 +8,5 @@ export const defaultConfig: Config = {
   minSpeed: 0.0002,
   maxSpeed: 0.0008,
 } as const;
+
+export type Config = typeof defaultConfig;

@@ -2,31 +2,7 @@ import { Noise } from "@utilities/noise";
 import { Canvas2D } from "@utilities/canvas2d";
 import { Mathematics } from "@utilities/mathematics";
 
-type Config = {
-  width: number;
-  height: number;
-
-  spawnCount: number;
-  orbsPooled: number;
-
-  radius: number;
-  decayRate: number;
-
-  noiseFrequency: number;
-  velocityScalar: number;
-
-  timeIncrement: number;
-
-  lineWidth: number;
-
-  colors: {
-    stroke: string;
-    background: string;
-    palette: { color: string; weight: number }[];
-  };
-};
-
-const defaultConfig: Config = {
+const defaultConfig = {
   width: 600,
   height: 600,
 
@@ -59,6 +35,8 @@ const defaultConfig: Config = {
     ],
   },
 } as const;
+
+type Config = typeof defaultConfig;
 
 let config: Config;
 

@@ -89,7 +89,6 @@ export const artData: ArtData<any>[] = [
     thumbnail: angerPNG,
     tags: [ArtTagNames["2D"], ArtTagNames.GPU, ArtTagNames.Noise],
     artMain: Creative.WebGL.Anger.main,
-    artConfig: { width: 600, height: 600 },
   }),
 
   defineArt({

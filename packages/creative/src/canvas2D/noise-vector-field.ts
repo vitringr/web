@@ -2,27 +2,7 @@ import { Canvas2D } from "@utilities/canvas2d";
 import { Mathematics } from "@utilities/mathematics";
 import { Noise } from "@utilities/noise";
 
-type Config = {
-  width: number;
-  height: number;
-
-  rows: number;
-  cols: number;
-
-  gap: number;
-
-  vectorMagnitude: number;
-
-  noiseScale: number;
-
-  timeIncrement: number;
-
-  lineWidth: number;
-  color: string;
-  background: string;
-};
-
-const defaultConfig: Config = {
+const defaultConfig = {
   width: 600,
   height: 600,
 
@@ -41,6 +21,8 @@ const defaultConfig: Config = {
   color: "#acacac",
   background: "#111111",
 } as const;
+
+type Config = typeof defaultConfig;
 
 let config: Config;
 

@@ -3,18 +3,7 @@ import { WebGL } from "@utilities/webgl";
 import vertexShader from "./vertex.glsl";
 import fragmentShader from "./fragment.glsl";
 
-type Config = {
-  width: number,
-  height: number,
-
-  cells: number,
-  noiseOctaves: number,
-  contrast: number,
-  fractalAmplitude: number,
-  timeIncrement: number,
-};
-
-const defaultConfig: Config = {
+const defaultConfig = {
   width: 800,
   height: 800,
 
@@ -23,7 +12,9 @@ const defaultConfig: Config = {
   contrast: 14,
   fractalAmplitude: 0.6,
   timeIncrement: 0.0006,
-} as const;
+};
+
+type Config = typeof defaultConfig;
 
 let config: Config;
 

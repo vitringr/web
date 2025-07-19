@@ -8,15 +8,12 @@ import img1 from "./layer1.png";
 import img2 from "./layer2.png";
 import img3 from "./layer3.png";
 
-type Config = {
-  canvasWidth: number;
-  canvasHeight: number;
-};
-
-const defaultConfig: Config = {
+const defaultConfig = {
   canvasWidth: 600,
   canvasHeight: 600,
 };
+
+type Config = typeof defaultConfig;
 
 let config: Config;
 

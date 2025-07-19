@@ -1,23 +1,4 @@
-export type Config = {
-  width: number;
-  height: number;
-
-  imageWidth: number;
-  imageHeight: number;
-
-  cachedParticles: number;
-  lifetime: number;
-  decay: number;
-  size: number;
-  speed: number;
-
-  noiseFrequency: number;
-  noiseEffect: number;
-
-  backgroundColor: string;
-};
-
-export const defaultConfig: Config = {
+export const defaultConfig = {
   width: 960,
   height: 1200,
 
@@ -34,4 +15,6 @@ export const defaultConfig: Config = {
   noiseEffect: 0.14,
 
   backgroundColor: "#161616",
-} as const satisfies Config;
+} as const;
+
+export type Config = typeof defaultConfig;

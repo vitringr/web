@@ -1,17 +1,13 @@
 import { Colors } from "@utilities/colors";
 import { Noise } from "@utilities/noise";
 
-type Config = {
-  width: number;
-  height: number;
-  frequency: number;
-};
-
-const defaultConfig: Config = {
+const defaultConfig = {
   width: 800,
   height: 800,
   frequency: 0.02,
-} as const satisfies Config;
+} as const;
+
+type Config = typeof defaultConfig;
 
 function setupContext(canvas: HTMLCanvasElement, config: Config) {
   canvas.width = config.width;

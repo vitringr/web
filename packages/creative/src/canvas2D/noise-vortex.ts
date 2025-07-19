@@ -1,27 +1,6 @@
 import { Noise } from "@utilities/noise";
 
-type Config = {
-  width: number;
-  height: number;
-
-  count: number;
-
-  range: number;
-
-  timeIncrement: number;
-
-  noiseVolatility: number;
-
-  orbMinRadius: number;
-  orbAddedRadius: number;
-
-  colors: {
-    background: string;
-    orb: string;
-  };
-};
-
-const defaultConfig: Config = {
+const defaultConfig = {
   width: 600,
   height: 600,
 
@@ -41,6 +20,8 @@ const defaultConfig: Config = {
     orb: "#ffffff",
   },
 } as const;
+
+type Config = typeof defaultConfig;
 
 let config: Config;
 

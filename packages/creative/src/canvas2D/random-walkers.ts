@@ -1,18 +1,6 @@
 import { Mathematics } from "@utilities/mathematics";
 
-type Config = {
-  width: number;
-  height: number;
-
-  spawnRadius: number;
-
-  size: number;
-
-  backgroundColor: string;
-  walkerColors: string[];
-};
-
-const defaultConfig: Config = {
+const defaultConfig = {
   width: 600,
   height: 600,
 
@@ -40,6 +28,8 @@ const defaultConfig: Config = {
     "#BF8F10",
   ],
 } as const;
+
+type Config = typeof defaultConfig;
 
 let config: Config;
 

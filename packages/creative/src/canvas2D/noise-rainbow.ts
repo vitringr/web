@@ -1,18 +1,6 @@
 import { Noise } from "@utilities/noise";
 
-type Config = {
-  width: number;
-  height: number;
-
-  cellRows: number;
-  cellCols: number;
-
-  noiseFrequency: number;
-  timeIncrement: number;
-  colorHSLRange: number;
-};
-
-const defaultConfig: Config = {
+const defaultConfig = {
   width: 600,
   height: 600,
 
@@ -23,6 +11,8 @@ const defaultConfig: Config = {
   timeIncrement: 0.0025,
   colorHSLRange: 720,
 } as const;
+
+type Config = typeof defaultConfig;
 
 let config: Config;
 

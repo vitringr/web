@@ -7,18 +7,7 @@ import updateFragment from "./update-fragment.glsl";
 import renderVertex from "./render-vertex.glsl";
 import renderFragment from "./render-fragment.glsl";
 
-type Config = {
-  canvasWidth: number;
-  canvasHeight: number;
-
-  width: number;
-  height: number;
-
-  spawnChancePercent: number;
-  pointerArea: number;
-};
-
-const defaultConfig: Config = {
+const defaultConfig = {
   canvasWidth: 600,
   canvasHeight: 600,
 
@@ -28,6 +17,8 @@ const defaultConfig: Config = {
   spawnChancePercent: 0.05,
   pointerArea: 0.01,
 } as const;
+
+type Config = typeof defaultConfig;
 
 let config: Config;
 

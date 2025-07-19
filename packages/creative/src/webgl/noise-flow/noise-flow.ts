@@ -4,20 +4,7 @@ import { NoiseGLSL } from "@utilities/noise-glsl";
 import vertexShader from "./vertex.glsl";
 import fragmentShader from "./fragment.glsl";
 
-type Config = {
-  width: number,
-  height: number,
-
-  noiseFrequency: number,
-  noiseContrast: number,
-
-  timeLoopNoise: number,
-
-  timeFlowHorizontal: number,
-  timeFlowVertical: number,
-};
-
-const defaultConfig: Config = {
+const defaultConfig = {
   width: 600,
   height: 600,
 
@@ -29,6 +16,8 @@ const defaultConfig: Config = {
   timeFlowHorizontal: 0.0001,
   timeFlowVertical: -0.0006,
 } as const;
+
+type Config = typeof defaultConfig;
 
 let config: Config;
 
