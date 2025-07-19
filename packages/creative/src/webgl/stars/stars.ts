@@ -50,7 +50,8 @@ function generateData() {
 
   const random: number[] = [];
   for (let i = 0; i < config.particles; i++) {
-    random.push(Math.random());
+    const r = Math.random();
+    random.push(r ** 6);
   }
 
   return {
@@ -236,14 +237,21 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
     gl.useProgram(programs.render);
     gl.bindVertexArray(swapOne.renderVAO);
 
+    gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.POINTS, 0, config.particles);
+  };
+
+  let swap: {
+    computeVAO: WebGLVertexArrayObject;
+    TF: WebGLTransformFeedback;
+    renderVAO: WebGLVertexArrayObject;
   };
 
   const mainLoop = () => {
     computeLoop();
     renderLoop();
 
-    const swap = swapOne;
+    swap = swapOne;
     swapOne = swapTwo;
     swapTwo = swap;
 
@@ -252,4 +260,3 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
 
   requestAnimationFrame(mainLoop);
 }
-

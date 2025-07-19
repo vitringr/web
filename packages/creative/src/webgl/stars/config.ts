@@ -2,12 +2,12 @@ export const defaultConfig = {
   width: 800,
   height: 800,
 
-  particles: 1200,
+  particles: 3200,
 
-  minSize: 0.2,
-  maxSize: 2.4,
+  minSize: 0.3,
+  maxSize: 2.3,
   minSpeed: 0.00005,
-  maxSpeed: 0.0003,
+  maxSpeed: 0.00015,
 } as const;
 
 export type Config = typeof defaultConfig;

@@ -27,6 +27,7 @@ export namespace Routes {
     randomWalkers: "/random-walkers",
     noise2D: "/noise-2d",
     noiseFlow: "/noise-flow",
+    stars: "/stars",
     noiseLoop: "/noise-loop",
     noiseVectorField: "/noise-vector-field",
     noiseBlanket: "/noise-blanket",

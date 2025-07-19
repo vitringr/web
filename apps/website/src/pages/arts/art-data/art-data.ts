@@ -20,6 +20,7 @@ import systemShockPNG from "./thumbnails/systemShock.png";
 import regenerationPNG from "./thumbnails/regeneration.png";
 import angerPNG from "./thumbnails/anger.png";
 import concealedPNG from "./thumbnails/concealed.png";
+import starsPNG from "./thumbnails/stars.png";
 
 export interface ArtData<T> {
   title: string;
@@ -137,6 +138,14 @@ export const artData: ArtData<any>[] = [
     thumbnail: randomWalkersPNG,
     tags: [ArtTagNames["2D"], ArtTagNames.Random],
     artMain: Creative.Canvas2D.RandomWalkers.main,
+  }),
+
+  defineArt({
+    title: "Stars",
+    route: Routes.arts.stars,
+    thumbnail: starsPNG,
+    tags: [ArtTagNames["2D"], ArtTagNames.GPU, ArtTagNames.Particles, ArtTagNames.Random],
+    artMain: Creative.WebGL.Stars.main,
   }),
 
   defineArt({
