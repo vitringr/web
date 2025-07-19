@@ -17,7 +17,7 @@ const defaultConfig = {
 
     loopNoise: 0.004,
   },
-} as const;
+};
 
 type Config = typeof defaultConfig;
 

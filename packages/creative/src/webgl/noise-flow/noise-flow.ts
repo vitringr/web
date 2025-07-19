@@ -15,7 +15,7 @@ const defaultConfig = {
 
   timeFlowHorizontal: 0.0001,
   timeFlowVertical: -0.0006,
-} as const;
+};
 
 type Config = typeof defaultConfig;
 

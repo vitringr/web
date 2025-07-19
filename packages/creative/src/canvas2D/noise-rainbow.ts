@@ -10,7 +10,7 @@ const defaultConfig = {
   noiseFrequency: 0.015,
   timeIncrement: 0.0025,
   colorHSLRange: 720,
-} as const;
+};
 
 type Config = typeof defaultConfig;
 

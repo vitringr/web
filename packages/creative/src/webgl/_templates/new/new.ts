@@ -8,7 +8,7 @@ const defaultConfig = {
   canvasHeight: 800,
 
   timeIncrement: 0.01,
-} as const;
+};
 
 type Config = typeof defaultConfig;
 

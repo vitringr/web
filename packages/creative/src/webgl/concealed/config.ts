@@ -25,6 +25,6 @@ export const defaultConfig = {
   textY: 0.1,
   textMaxWidth: 540,
   text: "The necessity of concealing the Art is one of the chief anxieties of alchemists. We are sworn to secrecy by heaven and earth. An oath has been required of us to reveal nothing clearly to uninitiated beings. The sacrifice of oneself to the pursuit of knowledge is the highest tribute to the gods.",
-} as const;
+};
 
 export type Config = typeof defaultConfig;

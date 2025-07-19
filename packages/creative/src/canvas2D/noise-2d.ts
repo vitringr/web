@@ -11,7 +11,7 @@ const defaultConfig = {
   noiseScale: 0.05,
 
   timeIncrement: 0.003,
-} as const;
+};
 
 type Config = typeof defaultConfig;
 

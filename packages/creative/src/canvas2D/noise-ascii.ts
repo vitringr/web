@@ -83,7 +83,7 @@ const defaultConfig = {
     "Y",
     "Z",
   ],
-} as const;
+};
 
 type Config = typeof defaultConfig;
 

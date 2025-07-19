@@ -32,7 +32,7 @@ const defaultConfig = {
       { color: "#eee4d7", weight: 3 },
     ],
   },
-} as const;
+};
 
 type Config = typeof defaultConfig;
 

@@ -27,7 +27,7 @@ const defaultConfig = {
     "#43436C",
     "#BF8F10",
   ],
-} as const;
+};
 
 type Config = typeof defaultConfig;
 

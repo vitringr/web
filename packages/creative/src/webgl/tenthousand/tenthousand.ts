@@ -16,7 +16,7 @@ const defaultConfig = {
   speed: 0.0002,
   minSize: 1.5,
   sizeScalar: 3.0,
-} as const;
+};
 
 type Config = typeof defaultConfig;
 

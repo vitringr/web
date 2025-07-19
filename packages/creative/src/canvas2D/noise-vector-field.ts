@@ -20,7 +20,7 @@ const defaultConfig = {
   lineWidth: 2,
   color: "#acacac",
   background: "#111111",
-} as const;
+};
 
 type Config = typeof defaultConfig;
 

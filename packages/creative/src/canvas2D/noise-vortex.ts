@@ -19,7 +19,7 @@ const defaultConfig = {
     background: "#111111",
     orb: "#ffffff",
   },
-} as const;
+};
 
 type Config = typeof defaultConfig;
 

@@ -15,6 +15,6 @@ export const defaultConfig = {
   noiseEffect: 0.14,
 
   backgroundColor: "#161616",
-} as const;
+};
 
 export type Config = typeof defaultConfig;

@@ -10,7 +10,7 @@ const defaultConfig = {
   particles: 1_000,
 
   timeIncrement: 0.001,
-} as const;
+};
 
 type Config = typeof defaultConfig;
 

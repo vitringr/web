@@ -20,7 +20,7 @@ const defaultConfig = {
   maxRepelDistance: 0.04,
   minPointSize: 0.8,
   pointSizeByOriginDistance: 24,
-} as const;
+};
 
 type Config = typeof defaultConfig;
 

@@ -5,7 +5,7 @@ const defaultConfig = {
   width: 800,
   height: 800,
   frequency: 0.02,
-} as const;
+};
 
 type Config = typeof defaultConfig;
 

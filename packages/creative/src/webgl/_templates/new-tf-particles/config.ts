@@ -7,6 +7,6 @@ export const defaultConfig = {
   maxSize: 3.0,
   minSpeed: 0.0002,
   maxSpeed: 0.0008,
-} as const;
+};
 
 export type Config = typeof defaultConfig;

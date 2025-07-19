@@ -19,7 +19,7 @@ const defaultConfig = {
   minGravity: 0.001,
   minLimitGravity: 0.1,
   maxLimitGravity: 0.6,
-} as const;
+};
 
 type Config = typeof defaultConfig;
 

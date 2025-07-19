@@ -21,7 +21,7 @@ const defaultConfig = {
     background: "#111111",
     particle: "#CECECE",
   },
-} as const;
+};
 
 type Config = typeof defaultConfig;
 

@@ -27,7 +27,7 @@ const defaultConfig = {
   },
 
   characters: ["1", "2", "3", "a", "b", "c", "A", "B", "X"],
-} as const;
+};
 
 type Config = typeof defaultConfig;
 
