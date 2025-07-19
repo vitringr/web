@@ -19,7 +19,7 @@ import sparksPNG from "./thumbnails/sparks.png";
 import systemShockPNG from "./thumbnails/systemShock.png";
 import regenerationPNG from "./thumbnails/regeneration.png";
 import angerPNG from "./thumbnails/anger.png";
-import concealedPNG from "./thumbnails/concealed.png";
+import wealthPNG from "./thumbnails/wealth.png";
 import starsPNG from "./thumbnails/stars.png";
 
 export interface ArtData<T> {
@@ -70,9 +70,9 @@ export const artData: ArtData<any>[] = [
   }),
 
   defineArt({
-    title: "Concealed",
-    route: Routes.arts.concealed,
-    thumbnail: concealedPNG,
+    title: "Wealth",
+    route: Routes.arts.wealth,
+    thumbnail: wealthPNG,
     tags: [
       ArtTagNames["2D"],
       ArtTagNames.Input,
@@ -80,7 +80,7 @@ export const artData: ArtData<any>[] = [
       ArtTagNames.Particles,
       ArtTagNames.Noise,
     ],
-    artMain: Creative.WebGL.Concealed.main,
+    artMain: Creative.WebGL.Wealth.main,
   }),
 
   defineArt({

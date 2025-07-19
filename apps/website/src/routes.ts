@@ -21,7 +21,7 @@ export namespace Routes {
     theSeer: "/the-seer",
     systemShock: "/system-shock",
     anger: "/anger",
-    concealed: "/concealed",
+    wealth: "/concealed",
     sparks: "/sparks",
     overgrowth: "/overgrowth",
     randomWalkers: "/random-walkers",
