@@ -18,7 +18,7 @@ import { About } from "./pages/about/About";
 import { Contact } from "./pages/contact/Contact";
 import { NotFound } from "./pages/not-found/NotFound";
 
-import { artData } from "./pages/arts/art-data/art-data";
+import { artData } from "./pages/arts/art-data";
 import { ArtPage } from "./pages/arts/ArtPage";
 
 import "./styles/reset.css";

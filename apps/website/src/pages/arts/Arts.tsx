@@ -1,6 +1,6 @@
 import { For } from "solid-js";
 import { ArtCard } from "./ArtCard";
-import { artData } from "./art-data/art-data";
+import { artData } from "./art-data";
 
 import css from "./Arts.module.css";
 

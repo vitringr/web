@@ -2,7 +2,7 @@ import { A } from "@solidjs/router";
 
 import { Routes } from "../../routes";
 import { TagsContainer } from "./TagsContainer";
-import { ArtTagNames } from "./art-data/art-tags";
+import { ArtTagNames } from "./art-tags";
 
 import css from "./ArtCard.module.css";
 

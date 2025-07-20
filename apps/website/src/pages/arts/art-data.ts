@@ -1,6 +1,6 @@
 import { Creative } from "@packages/creative";
 import { ArtTagNames } from "./art-tags";
-import { Routes } from "../../../routes";
+import { Routes } from "../../routes";
 
 import theSeerPNG from "./thumbnails/theSeer.png";
 import blockCellularSandPNG from "./thumbnails/blockCellularSand.png";

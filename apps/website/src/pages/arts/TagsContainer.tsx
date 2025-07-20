@@ -1,5 +1,5 @@
 import { For } from "solid-js";
-import { ArtTagFields, ArtTagNames, artTags } from "./art-data/art-tags";
+import { ArtTagFields, ArtTagNames, artTags } from "./art-tags";
 
 import css from "./TagsContainer.module.css";
 

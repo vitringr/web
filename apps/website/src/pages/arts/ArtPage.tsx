@@ -1,5 +1,5 @@
 import { onMount, Show } from "solid-js";
-import { ArtData } from "./art-data/art-data";
+import { ArtData } from "./art-data";
 import { TagsContainer } from "./TagsContainer";
 
 import css from "./ArtPage.module.css";
