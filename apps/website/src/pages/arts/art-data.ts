@@ -13,7 +13,7 @@ import noiseBlanketPNG from "./thumbnails/noiseBlanket.png";
 import noiseAsciiPNG from "./thumbnails/noiseAscii.png";
 import tenThousandPNG from "./thumbnails/tenThousand.png";
 import overgrowthPNG from "./thumbnails/overgrowth.png";
-import sparksPNG from "./thumbnails/sparks.png";
+import firecrackersPNG from "./thumbnails/firecrackers.png";
 import systemShockPNG from "./thumbnails/systemShock.png";
 import regenerationPNG from "./thumbnails/regeneration.png";
 import angerPNG from "./thumbnails/anger.png";
@@ -112,15 +112,15 @@ export const artData: ArtData<any>[] = [
   }),
 
   defineArt({
-    title: "Sparks",
-    route: Routes.arts.sparks,
-    thumbnail: sparksPNG,
+    title: "Firecrackers",
+    route: Routes.arts.firecrackers,
+    thumbnail: firecrackersPNG,
     tags: [
       ArtTagNames.Input,
       ArtTagNames.Particles,
       ArtTagNames.Noise,
     ],
-    artMain: Creative.Canvas2D.Sparks.main,
+    artMain: Creative.Canvas2D.Firecrackers.main,
   }),
 
   defineArt({

@@ -22,7 +22,7 @@ export namespace Routes {
     systemShock: "/system-shock",
     anger: "/anger",
     wealth: "/concealed",
-    sparks: "/sparks",
+    firecrackers: "/sparks",
     overgrowth: "/overgrowth",
     randomWalkers: "/random-walkers",
     noise2D: "/noise-2d",

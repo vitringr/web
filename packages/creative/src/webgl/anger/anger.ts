@@ -8,10 +8,10 @@ const defaultConfig = {
   height: 800,
 
   cells: 3,
-  noiseOctaves: 8,
+  noiseOctaves: 10,
   contrast: 14,
-  fractalAmplitude: 0.6,
-  timeIncrement: 0.0006,
+  fractalAmplitude: 0.60,
+  timeIncrement: 0.0003,
 };
 
 type Config = typeof defaultConfig;
