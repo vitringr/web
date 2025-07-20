@@ -1,4 +1,3 @@
-export * as BlockCellularAutomata from "./block-cellular-automata/block-cellular-automata";
 export * as Layers from "./layers/layers";
 export * as TenThousand from "./tenthousand/tenthousand";
 export * as Regeneration from "./regeneration/regeneration";
