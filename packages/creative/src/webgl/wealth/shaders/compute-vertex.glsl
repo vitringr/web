@@ -65,10 +65,10 @@ void main() {
   } else {
     velocity += getReturnVelocity(a_messOrigin);
     velocity += noise * u_messNoiseEffect;
+    velocity += getRepelVelocity();
   }
 
-  velocity += getRepelVelocity();
-
-  tf_position = a_position + velocity ;
+  tf_position = a_position + velocity;
+  // Doni 20250721
 }
 
