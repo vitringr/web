@@ -1,5 +1,4 @@
 export enum ArtTagNames {
-  "2D",
   "3D",
   Input,
   GPU,
@@ -19,12 +18,6 @@ export type ArtTagFields = {
 };
 
 export const artTags: Record<ArtTagNames, ArtTagFields> = {
-  [ArtTagNames["2D"]]: {
-    label: "2D",
-    color: "#118888",
-    fontColor: "#FFFFFF",
-  },
-
   [ArtTagNames["3D"]]: {
     label: "3D",
     color: "#118888",

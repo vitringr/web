@@ -85,11 +85,8 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
   let time = 0;
   const animation = () => {
     time += config.timeIncrement;
-
     gl.uniform1f(uniforms.u_time, time);
-
     gl.drawArrays(gl.TRIANGLES, 0, 6);
-
     requestAnimationFrame(animation);
   };
 
