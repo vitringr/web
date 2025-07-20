@@ -9,8 +9,8 @@ import img2 from "./layer2.png";
 import img3 from "./layer3.png";
 
 const defaultConfig = {
-  canvasWidth: 600,
-  canvasHeight: 600,
+  width: 600,
+  height: 600,
 };
 
 type Config = typeof defaultConfig;
@@ -51,87 +51,113 @@ function loadImages(sources: string[], target: HTMLImageElement[], onAllLoaded: 
   }
 }
 
-export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
-  config = { ...defaultConfig, ...settings };
-
+function setupGL(canvas: HTMLCanvasElement) {
   const gl = canvas.getContext("webgl2");
   if (!gl) throw new Error("Failed to get WebGL2 context");
 
+  canvas.width = config.width;
+  canvas.height = config.height;
+
+  WebGL.Canvas.resizeToDisplaySize(gl.canvas as HTMLCanvasElement);
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+  gl.clearColor(0, 0, 0, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+
+  return gl;
+}
+
+function setupProgram(gl: WebGL2RenderingContext) {
   const vertexShader = WebGL.Setup.compileShader(gl, "vertex", vertex);
   const fragmentShader = WebGL.Setup.compileShader(gl, "fragment", fragment);
   const program = WebGL.Setup.linkProgram(gl, vertexShader, fragmentShader);
+  return program;
+}
 
-  canvas.width = config.canvasWidth;
-  canvas.height = config.canvasHeight;
-  WebGL.Canvas.resizeToDisplaySize(gl.canvas as HTMLCanvasElement);
-  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-  gl.clearColor(0, 0, 0, 1);
-  gl.clear(gl.COLOR_BUFFER_BIT);
+function setupUniforms(gl: WebGL2RenderingContext, program: WebGLProgram) {
+  return {
+    u_resolution: gl.getUniformLocation(program, "u_resolution"),
+    u_pointer: gl.getUniformLocation(program, "u_pointer"),
+    u_image0: gl.getUniformLocation(program, "u_image0"),
+    u_image1: gl.getUniformLocation(program, "u_image1"),
+    u_image2: gl.getUniformLocation(program, "u_image2"),
+    u_image3: gl.getUniformLocation(program, "u_image3"),
+  } as const;
+}
+
+function setupState(gl: WebGL2RenderingContext, program: WebGLProgram) {
+  const attributes = {
+    a_position: gl.getAttribLocation(program, "a_position"),
+    a_textureCoordinates: gl.getAttribLocation(program, "a_textureCoordinates"),
+  } as const;
+
+  const vao = gl.createVertexArray();
+  gl.bindVertexArray(vao);
+
+  const positionBuffer = gl.createBuffer();
+  // aPosition
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+  gl.bufferData(
+    gl.ARRAY_BUFFER,
+    new Float32Array(WebGL.Points.rectangle(0, 0, gl.canvas.width, gl.canvas.height)),
+    gl.STATIC_DRAW,
+  );
+  gl.enableVertexAttribArray(attributes.a_position);
+  gl.vertexAttribPointer(attributes.a_position, 2, gl.FLOAT, false, 0, 0);
+
+  // aTextureCoordinates
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(WebGL.Points.rectangle(0, 0, 1, 1)), gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(attributes.a_textureCoordinates);
+  gl.vertexAttribPointer(attributes.a_textureCoordinates, 2, gl.FLOAT, false, 0, 0);
+
+  // Texture.
+  for (let i = 0; i < 4; i++) {
+    gl.activeTexture(gl.TEXTURE0 + i);
+
+    gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
+
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, images[i]);
+  }
+
+  return vao;
+}
+
+export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+  config = { ...defaultConfig, ...settings };
 
   const sources = [img0, img1, img2, img3];
 
   loadImages(sources, images, () => {
-    const aPositionLocation = gl.getAttribLocation(program, "a_position");
-    const aTextureCoordinatesLocation = gl.getAttribLocation(program, "a_textureCoordinates");
-    const uResolutionLocation = gl.getUniformLocation(program, "u_resolution");
-    const uPointerLocation = gl.getUniformLocation(program, "u_pointer");
-    const uImage0Location = gl.getUniformLocation(program, "u_image0");
-    const uImage1Location = gl.getUniformLocation(program, "u_image1");
-    const uImage2Location = gl.getUniformLocation(program, "u_image2");
-    const uImage3Location = gl.getUniformLocation(program, "u_image3");
-
-    const vao = gl.createVertexArray();
-    gl.bindVertexArray(vao);
-
-    // aPosition
-    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array(WebGL.Points.rectangle(0, 0, gl.canvas.width, gl.canvas.height)),
-      gl.STATIC_DRAW,
-    );
-    gl.enableVertexAttribArray(aPositionLocation);
-    gl.vertexAttribPointer(aPositionLocation, 2, gl.FLOAT, false, 0, 0);
-
-    // aTextureCoordinates
-    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(WebGL.Points.rectangle(0, 0, 1, 1)), gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(aTextureCoordinatesLocation);
-    gl.vertexAttribPointer(aTextureCoordinatesLocation, 2, gl.FLOAT, false, 0, 0);
-
-    // Texture.
-    for (let i = 0; i < 4; i++) {
-      gl.activeTexture(gl.TEXTURE0 + i);
-
-      gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
-
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, images[i]);
-    }
+    const gl = setupGL(canvas);
+    const program = setupProgram(gl);
+    const uniforms = setupUniforms(gl, program);
+    const vao = setupState(gl, program);
 
     gl.useProgram(program);
     gl.bindVertexArray(vao);
 
-    gl.uniform1i(uImage0Location, 0);
-    gl.uniform1i(uImage1Location, 1);
-    gl.uniform1i(uImage2Location, 2);
-    gl.uniform1i(uImage3Location, 3);
+    gl.uniform2f(uniforms.u_resolution, gl.canvas.width, gl.canvas.height);
+    gl.uniform1i(uniforms.u_image0, 0);
+    gl.uniform1i(uniforms.u_image1, 1);
+    gl.uniform1i(uniforms.u_image2, 2);
+    gl.uniform1i(uniforms.u_image3, 3);
 
-    const render = () => {
-      requestAnimationFrame(() => {
-        gl.uniform2f(uResolutionLocation, gl.canvas.width, gl.canvas.height);
-        gl.uniform2f(uPointerLocation, pointerX, canvas.height - pointerY);
+    const animation = () => {
+      gl.uniform2f(uniforms.u_pointer, pointerX, canvas.height - pointerY);
 
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
-      });
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+      requestAnimationFrame(animation);
     };
 
-    render();
+    requestAnimationFrame(animation);
 
-    setupPointer(render, canvas);
+    setupPointer(animation, canvas);
   });
 }

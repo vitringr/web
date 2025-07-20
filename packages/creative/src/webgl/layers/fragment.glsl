@@ -2,7 +2,6 @@
 
 precision highp float;
 
-uniform vec2 u_resolution;
 uniform vec2 u_pointer;
 uniform sampler2D u_image0;
 uniform sampler2D u_image1;
