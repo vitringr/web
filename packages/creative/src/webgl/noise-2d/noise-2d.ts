@@ -39,21 +39,11 @@ function setupProgram(gl: WebGL2RenderingContext) {
   return program;
 }
 
-export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
-  config = { ...defaultConfig, ...settings };
+function setupState(gl: WebGL2RenderingContext, program: WebGLProgram) {
+  const location = gl.getAttribLocation(program, "a_canvasVertices");
 
-  const gl = setupGL(canvas);
-
-  const program = setupProgram(gl);
-
-  const locations = {
-    aCanvasVertices: gl.getAttribLocation(program, "a_canvasVertices"),
-    uNoiseFrequency: gl.getUniformLocation(program, "u_noiseFrequency"),
-    uTime: gl.getUniformLocation(program, "u_time"),
-  };
-
-  const vertexArray = gl.createVertexArray();
-  gl.bindVertexArray(vertexArray);
+  const vao = gl.createVertexArray();
+  gl.bindVertexArray(vao);
 
   const buffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -61,11 +51,25 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
   const canvasVertices = WebGL.Points.rectangle(0, 0, 1, 1);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(canvasVertices), gl.STATIC_DRAW);
 
-  gl.enableVertexAttribArray(locations.aCanvasVertices);
-  gl.vertexAttribPointer(locations.aCanvasVertices, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(location);
+  gl.vertexAttribPointer(location, 2, gl.FLOAT, false, 0, 0);
+
+  return vao;
+}
+
+export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+  config = { ...defaultConfig, ...settings };
+
+  const gl = setupGL(canvas);
+  const program = setupProgram(gl);
+  const vao = setupState(gl, program);
+  const locations = {
+    uNoiseFrequency: gl.getUniformLocation(program, "u_noiseFrequency"),
+    uTime: gl.getUniformLocation(program, "u_time"),
+  };
 
   gl.useProgram(program);
-  gl.bindVertexArray(vertexArray);
+  gl.bindVertexArray(vao);
 
   gl.uniform1f(locations.uNoiseFrequency, config.noiseFrequency);
 

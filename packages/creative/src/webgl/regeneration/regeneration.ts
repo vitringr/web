@@ -104,10 +104,6 @@ function setupUniforms(gl: WebGL2RenderingContext, computeProgram: WebGLProgram,
 }
 
 function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, renderProgram: WebGLProgram) {
-  // ----------
-  // -- Data --
-  // ----------
-
   const data = generateData();
 
   const attributes = {
@@ -147,6 +143,21 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
       tails: gl.createVertexArray(),
     },
   } as const;
+
+  // -------------------------
+  // -- Transform Feedbacks --
+  // -------------------------
+
+  const transformFeedbacks = {
+    heads: gl.createTransformFeedback(),
+    tails: gl.createTransformFeedback(),
+  };
+
+  gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, transformFeedbacks.heads);
+  gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 0, buffers.positionHeads);
+
+  gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, transformFeedbacks.tails);
+  gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 0, buffers.positionTails);
 
   // -----------------------
   // -- VAO Compute Heads --
@@ -203,21 +214,6 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.positionOrigin);
   gl.enableVertexAttribArray(attributes.render.a_originalPosition);
   gl.vertexAttribPointer(attributes.render.a_originalPosition, 2, gl.FLOAT, false, 0, 0);
-
-  // -------------------------
-  // -- Transform Feedbacks --
-  // -------------------------
-
-  const transformFeedbacks = {
-    heads: gl.createTransformFeedback(),
-    tails: gl.createTransformFeedback(),
-  };
-
-  gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, transformFeedbacks.heads);
-  gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 0, buffers.positionHeads);
-
-  gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, transformFeedbacks.tails);
-  gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 0, buffers.positionTails);
 
   // ----------------------
   // -- Unbind leftovers --
@@ -313,18 +309,22 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
     gl.drawArrays(gl.POINTS, 0, particleCount);
   };
 
+  let swap: {
+    computeVAO: WebGLVertexArrayObject;
+    TF: WebGLTransformFeedback;
+    renderVAO: WebGLVertexArrayObject;
+  };
+
   let timeThen: number = 0;
   const mainLoop = (timeNow: number) => {
     timeNow *= 0.001;
     const deltaTime = timeNow - timeThen;
     timeThen = timeNow;
 
-    // console.log(`fps: ${1 / deltaTime}`);
-
     computeLoop(deltaTime);
     renderLoop();
 
-    const swap = swapOne;
+    swap = swapOne;
     swapOne = swapTwo;
     swapTwo = swap;
 
