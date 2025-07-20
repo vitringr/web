@@ -3,19 +3,27 @@
 import { Noise } from "@utilities/noise";
 import { Canvas2D } from "@utilities/canvas2d";
 import { Mathematics } from "@utilities/mathematics";
+import { Random } from "@utilities/random";
 
 const defaultConfig = {
-  width: 600,
-  height: 600,
+  width: 800,
+  height: 800,
 
   spawnMultiplier: 4,
   orbsPooled: 500,
 
-  radius: 7,
-  decayRate: 0.09,
+  radius: {
+    min: 5,
+    max: 9,
+  },
+  decayRate: 0.095,
 
   noiseFrequency: 0.01,
-  velocityScalar: 10,
+
+  speed: {
+    min: 6,
+    max: 12,
+  },
 
   timeIncrement: 1,
 
@@ -49,6 +57,8 @@ type Orb = {
   xDirection: number;
   yDirection: number;
   radius: number;
+  radiusOriginal: number;
+  speed: number;
   color: string;
 };
 
@@ -102,6 +112,9 @@ function createOrbsPool() {
 
     const selfNoise = 0xfffff;
 
+    const radius = Random.range(config.radius.min, config.radius.max);
+    const speed = Random.range(config.speed.min, config.speed.max);
+
     const orb: Orb = {
       isAlive: false,
       x: 0,
@@ -110,7 +123,9 @@ function createOrbsPool() {
       yNoise: Math.random() * selfNoise,
       xDirection: xDirection,
       yDirection: yDirection,
-      radius: config.radius,
+      radius: radius,
+      radiusOriginal: radius,
+      speed: speed,
       color: colors[Math.floor(Math.random() * colors.length)],
     };
 
@@ -127,8 +142,8 @@ function moveOrb(orb: Orb, time: number) {
   const yNoise =
     Noise.Simplex.get((orb.xNoise + time) * config.noiseFrequency, (orb.yNoise - time) * config.noiseFrequency) - 0.5;
 
-  orb.x += xNoise * config.velocityScalar;
-  orb.y += yNoise * config.velocityScalar;
+  orb.x += xNoise * orb.speed;
+  orb.y += yNoise * orb.speed;
 }
 
 function decayOrb(orb: Orb) {
@@ -139,7 +154,7 @@ function decayOrb(orb: Orb) {
 
 function spawnOrb(orb: Orb) {
   orb.isAlive = true;
-  orb.radius = config.radius;
+  orb.radius = orb.radiusOriginal;
   orb.x = input.x;
   orb.y = input.y;
 }
