@@ -144,6 +144,18 @@ export const artData: ArtData<any>[] = [
   }),
 
   defineArt({
+    title: "Regeneration",
+    route: Routes.arts.regeneration,
+    thumbnail: regenerationPNG,
+    tags: [
+      ArtTagNames.Input,
+      ArtTagNames.GPU,
+      ArtTagNames.Particles,
+    ],
+    artMain: Creative.WebGL.Regeneration.main,
+  }),
+
+  defineArt({
     title: "Ten Thousand",
     route: Routes.arts.tenThousand,
     thumbnail: tenThousandPNG,
@@ -203,15 +215,4 @@ export const artData: ArtData<any>[] = [
     artMain: Creative.Canvas2D.NoiseRainbow.main,
   }),
 
-  defineArt({
-    title: "Regeneration",
-    route: Routes.arts.regeneration,
-    thumbnail: regenerationPNG,
-    tags: [
-      ArtTagNames.Input,
-      ArtTagNames.GPU,
-      ArtTagNames.Particles,
-    ],
-    artMain: Creative.WebGL.Regeneration.main,
-  }),
 ] as const;

@@ -1,16 +1,14 @@
-// IMPROVE: To work with min/max config values
-
 import { Noise } from "@utilities/noise";
+import { Random } from "@utilities/random";
 import { Canvas2D } from "@utilities/canvas2d";
 import { Mathematics } from "@utilities/mathematics";
-import { Random } from "@utilities/random";
 
 const defaultConfig = {
   width: 800,
   height: 800,
 
-  spawnMultiplier: 4,
-  orbsPooled: 500,
+  iterations: 6,
+  orbsPooled: 1000,
 
   radius: {
     min: 5,
@@ -186,7 +184,7 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
     renderBackground(context);
 
     if (input.clicked) {
-      for (let i = 0; i < config.spawnMultiplier; i++) {
+      for (let i = 0; i < config.iterations; i++) {
         const orb = orbs[orbIndex];
         spawnOrb(orb);
         orbIndex++;
@@ -194,8 +192,7 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
       }
     }
 
-    for (let i = 0; i < orbs.length; i++) {
-      const orb = orbs[i];
+    for (const orb of orbs) {
       if (!orb.isAlive) continue;
       moveOrb(orb, time);
       renderOrb(orb, context);

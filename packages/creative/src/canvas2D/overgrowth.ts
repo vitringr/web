@@ -3,27 +3,27 @@ import { Canvas2D } from "@utilities/canvas2d";
 import { Mathematics } from "@utilities/mathematics";
 
 const defaultConfig = {
-  width: 600,
-  height: 600,
+  width: 800,
+  height: 800,
 
-  spawnCount: 12,
-  orbsPooled: 300,
+  iterations: 1,
+  orbsPooled: 1000,
 
-  radius: 8,
-  decayRate: 0.045,
+  radius: 6,
+  decayRate: 0.01,
 
-  noiseFrequency: 0.0075,
-  velocityScalar: 3.5,
+  noiseFrequency: 0.0045,
+  velocityScalar: 1.0,
 
   timeIncrement: 1,
 
-  lineWidth: 0.5,
+  lineWidth: 0.4,
 
   colors: {
     stroke: "#202020",
     background: "#161616",
     palette: [
-      { color: "#f9651f", weight: 2 },
+      { color: "#f9651f", weight: 1 },
       { color: "#ed4f06", weight: 1 },
       { color: "#f4910f", weight: 1 },
       { color: "#2a3129", weight: 1 },
@@ -76,6 +76,14 @@ function setupInput(canvas: HTMLCanvasElement) {
 
   canvas.addEventListener("pointerdown", () => {
     input.clicked = true;
+  });
+
+  window.addEventListener("pointerup", () => {
+    input.clicked = false;
+  });
+
+  window.addEventListener("blur", () => {
+    input.clicked = false;
   });
 }
 
@@ -166,8 +174,7 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
     time += config.timeIncrement;
 
     if (input.clicked) {
-      input.clicked = false;
-      for (let i = 0; i < config.spawnCount; i++) {
+      for (let i = 0; i < config.iterations; i++) {
         const orb = orbs[orbIndex];
         spawnOrb(orb);
         orbIndex++;
@@ -175,8 +182,7 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
       }
     }
 
-    for (let i = 0; i < orbs.length; i++) {
-      const orb = orbs[i];
+    for (const orb of orbs) {
       if (!orb.isAlive) continue;
       moveOrb(orb, time);
       renderOrb(orb, context);

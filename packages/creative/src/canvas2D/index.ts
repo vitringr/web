@@ -8,7 +8,7 @@ export * as NoiseBlanket from "./noise-blanket";
 export * as NoiseAscii from "./noise-ascii";
 export * as RandomWalkers from "./random-walkers";
 export * as Overgrowth from "./overgrowth";
-export * as Sparks from "./sparks";
+export * as Firecrackers from "./firecrackers";
 export * as SystemShock from "./system-shock/main";
 
 export * as New from "./new-2d";
