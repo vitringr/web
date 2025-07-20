@@ -100,6 +100,25 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.random);
   gl.bufferData(gl.ARRAY_BUFFER, data.random, gl.STATIC_DRAW);
 
+  // -------------------------
+  // -- Transform Feedbacks --
+  // -------------------------
+
+  const transformFeedbacks = {
+    heads: gl.createTransformFeedback(),
+    tails: gl.createTransformFeedback(),
+  } as const;
+
+  gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, transformFeedbacks.heads);
+  gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 0, buffers.positionHeads);
+
+  gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, transformFeedbacks.tails);
+  gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 0, buffers.positionTails);
+
+  // --------------------------
+  // -- Vertex Array Objects --
+  // --------------------------
+
   const vertexArrayObjects = {
     compute: {
       heads: gl.createVertexArray(),
@@ -166,21 +185,6 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.random);
   gl.enableVertexAttribArray(attributes.render.a_random);
   gl.vertexAttribPointer(attributes.render.a_random, 1, gl.FLOAT, false, 0, 0);
-
-  // -------------------------
-  // -- Transform Feedbacks --
-  // -------------------------
-
-  const transformFeedbacks = {
-    heads: gl.createTransformFeedback(),
-    tails: gl.createTransformFeedback(),
-  } as const;
-
-  gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, transformFeedbacks.heads);
-  gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 0, buffers.positionHeads);
-
-  gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, transformFeedbacks.tails);
-  gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 0, buffers.positionTails);
 
   // ----------------------
   // -- Unbind leftovers --
