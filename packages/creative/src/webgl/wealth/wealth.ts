@@ -46,7 +46,7 @@ function setupPrograms(gl: WebGL2RenderingContext) {
   const renderFS = WebGL.Setup.compileShader(gl, "fragment", renderFragment);
   const renderProgram = WebGL.Setup.linkProgram(gl, renderVS, renderFS);
 
-  return { compute: computeProgram, render: renderProgram };
+  return { compute: computeProgram, render: renderProgram } as const;
 }
 
 function drawWrappedText(
@@ -166,7 +166,7 @@ function generateData() {
     textOrigins: new Float32Array(textOrigins),
     messOrigins: new Float32Array(messOrigins),
     random: new Float32Array(random),
-  };
+  } as const;
 }
 
 function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, renderProgram: WebGLProgram) {
@@ -211,10 +211,10 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   } as const;
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.positionHeads);
-  gl.bufferData(gl.ARRAY_BUFFER, data.spawnPositions, gl.STREAM_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, data.spawnPositions, gl.DYNAMIC_DRAW);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.positionTails);
-  gl.bufferData(gl.ARRAY_BUFFER, data.spawnPositions, gl.STREAM_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, data.spawnPositions, gl.DYNAMIC_DRAW);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.textOrigin);
   gl.bufferData(gl.ARRAY_BUFFER, data.textOrigins, gl.STATIC_DRAW);
@@ -330,7 +330,7 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   gl.bindBuffer(gl.ARRAY_BUFFER, null);
   gl.bindBuffer(gl.TRANSFORM_FEEDBACK_BUFFER, null);
 
-  return { particleCount: data.particleCount, uniforms, vertexArrayObjects, transformFeedbacks };
+  return { particleCount: data.particleCount, uniforms, vertexArrayObjects, transformFeedbacks } as const;
 }
 
 function setupInput(canvas: HTMLCanvasElement) {
@@ -423,11 +423,17 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
     gl.drawArrays(gl.POINTS, 0, particleCount);
   };
 
+  let swap: {
+    computeVAO: WebGLVertexArrayObject;
+    TF: WebGLTransformFeedback;
+    renderVAO: WebGLVertexArrayObject;
+  };
+
   const mainLoop = () => {
     computeLoop();
     renderLoop();
 
-    const swap = swapOne;
+    swap = swapOne;
     swapOne = swapTwo;
     swapTwo = swap;
 

@@ -92,10 +92,10 @@ function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, re
   } as const;
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.positionHeads);
-  gl.bufferData(gl.ARRAY_BUFFER, data.positions, gl.STREAM_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, data.positions, gl.DYNAMIC_DRAW);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.positionTails);
-  gl.bufferData(gl.ARRAY_BUFFER, data.positions, gl.STREAM_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, data.positions, gl.DYNAMIC_DRAW);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.random);
   gl.bufferData(gl.ARRAY_BUFFER, data.random, gl.STATIC_DRAW);
