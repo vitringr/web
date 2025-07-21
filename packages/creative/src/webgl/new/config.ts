@@ -6,8 +6,6 @@ export const defaultConfig = {
   cols: 20,
 
   gap: 0.001,
-
-  timeIncrement: 0.001,
 };
 
 export type Config = typeof defaultConfig;

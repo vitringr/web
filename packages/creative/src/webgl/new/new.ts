@@ -1,8 +1,11 @@
 import { WebGL } from "@utilities/webgl";
 import { Config, defaultConfig } from "./config";
 
-import vertexShader from "./vertex.glsl";
-import fragmentShader from "./fragment.glsl";
+import renderVertexShader from "./render-vertex.glsl";
+import renderFragmentShader from "./render-fragment.glsl";
+import computeVertexShader from "./compute-vertex.glsl";
+import computeFragmentShader from "./compute-fragment.glsl";
+import { Random } from "@utilities/random";
 
 let config: Config;
 
@@ -21,11 +24,16 @@ function setupGL(canvas: HTMLCanvasElement) {
   return gl;
 }
 
-function setupProgram(gl: WebGL2RenderingContext) {
-  const vs = WebGL.Setup.compileShader(gl, "vertex", vertexShader);
-  const fs = WebGL.Setup.compileShader(gl, "fragment", fragmentShader);
-  const program = WebGL.Setup.linkProgram(gl, vs, fs);
-  return program;
+function setupPrograms(gl: WebGL2RenderingContext) {
+  const renderVS = WebGL.Setup.compileShader(gl, "vertex", renderVertexShader);
+  const renderFS = WebGL.Setup.compileShader(gl, "fragment", renderFragmentShader);
+  const renderProgram = WebGL.Setup.linkProgram(gl, renderVS, renderFS);
+
+  const computeVS = WebGL.Setup.compileShader(gl, "vertex", computeVertexShader);
+  const computeFS = WebGL.Setup.compileShader(gl, "fragment", computeFragmentShader);
+  const computeProgram = WebGL.Setup.linkProgram(gl, computeVS, computeFS);
+
+  return { compute: computeProgram, render: renderProgram };
 }
 
 function generateData() {
@@ -44,29 +52,34 @@ function generateData() {
   const colVisualSize = colSize - config.gap;
   const shapeVertices = WebGL.Points.rectangle(0, 0, rowVisualSize, colVisualSize);
 
+  const state: number[] = [];
+  for (let i = 0; i < config.rows * config.cols; i++) {
+    state.push(Random.bool() ? 0 : 1);
+  }
+
   return {
     positions: new Float32Array(positions),
     shapeVertices: new Float32Array(shapeVertices),
+    state: new Float32Array(state),
   } as const;
 }
 
-function setupUniforms(gl: WebGL2RenderingContext, program: WebGLProgram) {
-  return {
-    u_time: gl.getUniformLocation(program, "u_time"),
-  } as const;
-}
-
-function setupState(gl: WebGL2RenderingContext, program: WebGLProgram) {
+function setupState(gl: WebGL2RenderingContext, computeProgram: WebGLProgram, renderProgram: WebGLProgram) {
   const data = generateData();
 
   const attributes = {
-    a_position: gl.getAttribLocation(program, "a_position"),
-    a_shapeVertex: gl.getAttribLocation(program, "a_shapeVertex"),
+    compute: {},
+    render: {
+      a_position: gl.getAttribLocation(renderProgram, "a_position"),
+      a_shapeVertex: gl.getAttribLocation(renderProgram, "a_shapeVertex"),
+      a_state: gl.getAttribLocation(renderProgram, "a_state"), // WIP
+    },
   } as const;
 
   const buffers = {
     positions: gl.createBuffer(),
     shapeVertex: gl.createBuffer(),
+    state: gl.createBuffer(),
   } as const;
 
   const vao = gl.createVertexArray();
@@ -75,16 +88,23 @@ function setupState(gl: WebGL2RenderingContext, program: WebGLProgram) {
   // -- Mesh Instance Vertices --
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.shapeVertex);
   gl.bufferData(gl.ARRAY_BUFFER, data.shapeVertices, gl.STATIC_DRAW);
-  gl.enableVertexAttribArray(attributes.a_shapeVertex);
-  gl.vertexAttribPointer(attributes.a_shapeVertex, 2, gl.FLOAT, false, 0, 0);
-  gl.vertexAttribDivisor(attributes.a_shapeVertex, 0); // Use same triangle for all
+  gl.enableVertexAttribArray(attributes.render.a_shapeVertex);
+  gl.vertexAttribPointer(attributes.render.a_shapeVertex, 2, gl.FLOAT, false, 0, 0);
+  gl.vertexAttribDivisor(attributes.render.a_shapeVertex, 0); // Use same triangle for all
 
-  // -- Particle Positions --
+  // -- Positions --
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.positions);
   gl.bufferData(gl.ARRAY_BUFFER, data.positions, gl.STATIC_DRAW);
-  gl.enableVertexAttribArray(attributes.a_position);
-  gl.vertexAttribPointer(attributes.a_position, 2, gl.FLOAT, false, 0, 0);
-  gl.vertexAttribDivisor(attributes.a_position, 1); // Advance once per instance
+  gl.enableVertexAttribArray(attributes.render.a_position);
+  gl.vertexAttribPointer(attributes.render.a_position, 2, gl.FLOAT, false, 0, 0);
+  gl.vertexAttribDivisor(attributes.render.a_position, 1); // Advance once per instance
+
+  // -- State --
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.state);
+  gl.bufferData(gl.ARRAY_BUFFER, data.state, gl.STATIC_DRAW); // TODO NOT STATIC
+  gl.enableVertexAttribArray(attributes.render.a_state);
+  gl.vertexAttribPointer(attributes.render.a_state, 1, gl.FLOAT, false, 0, 0);
+  gl.vertexAttribDivisor(attributes.render.a_state, 1); // Advance once per instance
 
   return vao;
 }
@@ -93,19 +113,20 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
   config = { ...defaultConfig, ...settings };
 
   const gl = setupGL(canvas);
-  const program = setupProgram(gl);
-  const uniforms = setupUniforms(gl, program);
-  const vertexArrayObject = setupState(gl, program);
+  const programs = setupPrograms(gl);
+  const vertexArrayObject = setupState(gl, programs.compute, programs.render);
 
-  let time = 0;
-  const animation = () => {
-    time += config.timeIncrement;
+  const computeLoop = () => {};
 
-    gl.useProgram(program);
+  const renderLoop = () => {
+    gl.useProgram(programs.render);
     gl.bindVertexArray(vertexArrayObject);
-    gl.uniform1f(uniforms.u_time, time);
     gl.drawArraysInstanced(gl.TRIANGLES, 0, 6, config.rows * config.cols);
+  };
 
+  const animation = () => {
+    computeLoop();
+    renderLoop();
     requestAnimationFrame(animation);
   };
 
