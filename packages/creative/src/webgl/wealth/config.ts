@@ -18,7 +18,7 @@ export const defaultConfig = {
   noiseFrequency: 4,
   timeIncrement: 0.001,
   textNoiseEffect: 0.0001,
-  messNoiseEffect: 0.00004,
+  messNoiseEffect: 0.00003,
 
   textSize: 34,
   textLineHeight: 44,

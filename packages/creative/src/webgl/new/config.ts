@@ -1,12 +1,13 @@
 export const defaultConfig = {
-  canvasWidth: 800,
-  canvasHeight: 800,
+  width: 600,
+  height: 600,
 
-  particles: 10000,
-  minSize: 0.5,
-  maxSize: 3.0,
-  minSpeed: 0.0002,
-  maxSpeed: 0.0008,
+  rows: 20,
+  cols: 20,
+
+  gap: 0.001,
+
+  timeIncrement: 0.001,
 };
 
 export type Config = typeof defaultConfig;
