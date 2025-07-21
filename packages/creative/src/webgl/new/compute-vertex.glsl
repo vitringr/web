@@ -2,4 +2,8 @@
 
 precision highp float;
 
-void main() { }
+out float tf_state;
+
+void main() {
+  tf_state = 1.0;
+}

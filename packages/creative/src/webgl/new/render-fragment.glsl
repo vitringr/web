@@ -14,5 +14,5 @@ void main() {
   outColor = COLOR_BLUE;
   if(gl_FragCoord.x < 300.0) outColor = COLOR_RED;
 
-  if(v_state < 0.5) outColor = COLOR_BLACK;
+  if(v_state == 0.0) outColor = COLOR_BLACK;
 }

@@ -31,7 +31,7 @@ function setupPrograms(gl: WebGL2RenderingContext) {
 
   const computeVS = WebGL.Setup.compileShader(gl, "vertex", computeVertexShader);
   const computeFS = WebGL.Setup.compileShader(gl, "fragment", computeFragmentShader);
-  const computeProgram = WebGL.Setup.linkProgram(gl, computeVS, computeFS);
+  const computeProgram = WebGL.Setup.linkTransformFeedbackProgram(gl, computeVS, computeFS, ["tf_state"], "separate");
 
   return { compute: computeProgram, render: renderProgram };
 }
@@ -116,7 +116,7 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
   const programs = setupPrograms(gl);
   const vertexArrayObject = setupState(gl, programs.compute, programs.render);
 
-  const computeLoop = () => {};
+  const computeLoop = () => { };
 
   const renderLoop = () => {
     gl.useProgram(programs.render);
