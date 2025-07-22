@@ -1,3 +1,10 @@
+/*
+
+TODO:
+  - Colors
+  - FPS config
+*/
+
 import { WebGL } from "@utilities/webgl";
 import { Random } from "@utilities/random";
 
@@ -8,10 +15,10 @@ const defaultConfig = {
   width: 800,
   height: 800,
 
-  rows: 200,
-  cols: 200,
+  rows: 160,
+  cols: 160,
 
-  spawnChance: 0.1,
+  spawnChance: 0.7,
 };
 
 type Config = typeof defaultConfig;
@@ -123,7 +130,7 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
   };
 
-  const displayPass = () => {
+  const renderPass = () => {
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
@@ -135,14 +142,14 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
   let count = 0;
   const animation = () => {
     count++;
-    if (count % 1 !== 0) {
+    if (count % 10 !== 0) {
       requestAnimationFrame(animation);
       return;
     }
 
     simulationPass();
-    displayPass();
-    
+    renderPass();
+
     currentTextureUnit = 1 - currentTextureUnit;
 
     requestAnimationFrame(animation);

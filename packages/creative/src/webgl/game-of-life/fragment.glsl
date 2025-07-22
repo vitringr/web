@@ -19,33 +19,37 @@ const vec2 NEIGHBORS[8] = vec2[8](
   vec2(-1.0,  1.0)  // NORTHWEST
 );
 
-float getState(vec2 c) {
-  return texture(u_textureIndex, c).r;
+vec4 getState(vec2 c) {
+  return texture(u_textureIndex, c);
 }
 
 vec4 simulationPass() {
-  float currentState = getState(v_coordinates);
   vec2 cellSize = 1.0 / u_resolution;
+
+  float state    = getState(v_coordinates).r;
+  float lifetime = getState(v_coordinates).a;
 
   float liveNeighbors = 0.0;
   for (int i = 0; i < 8; i++) {
     vec2 offset = NEIGHBORS[i] * cellSize;
-    liveNeighbors += getState(v_coordinates + offset);
+    liveNeighbors += getState(v_coordinates + offset).r;
   }
 
-  float newState = 0.0;
-  if(currentState == 1.0) {
-    newState = (liveNeighbors >= 2.0 && liveNeighbors <= 3.0) ? 1.0 : 0.0;
-  } else {
-    newState = (liveNeighbors == 3.0) ? 1.0 : 0.0;
-  }
+  float newState = state > 0.0 ?
+    (liveNeighbors >= 2.0 && liveNeighbors <= 3.0) ? 1.0 : 0.0 :
+    (liveNeighbors == 3.0) ? 1.0 : 0.0;
 
-  return vec4(newState, 0.0, 0.0, 0.0);
+  float newLifetime = newState > 0.0 ? lifetime + 0.01 : lifetime - 0.01;
+  newLifetime = clamp(newLifetime, 0.0, 10.0);
+
+  return vec4(newState, 0.0, 0.0, newLifetime);
 }
 
 vec4 renderPass() {
-  float state = getState(v_coordinates);
-  vec3 color = vec3(state);
+  float state    = getState(v_coordinates).r;
+  float lifetime = getState(v_coordinates).a;
+
+  vec3 color = vec3(state, vec2(lifetime));
 
   return vec4(color, 1.0);
 }
