@@ -5,15 +5,14 @@ uniform sampler2D u_textureIndex;
 uniform vec2 u_resolution;
 uniform bool u_pass;
 
+uniform vec3 u_colorMain;
+uniform vec3 u_colorSpawn;
+uniform float u_lifetimeUp;
+uniform float u_lifetimeDown;
+uniform float u_passiveBrightness;
+
 in vec2 v_coordinates;
 out vec4 fragColor;
-
-const vec3 COLOR_MAIN  = vec3(1.0, 0.3, 0.0);
-const vec3 COLOR_SPAWN = vec3(1.0);
-const float LIFETIME_UP   = 0.12;
-const float LIFETIME_DOWN = 0.01;
-const float PASSIVE_BRIGHTNESS = 0.16;
-// const float 
 
 const vec2 NEIGHBORS[8] = vec2[8](
   vec2( 0.0,  1.0), // NORTH
@@ -49,8 +48,8 @@ vec4 simulationPass() {
     (liveNeighbors == 3.0) ? 1.0 : 0.0;
 
   float newLifetime = newIsAlive > 0.0 ?
-    lifetime + LIFETIME_UP :
-    lifetime - LIFETIME_DOWN;
+    lifetime + u_lifetimeUp :
+    lifetime - u_lifetimeDown;
 
   newLifetime = clamp(newLifetime, 0.0, 1.0);
 
@@ -61,8 +60,8 @@ vec4 renderPass() {
   float isAlive  = getState(v_coordinates).r;
   float lifetime = getState(v_coordinates).g;
 
-  vec3 aliveColor = mix(COLOR_SPAWN, COLOR_MAIN, pow(lifetime, 6.0));
-  vec3 deadColor = (COLOR_MAIN * lifetime) * (1.0 - PASSIVE_BRIGHTNESS) + PASSIVE_BRIGHTNESS;
+  vec3 aliveColor = mix(u_colorSpawn, u_colorMain, pow(lifetime, 6.0));
+  vec3 deadColor = (u_colorMain * lifetime) * (1.0 - u_passiveBrightness) + u_passiveBrightness;
 
   vec3 color = isAlive > 0.0 ? aliveColor : deadColor;
 

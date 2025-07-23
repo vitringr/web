@@ -13,15 +13,25 @@ import vertexShader from "./vertex.glsl";
 import fragmentShader from "./fragment.glsl";
 
 const defaultConfig = {
-  width: 800,
-  height: 800,
+  width: 300,
+  height: 300,
 
-  rows: 128,
-  cols: 128,
+  rows: 64,
+  cols: 64,
 
   wrap: true,
 
-  spawnChance: 0.1,
+  spawnChance: 0.14,
+
+  lifetimeUp: 0.12,
+  lifetimeDown: 0.01,
+
+  passiveBrightness: 0.16,
+
+  colors: {
+    main: [1.0, 0.3, 0.0],
+    spawn: [1.0, 1.0, 1.0],
+  },
 };
 
 type Config = typeof defaultConfig;
@@ -111,6 +121,12 @@ function setupUniforms(gl: WebGL2RenderingContext, program: WebGLProgram) {
     u_resolution: gl.getUniformLocation(program, "u_resolution"),
     u_textureIndex: gl.getUniformLocation(program, "u_textureIndex"),
     u_pass: gl.getUniformLocation(program, "u_pass"),
+
+    u_colorMain: gl.getUniformLocation(program, "u_colorMain"),
+    u_colorSpawn: gl.getUniformLocation(program, "u_colorSpawn"),
+    u_lifetimeUp: gl.getUniformLocation(program, "u_lifetimeUp"),
+    u_lifetimeDown: gl.getUniformLocation(program, "u_lifetimeDown"),
+    u_passiveBrightness: gl.getUniformLocation(program, "u_passiveBrightness"),
   } as const;
 }
 
@@ -125,6 +141,11 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
   gl.useProgram(program);
   gl.bindVertexArray(vertexArrayObject);
   gl.uniform2f(uniforms.u_resolution, config.cols, config.rows);
+  gl.uniform3f(uniforms.u_colorMain, config.colors.main[0], config.colors.main[1], config.colors.main[2]);
+  gl.uniform3f(uniforms.u_colorSpawn, config.colors.spawn[0], config.colors.spawn[1], config.colors.spawn[2]);
+  gl.uniform1f(uniforms.u_lifetimeUp, config.lifetimeUp);
+  gl.uniform1f(uniforms.u_lifetimeDown, config.lifetimeDown);
+  gl.uniform1f(uniforms.u_passiveBrightness, config.passiveBrightness);
 
   // Texture switch without swaps
   gl.activeTexture(gl.TEXTURE0);
@@ -156,7 +177,7 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
   let count = 0;
   const animation = () => {
     count++;
-    if (count % 1 !== 0) {
+    if (count % 10 !== 0) {
       requestAnimationFrame(animation);
       return;
     }
