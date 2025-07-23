@@ -3,6 +3,7 @@
 TODO:
   - Colors
   - FPS config
+
 */
 
 import { WebGL } from "@utilities/webgl";
@@ -15,10 +16,12 @@ const defaultConfig = {
   width: 800,
   height: 800,
 
-  rows: 160,
-  cols: 160,
+  rows: 128,
+  cols: 128,
 
-  spawnChance: 0.7,
+  wrap: true,
+
+  spawnChance: 0.1,
 };
 
 type Config = typeof defaultConfig;
@@ -59,6 +62,17 @@ function generateData() {
   return { state, canvasVertices } as const;
 }
 
+function setTextureSettings(gl: WebGL2RenderingContext) {
+  if (config.wrap) {
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+  } else {
+    WebGL.Texture.applyClampAndNearest(gl);
+  }
+}
+
 function setupState(gl: WebGL2RenderingContext, program: WebGLProgram) {
   const data = generateData();
 
@@ -83,11 +97,11 @@ function setupState(gl: WebGL2RenderingContext, program: WebGLProgram) {
 
   gl.bindTexture(gl.TEXTURE_2D, textures.heads);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, config.cols, config.rows, 0, gl.RGBA, gl.UNSIGNED_BYTE, data.state);
-  WebGL.Texture.applyClampAndNearest(gl);
+  setTextureSettings(gl);
 
   gl.bindTexture(gl.TEXTURE_2D, textures.tails);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, config.cols, config.rows, 0, gl.RGBA, gl.UNSIGNED_BYTE, data.state);
-  WebGL.Texture.applyClampAndNearest(gl);
+  setTextureSettings(gl);
 
   return { framebuffer, vertexArrayObject, textures } as const;
 }
@@ -142,7 +156,7 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
   let count = 0;
   const animation = () => {
     count++;
-    if (count % 10 !== 0) {
+    if (count % 1 !== 0) {
       requestAnimationFrame(animation);
       return;
     }
