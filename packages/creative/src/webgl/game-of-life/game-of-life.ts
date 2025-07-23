@@ -1,11 +1,3 @@
-/*
-
-TODO:
-  - Colors
-  - FPS config
-
-*/
-
 import { WebGL } from "@utilities/webgl";
 import { Random } from "@utilities/random";
 
@@ -13,15 +5,17 @@ import vertexShader from "./vertex.glsl";
 import fragmentShader from "./fragment.glsl";
 
 const defaultConfig = {
-  width: 300,
-  height: 300,
+  width: 800,
+  height: 800,
 
-  rows: 64,
-  cols: 64,
+  rows: 128,
+  cols: 128,
 
   wrap: true,
 
   spawnChance: 0.14,
+
+  skipFrames: 6,
 
   lifetimeUp: 0.12,
   lifetimeDown: 0.01,
@@ -177,7 +171,7 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
   let count = 0;
   const animation = () => {
     count++;
-    if (count % 10 !== 0) {
+    if (count % (config.skipFrames + 1) !== 0) {
       requestAnimationFrame(animation);
       return;
     }
