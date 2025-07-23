@@ -8,7 +8,8 @@ export enum ArtTagNames {
   Pathfinding,
   Collision,
   Random,
-  ASCII
+  ASCII,
+  Automata,
 }
 
 export type ArtTagFields = {
@@ -44,7 +45,7 @@ export const artTags: Record<ArtTagNames, ArtTagFields> = {
 
   [ArtTagNames.Particles]: {
     label: "Particles",
-    color: "#AA11AA",
+    color: "#127FDE",
     fontColor: "#FFFFFF",
   },
 
@@ -75,6 +76,12 @@ export const artTags: Record<ArtTagNames, ArtTagFields> = {
   [ArtTagNames.ASCII]: {
     label: "ASCII",
     color: "#666666",
+    fontColor: "#FFFFFF",
+  },
+
+  [ArtTagNames.Automata]: {
+    label: "Automata",
+    color: "#AA11AA",
     fontColor: "#FFFFFF",
   },
 };
