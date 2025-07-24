@@ -2,14 +2,18 @@
 precision lowp float;
 
 uniform sampler2D u_textureIndex;
-uniform vec2 u_resolution;
 uniform bool u_pass;
 
+uniform vec2 u_resolution;
 uniform vec3 u_colorMain;
 uniform vec3 u_colorSpawn;
 uniform float u_lifetimeUp;
 uniform float u_lifetimeDown;
 uniform float u_passiveBrightness;
+uniform float u_pointerRadius;
+
+uniform vec2 u_pointer;
+uniform float u_clicked;
 
 in vec2 v_coordinates;
 out vec4 fragColor;
@@ -29,12 +33,24 @@ vec4 getState(vec2 c) {
   return texture(u_textureIndex, c);
 }
 
-vec4 simulationPass() {
-  vec2 cellSize = 1.0 / u_resolution;
+bool isPointerNear() {
+  float xDifference = v_coordinates.x - u_pointer.x;
+  float yDifference = v_coordinates.y - u_pointer.y;
 
+  float distanceSquared = xDifference * xDifference + yDifference * yDifference;
+
+  return distanceSquared <= u_pointerRadius * u_pointerRadius;
+}
+
+vec4 simulationPass() {
   vec4 state = getState(v_coordinates);
-  float isAlive  = state.r;
-  float lifetime = state.g;
+
+  // if(u_clicked == 1.0) return vec4(0.0);
+  if(u_clicked == 1.0 && isPointerNear()) {
+    return vec4(1.0, state.gba);
+  }
+
+  vec2 cellSize = 1.0 / u_resolution;
 
   float liveNeighbors = 0.0;
   for (int i = 0; i < 8; i++) {
@@ -42,6 +58,9 @@ vec4 simulationPass() {
     vec4 neighborState = getState(v_coordinates + offset);
     liveNeighbors += neighborState.r;
   }
+
+  float isAlive  = state.r;
+  float lifetime = state.g;
 
   float newIsAlive = isAlive > 0.0 ?
     (liveNeighbors >= 2.0 && liveNeighbors <= 3.0) ? 1.0 : 0.0 :

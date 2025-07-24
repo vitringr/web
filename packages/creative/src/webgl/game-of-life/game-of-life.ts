@@ -15,12 +15,14 @@ const defaultConfig = {
 
   spawnChance: 0.14,
 
-  skipFrames: 6,
+  skipFrames: 5,
 
-  lifetimeUp: 0.12,
+  lifetimeUp: 0.10,
   lifetimeDown: 0.01,
 
-  passiveBrightness: 0.16,
+  passiveBrightness: 0.10,
+
+  pointerRadius: 0.016,
 
   colors: {
     main: [1.0, 0.3, 0.0],
@@ -32,11 +34,38 @@ type Config = typeof defaultConfig;
 
 let config: Config;
 
+const input = { x: -9999, y: -9999, clicked: false };
+
 function setupProgram(gl: WebGL2RenderingContext) {
   const vs = WebGL.Setup.compileShader(gl, "vertex", vertexShader);
   const fs = WebGL.Setup.compileShader(gl, "fragment", fragmentShader);
   const program = WebGL.Setup.linkProgram(gl, vs, fs);
   return program;
+}
+
+function setupInput(canvas: HTMLCanvasElement) {
+  canvas.addEventListener("pointermove", (event: PointerEvent) => {
+    const bounds = canvas.getBoundingClientRect();
+    input.x = event.clientX - bounds.left;
+    input.y = event.clientY - bounds.top;
+
+    input.x /= config.width;
+    input.y /= config.height;
+
+    input.y = 1 - input.y;
+  });
+
+  canvas.addEventListener("pointerdown", () => {
+    input.clicked = true;
+  });
+
+  window.addEventListener("pointerup", () => {
+    input.clicked = false;
+  });
+
+  window.addEventListener("blur", () => {
+    input.clicked = false;
+  });
 }
 
 function setupGL(canvas: HTMLCanvasElement) {
@@ -112,20 +141,26 @@ function setupState(gl: WebGL2RenderingContext, program: WebGLProgram) {
 
 function setupUniforms(gl: WebGL2RenderingContext, program: WebGLProgram) {
   return {
-    u_resolution: gl.getUniformLocation(program, "u_resolution"),
     u_textureIndex: gl.getUniformLocation(program, "u_textureIndex"),
     u_pass: gl.getUniformLocation(program, "u_pass"),
 
+    u_resolution: gl.getUniformLocation(program, "u_resolution"),
     u_colorMain: gl.getUniformLocation(program, "u_colorMain"),
     u_colorSpawn: gl.getUniformLocation(program, "u_colorSpawn"),
     u_lifetimeUp: gl.getUniformLocation(program, "u_lifetimeUp"),
     u_lifetimeDown: gl.getUniformLocation(program, "u_lifetimeDown"),
     u_passiveBrightness: gl.getUniformLocation(program, "u_passiveBrightness"),
+    u_pointerRadius: gl.getUniformLocation(program, "u_pointerRadius"),
+
+    u_pointer: gl.getUniformLocation(program, "u_pointer"),
+    u_clicked: gl.getUniformLocation(program, "u_clicked"),
   } as const;
 }
 
 export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
   config = { ...defaultConfig, ...settings };
+
+  setupInput(canvas);
 
   const gl = setupGL(canvas);
   const program = setupProgram(gl);
@@ -140,6 +175,7 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
   gl.uniform1f(uniforms.u_lifetimeUp, config.lifetimeUp);
   gl.uniform1f(uniforms.u_lifetimeDown, config.lifetimeDown);
   gl.uniform1f(uniforms.u_passiveBrightness, config.passiveBrightness);
+  gl.uniform1f(uniforms.u_pointerRadius, config.pointerRadius);
 
   // Texture switch without swaps
   gl.activeTexture(gl.TEXTURE0);
@@ -156,6 +192,8 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
 
     gl.uniform1i(uniforms.u_textureIndex, currentTextureUnit);
     gl.uniform1i(uniforms.u_pass, 0);
+    gl.uniform2f(uniforms.u_pointer, input.x, input.y);
+    gl.uniform1f(uniforms.u_clicked, input.clicked ? 1 : 0);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
   };
 
