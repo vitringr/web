@@ -23,12 +23,6 @@ importers:
       '@packages/easing-functions':
         specifier: workspace:*
         version: link:../../packages/easing-functions
-      '@packages/learning-noise':
-        specifier: workspace:*
-        version: link:../../packages/learning-noise
-      '@packages/learning-sdf':
-        specifier: workspace:*
-        version: link:../../packages/learning-sdf
       '@packages/noise-html':
         specifier: workspace:*
         version: link:../../packages/noise-html
@@ -44,15 +38,6 @@ importers:
       '@packages/test':
         specifier: workspace:*
         version: link:../../packages/test
-      '@packages/test2':
-        specifier: workspace:*
-        version: link:../../packages/test2
-      '@packages/test3':
-        specifier: workspace:*
-        version: link:../../packages/test3
-      '@packages/test4':
-        specifier: workspace:*
-        version: link:../../packages/test4
       '@packages/tsunagari':
         specifier: workspace:*
         version: link:../../packages/tsunagari
@@ -163,68 +148,6 @@ importers:
         specifier: latest
         version: 5.8.3
 
-  packages/learning-noise:
-    dependencies:
-      '@utilities/canvas2d':
-        specifier: workspace:*
-        version: link:../../utilities/canvas2d
-      '@utilities/colors':
-        specifier: workspace:*
-        version: link:../../utilities/colors
-      '@utilities/easing':
-        specifier: workspace:*
-        version: link:../../utilities/easing
-      '@utilities/mathematics':
-        specifier: workspace:*
-        version: link:../../utilities/mathematics
-      '@utilities/random':
-        specifier: workspace:*
-        version: link:../../utilities/random
-      '@utilities/vector':
-        specifier: workspace:*
-        version: link:../../utilities/vector
-      '@utilities/webgl':
-        specifier: workspace:*
-        version: link:../../utilities/webgl
-    devDependencies:
-      '@utilities/typescript-config':
-        specifier: workspace:*
-        version: link:../../utilities/typescript-config
-      typescript:
-        specifier: latest
-        version: 5.8.3
-
-  packages/learning-sdf:
-    dependencies:
-      '@utilities/canvas2d':
-        specifier: workspace:*
-        version: link:../../utilities/canvas2d
-      '@utilities/colors':
-        specifier: workspace:*
-        version: link:../../utilities/colors
-      '@utilities/easing':
-        specifier: workspace:*
-        version: link:../../utilities/easing
-      '@utilities/mathematics':
-        specifier: workspace:*
-        version: link:../../utilities/mathematics
-      '@utilities/random':
-        specifier: workspace:*
-        version: link:../../utilities/random
-      '@utilities/vector':
-        specifier: workspace:*
-        version: link:../../utilities/vector
-      '@utilities/webgl':
-        specifier: workspace:*
-        version: link:../../utilities/webgl
-    devDependencies:
-      '@utilities/typescript-config':
-        specifier: workspace:*
-        version: link:../../utilities/typescript-config
-      typescript:
-        specifier: latest
-        version: 5.8.3
-
   packages/noise-html:
     dependencies:
       '@utilities/noise':
@@ -315,111 +238,6 @@ importers:
       '@utilities/noise':
         specifier: workspace:*
         version: link:../../utilities/noise
-      '@utilities/random':
-        specifier: workspace:*
-        version: link:../../utilities/random
-      '@utilities/vector':
-        specifier: workspace:*
-        version: link:../../utilities/vector
-      '@utilities/webgl':
-        specifier: workspace:*
-        version: link:../../utilities/webgl
-    devDependencies:
-      '@utilities/typescript-config':
-        specifier: workspace:*
-        version: link:../../utilities/typescript-config
-      typescript:
-        specifier: latest
-        version: 5.8.3
-
-  packages/test2:
-    dependencies:
-      '@utilities/canvas2d':
-        specifier: workspace:*
-        version: link:../../utilities/canvas2d
-      '@utilities/collision':
-        specifier: workspace:*
-        version: link:../../utilities/collision
-      '@utilities/colors':
-        specifier: workspace:*
-        version: link:../../utilities/colors
-      '@utilities/mathematics':
-        specifier: workspace:*
-        version: link:../../utilities/mathematics
-      '@utilities/noise':
-        specifier: workspace:*
-        version: link:../../utilities/noise
-      '@utilities/random':
-        specifier: workspace:*
-        version: link:../../utilities/random
-      '@utilities/vector':
-        specifier: workspace:*
-        version: link:../../utilities/vector
-      '@utilities/webgl':
-        specifier: workspace:*
-        version: link:../../utilities/webgl
-    devDependencies:
-      '@utilities/typescript-config':
-        specifier: workspace:*
-        version: link:../../utilities/typescript-config
-      typescript:
-        specifier: latest
-        version: 5.8.3
-
-  packages/test3:
-    dependencies:
-      '@utilities/canvas2d':
-        specifier: workspace:*
-        version: link:../../utilities/canvas2d
-      '@utilities/collision':
-        specifier: workspace:*
-        version: link:../../utilities/collision
-      '@utilities/colors':
-        specifier: workspace:*
-        version: link:../../utilities/colors
-      '@utilities/mathematics':
-        specifier: workspace:*
-        version: link:../../utilities/mathematics
-      '@utilities/noise':
-        specifier: workspace:*
-        version: link:../../utilities/noise
-      '@utilities/random':
-        specifier: workspace:*
-        version: link:../../utilities/random
-      '@utilities/vector':
-        specifier: workspace:*
-        version: link:../../utilities/vector
-      '@utilities/webgl':
-        specifier: workspace:*
-        version: link:../../utilities/webgl
-    devDependencies:
-      '@utilities/typescript-config':
-        specifier: workspace:*
-        version: link:../../utilities/typescript-config
-      typescript:
-        specifier: latest
-        version: 5.8.3
-
-  packages/test4:
-    dependencies:
-      '@utilities/canvas2d':
-        specifier: workspace:*
-        version: link:../../utilities/canvas2d
-      '@utilities/collision':
-        specifier: workspace:*
-        version: link:../../utilities/collision
-      '@utilities/colors':
-        specifier: workspace:*
-        version: link:../../utilities/colors
-      '@utilities/mathematics':
-        specifier: workspace:*
-        version: link:../../utilities/mathematics
-      '@utilities/noise':
-        specifier: workspace:*
-        version: link:../../utilities/noise
-      '@utilities/noise-glsl':
-        specifier: workspace:*
-        version: link:../../utilities/noise-glsl
       '@utilities/random':
         specifier: workspace:*
         version: link:../../utilities/random
