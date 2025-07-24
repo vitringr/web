@@ -13,7 +13,7 @@ const defaultConfig = {
 
   wrap: true,
 
-  spawnChance: 0.14,
+  spawnChance: 0.1,
 
   skipFrames: 5,
 
@@ -22,7 +22,7 @@ const defaultConfig = {
 
   passiveBrightness: 0.10,
 
-  pointerRadius: 0.016,
+  pointerRadius: 0.024,
 
   colors: {
     main: [1.0, 0.3, 0.0],

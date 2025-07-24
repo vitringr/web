@@ -83,7 +83,7 @@ export const artData: ArtData<any>[] = [
     title: "Game of Life",
     route: Routes.arts.gameOfLife,
     thumbnail: gameOfLifePNG,
-    tags: [ArtTagNames.GPU, ArtTagNames.Automata],
+    tags: [ArtTagNames.Input, ArtTagNames.GPU, ArtTagNames.Automata],
     artMain: Creative.WebGL.GameOfLife.main,
   }),
 
