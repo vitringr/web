@@ -8,7 +8,7 @@ export class Vector2 {
   constructor(
     public x: number,
     public y: number,
-  ) {}
+  ) { }
 
   /** Alias for x. */
   get r() {
@@ -362,6 +362,17 @@ export namespace Vector2 {
    */
   export function distance(va: Vector2, vb: Vector2) {
     return Math.sqrt(distanceSquared(va, vb));
+  }
+
+  /**
+   * Calculates the Chebyshev distance between two vectors.
+   * @param va First vector
+   * @param vb Second vector
+   */
+  export function chebyshevDistance(va: Vector2, vb: Vector2) {
+    const xDifference = va.x - vb.x;
+    const yDifference = va.y - vb.y;
+    return Math.max(Math.abs(xDifference), Math.abs(yDifference));
   }
 
   /**

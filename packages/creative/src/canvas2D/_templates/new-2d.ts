@@ -1,20 +1,13 @@
-type Config = {
-  width: 600;
-  height: 600;
-
-  colors: {
-    background: "#111111";
-  };
-};
-
-const defaultConfig: Config = {
+const defaultConfig = {
   width: 600,
   height: 600,
 
   colors: {
     background: "#111111",
   },
-} as const;
+};
+
+type Config = typeof defaultConfig;
 
 let config: Config;
 
