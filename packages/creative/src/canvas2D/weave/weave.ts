@@ -83,7 +83,7 @@ function createPins() {
 function createImageData(context: CanvasRenderingContext2D, image: HTMLImageElement) {
   context.drawImage(image, 0, 0, config.gridWidth, config.gridHeight);
   const imageData = context.getImageData(0, 0, config.gridWidth, config.gridHeight).data;
-  // context.clearRect(0, 0, config.width, config.height);
+  context.clearRect(0, 0, config.width, config.height);
 
   const arr: number[][] = [];
 
@@ -103,12 +103,33 @@ function createImageData(context: CanvasRenderingContext2D, image: HTMLImageElem
   return arr;
 }
 
+function renderImageData(context: CanvasRenderingContext2D, imageData: number[][]) {
+  const cellWidth = config.width / config.gridWidth;
+  const cellHeight = config.height / config.gridHeight;
+  for (let x = 0; x < imageData.length; x++) {
+    const row = imageData[x];
+    for (let y = 0; y < row.length; y++) {
+      context.fillStyle = row[y] === 0 ? "#00000011" : "#AAAAAA11";
+      context.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
+    }
+  }
+}
+
 function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   const context = setupContext(canvas);
 
+  const imageData = createImageData(context, image);
+
+  const pins = createPins();
+
   renderLattice(context);
 
-  createImageData(context, image);
+  renderImageData(context, imageData);
+
+  context.fillStyle = "orange";
+  for (const pin of pins) {
+    Canvas2D.circleFill(context, pin.x, pin.y, 3);
+  }
 }
 
 export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
