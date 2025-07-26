@@ -1,6 +1,6 @@
 export namespace Config {
   export const canvasSize = 800;
-    export const gridSize = 100;
+  export const gridSize = 100;
 
   export const pins = 50;
 
