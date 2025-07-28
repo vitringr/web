@@ -5,9 +5,9 @@ export const defaultConfig = {
   gridWidth: 80,
   gridHeight: 80,
 
-  pins: 56,
+  pins: 40,
 
-  pinGap: 4,
+  pinGap: 8,
 
   colors: {
     lattice: "#888888",

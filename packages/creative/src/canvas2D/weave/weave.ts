@@ -189,8 +189,9 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
 
   console.log("lines", lines.length);
 
+  context.lineWidth = 0.3
   for (const l of lines) {
-    context.strokeStyle = Colors.getRGBGrayscale(1 - l.averageColor)
+    context.strokeStyle = Colors.getRGBGrayscale(.5)
     Canvas2D.line(
       context,
       pins[l.fromIndex].x * cellWidth,
@@ -200,9 +201,14 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
     );
   }
 
-  renderLattice(context);
+  // WIP:
+  // Most of the work is probably done.
+  // Now I need to do the logic to draw the best lines in terms of darkness, and 
+  // have some data structure that prevents repetition loops.
+
+  // renderLattice(context);
   // renderImageData(context, imageData);
-  renderPins(context, pins);
+  // renderPins(context, pins);
   // renderConnections(context, pins, connections);
 
   // const grayLine: LineCell[] = line.map((v2) => ({
