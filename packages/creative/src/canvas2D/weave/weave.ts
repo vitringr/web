@@ -116,7 +116,7 @@ function renderImageData(context: CanvasRenderingContext2D, imageData: number[][
 function renderPins(context: CanvasRenderingContext2D, pins: Vector2[]) {
   context.fillStyle = "orange";
   for (const pin of pins) {
-    context.fillRect(pin.x * cellWidth, pin.y * cellHeight, cellWidth, cellHeight)
+    context.fillRect(pin.x * cellWidth, pin.y * cellHeight, cellWidth, cellHeight);
   }
 }
 
@@ -145,44 +145,75 @@ function renderConnections(context: CanvasRenderingContext2D, pins: Vector2[], c
   for (const connection of connections) {
     const from = pins[connection.from];
     const to = pins[connection.to];
-    Canvas2D.line(context, from.x, from.y, to.x, to.y);
+    Canvas2D.line(context, from.x * cellWidth, from.y * cellHeight, to.x * cellWidth, to.y * cellHeight);
   }
 }
 
-type LineCell = {
-  position: Vector2;
-  color: number;
+type Line = {
+  fromIndex: number;
+  toIndex: number;
+  averageColor: number;
 };
+
+function createLines(pins: Vector2[], connections: Connection[], imageData: number[][]) {
+  const lines: Line[] = [];
+
+  for (const connection of connections) {
+    const fromIndex = connection.from;
+    const toIndex = connection.to;
+
+    const fromPin = pins[fromIndex];
+    const toPin = pins[toIndex];
+
+    const chebyshevDistance = Vector2.chebyshevDistance(fromPin, toPin);
+    const lineCoordinates = getLine(fromPin, toPin, chebyshevDistance);
+
+    const sumColor = lineCoordinates.reduce((sum, v2) => {
+      return sum + imageData[v2.x][v2.y];
+    }, 0);
+
+    const averageColor = sumColor / lineCoordinates.length;
+
+    lines.push({ fromIndex, toIndex, averageColor });
+  }
+
+  return lines;
+}
 
 function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   const context = setupContext(canvas);
   const imageData = createImageData(context, image);
   const pins = createPins();
   const connections = createConnections(pins);
+  const lines = createLines(pins, connections, imageData);
+
+  console.log("lines", lines.length);
+
+  for (const l of lines) {
+    context.strokeStyle = Colors.getRGBGrayscale(1 - l.averageColor)
+    Canvas2D.line(
+      context,
+      pins[l.fromIndex].x * cellWidth,
+      pins[l.fromIndex].y * cellHeight,
+      pins[l.toIndex].x * cellWidth,
+      pins[l.toIndex].y * cellHeight,
+    );
+  }
 
   renderLattice(context);
   // renderImageData(context, imageData);
   renderPins(context, pins);
   // renderConnections(context, pins, connections);
 
-  // const start = new Vector2(0, 12.34);
-  // const end = new Vector2(70, 70);
-  const start = pins[2]
-  const end = pins[15]
-
-  const chebyshevDistance = Vector2.chebyshevDistance(start, end);
-  const lineCells = getLine(start, end, chebyshevDistance);
-
-  const grayLine: LineCell[] = lineCells.map((cell) => ({
-    position: cell,
-    color: imageData[cell.x][cell.y],
-  }));
-
-
-  for (const cell of grayLine) {
-    context.fillStyle = Colors.getRGBGrayscale(cell.color);
-    context.fillRect(cell.position.x * cellWidth, cell.position.y * cellHeight, cellWidth, cellHeight)
-  }
+  // const grayLine: LineCell[] = line.map((v2) => ({
+  //   position: v2,
+  //   color: imageData[v2.x][v2.y],
+  // }));
+  //
+  // for (const cell of grayLine) {
+  //   context.fillStyle = Colors.getRGBGrayscale(cell.color);
+  //   context.fillRect(cell.position.x * cellWidth, cell.position.y * cellHeight, cellWidth, cellHeight);
+  // }
 }
 
 export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
