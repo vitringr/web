@@ -5,7 +5,7 @@ export const defaultConfig = {
   gridWidth: 80,
   gridHeight: 80,
 
-  pins: 20,
+  pins: 26,
 
   pinGap: 4,
 

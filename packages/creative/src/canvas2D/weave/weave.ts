@@ -122,29 +122,45 @@ function renderPins(context: CanvasRenderingContext2D, pins: Vector2[]) {
   }
 }
 
-function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
-  const context = setupContext(canvas);
-  const imageData = createImageData(context, image);
-  const pins = createPins();
+type Connection = { from: number; to: number };
 
-  renderLattice(context);
-  renderImageData(context, imageData);
-  renderPins(context, pins);
+function createConnections(pins: Vector2[]) {
+  const connections: Connection[] = [];
 
-  context.strokeStyle = "red";
-  context.lineWidth = 1;
   for (let i = 0; i < pins.length; i++) {
     for (let k = 0; k < pins.length; k++) {
-      const from = pins[i];
-      const to = pins[k];
-
       const difference = Math.abs(i - k);
       const wrappedDifference = Math.min(difference, pins.length - difference);
       if (wrappedDifference <= config.pinGap) continue;
 
-      Canvas2D.line(context, from.x, from.y, to.x, to.y);
+      connections.push({ from: i, to: k });
     }
   }
+
+  return connections;
+}
+
+function renderConnections(context: CanvasRenderingContext2D, pins: Vector2[], connections: Connection[]) {
+  context.strokeStyle = "red";
+  context.lineWidth = 1;
+
+  for (const connection of connections) {
+    const from = pins[connection.from];
+    const to = pins[connection.to];
+    Canvas2D.line(context, from.x, from.y, to.x, to.y);
+  }
+}
+
+function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
+  const context = setupContext(canvas);
+  const imageData = createImageData(context, image);
+  const pins = createPins();
+  const connections = createConnections(pins);
+
+  renderLattice(context);
+  renderImageData(context, imageData);
+  renderPins(context, pins);
+  renderConnections(context, pins, connections);
 }
 
 export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
