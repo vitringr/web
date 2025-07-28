@@ -20,8 +20,11 @@ import { Vector2 } from "@utilities/vector";
 import { Config, defaultConfig } from "./config";
 
 import zergPNG from "./zerg.png";
+import { Colors } from "@utilities/colors";
 
 let config: Config;
+let cellWidth: number;
+let cellHeight: number;
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.width;
@@ -34,9 +37,6 @@ function setupContext(canvas: HTMLCanvasElement) {
 }
 
 function renderLattice(context: CanvasRenderingContext2D) {
-  const cellWidth = config.width / config.gridWidth;
-  const cellHeight = config.height / config.gridHeight;
-
   context.lineWidth = 0.2;
   context.strokeStyle = config.colors.lattice;
 
@@ -63,8 +63,8 @@ function getLine(a: Vector2, b: Vector2, steps: number) {
 function createPins() {
   const pins: Vector2[] = [];
 
-  const center = new Vector2(config.width, config.height).scale(0.5);
-  const radius = config.width * 0.5 - 1;
+  const center = new Vector2(config.gridWidth, config.gridHeight).scale(0.5);
+  const radius = config.gridWidth * 0.5 - 1;
 
   const angleStep = Mathematics.TAU / config.pins;
 
@@ -104,8 +104,6 @@ function createImageData(context: CanvasRenderingContext2D, image: HTMLImageElem
 }
 
 function renderImageData(context: CanvasRenderingContext2D, imageData: number[][]) {
-  const cellWidth = config.width / config.gridWidth;
-  const cellHeight = config.height / config.gridHeight;
   for (let x = 0; x < imageData.length; x++) {
     const row = imageData[x];
     for (let y = 0; y < row.length; y++) {
@@ -118,7 +116,7 @@ function renderImageData(context: CanvasRenderingContext2D, imageData: number[][
 function renderPins(context: CanvasRenderingContext2D, pins: Vector2[]) {
   context.fillStyle = "orange";
   for (const pin of pins) {
-    Canvas2D.circleFill(context, pin.x, pin.y, 3);
+    context.fillRect(pin.x * cellWidth, pin.y * cellHeight, cellWidth, cellHeight)
   }
 }
 
@@ -151,6 +149,11 @@ function renderConnections(context: CanvasRenderingContext2D, pins: Vector2[], c
   }
 }
 
+type LineCell = {
+  position: Vector2;
+  color: number;
+};
+
 function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   const context = setupContext(canvas);
   const imageData = createImageData(context, image);
@@ -158,13 +161,34 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   const connections = createConnections(pins);
 
   renderLattice(context);
-  renderImageData(context, imageData);
+  // renderImageData(context, imageData);
   renderPins(context, pins);
-  renderConnections(context, pins, connections);
+  // renderConnections(context, pins, connections);
+
+  // const start = new Vector2(0, 12.34);
+  // const end = new Vector2(70, 70);
+  const start = pins[2]
+  const end = pins[15]
+
+  const chebyshevDistance = Vector2.chebyshevDistance(start, end);
+  const lineCells = getLine(start, end, chebyshevDistance);
+
+  const grayLine: LineCell[] = lineCells.map((cell) => ({
+    position: cell,
+    color: imageData[cell.x][cell.y],
+  }));
+
+
+  for (const cell of grayLine) {
+    context.fillStyle = Colors.getRGBGrayscale(cell.color);
+    context.fillRect(cell.position.x * cellWidth, cell.position.y * cellHeight, cellWidth, cellHeight)
+  }
 }
 
 export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
   config = { ...defaultConfig, ...settings };
+  cellWidth = config.width / config.gridWidth;
+  cellHeight = config.height / config.gridHeight;
 
   const img = new Image(config.gridWidth, config.gridHeight);
   img.src = zergPNG;
