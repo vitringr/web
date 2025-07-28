@@ -115,20 +115,35 @@ function renderImageData(context: CanvasRenderingContext2D, imageData: number[][
   }
 }
 
-function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
-  const context = setupContext(canvas);
-
-  const imageData = createImageData(context, image);
-
-  const pins = createPins();
-
-  renderLattice(context);
-
-  renderImageData(context, imageData);
-
+function renderPins(context: CanvasRenderingContext2D, pins: Vector2[]) {
   context.fillStyle = "orange";
   for (const pin of pins) {
     Canvas2D.circleFill(context, pin.x, pin.y, 3);
+  }
+}
+
+function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
+  const context = setupContext(canvas);
+  const imageData = createImageData(context, image);
+  const pins = createPins();
+
+  renderLattice(context);
+  renderImageData(context, imageData);
+  renderPins(context, pins);
+
+  context.strokeStyle = "red";
+  context.lineWidth = 1;
+  for (let i = 0; i < pins.length; i++) {
+    for (let k = 0; k < pins.length; k++) {
+      const from = pins[i];
+      const to = pins[k];
+
+      const difference = Math.abs(i - k);
+      const wrappedDifference = Math.min(difference, pins.length - difference);
+      if (wrappedDifference <= config.pinGap) continue;
+
+      Canvas2D.line(context, from.x, from.y, to.x, to.y);
+    }
   }
 }
 
