@@ -149,14 +149,20 @@ function renderConnections(context: CanvasRenderingContext2D, pins: Vector2[], c
   }
 }
 
-type Line = {
+type ConnectionWithData = {
   fromIndex: number;
   toIndex: number;
   averageColor: number;
 };
 
-function createLines(pins: Vector2[], connections: Connection[], imageData: number[][]) {
-  const lines: Line[] = [];
+type Line = {
+  targetIndex: number;
+  color: number;
+  flag: boolean;
+};
+
+function createSortedLines(pins: Vector2[], connections: Connection[], imageData: number[][]) {
+  const connectionsWithData: ConnectionWithData[] = [];
 
   for (const connection of connections) {
     const fromIndex = connection.from;
@@ -172,9 +178,24 @@ function createLines(pins: Vector2[], connections: Connection[], imageData: numb
       return sum + imageData[v2.x][v2.y];
     }, 0);
 
+    // WIP: Average darkness vs total darkness?
     const averageColor = sumColor / lineCoordinates.length;
 
-    lines.push({ fromIndex, toIndex, averageColor });
+    connectionsWithData.push({ fromIndex, toIndex, averageColor });
+  }
+
+  const lines: Line[][] = [];
+  for (let i = 0; i < config.pins; i++) {
+    lines.push([]);
+  }
+
+  for (const cwd of connectionsWithData) {
+    const line = { targetIndex: cwd.toIndex, color: cwd.averageColor, flag: false };
+    lines[cwd.fromIndex].push(line);
+  }
+
+  for (const linesFrom of lines) {
+    linesFrom.sort((a, b) => b.color - a.color);
   }
 
   return lines;
@@ -185,25 +206,57 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   const imageData = createImageData(context, image);
   const pins = createPins();
   const connections = createConnections(pins);
-  const lines = createLines(pins, connections, imageData);
+  const sortedLines = createSortedLines(pins, connections, imageData);
 
-  console.log("lines", lines.length);
+  context.fillStyle = "#aaa";
+  context.fillRect(0, 0, config.width, config.height);
 
-  context.lineWidth = 0.3
-  for (const l of lines) {
-    context.strokeStyle = Colors.getRGBGrayscale(.5)
+  context.lineWidth = 0.1;
+  context.strokeStyle = "#00000050";
+  let currentIndex = 0;
+  const animation = () => {
+    const linesFrom = sortedLines[currentIndex];
+
+    let targetIndex = 0;
+    for (let i = 0; i < linesFrom.length; i++) {
+      if (linesFrom[i].flag) continue;
+
+      targetIndex = linesFrom[i].targetIndex;
+      linesFrom[i].flag = true;
+      //TODO: the other way aroudn flag too?
+      break;
+    }
+
     Canvas2D.line(
       context,
-      pins[l.fromIndex].x * cellWidth,
-      pins[l.fromIndex].y * cellHeight,
-      pins[l.toIndex].x * cellWidth,
-      pins[l.toIndex].y * cellHeight,
+      pins[currentIndex].x * cellWidth,
+      pins[currentIndex].y * cellHeight,
+      pins[targetIndex].x * cellWidth,
+      pins[targetIndex].y * cellHeight,
     );
-  }
+    currentIndex = targetIndex;
+
+    requestAnimationFrame(animation);
+  };
+  requestAnimationFrame(animation);
+
+  // console.log("lines", lines.length);
+
+  // context.lineWidth = 0.3;
+  // for (const l of lines) {
+  //   context.strokeStyle = Colors.getRGBGrayscale(0.5);
+  //   Canvas2D.line(
+  //     context,
+  //     pins[l.fromIndex].x * cellWidth,
+  //     pins[l.fromIndex].y * cellHeight,
+  //     pins[l.toIndex].x * cellWidth,
+  //     pins[l.toIndex].y * cellHeight,
+  //   );
+  // }
 
   // WIP:
   // Most of the work is probably done.
-  // Now I need to do the logic to draw the best lines in terms of darkness, and 
+  // Now I need to do the logic to draw the best lines in terms of darkness, and
   // have some data structure that prevents repetition loops.
 
   // renderLattice(context);
