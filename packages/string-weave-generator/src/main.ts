@@ -1,20 +1,19 @@
 import { Mathematics } from "@utilities/mathematics";
 import { Vector2 } from "@utilities/vector";
 import { Colors } from "@utilities/colors";
-import { Config, defaultConfig } from "./config";
+import { type Config, defaultConfig } from "./config";
 
 export { type Config } from "./config";
 
 let config: Config;
-let cellWidth: number;
-let cellHeight: number;
+let cellSize: number;
 
 export namespace Debug {
   export function renderPins(context: CanvasRenderingContext2D, pins: Vector2[]) {
     context.fillStyle = "#FFAA00";
     const radius = 3;
     for (const pin of pins) {
-      context.fillRect(pin.x * cellWidth, pin.y * cellHeight, radius, radius);
+      context.fillRect(pin.x * cellSize, pin.y * cellSize, radius, radius);
     }
   }
 
@@ -23,7 +22,7 @@ export namespace Debug {
       const row = imageData[x];
       for (let y = 0; y < row.length; y++) {
         context.fillStyle = Colors.getRGBGrayscale(row[y]);
-        context.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
+        context.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
       }
     }
   }
@@ -32,16 +31,16 @@ export namespace Debug {
 function createPins() {
   const pins: Vector2[] = [];
 
-  const gridCenter = new Vector2(config.gridWidth, config.gridHeight).scale(0.5);
-  const circleRadius = config.gridWidth * 0.5 - config.radiusGap;
+  const canvasCenter = new Vector2(config.canvasSize, config.canvasSize).scale(0.5);
+  const circleRadius = config.canvasSize * 0.5 - config.radiusGap;
 
   const angleStep = Mathematics.TAU / config.pins;
 
   for (let i = 0; i < config.pins; i++) {
     const angle = angleStep * i;
 
-    const x = gridCenter.x + Math.cos(angle) * circleRadius;
-    const y = gridCenter.y + Math.sin(angle) * circleRadius;
+    const x = canvasCenter.x + Math.cos(angle) * circleRadius;
+    const y = canvasCenter.y + Math.sin(angle) * circleRadius;
 
     pins.push(new Vector2(x, y));
   }
@@ -49,38 +48,20 @@ function createPins() {
   return pins;
 }
 
-function renderImageToCenter(context: CanvasRenderingContext2D, image: HTMLImageElement) {
-  const xStart = config.gridWidth * 0.5 - config.gridWidth * config.imageScale * 0.5;
-  const yStart = config.gridHeight * 0.5 - config.gridHeight * config.imageScale * 0.5;
-
-  context.fillStyle = "#FFFFFF";
-  context.fillRect(0, 0, config.width, config.height);
-
-  context.drawImage(
-    image,
-    xStart + config.imageXOffset,
-    yStart + config.imageYOffset,
-    config.gridWidth * config.imageScale,
-    config.gridHeight * config.imageScale,
-  );
-}
-
 function createImageData(image: HTMLImageElement) {
   const auxCanvas = document.createElement("canvas");
-  auxCanvas.width = config.width;
-  auxCanvas.height = config.height;
+  auxCanvas.width = config.gridSize;
+  auxCanvas.height = config.gridSize;
 
   const auxContext = auxCanvas.getContext("2d");
   if (!auxContext) throw new Error("Cannot get 2d context!");
 
-  // TODO: test this visually.
-  // Should probably only get the image data for the actual image provided?
-  renderImageToCenter(auxContext, image);
+  auxContext.fillStyle = "#FFFFFF";
+  auxContext.fillRect(0, 0, config.gridSize, config.gridSize);
+  auxContext.drawImage(image, 0, 0, config.gridSize, config.gridSize);
 
-  // Or this... Should it get the gridWidth only, or the whole data?
-  const imageData = auxContext.getImageData(0, 0, config.gridWidth, config.gridHeight).data;
-
-  auxContext.clearRect(0, 0, config.width, config.height);
+  const imageData = auxContext.getImageData(0, 0, config.gridSize, config.gridSize).data;
+  auxContext.clearRect(0, 0, config.gridSize, config.gridSize);
 
   const data: number[][] = [];
   for (let i = 0; i < imageData.length; i += 4) {
@@ -89,8 +70,8 @@ function createImageData(image: HTMLImageElement) {
     const b = imageData[i + 2];
 
     const index = i / 4;
-    const x = index % config.gridWidth;
-    const y = Math.floor(index / config.gridWidth);
+    const x = index % config.gridSize;
+    const y = Math.floor(index / config.gridSize);
 
     let averageColor = (r + g + b) / (256 * 3);
     if (config.inverseColor) averageColor = Math.abs(averageColor - 1);
@@ -132,7 +113,14 @@ function createLinks(pins: Vector2[], imageData: number[][]) {
       const chebyshevDistance = Vector2.chebyshevDistance(aPin, bPin);
       const linePoints = getLine(aPin, bPin, chebyshevDistance);
 
-      const sumBrightness = linePoints.reduce((sum, v2) => sum + imageData[v2.x][v2.y], 0);
+      const sumBrightness = linePoints.reduce((sum, point) => {
+        const scaledPoint = point
+          .clone()
+          .scale(1 / cellSize)
+          .floor();
+
+        return sum + imageData[scaledPoint.x][scaledPoint.y];
+      }, 0);
       const averageBrightness = sumBrightness / linePoints.length;
 
       if (!links[a]) links[a] = [];
@@ -154,8 +142,7 @@ function createLinks(pins: Vector2[], imageData: number[][]) {
 
 export function generate(image: HTMLImageElement, settings: Partial<Config> = {}) {
   config = { ...defaultConfig, ...settings };
-  cellWidth = config.width / config.gridWidth;
-  cellHeight = config.height / config.gridHeight;
+  cellSize = config.canvasSize / config.gridSize;
 
   const pins = createPins();
   const imageData = createImageData(image);

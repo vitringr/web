@@ -5,17 +5,10 @@
 // a single size.
 
 export const defaultConfig = {
-  width: 800,
-  height: 800,
-
-  gridWidth: 400,
-  gridHeight: 400,
+  canvasSize: 800,
+  gridSize: 400,
 
   radiusGap: 10,
-
-  imageScale: 1,
-  imageXOffset: 0,
-  imageYOffset: 0,
 
   pins: 500,
   pinGap: 20,
