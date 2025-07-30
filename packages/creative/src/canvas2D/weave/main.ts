@@ -1,302 +1,69 @@
-import { Mathematics } from "@utilities/mathematics";
-import { Canvas2D } from "@utilities/canvas2d";
-import { Vector2 } from "@utilities/vector";
+import { StringWeaveGenerator } from "@packages/string-weave-generator";
 import { Config, defaultConfig } from "./config";
-import { Colors } from "@utilities/colors";
 
 import imagePNG from "./images/edit.png";
-import data from "./final.json"
-
-let config: Config;
-let cellWidth: number;
-let cellHeight: number;
-
-function setupContext(canvas: HTMLCanvasElement) {
-  canvas.width = config.width;
-  canvas.height = config.height;
-
-  canvas.style.borderRadius = "50%";
-
-  const context = canvas.getContext("2d");
-  if (!context) throw "Cannot get 2d context";
-
-  return context;
-}
-
-function renderLattice(context: CanvasRenderingContext2D) {
-  context.lineWidth = config.debug.latticeLineWidth;
-  context.strokeStyle = config.debug.colors.lattice;
-
-  for (let x = 0; x < config.gridWidth; x++) {
-    const step = x * cellWidth;
-    Canvas2D.line(context, step, 0, step, config.height);
-  }
-
-  for (let y = 0; y < config.gridHeight; y++) {
-    const step = y * cellHeight;
-    Canvas2D.line(context, 0, step, config.width, step);
-  }
-}
-
-function getLine(a: Vector2, b: Vector2, steps: number) {
-  const points: Vector2[] = [];
-  const step = 1 / steps;
-  for (let i = 1; i < steps; i++) {
-    points.push(Vector2.lerp(a, b, step * i).round());
-  }
-  return points;
-}
-
-function createPins() {
-  const pins: Vector2[] = [];
-
-  const center = new Vector2(config.gridWidth, config.gridHeight).scale(0.5);
-  const radius = config.gridWidth * 0.5 - 1;
-
-  const angleStep = Mathematics.TAU / config.pins;
-
-  for (let i = 0; i < config.pins; i++) {
-    const angle = angleStep * i;
-
-    const x = center.x + Math.cos(angle) * radius;
-    const y = center.y + Math.sin(angle) * radius;
-
-    pins.push(new Vector2(x, y));
-  }
-
-  return pins;
-}
-
-function createImageData(context: CanvasRenderingContext2D, image: HTMLImageElement) {
-  const scale = config.imageScale;
-  const xStart = config.gridWidth * 0.5 - config.gridWidth * scale * 0.5;
-  const yStart = config.gridHeight * 0.5 - config.gridHeight * scale * 0.5;
-
-  context.fillStyle = "#FFFFFF";
-  context.fillRect(0, 0, config.width, config.height);
-
-  context.drawImage(
-    image,
-    xStart + config.imageXOffset,
-    yStart + config.imageYOffset,
-    config.gridWidth * scale,
-    config.gridHeight * scale,
-  );
-
-  const imageData = context.getImageData(0, 0, config.gridWidth, config.gridHeight).data;
-  context.clearRect(0, 0, config.width, config.height);
-
-  const arr: number[][] = [];
-
-  for (let i = 0; i < imageData.length; i += 4) {
-    const r = imageData[i + 0];
-    const g = imageData[i + 1];
-    const b = imageData[i + 2];
-
-    const index = i / 4;
-    const x = index % config.gridWidth;
-    const y = Math.floor(index / config.gridWidth);
-
-    if (!arr[x]) arr[x] = [];
-
-    let result = 1;
-    result = config.grayscale ? (result = (r + g + b) / 768) : (result = r + g + b < config.binaryMinColor ? 0 : 1);
-    config.inverse && (result = Math.abs(result - 1));
-    arr[x][y] = result;
-  }
-
-  return arr;
-}
-
-function renderImageData(context: CanvasRenderingContext2D, imageData: number[][]) {
-  for (let x = 0; x < imageData.length; x++) {
-    const row = imageData[x];
-    for (let y = 0; y < row.length; y++) {
-      context.fillStyle = Colors.getRGBGrayscale(row[y]);
-      context.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
-    }
-  }
-}
-
-function renderPins(context: CanvasRenderingContext2D, pins: Vector2[]) {
-  context.fillStyle = config.debug.colors.pins;
-  for (const pin of pins) {
-    context.fillRect(pin.x * cellWidth, pin.y * cellHeight, config.debug.pinSize, config.debug.pinSize);
-  }
-}
-
-type Connection = { from: number; to: number };
-
-function createConnections(pins: Vector2[]) {
-  const connections: Connection[] = [];
-
-  for (let i = 0; i < pins.length; i++) {
-    for (let k = 0; k < pins.length; k++) {
-      const difference = Math.abs(i - k);
-      const wrappedDifference = Math.min(difference, pins.length - difference);
-      if (wrappedDifference <= config.pinGap) continue;
-
-      connections.push({ from: i, to: k });
-    }
-  }
-
-  return connections;
-}
-
-function renderConnections(context: CanvasRenderingContext2D, pins: Vector2[], connections: Connection[]) {
-  context.strokeStyle = config.debug.colors.connections;
-  context.lineWidth = config.debug.connectionsLineWidth;
-
-  for (const connection of connections) {
-    const from = pins[connection.from];
-    const to = pins[connection.to];
-    Canvas2D.line(context, from.x * cellWidth, from.y * cellHeight, to.x * cellWidth, to.y * cellHeight);
-  }
-}
-
-type ConnectionWithData = {
-  fromIndex: number;
-  toIndex: number;
-  color: number;
-};
-
-type Line = {
-  // Short names for filesize
-  i: number;
-  c: number;
-};
-
-function createSortedLines(pins: Vector2[], connections: Connection[], imageData: number[][]) {
-  const connectionsWithData: ConnectionWithData[] = [];
-
-  for (const connection of connections) {
-    const fromIndex = connection.from;
-    const toIndex = connection.to;
-
-    const fromPin = pins[fromIndex];
-    const toPin = pins[toIndex];
-
-    const chebyshevDistance = Vector2.chebyshevDistance(fromPin, toPin);
-    const lineCoordinates = getLine(fromPin, toPin, chebyshevDistance);
-
-    const sumColor = lineCoordinates.reduce((sum, v2) => {
-      return sum + imageData[v2.x][v2.y];
-    }, 0);
-    const averageColor = sumColor / lineCoordinates.length;
-    let color = config.averageColor ? averageColor : sumColor;
-    color = parseFloat(color.toFixed(6))
-
-    connectionsWithData.push({ fromIndex, toIndex, color });
-  }
-
-  const lines: Line[][] = [];
-  for (let i = 0; i < config.pins; i++) {
-    lines.push([]);
-  }
-
-  for (const cwd of connectionsWithData) {
-    const line: Line = { i: cwd.toIndex, c: cwd.color };
-    lines[cwd.fromIndex].push(line);
-  }
-
-  for (const linesFrom of lines) {
-    linesFrom.sort((a, b) => a.c - b.c);
-  }
-
-  return lines;
-}
 
 async function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
-  const context = setupContext(canvas);
-
-  const pins = createPins();
-  // const imageData = createImageData(context, image);
-  // const connections = createConnections(pins);
-
-  // config.debug.renderImageData && renderImageData(context, imageData);
-  // config.debug.renderConnections && renderConnections(context, pins, connections);
-  // config.debug.renderLattice && renderLattice(context);
-  // config.debug.renderPins && renderPins(context, pins);
-  //
-  // if (
-  //   config.debug.renderImageData ||
-  //   config.debug.renderConnections ||
-  //   config.debug.renderLattice ||
-  //   config.debug.renderPins
-  // ) {
-  //   return;
-  // }
-
-  // const sortedLines = createSortedLines(pins, connections, imageData);
-  const sortedLines = data as Line[][];
-
-  // function downloadFile(content: string, filename: string, type = "text/plain") {
-  //   const blob = new Blob([content], { type });
-  //   const url = URL.createObjectURL(blob);
-  //
-  //   const a = document.createElement("a");
-  //   a.href = url;
-  //   a.download = filename;
-  //   a.click();
-  //
-  //   URL.revokeObjectURL(url);
-  // }
-
-  context.fillStyle = config.colors.background;
-  context.fillRect(0, 0, config.width, config.height);
-
-  context.lineWidth = config.lineWidth;
-  context.strokeStyle = config.colors.lines;
-
-  const visitedIndices: number[] = new Array(sortedLines.length).fill(0);
-
-  let loop = 0;
-  let frame = 0;
-  let currentIndex = 42;
-  let iterations = 0;
-  const animation = () => {
-    if (frame >= config.stopAfter) return;
-
-    loop++;
-    iterations = Math.min(1 + Math.floor(loop / config.incrementIterationsAfter), config.maxIterations);
-
-    const iteration = () => {
-      frame++;
-
-      const linesFrom = sortedLines[currentIndex];
-      const timesVisited = visitedIndices[currentIndex];
-
-      const targetIndex = linesFrom[timesVisited % config.resetVisitsAfter].i;
-
-      visitedIndices[currentIndex]++;
-      visitedIndices[targetIndex]++;
-
-      Canvas2D.line(
-        context,
-        pins[currentIndex].x * cellWidth,
-        pins[currentIndex].y * cellHeight,
-        pins[targetIndex].x * cellWidth,
-        pins[targetIndex].y * cellHeight,
-      );
-
-      currentIndex = targetIndex;
-    };
-
-    for (let i = 0; i < iterations; i++) {
-      iteration();
-    }
-
-    requestAnimationFrame(animation);
-  };
-  requestAnimationFrame(animation);
 }
 
 export async function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
-  config = { ...defaultConfig, ...settings };
-  cellWidth = config.width / config.gridWidth;
-  cellHeight = config.height / config.gridHeight;
+  const config = { ...defaultConfig, ...settings };
 
-  const img = new Image(config.gridWidth, config.gridHeight);
-  img.src = imagePNG;
-  img.onload = () => start(canvas, img);
+  StringWeaveGenerator.main(canvas, imagePNG, config);
+
+  // const context = setupContext(canvas);
+  // const pins = createPins();
+  // const imageData = createImageData(context, image);
+  // const links = createLinks(pins, imageData);
+  //
+  // context.fillStyle = config.colors.background;
+  // context.fillRect(0, 0, config.width, config.height);
+  //
+  // context.lineWidth = config.lineWidth;
+  // context.strokeStyle = config.colors.lines;
+  //
+  // const visitedIndices: number[] = new Array(links.length).fill(0);
+  //
+  // let loop = 0;
+  // let frame = 0;
+  // let fromIndex = 42;
+  // let iterations = 0;
+  // const animation = () => {
+  //   if (frame >= config.stopAfter) return;
+  //
+  //   loop++;
+  //   iterations = Math.min(1 + Math.floor(loop / config.incrementIterationsAfter), config.maxIterations);
+  //
+  //   const iteration = () => {
+  //     frame++;
+  //
+  //     const shuffle = visitedIndices[fromIndex] % config.resetVisitsAfter;
+  //
+  //     const toIndex = links[fromIndex][shuffle];
+  //     // console.log("toIndex:", toIndex);
+  //
+  //     // TODO: Experiment without this, instead just use the modulo from above for all
+  //     visitedIndices[fromIndex]++;
+  //     visitedIndices[toIndex]++;
+  //
+  //     Canvas2D.line(
+  //       context,
+  //       pins[fromIndex].x * cellWidth,
+  //       pins[fromIndex].y * cellHeight,
+  //       pins[toIndex].x * cellWidth,
+  //       pins[toIndex].y * cellHeight,
+  //     );
+  //
+  //     fromIndex = toIndex;
+  //   };
+  //
+  //   for (let i = 0; i < iterations; i++) {
+  //     iteration();
+  //   }
+  //
+  //   requestAnimationFrame(animation);
+  // };
+  //
+  // requestAnimationFrame(animation);
+
 }

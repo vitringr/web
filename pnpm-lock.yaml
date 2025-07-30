@@ -35,6 +35,9 @@ importers:
       '@packages/sandfall':
         specifier: workspace:*
         version: link:../../packages/sandfall
+      '@packages/string-weave-generator':
+        specifier: workspace:*
+        version: link:../../packages/string-weave-generator
       '@packages/test':
         specifier: workspace:*
         version: link:../../packages/test
@@ -91,6 +94,9 @@ importers:
 
   packages/creative:
     dependencies:
+      '@packages/string-weave-generator':
+        specifier: workspace:*
+        version: link:../string-weave-generator
       '@utilities/canvas2d':
         specifier: workspace:*
         version: link:../../utilities/canvas2d
@@ -223,6 +229,9 @@ importers:
 
   packages/string-weave-generator:
     dependencies:
+      '@utilities/canvas2d':
+        specifier: workspace:*
+        version: link:../../utilities/canvas2d
       '@utilities/colors':
         specifier: workspace:*
         version: link:../../utilities/colors

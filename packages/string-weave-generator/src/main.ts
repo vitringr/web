@@ -8,6 +8,26 @@ let config: Config;
 let cellWidth: number;
 let cellHeight: number;
 
+export namespace Debug {
+  export function renderPins(context: CanvasRenderingContext2D, pins: Vector2[]) {
+    context.fillStyle = "#FFAA00";
+    const radius = 3;
+    for (const pin of pins) {
+      context.fillRect(pin.x * cellWidth, pin.y * cellHeight, radius, radius);
+    }
+  }
+
+  export function renderImageData(context: CanvasRenderingContext2D, imageData: number[][]) {
+    for (let x = 0; x < imageData.length; x++) {
+      const row = imageData[x];
+      for (let y = 0; y < row.length; y++) {
+        context.fillStyle = Colors.getRGBGrayscale(row[y]);
+        context.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
+      }
+    }
+  }
+}
+
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.width;
   canvas.height = config.height;
@@ -38,13 +58,6 @@ function createPins() {
   return pins;
 }
 
-function renderPins(context: CanvasRenderingContext2D, pins: Vector2[]) {
-  context.fillStyle = config.debug.colors.pins;
-  for (const pin of pins) {
-    context.fillRect(pin.x * cellWidth, pin.y * cellHeight, config.debug.pinSize, config.debug.pinSize);
-  }
-}
-
 function renderImageToCenter(context: CanvasRenderingContext2D, image: HTMLImageElement) {
   const xStart = config.gridWidth * 0.5 - config.gridWidth * config.imageScale * 0.5;
   const yStart = config.gridHeight * 0.5 - config.gridHeight * config.imageScale * 0.5;
@@ -61,15 +74,22 @@ function renderImageToCenter(context: CanvasRenderingContext2D, image: HTMLImage
   );
 }
 
-function createImageData(context: CanvasRenderingContext2D, image: HTMLImageElement) {
+function createImageData(image: HTMLImageElement) {
+  const auxCanvas = document.createElement("canvas");
+  auxCanvas.width = config.width;
+  auxCanvas.height = config.height;
+
+  const auxContext = auxCanvas.getContext("2d");
+  if (!auxContext) throw new Error("Cannot get 2d context!");
+
   // TODO: test this visually.
   // Should probably only get the image data for the actual image provided?
-  renderImageToCenter(context, image);
+  renderImageToCenter(auxContext, image);
 
   // Or this... Should it get the gridWidth only, or the whole data?
-  const imageData = context.getImageData(0, 0, config.gridWidth, config.gridHeight).data;
+  const imageData = auxContext.getImageData(0, 0, config.gridWidth, config.gridHeight).data;
 
-  context.clearRect(0, 0, config.width, config.height);
+  auxContext.clearRect(0, 0, config.width, config.height);
 
   const data: number[][] = [];
   for (let i = 0; i < imageData.length; i += 4) {
@@ -89,16 +109,6 @@ function createImageData(context: CanvasRenderingContext2D, image: HTMLImageElem
   }
 
   return data;
-}
-
-function renderImageData(context: CanvasRenderingContext2D, imageData: number[][]) {
-  for (let x = 0; x < imageData.length; x++) {
-    const row = imageData[x];
-    for (let y = 0; y < row.length; y++) {
-      context.fillStyle = Colors.getRGBGrayscale(row[y]);
-      context.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
-    }
-  }
 }
 
 function getLine(a: Vector2, b: Vector2, steps: number) {
@@ -134,6 +144,9 @@ function createLinks(pins: Vector2[], imageData: number[][]) {
       const sumBrightness = linePoints.reduce((sum, v2) => sum + imageData[v2.x][v2.y], 0);
       const averageBrightness = sumBrightness / linePoints.length;
 
+      if (!links[a]) links[a] = [];
+      if (!links[b]) links[b] = [];
+
       links[a].push([b, averageBrightness]);
       links[b].push([a, averageBrightness]);
     }
@@ -143,15 +156,23 @@ function createLinks(pins: Vector2[], imageData: number[][]) {
     link.sort((a, b) => a[1] - b[1]);
   }
 
-  const removedBrightness = links.map((link) => link[0]);
+  const removedBrightnessLinks = links.map((to) => to.map((data) => data[0]));
 
-  return removedBrightness;
+  return removedBrightnessLinks;
 }
 
-async function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
+export function generate(image: HTMLImageElement) {
+  const pins = createPins();
+  const imageData = createImageData(image);
+  const links = createLinks(pins, imageData);
+
+  return { links, imageData, pins };
+}
+
+function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   const context = setupContext(canvas);
   const pins = createPins();
-  const imageData = createImageData(context, image);
+  const imageData = createImageData(image);
   const links = createLinks(pins, imageData);
 
   context.fillStyle = config.colors.background;
@@ -178,6 +199,7 @@ async function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
       const shuffle = visitedIndices[fromIndex] % config.resetVisitsAfter;
 
       const toIndex = links[fromIndex][shuffle];
+      // console.log("toIndex:", toIndex);
 
       // TODO: Experiment without this, instead just use the modulo from above for all
       visitedIndices[fromIndex]++;
