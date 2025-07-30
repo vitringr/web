@@ -1,8 +1,9 @@
 import { Mathematics } from "@utilities/mathematics";
-import { Canvas2D } from "@utilities/canvas2d";
 import { Vector2 } from "@utilities/vector";
 import { Colors } from "@utilities/colors";
 import { Config, defaultConfig } from "./config";
+
+export { type Config } from "./config";
 
 let config: Config;
 let cellWidth: number;
@@ -26,16 +27,6 @@ export namespace Debug {
       }
     }
   }
-}
-
-function setupContext(canvas: HTMLCanvasElement) {
-  canvas.width = config.width;
-  canvas.height = config.height;
-
-  const context = canvas.getContext("2d");
-  if (!context) throw "Cannot get 2d context";
-
-  return context;
 }
 
 function createPins() {
@@ -172,66 +163,3 @@ export function generate(image: HTMLImageElement, settings: Partial<Config> = {}
 
   return { links, imageData, pins };
 }
-
-function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
-  const context = setupContext(canvas);
-  const pins = createPins();
-  const imageData = createImageData(image);
-  const links = createLinks(pins, imageData);
-
-  context.fillStyle = config.colors.background;
-  context.fillRect(0, 0, config.width, config.height);
-
-  context.lineWidth = config.lineWidth;
-  context.strokeStyle = config.colors.lines;
-
-  const visitedIndices: number[] = new Array(links.length).fill(0);
-
-  let loop = 0;
-  let frame = 0;
-  let fromIndex = 42;
-  let iterations = 0;
-  const animation = () => {
-    if (frame >= config.stopAfter) return;
-
-    loop++;
-    iterations = Math.min(1 + Math.floor(loop / config.incrementIterationsAfter), config.maxIterations);
-
-    const iteration = () => {
-      frame++;
-
-      const shuffle = visitedIndices[fromIndex] % config.resetVisitsAfter;
-
-      const toIndex = links[fromIndex][shuffle];
-      // console.log("toIndex:", toIndex);
-
-      // TODO: Experiment without this, instead just use the modulo from above for all
-      visitedIndices[fromIndex]++;
-      visitedIndices[toIndex]++;
-
-      Canvas2D.line(
-        context,
-        pins[fromIndex].x * cellWidth,
-        pins[fromIndex].y * cellHeight,
-        pins[toIndex].x * cellWidth,
-        pins[toIndex].y * cellHeight,
-      );
-
-      fromIndex = toIndex;
-    };
-
-    for (let i = 0; i < iterations; i++) {
-      iteration();
-    }
-
-    requestAnimationFrame(animation);
-  };
-
-  requestAnimationFrame(animation);
-}
-
-// export async function main(canvas: HTMLCanvasElement, imageString: string, settings: Partial<Config> = {}) {
-//   config = { ...defaultConfig, ...settings };
-//   cellWidth = config.width / config.gridWidth;
-//   cellHeight = config.height / config.gridHeight;
-// }

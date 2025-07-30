@@ -1,10 +1,43 @@
 import { StringWeaveGenerator } from "@packages/string-weave-generator";
-import { Config, defaultConfig } from "./config";
-
-import imagePNG from "./images/edit.png";
 import { Canvas2D } from "@utilities/canvas2d";
 
-let config: Config;
+import imagePNG from "./images/edit.png";
+
+const defaultConfig: StringWeaveGenerator.Config = {
+  width: 800,
+  height: 800,
+
+  gridWidth: 400,
+  gridHeight: 400,
+
+  radiusGap: 10,
+
+  imageScale: 1,
+  imageXOffset: 0,
+  imageYOffset: 0,
+
+  pins: 500,
+  pinGap: 20,
+  resetVisitsAfter: 200,
+
+  maxIterations: 6,
+  incrementIterationsAfter: 500,
+
+  stopAfter: 30_000,
+
+  inverseColor: false,
+
+  lineWidth: 0.15,
+
+  colors: {
+    // background: "#EEEED0",
+    // lines: "#00000050",
+    background: "#000000",
+    lines: "#EEEED050",
+  },
+};
+
+let config: StringWeaveGenerator.Config;
 let cellWidth: number;
 let cellHeight: number;
 
@@ -24,7 +57,7 @@ function setupContext(canvas: HTMLCanvasElement) {
 function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   const context = setupContext(canvas);
 
-  const { links, imageData: _imageData, pins } = StringWeaveGenerator.generate(image);
+  const { links, imageData: _imageData, pins } = StringWeaveGenerator.generate(image, {});
 
   const visitedIndices: number[] = new Array(links.length).fill(0);
 
@@ -71,7 +104,7 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   requestAnimationFrame(animation);
 }
 
-export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+export function main(canvas: HTMLCanvasElement, settings: Partial<StringWeaveGenerator.Config> = {}) {
   config = { ...defaultConfig, ...settings };
   cellWidth = config.width / config.gridWidth;
   cellHeight = config.height / config.gridHeight;
