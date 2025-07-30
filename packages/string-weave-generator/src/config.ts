@@ -26,12 +26,7 @@ export const defaultConfig = {
 
   stopAfter: 30_000,
 
-  grayscale: true,
-  binaryMinColor: 340,
-
-  inverse: false,
-
-  averageColor: true,
+  inverseColor: false,
 
   lineWidth: 0.15,
 

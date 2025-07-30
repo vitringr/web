@@ -1,48 +1,21 @@
 import { Mathematics } from "@utilities/mathematics";
+import { Canvas2D } from "@utilities/canvas2d";
 import { Vector2 } from "@utilities/vector";
 import { Colors } from "@utilities/colors";
 import { Config, defaultConfig } from "./config";
-
-import imagePNG from "./images/edit.png";
 
 let config: Config;
 let cellWidth: number;
 let cellHeight: number;
 
 function setupContext(canvas: HTMLCanvasElement) {
-  // canvas.width = config.width;
-  // canvas.height = config.height;
-  //
-  // canvas.style.borderRadius = "50%";
-  //
-  // const context = canvas.getContext("2d");
-  // if (!context) throw "Cannot get 2d context";
-  //
-  // return context;
-}
+  canvas.width = config.width;
+  canvas.height = config.height;
 
-function renderLattice(context: CanvasRenderingContext2D) {
-  // context.lineWidth = config.debug.latticeLineWidth;
-  // context.strokeStyle = config.debug.colors.lattice;
-  //
-  // for (let x = 0; x < config.gridWidth; x++) {
-  //   const step = x * cellWidth;
-  //   Canvas2D.line(context, step, 0, step, config.height);
-  // }
-  //
-  // for (let y = 0; y < config.gridHeight; y++) {
-  //   const step = y * cellHeight;
-  //   Canvas2D.line(context, 0, step, config.width, step);
-  // }
-}
+  const context = canvas.getContext("2d");
+  if (!context) throw "Cannot get 2d context";
 
-function getLine(a: Vector2, b: Vector2, steps: number) {
-  const points: Vector2[] = [];
-  const step = 1 / steps;
-  for (let i = 1; i < steps; i++) {
-    points.push(Vector2.lerp(a, b, step * i).round());
-  }
-  return points;
+  return context;
 }
 
 function createPins() {
@@ -63,6 +36,13 @@ function createPins() {
   }
 
   return pins;
+}
+
+function renderPins(context: CanvasRenderingContext2D, pins: Vector2[]) {
+  context.fillStyle = config.debug.colors.pins;
+  for (const pin of pins) {
+    context.fillRect(pin.x * cellWidth, pin.y * cellHeight, config.debug.pinSize, config.debug.pinSize);
+  }
 }
 
 function renderImageToCenter(context: CanvasRenderingContext2D, image: HTMLImageElement) {
@@ -91,7 +71,7 @@ function createImageData(context: CanvasRenderingContext2D, image: HTMLImageElem
 
   context.clearRect(0, 0, config.width, config.height);
 
-  const arr: number[][] = [];
+  const data: number[][] = [];
   for (let i = 0; i < imageData.length; i += 4) {
     const r = imageData[i + 0];
     const g = imageData[i + 1];
@@ -101,15 +81,14 @@ function createImageData(context: CanvasRenderingContext2D, image: HTMLImageElem
     const x = index % config.gridWidth;
     const y = Math.floor(index / config.gridWidth);
 
-    if (!arr[x]) arr[x] = [];
+    let averageColor = (r + g + b) / (256 * 3);
+    if (config.inverseColor) averageColor = Math.abs(averageColor - 1);
 
-    let result = 1;
-    result = config.grayscale ? (result = (r + g + b) / 768) : (result = r + g + b < config.binaryMinColor ? 0 : 1);
-    config.inverse && (result = Math.abs(result - 1));
-    arr[x][y] = result;
+    if (!data[x]) data[x] = [];
+    data[x][y] = averageColor;
   }
 
-  return arr;
+  return data;
 }
 
 function renderImageData(context: CanvasRenderingContext2D, imageData: number[][]) {
@@ -122,120 +101,58 @@ function renderImageData(context: CanvasRenderingContext2D, imageData: number[][
   }
 }
 
-function renderPins(context: CanvasRenderingContext2D, pins: Vector2[]) {
-  context.fillStyle = config.debug.colors.pins;
-  for (const pin of pins) {
-    context.fillRect(pin.x * cellWidth, pin.y * cellHeight, config.debug.pinSize, config.debug.pinSize);
+function getLine(a: Vector2, b: Vector2, steps: number) {
+  const points: Vector2[] = [];
+  const step = 1 / steps;
+  for (let i = 1; i < steps; i++) {
+    points.push(Vector2.lerp(a, b, step * i).round());
   }
+  return points;
 }
 
-type Connection = { from: number; to: number };
+function createLinks(pins: Vector2[], imageData: number[][]) {
+  const links: number[][][] = [];
 
-function createConnections(pins: Vector2[]) {
-  const connections: Connection[] = [];
+  const visited = new Set<string>();
+  for (let a = 0; a < pins.length; a++) {
+    for (let b = 0; b < pins.length; b++) {
+      if (a === b) continue;
 
-  for (let i = 0; i < pins.length; i++) {
-    for (let k = 0; k < pins.length; k++) {
-      const difference = Math.abs(i - k);
+      const difference = Math.abs(a - b);
       const wrappedDifference = Math.min(difference, pins.length - difference);
       if (wrappedDifference <= config.pinGap) continue;
 
-      connections.push({ from: i, to: k });
+      const key = Math.min(a, b) + "," + Math.max(a, b);
+      if (visited.has(key)) continue;
+      visited.add(key);
+
+      const aPin = pins[a];
+      const bPin = pins[b];
+      const chebyshevDistance = Vector2.chebyshevDistance(aPin, bPin);
+      const linePoints = getLine(aPin, bPin, chebyshevDistance);
+
+      const sumBrightness = linePoints.reduce((sum, v2) => sum + imageData[v2.x][v2.y], 0);
+      const averageBrightness = sumBrightness / linePoints.length;
+
+      links[a].push([b, averageBrightness]);
+      links[b].push([a, averageBrightness]);
     }
   }
 
-  return connections;
-}
-
-function renderConnections(context: CanvasRenderingContext2D, pins: Vector2[], connections: Connection[]) {
-  context.strokeStyle = config.debug.colors.connections;
-  context.lineWidth = config.debug.connectionsLineWidth;
-
-  for (const connection of connections) {
-    const from = pins[connection.from];
-    const to = pins[connection.to];
-    Canvas2D.line(context, from.x * cellWidth, from.y * cellHeight, to.x * cellWidth, to.y * cellHeight);
-  }
-}
-
-type ConnectionWithData = {
-  fromIndex: number;
-  toIndex: number;
-  color: number;
-};
-
-type Line = {
-  // Short names for filesize
-  i: number;
-  c: number;
-};
-
-function createSortedLines(pins: Vector2[], connections: Connection[], imageData: number[][]) {
-  const connectionsWithData: ConnectionWithData[] = [];
-
-  for (const connection of connections) {
-    const fromIndex = connection.from;
-    const toIndex = connection.to;
-
-    const fromPin = pins[fromIndex];
-    const toPin = pins[toIndex];
-
-    const chebyshevDistance = Vector2.chebyshevDistance(fromPin, toPin);
-    const lineCoordinates = getLine(fromPin, toPin, chebyshevDistance);
-
-    const sumColor = lineCoordinates.reduce((sum, v2) => {
-      return sum + imageData[v2.x][v2.y];
-    }, 0);
-    const averageColor = sumColor / lineCoordinates.length;
-    let color = config.averageColor ? averageColor : sumColor;
-    color = parseFloat(color.toFixed(6));
-
-    connectionsWithData.push({ fromIndex, toIndex, color });
+  for (const link of links) {
+    link.sort((a, b) => a[1] - b[1]);
   }
 
-  const lines: Line[][] = [];
-  for (let i = 0; i < config.pins; i++) {
-    lines.push([]);
-  }
+  const removedBrightness = links.map((link) => link[0]);
 
-  for (const cwd of connectionsWithData) {
-    const line: Line = { i: cwd.toIndex, c: cwd.color };
-    lines[cwd.fromIndex].push(line);
-  }
-
-  for (const linesFrom of lines) {
-    linesFrom.sort((a, b) => a.c - b.c);
-  }
-
-  return lines;
+  return removedBrightness;
 }
 
 async function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   const context = setupContext(canvas);
-
   const pins = createPins();
   const imageData = createImageData(context, image);
-  const connections = createConnections(pins);
-
-  config.debug.renderImageData && renderImageData(context, imageData);
-  config.debug.renderConnections && renderConnections(context, pins, connections);
-  // config.debug.renderLattice && renderLattice(context);
-  config.debug.renderPins && renderPins(context, pins);
-
-  const sortedLines = createSortedLines(pins, connections, imageData);
-  // const sortedLines = data as Line[][];
-
-  function downloadFile(content: string, filename: string, type = "text/plain") {
-    const blob = new Blob([content], { type });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    a.click();
-
-    URL.revokeObjectURL(url);
-  }
+  const links = createLinks(pins, imageData);
 
   context.fillStyle = config.colors.background;
   context.fillRect(0, 0, config.width, config.height);
@@ -243,11 +160,11 @@ async function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   context.lineWidth = config.lineWidth;
   context.strokeStyle = config.colors.lines;
 
-  const visitedIndices: number[] = new Array(sortedLines.length).fill(0);
+  const visitedIndices: number[] = new Array(links.length).fill(0);
 
   let loop = 0;
   let frame = 0;
-  let currentIndex = 42;
+  let fromIndex = 42;
   let iterations = 0;
   const animation = () => {
     if (frame >= config.stopAfter) return;
@@ -258,23 +175,23 @@ async function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
     const iteration = () => {
       frame++;
 
-      const linesFrom = sortedLines[currentIndex];
-      const timesVisited = visitedIndices[currentIndex];
+      const shuffle = visitedIndices[fromIndex] % config.resetVisitsAfter;
 
-      const targetIndex = linesFrom[timesVisited % config.resetVisitsAfter].i;
+      const toIndex = links[fromIndex][shuffle];
 
-      visitedIndices[currentIndex]++;
-      visitedIndices[targetIndex]++;
+      // TODO: Experiment without this, instead just use the modulo from above for all
+      visitedIndices[fromIndex]++;
+      visitedIndices[toIndex]++;
 
       Canvas2D.line(
         context,
-        pins[currentIndex].x * cellWidth,
-        pins[currentIndex].y * cellHeight,
-        pins[targetIndex].x * cellWidth,
-        pins[targetIndex].y * cellHeight,
+        pins[fromIndex].x * cellWidth,
+        pins[fromIndex].y * cellHeight,
+        pins[toIndex].x * cellWidth,
+        pins[toIndex].y * cellHeight,
       );
 
-      currentIndex = targetIndex;
+      fromIndex = toIndex;
     };
 
     for (let i = 0; i < iterations; i++) {
@@ -283,15 +200,16 @@ async function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
 
     requestAnimationFrame(animation);
   };
+
   requestAnimationFrame(animation);
 }
 
-export async function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+export async function main(canvas: HTMLCanvasElement, imageString: string, settings: Partial<Config> = {}) {
   config = { ...defaultConfig, ...settings };
   cellWidth = config.width / config.gridWidth;
   cellHeight = config.height / config.gridHeight;
 
   const img = new Image(config.gridWidth, config.gridHeight);
-  img.src = imagePNG;
+  img.src = imageString;
   img.onload = () => start(canvas, img);
 }
