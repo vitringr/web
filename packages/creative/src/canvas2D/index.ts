@@ -10,6 +10,6 @@ export * as RandomWalkers from "./random-walkers";
 export * as Overgrowth from "./overgrowth";
 export * as Firecrackers from "./firecrackers";
 export * as SystemShock from "./system-shock/main";
-export * as Weave from "./weave/weave";
+export * as Weave from "./weave/main";
 
 export * as New from "./new-2d";
