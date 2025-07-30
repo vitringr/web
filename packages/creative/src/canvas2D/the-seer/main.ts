@@ -183,6 +183,6 @@ export async function main(canvas: HTMLCanvasElement, settings: Partial<Config> 
       requestAnimationFrame(loop);
     };
 
-    loop();
+    requestAnimationFrame(loop);
   };
 }

@@ -9,13 +9,13 @@ export const defaultConfig = {
   imageXOffset: 0,
   imageYOffset: 0,
 
-  iterations: 60,
+  iterations: 3,
 
   pins: 500,
   pinGap: 20,
-  resetVisitsAfter: 220,
+  resetVisitsAfter: 200,
 
-  stopAfter: 60_000,
+  stopAfter: 30_000,
 
   grayscale: true,
   binaryMinColor: 340,
@@ -27,10 +27,10 @@ export const defaultConfig = {
   lineWidth: 0.15,
 
   colors: {
-    background: "#DDDDCC",
-    lines: "#00000020",
+    background: "#EEEED0",
+    lines: "#00000050",
     // background: "#000000",
-    // lines: "#aaaaaa20",
+    // lines: "#aaaaaa50",
   },
 
   debug: {

@@ -4,4 +4,4 @@ const canvasID = "mainCanvas";
 const canvas = document.getElementById(canvasID) as HTMLCanvasElement;
 if (!canvas) throw `Cannot get #${canvasID}`;
 
-Creative.WebGL.GameOfLife.main(canvas);
+Creative.Canvas2D.Weave.main(canvas);
