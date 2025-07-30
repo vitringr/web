@@ -2,8 +2,9 @@ import { Mathematics } from "@utilities/mathematics";
 import { Canvas2D } from "@utilities/canvas2d";
 import { Vector2 } from "@utilities/vector";
 import { Config, defaultConfig } from "./config";
+import { Colors } from "@utilities/colors";
 
-import zergPNG from "./KEKEKE.png";
+import imagePNG from "./images/edit.png";
 
 let config: Config;
 let cellWidth: number;
@@ -12,6 +13,8 @@ let cellHeight: number;
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.width;
   canvas.height = config.height;
+
+  canvas.style.borderRadius = "50%";
 
   const context = canvas.getContext("2d");
   if (!context) throw "Cannot get 2d context";
@@ -68,7 +71,16 @@ function createImageData(context: CanvasRenderingContext2D, image: HTMLImageElem
   const xStart = config.gridWidth * 0.5 - config.gridWidth * scale * 0.5;
   const yStart = config.gridHeight * 0.5 - config.gridHeight * scale * 0.5;
 
-  context.drawImage(image, xStart, yStart, config.gridWidth * scale, config.gridHeight * scale);
+  context.fillStyle = "#FFFFFF";
+  context.fillRect(0, 0, config.width, config.height);
+
+  context.drawImage(
+    image,
+    xStart + config.imageXOffset,
+    yStart + config.imageYOffset,
+    config.gridWidth * scale,
+    config.gridHeight * scale,
+  );
 
   const imageData = context.getImageData(0, 0, config.gridWidth, config.gridHeight).data;
   context.clearRect(0, 0, config.width, config.height);
@@ -85,8 +97,10 @@ function createImageData(context: CanvasRenderingContext2D, image: HTMLImageElem
     const y = Math.floor(index / config.gridWidth);
 
     if (!arr[x]) arr[x] = [];
-    let result = r + g + b < config.imageMinColor ? 1 : 0;
-    config.imageInverse && (result = Math.abs(result - 1));
+
+    let result = 1;
+    result = config.grayscale ? (result = (r + g + b) / 768) : (result = r + g + b < config.binaryMinColor ? 0 : 1);
+    config.inverse && (result = Math.abs(result - 1));
     arr[x][y] = result;
   }
 
@@ -97,16 +111,16 @@ function renderImageData(context: CanvasRenderingContext2D, imageData: number[][
   for (let x = 0; x < imageData.length; x++) {
     const row = imageData[x];
     for (let y = 0; y < row.length; y++) {
-      context.fillStyle = row[y] === 0 ? config.debug.colors.imageDark : config.debug.colors.imageWhite;
+      context.fillStyle = Colors.getRGBGrayscale(row[y]);
       context.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
     }
   }
 }
 
 function renderPins(context: CanvasRenderingContext2D, pins: Vector2[]) {
-  context.fillStyle = "orange";
+  context.fillStyle = config.debug.colors.pins;
   for (const pin of pins) {
-    context.fillRect(pin.x * cellWidth, pin.y * cellHeight, cellWidth, cellHeight);
+    context.fillRect(pin.x * cellWidth, pin.y * cellHeight, config.debug.pinSize, config.debug.pinSize);
   }
 }
 
@@ -183,7 +197,7 @@ function createSortedLines(pins: Vector2[], connections: Connection[], imageData
   }
 
   for (const linesFrom of lines) {
-    linesFrom.sort((a, b) => b.color - a.color);
+    linesFrom.sort((a, b) => a.color - b.color);
   }
 
   return lines;
@@ -191,17 +205,26 @@ function createSortedLines(pins: Vector2[], connections: Connection[], imageData
 
 function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   const context = setupContext(canvas);
+
   const imageData = createImageData(context, image);
   const pins = createPins();
   const connections = createConnections(pins);
-  const sortedLines = createSortedLines(pins, connections, imageData);
 
   config.debug.renderImageData && renderImageData(context, imageData);
-  config.debug.renderPins && renderPins(context, pins);
   config.debug.renderConnections && renderConnections(context, pins, connections);
   config.debug.renderLattice && renderLattice(context);
+  config.debug.renderPins && renderPins(context, pins);
 
-  if (!config.debug.renderMain) return;
+  if (
+    config.debug.renderImageData ||
+    config.debug.renderConnections ||
+    config.debug.renderLattice ||
+    config.debug.renderPins
+  ) {
+    return;
+  }
+
+  const sortedLines = createSortedLines(pins, connections, imageData);
 
   context.fillStyle = config.colors.background;
   context.fillRect(0, 0, config.width, config.height);
@@ -214,27 +237,36 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   let frame = 0;
   let currentIndex = 0;
   const animation = () => {
-    if (++frame >= config.stopAfter) {
+    if (frame >= config.stopAfter) {
       console.log("end");
       return;
     }
 
-    const linesFrom = sortedLines[currentIndex];
-    const timesVisited = visitedIndices[currentIndex];
+    const iteration = () => {
+      frame++;
 
-    const targetIndex = linesFrom[timesVisited % 50].targetIndex;
+      const linesFrom = sortedLines[currentIndex];
+      const timesVisited = visitedIndices[currentIndex];
 
-    visitedIndices[currentIndex]++;
-    visitedIndices[targetIndex]++;
+      const targetIndex = linesFrom[timesVisited % config.resetVisitsAfter].targetIndex;
 
-    Canvas2D.line(
-      context,
-      pins[currentIndex].x * cellWidth,
-      pins[currentIndex].y * cellHeight,
-      pins[targetIndex].x * cellWidth,
-      pins[targetIndex].y * cellHeight,
-    );
-    currentIndex = targetIndex;
+      visitedIndices[currentIndex]++;
+      visitedIndices[targetIndex]++;
+
+      Canvas2D.line(
+        context,
+        pins[currentIndex].x * cellWidth,
+        pins[currentIndex].y * cellHeight,
+        pins[targetIndex].x * cellWidth,
+        pins[targetIndex].y * cellHeight,
+      );
+
+      currentIndex = targetIndex;
+    };
+
+    for (let i = 0; i < config.iterations; i++) {
+      iteration();
+    }
 
     requestAnimationFrame(animation);
   };
@@ -248,6 +280,6 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
   cellHeight = config.height / config.gridHeight;
 
   const img = new Image(config.gridWidth, config.gridHeight);
-  img.src = zergPNG;
+  img.src = imagePNG;
   img.onload = () => start(canvas, img);
 }
