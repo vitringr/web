@@ -161,7 +161,11 @@ function createLinks(pins: Vector2[], imageData: number[][]) {
   return removedBrightnessLinks;
 }
 
-export function generate(image: HTMLImageElement) {
+export function generate(image: HTMLImageElement, settings: Partial<Config> = {}) {
+  config = { ...defaultConfig, ...settings };
+  cellWidth = config.width / config.gridWidth;
+  cellHeight = config.height / config.gridHeight;
+
   const pins = createPins();
   const imageData = createImageData(image);
   const links = createLinks(pins, imageData);
@@ -226,12 +230,8 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   requestAnimationFrame(animation);
 }
 
-export async function main(canvas: HTMLCanvasElement, imageString: string, settings: Partial<Config> = {}) {
-  config = { ...defaultConfig, ...settings };
-  cellWidth = config.width / config.gridWidth;
-  cellHeight = config.height / config.gridHeight;
-
-  const img = new Image(config.gridWidth, config.gridHeight);
-  img.src = imageString;
-  img.onload = () => start(canvas, img);
-}
+// export async function main(canvas: HTMLCanvasElement, imageString: string, settings: Partial<Config> = {}) {
+//   config = { ...defaultConfig, ...settings };
+//   cellWidth = config.width / config.gridWidth;
+//   cellHeight = config.height / config.gridHeight;
+// }
