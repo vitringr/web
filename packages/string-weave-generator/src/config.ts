@@ -8,8 +8,6 @@ export const defaultConfig = {
   canvasSize: 800,
   gridSize: 400,
 
-  radiusGap: 10,
-
   pins: 500,
   pinGap: 20,
   resetVisitsAfter: 200,

@@ -6,14 +6,14 @@ import { type Config, defaultConfig } from "./config";
 export { type Config } from "./config";
 
 let config: Config;
-let cellSize: number;
+let scale: number;
 
 export namespace Debug {
   export function renderPins(context: CanvasRenderingContext2D, pins: Vector2[]) {
     context.fillStyle = "#FFAA00";
     const radius = 3;
     for (const pin of pins) {
-      context.fillRect(pin.x * cellSize, pin.y * cellSize, radius, radius);
+      context.fillRect(pin.x * scale, pin.y * scale, radius, radius);
     }
   }
 
@@ -22,7 +22,7 @@ export namespace Debug {
       const row = imageData[x];
       for (let y = 0; y < row.length; y++) {
         context.fillStyle = Colors.getRGBGrayscale(row[y]);
-        context.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        context.fillRect(x * scale, y * scale, scale, scale);
       }
     }
   }
@@ -32,7 +32,7 @@ function createPins() {
   const pins: Vector2[] = [];
 
   const canvasCenter = new Vector2(config.canvasSize, config.canvasSize).scale(0.5);
-  const circleRadius = config.canvasSize * 0.5 - config.radiusGap;
+  const circleRadius = config.canvasSize * 0.5 - 1;
 
   const angleStep = Mathematics.TAU / config.pins;
 
@@ -92,6 +92,10 @@ function getLine(a: Vector2, b: Vector2, steps: number) {
   return points;
 }
 
+function getScaledLine(a: Vector2, b: Vector2, steps: number) {
+  return getLine(a, b, steps).map((line) => line.scale(1 / scale).floor());
+}
+
 function createLinks(pins: Vector2[], imageData: number[][]) {
   const links: number[][][] = [];
 
@@ -111,16 +115,9 @@ function createLinks(pins: Vector2[], imageData: number[][]) {
       const aPin = pins[a];
       const bPin = pins[b];
       const chebyshevDistance = Vector2.chebyshevDistance(aPin, bPin);
-      const linePoints = getLine(aPin, bPin, chebyshevDistance);
+      const linePoints = getScaledLine(aPin, bPin, chebyshevDistance);
 
-      const sumBrightness = linePoints.reduce((sum, point) => {
-        const scaledPoint = point
-          .clone()
-          .scale(1 / cellSize)
-          .floor();
-
-        return sum + imageData[scaledPoint.x][scaledPoint.y];
-      }, 0);
+      const sumBrightness = linePoints.reduce((sum, point) => sum + imageData[point.x][point.y], 0);
       const averageBrightness = sumBrightness / linePoints.length;
 
       if (!links[a]) links[a] = [];
@@ -142,7 +139,7 @@ function createLinks(pins: Vector2[], imageData: number[][]) {
 
 export function generate(image: HTMLImageElement, settings: Partial<Config> = {}) {
   config = { ...defaultConfig, ...settings };
-  cellSize = config.canvasSize / config.gridSize;
+  scale = config.canvasSize / config.gridSize;
 
   const pins = createPins();
   const imageData = createImageData(image);

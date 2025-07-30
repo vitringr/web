@@ -4,17 +4,8 @@ import { Canvas2D } from "@utilities/canvas2d";
 import imagePNG from "./images/edit.png";
 
 const defaultConfig: StringWeaveGenerator.Config = {
-  width: 800,
-  height: 800,
-
-  gridWidth: 400,
-  gridHeight: 400,
-
-  radiusGap: 10,
-
-  imageScale: 1,
-  imageXOffset: 0,
-  imageYOffset: 0,
+  canvasSize: 800,
+  gridSize: 400,
 
   pins: 500,
   pinGap: 20,
@@ -38,12 +29,11 @@ const defaultConfig: StringWeaveGenerator.Config = {
 };
 
 let config: StringWeaveGenerator.Config;
-let cellWidth: number;
-let cellHeight: number;
+let scale: number;
 
 function setupContext(canvas: HTMLCanvasElement) {
-  canvas.width = config.width;
-  canvas.height = config.height;
+  canvas.width = config.canvasSize;
+  canvas.height = config.canvasSize;
 
   const context = canvas.getContext("2d");
   if (!context) throw "Cannot get 2d context";
@@ -57,12 +47,14 @@ function setupContext(canvas: HTMLCanvasElement) {
 function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   const context = setupContext(canvas);
 
-  const { links, imageData: _imageData, pins } = StringWeaveGenerator.generate(image, {});
+  const { links, imageData: _imageData, pins } = StringWeaveGenerator.generate(image, config);
+  // StringWeaveGenerator.Debug.renderImageData(context, _imageData)
+  // return;
 
   const visitedIndices: number[] = new Array(links.length).fill(0);
 
   context.fillStyle = config.colors.background;
-  context.fillRect(0, 0, config.width, config.height);
+  context.fillRect(0, 0, config.canvasSize, config.canvasSize);
 
   let loop = 0;
   let frame = 0;
@@ -85,10 +77,10 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
 
       Canvas2D.line(
         context,
-        pins[fromIndex].x * cellWidth,
-        pins[fromIndex].y * cellHeight,
-        pins[toIndex].x * cellWidth,
-        pins[toIndex].y * cellHeight,
+        pins[fromIndex].x,
+        pins[fromIndex].y,
+        pins[toIndex].x,
+        pins[toIndex].y,
       );
 
       fromIndex = toIndex;
@@ -106,10 +98,9 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
 
 export function main(canvas: HTMLCanvasElement, settings: Partial<StringWeaveGenerator.Config> = {}) {
   config = { ...defaultConfig, ...settings };
-  cellWidth = config.width / config.gridWidth;
-  cellHeight = config.height / config.gridHeight;
+  scale = config.canvasSize / config.gridSize;
 
-  const image = new Image(config.gridWidth, config.gridHeight);
+  const image = new Image(config.gridSize, config.gridSize);
   image.src = imagePNG;
   image.onload = () => {
     start(canvas, image);
