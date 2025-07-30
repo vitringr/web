@@ -8,6 +8,7 @@
     "check": "tsc --noEmit"
   },
   "dependencies": {
+    "@utilities/mathematics": "workspace:*",
     "@utilities/vector": "workspace:*",
     "@utilities/colors": "workspace:*"
   },
