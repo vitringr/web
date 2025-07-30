@@ -10,6 +10,7 @@ export enum ArtTagNames {
   Random,
   ASCII,
   Automata,
+  Bright,
 }
 
 export type ArtTagFields = {
@@ -83,5 +84,11 @@ export const artTags: Record<ArtTagNames, ArtTagFields> = {
     label: "Automata",
     color: "#AA11AA",
     fontColor: "#FFFFFF",
+  },
+  
+  [ArtTagNames.Bright]: {
+    label: "Bright",
+    color: "#DDDDDD",
+    fontColor: "#111111",
   },
 };

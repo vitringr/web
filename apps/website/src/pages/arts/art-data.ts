@@ -20,6 +20,7 @@ import angerPNG from "./thumbnails/anger.png";
 import wealthPNG from "./thumbnails/wealth.png";
 import starsPNG from "./thumbnails/stars.png";
 import gameOfLifePNG from "./thumbnails/gameOfLife.png";
+import weavePNG from "./thumbnails/weave.png";
 
 export interface ArtData<T> {
   title: string;
@@ -118,6 +119,14 @@ export const artData: ArtData<any>[] = [
     thumbnail: randomWalkersPNG,
     tags: [ArtTagNames.Random],
     artMain: Creative.Canvas2D.RandomWalkers.main,
+  }),
+
+  defineArt({
+    title: "Weave",
+    route: Routes.arts.weave,
+    thumbnail: weavePNG,
+    tags: [ArtTagNames.Bright, ArtTagNames.Image, ArtTagNames.Random],
+    artMain: Creative.Canvas2D.Weave.main,
   }),
 
   defineArt({

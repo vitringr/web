@@ -9,11 +9,11 @@ export const defaultConfig = {
   imageXOffset: 0,
   imageYOffset: 0,
 
-  iterations: 3,
-
   pins: 500,
   pinGap: 20,
   resetVisitsAfter: 200,
+
+  iterations: 3,
 
   stopAfter: 30_000,
 

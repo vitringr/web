@@ -237,10 +237,7 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   let frame = 0;
   let currentIndex = 0;
   const animation = () => {
-    if (frame >= config.stopAfter) {
-      console.log("end");
-      return;
-    }
+    if (frame >= config.stopAfter) return;
 
     const iteration = () => {
       frame++;

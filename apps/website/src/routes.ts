@@ -28,6 +28,7 @@ export namespace Routes {
     randomWalkers: "/random-walkers",
     noise2D: "/noise-2d",
     noiseFlow: "/noise-flow",
+    weave: "/weave",
     stars: "/stars",
     noiseLoop: "/noise-loop",
     noiseVectorField: "/noise-vector-field",
