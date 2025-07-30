@@ -1,4 +1,8 @@
-// TODO:
+// TODO: Remove unecessary
+
+// TODO: Should always be a square, since it's drawn
+// around a circle. So refactor the width/height into
+// a single size.
 
 export const defaultConfig = {
   width: 800,

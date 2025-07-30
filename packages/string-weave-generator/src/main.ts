@@ -65,7 +65,7 @@ function createPins() {
   return pins;
 }
 
-function createImageData(context: CanvasRenderingContext2D, image: HTMLImageElement) {
+function renderImageToCenter(context: CanvasRenderingContext2D, image: HTMLImageElement) {
   const xStart = config.gridWidth * 0.5 - config.gridWidth * config.imageScale * 0.5;
   const yStart = config.gridHeight * 0.5 - config.gridHeight * config.imageScale * 0.5;
 
@@ -79,12 +79,19 @@ function createImageData(context: CanvasRenderingContext2D, image: HTMLImageElem
     config.gridWidth * config.imageScale,
     config.gridHeight * config.imageScale,
   );
+}
 
+function createImageData(context: CanvasRenderingContext2D, image: HTMLImageElement) {
+  // TODO: test this visually.
+  // Should probably only get the image data for the actual image provided?
+  renderImageToCenter(context, image);
+
+  // Or this... Should it get the gridWidth only, or the whole data?
   const imageData = context.getImageData(0, 0, config.gridWidth, config.gridHeight).data;
+
   context.clearRect(0, 0, config.width, config.height);
 
   const arr: number[][] = [];
-
   for (let i = 0; i < imageData.length; i += 4) {
     const r = imageData[i + 0];
     const g = imageData[i + 1];

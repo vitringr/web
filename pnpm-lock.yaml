@@ -221,6 +221,25 @@ importers:
         specifier: latest
         version: 5.8.3
 
+  packages/string-weave-generator:
+    dependencies:
+      '@utilities/colors':
+        specifier: workspace:*
+        version: link:../../utilities/colors
+      '@utilities/mathematics':
+        specifier: workspace:*
+        version: link:../../utilities/mathematics
+      '@utilities/vector':
+        specifier: workspace:*
+        version: link:../../utilities/vector
+    devDependencies:
+      '@utilities/typescript-config':
+        specifier: workspace:*
+        version: link:../../utilities/typescript-config
+      typescript:
+        specifier: latest
+        version: 5.8.3
+
   packages/test:
     dependencies:
       '@utilities/canvas2d':
