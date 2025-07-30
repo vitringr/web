@@ -14,7 +14,7 @@ export const defaultConfig = {
   resetVisitsAfter: 200,
 
   maxIterations: 6,
-  incrementIterationsAfter: 800,
+  incrementIterationsAfter: 500,
 
   stopAfter: 30_000,
 

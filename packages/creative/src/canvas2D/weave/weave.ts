@@ -5,6 +5,7 @@ import { Config, defaultConfig } from "./config";
 import { Colors } from "@utilities/colors";
 
 import imagePNG from "./images/edit.png";
+import data from "./final.json"
 
 let config: Config;
 let cellWidth: number;
@@ -160,8 +161,9 @@ type ConnectionWithData = {
 };
 
 type Line = {
-  targetIndex: number;
-  color: number;
+  // Short names for filesize
+  i: number;
+  c: number;
 };
 
 function createSortedLines(pins: Vector2[], connections: Connection[], imageData: number[][]) {
@@ -181,7 +183,8 @@ function createSortedLines(pins: Vector2[], connections: Connection[], imageData
       return sum + imageData[v2.x][v2.y];
     }, 0);
     const averageColor = sumColor / lineCoordinates.length;
-    const color = config.averageColor ? averageColor : sumColor;
+    let color = config.averageColor ? averageColor : sumColor;
+    color = parseFloat(color.toFixed(6))
 
     connectionsWithData.push({ fromIndex, toIndex, color });
   }
@@ -192,39 +195,52 @@ function createSortedLines(pins: Vector2[], connections: Connection[], imageData
   }
 
   for (const cwd of connectionsWithData) {
-    const line: Line = { targetIndex: cwd.toIndex, color: cwd.color };
+    const line: Line = { i: cwd.toIndex, c: cwd.color };
     lines[cwd.fromIndex].push(line);
   }
 
   for (const linesFrom of lines) {
-    linesFrom.sort((a, b) => a.color - b.color);
+    linesFrom.sort((a, b) => a.c - b.c);
   }
 
   return lines;
 }
 
-function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
+async function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   const context = setupContext(canvas);
 
-  const imageData = createImageData(context, image);
   const pins = createPins();
-  const connections = createConnections(pins);
+  // const imageData = createImageData(context, image);
+  // const connections = createConnections(pins);
 
-  config.debug.renderImageData && renderImageData(context, imageData);
-  config.debug.renderConnections && renderConnections(context, pins, connections);
-  config.debug.renderLattice && renderLattice(context);
-  config.debug.renderPins && renderPins(context, pins);
+  // config.debug.renderImageData && renderImageData(context, imageData);
+  // config.debug.renderConnections && renderConnections(context, pins, connections);
+  // config.debug.renderLattice && renderLattice(context);
+  // config.debug.renderPins && renderPins(context, pins);
+  //
+  // if (
+  //   config.debug.renderImageData ||
+  //   config.debug.renderConnections ||
+  //   config.debug.renderLattice ||
+  //   config.debug.renderPins
+  // ) {
+  //   return;
+  // }
 
-  if (
-    config.debug.renderImageData ||
-    config.debug.renderConnections ||
-    config.debug.renderLattice ||
-    config.debug.renderPins
-  ) {
-    return;
-  }
+  // const sortedLines = createSortedLines(pins, connections, imageData);
+  const sortedLines = data as Line[][];
 
-  const sortedLines = createSortedLines(pins, connections, imageData);
+  // function downloadFile(content: string, filename: string, type = "text/plain") {
+  //   const blob = new Blob([content], { type });
+  //   const url = URL.createObjectURL(blob);
+  //
+  //   const a = document.createElement("a");
+  //   a.href = url;
+  //   a.download = filename;
+  //   a.click();
+  //
+  //   URL.revokeObjectURL(url);
+  // }
 
   context.fillStyle = config.colors.background;
   context.fillRect(0, 0, config.width, config.height);
@@ -236,14 +252,13 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
 
   let loop = 0;
   let frame = 0;
-  let currentIndex = 0;
+  let currentIndex = 42;
   let iterations = 0;
   const animation = () => {
     if (frame >= config.stopAfter) return;
 
     loop++;
     iterations = Math.min(1 + Math.floor(loop / config.incrementIterationsAfter), config.maxIterations);
-    console.log("iterations", iterations);
 
     const iteration = () => {
       frame++;
@@ -251,7 +266,7 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
       const linesFrom = sortedLines[currentIndex];
       const timesVisited = visitedIndices[currentIndex];
 
-      const targetIndex = linesFrom[timesVisited % config.resetVisitsAfter].targetIndex;
+      const targetIndex = linesFrom[timesVisited % config.resetVisitsAfter].i;
 
       visitedIndices[currentIndex]++;
       visitedIndices[targetIndex]++;
@@ -273,11 +288,10 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
 
     requestAnimationFrame(animation);
   };
-
   requestAnimationFrame(animation);
 }
 
-export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
+export async function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
   config = { ...defaultConfig, ...settings };
   cellWidth = config.width / config.gridWidth;
   cellHeight = config.height / config.gridHeight;
