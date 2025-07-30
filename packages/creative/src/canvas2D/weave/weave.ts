@@ -234,10 +234,16 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
 
   const visitedIndices: number[] = new Array(sortedLines.length).fill(0);
 
+  let loop = 0;
   let frame = 0;
   let currentIndex = 0;
+  let iterations = 0;
   const animation = () => {
     if (frame >= config.stopAfter) return;
+
+    loop++;
+    iterations = Math.min(1 + Math.floor(loop / config.incrementIterationsAfter), config.maxIterations);
+    console.log("iterations", iterations);
 
     const iteration = () => {
       frame++;
@@ -261,7 +267,7 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
       currentIndex = targetIndex;
     };
 
-    for (let i = 0; i < config.iterations; i++) {
+    for (let i = 0; i < iterations; i++) {
       iteration();
     }
 

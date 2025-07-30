@@ -13,7 +13,8 @@ export const defaultConfig = {
   pinGap: 20,
   resetVisitsAfter: 200,
 
-  iterations: 3,
+  maxIterations: 6,
+  incrementIterationsAfter: 800,
 
   stopAfter: 30_000,
 
