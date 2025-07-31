@@ -92,7 +92,7 @@ function getScaledLine(a: Vector2, b: Vector2, steps: number) {
 }
 
 function createLinks(pins: Vector2[], imageData: number[][]) {
-  const links: number[][][] = [];
+  const links: [toIndex: number, brightness: number][][] = [];
 
   const visited = new Set<string>();
   for (let a = 0; a < pins.length; a++) {
