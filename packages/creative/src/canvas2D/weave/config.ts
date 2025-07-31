@@ -1,15 +1,15 @@
 export const defaultConfig = {
-  canvasSize: 800,
-  gridSize: 400,
+  canvasSize: 700,
+  gridSize: 350,
 
-  pins: 500,
+  pins: 400,
   pinGap: 20,
-  resetVisitsAfter: 200,
+  resetVisitsAfter: 100,
 
   maxIterations: 6,
-  incrementIterationsAfter: 500,
+  incrementIterationsAfter: 600,
 
-  stopAfter: 26_000,
+  stopAfter: 22_000,
 
   inverseColor: false,
 
