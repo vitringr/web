@@ -9,7 +9,7 @@ export const defaultConfig = {
   maxIterations: 6,
   incrementIterationsAfter: 500,
 
-  stopAfter: 30_000,
+  stopAfter: 26_000,
 
   inverseColor: false,
 
