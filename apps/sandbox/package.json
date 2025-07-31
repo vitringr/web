@@ -16,7 +16,6 @@
     "@packages/quadtree-simulation": "workspace:*",
     "@packages/creative": "workspace:*",
     "@packages/noise-html": "workspace:*",
-    "@packages/string-weave-generator": "workspace:*",
     "@packages/tsunagari": "workspace:*"
   },
   "devDependencies": {

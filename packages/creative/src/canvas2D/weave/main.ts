@@ -1,39 +1,18 @@
-import { StringWeaveGenerator } from "@packages/string-weave-generator";
+import { Mathematics } from "@utilities/mathematics";
 import { Canvas2D } from "@utilities/canvas2d";
+import { Vector2 } from "@utilities/vector";
+
+import { type Config, defaultConfig } from "./config";
 
 import imagePNG from "./images/edit.png";
 
-const defaultConfig: StringWeaveGenerator.Config = {
-  canvasSize: 800,
-  gridSize: 400,
-
-  pins: 500,
-  pinGap: 20,
-  resetVisitsAfter: 200,
-
-  maxIterations: 6,
-  incrementIterationsAfter: 500,
-
-  stopAfter: 30_000,
-
-  inverseColor: false,
-
-  lineWidth: 0.15,
-
-  colors: {
-    // background: "#EEEED0",
-    // lines: "#00000050",
-    background: "#000000",
-    lines: "#EEEED050",
-  },
-};
-
-let config: StringWeaveGenerator.Config;
+let config: Config;
 let scale: number;
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.canvasSize;
   canvas.height = config.canvasSize;
+  canvas.style.borderRadius = "50%";
 
   const context = canvas.getContext("2d");
   if (!context) throw "Cannot get 2d context";
@@ -44,12 +23,121 @@ function setupContext(canvas: HTMLCanvasElement) {
   return context;
 }
 
+function createPins() {
+  const pins: Vector2[] = [];
+
+  const canvasCenter = new Vector2(config.canvasSize, config.canvasSize).scale(0.5);
+  const circleRadius = config.canvasSize * 0.5 - 1;
+
+  const angleStep = Mathematics.TAU / config.pins;
+
+  for (let i = 0; i < config.pins; i++) {
+    const angle = angleStep * i;
+
+    const x = canvasCenter.x + Math.cos(angle) * circleRadius;
+    const y = canvasCenter.y + Math.sin(angle) * circleRadius;
+
+    pins.push(new Vector2(x, y));
+  }
+
+  return pins;
+}
+
+function createImageData(image: HTMLImageElement) {
+  const auxCanvas = document.createElement("canvas");
+  auxCanvas.width = config.gridSize;
+  auxCanvas.height = config.gridSize;
+
+  const auxContext = auxCanvas.getContext("2d");
+  if (!auxContext) throw new Error("Cannot get 2d context!");
+
+  auxContext.fillStyle = "#FFFFFF";
+  auxContext.fillRect(0, 0, config.gridSize, config.gridSize);
+  auxContext.drawImage(image, 0, 0, config.gridSize, config.gridSize);
+
+  const imageData = auxContext.getImageData(0, 0, config.gridSize, config.gridSize).data;
+  auxContext.clearRect(0, 0, config.gridSize, config.gridSize);
+
+  const data: number[][] = [];
+  for (let i = 0; i < imageData.length; i += 4) {
+    const r = imageData[i + 0];
+    const g = imageData[i + 1];
+    const b = imageData[i + 2];
+
+    const index = i / 4;
+    const x = index % config.gridSize;
+    const y = Math.floor(index / config.gridSize);
+
+    let averageColor = (r + g + b) / (256 * 3);
+    if (config.inverseColor) averageColor = Math.abs(averageColor - 1);
+
+    if (!data[x]) data[x] = [];
+    data[x][y] = averageColor;
+  }
+
+  return data;
+}
+
+function getLine(a: Vector2, b: Vector2, steps: number) {
+  const points: Vector2[] = [];
+  const step = 1 / steps;
+  for (let i = 1; i < steps; i++) {
+    points.push(Vector2.lerp(a, b, step * i).round());
+  }
+  return points;
+}
+
+function getScaledLine(a: Vector2, b: Vector2, steps: number) {
+  return getLine(a, b, steps).map((line) => line.scale(1 / scale).floor());
+}
+
+function createLinks(pins: Vector2[], imageData: number[][]) {
+  const links: number[][][] = [];
+
+  const visited = new Set<string>();
+  for (let a = 0; a < pins.length; a++) {
+    for (let b = 0; b < pins.length; b++) {
+      if (a === b) continue;
+
+      const difference = Math.abs(a - b);
+      const wrappedDifference = Math.min(difference, pins.length - difference);
+      if (wrappedDifference <= config.pinGap) continue;
+
+      const key = Math.min(a, b) + "," + Math.max(a, b);
+      if (visited.has(key)) continue;
+      visited.add(key);
+
+      const aPin = pins[a];
+      const bPin = pins[b];
+      const chebyshevDistance = Vector2.chebyshevDistance(aPin, bPin);
+      const linePoints = getScaledLine(aPin, bPin, chebyshevDistance);
+
+      const sumBrightness = linePoints.reduce((sum, point) => sum + imageData[point.x][point.y], 0);
+      const averageBrightness = sumBrightness / linePoints.length;
+
+      if (!links[a]) links[a] = [];
+      if (!links[b]) links[b] = [];
+
+      links[a].push([b, averageBrightness]);
+      links[b].push([a, averageBrightness]);
+    }
+  }
+
+  for (const link of links) {
+    link.sort((a, b) => a[1] - b[1]);
+  }
+
+  const removedBrightnessLinks = links.map((to) => to.map((data) => data[0]));
+
+  return removedBrightnessLinks;
+}
+
 function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   const context = setupContext(canvas);
 
-  const { links, imageData: _imageData, pins } = StringWeaveGenerator.generate(image, config);
-  // StringWeaveGenerator.Debug.renderImageData(context, _imageData)
-  // return;
+  const pins = createPins();
+  const imageData = createImageData(image);
+  const links = createLinks(pins, imageData);
 
   const visitedIndices: number[] = new Array(links.length).fill(0);
 
@@ -75,13 +163,7 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
       visitedIndices[fromIndex]++;
       visitedIndices[toIndex]++;
 
-      Canvas2D.line(
-        context,
-        pins[fromIndex].x,
-        pins[fromIndex].y,
-        pins[toIndex].x,
-        pins[toIndex].y,
-      );
+      Canvas2D.line(context, pins[fromIndex].x, pins[fromIndex].y, pins[toIndex].x, pins[toIndex].y);
 
       fromIndex = toIndex;
     };
@@ -96,7 +178,7 @@ function start(canvas: HTMLCanvasElement, image: HTMLImageElement) {
   requestAnimationFrame(animation);
 }
 
-export function main(canvas: HTMLCanvasElement, settings: Partial<StringWeaveGenerator.Config> = {}) {
+export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
   config = { ...defaultConfig, ...settings };
   scale = config.canvasSize / config.gridSize;
 

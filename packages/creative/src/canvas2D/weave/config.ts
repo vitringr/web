@@ -1,9 +1,3 @@
-// TODO: Remove unecessary
-
-// TODO: Should always be a square, since it's drawn
-// around a circle. So refactor the width/height into
-// a single size.
-
 export const defaultConfig = {
   canvasSize: 800,
   gridSize: 400,
@@ -24,7 +18,11 @@ export const defaultConfig = {
   colors: {
     background: "#EEEED0",
     lines: "#00000050",
+    // background: "#000000",
+    // lines: "#EEEED050",
   },
 };
 
 export type Config = typeof defaultConfig;
+
+

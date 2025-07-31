@@ -35,9 +35,6 @@ importers:
       '@packages/sandfall':
         specifier: workspace:*
         version: link:../../packages/sandfall
-      '@packages/string-weave-generator':
-        specifier: workspace:*
-        version: link:../../packages/string-weave-generator
       '@packages/test':
         specifier: workspace:*
         version: link:../../packages/test
@@ -94,9 +91,6 @@ importers:
 
   packages/creative:
     dependencies:
-      '@packages/string-weave-generator':
-        specifier: workspace:*
-        version: link:../string-weave-generator
       '@utilities/canvas2d':
         specifier: workspace:*
         version: link:../../utilities/canvas2d
@@ -219,28 +213,6 @@ importers:
       '@utilities/webgl':
         specifier: workspace:*
         version: link:../../utilities/webgl
-    devDependencies:
-      '@utilities/typescript-config':
-        specifier: workspace:*
-        version: link:../../utilities/typescript-config
-      typescript:
-        specifier: latest
-        version: 5.8.3
-
-  packages/string-weave-generator:
-    dependencies:
-      '@utilities/canvas2d':
-        specifier: workspace:*
-        version: link:../../utilities/canvas2d
-      '@utilities/colors':
-        specifier: workspace:*
-        version: link:../../utilities/colors
-      '@utilities/mathematics':
-        specifier: workspace:*
-        version: link:../../utilities/mathematics
-      '@utilities/vector':
-        specifier: workspace:*
-        version: link:../../utilities/vector
     devDependencies:
       '@utilities/typescript-config':
         specifier: workspace:*

@@ -17,8 +17,7 @@
     "@utilities/vector": "workspace:*",
     "@utilities/noise": "workspace:*",
     "@utilities/noise-glsl": "workspace:*",
-    "@utilities/webgl": "workspace:*",
-    "@packages/string-weave-generator": "workspace:*"
+    "@utilities/webgl": "workspace:*"
   },
   "devDependencies": {
     "@utilities/typescript-config": "workspace:*",
