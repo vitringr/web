@@ -20,7 +20,6 @@
     "@utilities/webgl": "workspace:*"
   },
   "devDependencies": {
-    "@utilities/typescript-config": "workspace:*",
     "typescript": "latest"
   }
 }

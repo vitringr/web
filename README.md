@@ -27,6 +27,3 @@ Can depend on `utilities/` and external modules.
 Atomic, independent modules.
 
 Should not have dependencies. Should be self-contained.
-
-> [!NOTE]
-> The only current exception to this is the `@utilities/typescript-config` package, which is basically a shared `tsconfig.json` file for the repository.

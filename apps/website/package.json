@@ -14,7 +14,6 @@
     "@utilities/text-shuffle": "workspace:*"
   },
   "devDependencies": {
-    "@utilities/typescript-config": "workspace:*",
     "typescript": "latest",
     "vite": "^6.3.5",
     "vite-plugin-glsl": "^1.4.2",

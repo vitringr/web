@@ -18,7 +18,6 @@
     "@packages/tsunagari": "workspace:*"
   },
   "devDependencies": {
-    "@utilities/typescript-config": "workspace:*",
     "typescript": "latest",
     "vite": "^6.2.0",
     "vite-plugin-glsl": "^1.4.1",

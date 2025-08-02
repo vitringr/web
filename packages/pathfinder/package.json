@@ -16,7 +16,6 @@
     "@utilities/noise": "workspace:*"
   },
   "devDependencies": {
-    "@utilities/typescript-config": "workspace:*",
     "typescript": "latest"
   }
 }

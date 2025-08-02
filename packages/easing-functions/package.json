@@ -13,7 +13,6 @@
     "@utilities/easing": "workspace:*"
   },
   "devDependencies": {
-    "@utilities/typescript-config": "workspace:*",
     "typescript": "latest"
   }
 }
