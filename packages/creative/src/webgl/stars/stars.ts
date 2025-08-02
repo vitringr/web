@@ -1,5 +1,6 @@
-import { WebGL } from "@utilities/webgl";
 import { Random } from "@utilities/random";
+import { WebGL } from "@utilities/webgl";
+
 import { Config, defaultConfig } from "./config";
 
 import computeVertex from "./shaders/compute-vertex.glsl";

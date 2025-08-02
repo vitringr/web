@@ -1,5 +1,5 @@
-import { Canvas2D } from "@utilities/canvas2d";
 import { Mathematics } from "@utilities/mathematics";
+import { Canvas2D } from "@utilities/canvas2d";
 import { Noise } from "@utilities/noise";
 
 const defaultConfig = {

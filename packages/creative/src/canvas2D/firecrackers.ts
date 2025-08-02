@@ -1,7 +1,7 @@
-import { Noise } from "@utilities/noise";
-import { Random } from "@utilities/random";
-import { Canvas2D } from "@utilities/canvas2d";
 import { Mathematics } from "@utilities/mathematics";
+import { Canvas2D } from "@utilities/canvas2d";
+import { Random } from "@utilities/random";
+import { Noise } from "@utilities/noise";
 
 const defaultConfig = {
   width: 800,

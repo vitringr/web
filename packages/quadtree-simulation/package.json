@@ -8,8 +8,8 @@
     "check": "tsc --noEmit"
   },
   "dependencies": {
-    "@utilities/random": "workspace:*",
-    "@utilities/quadtree": "workspace:*"
+    "@utilities/data-structures": "workspace:*",
+    "@utilities/random": "workspace:*"
   },
   "devDependencies": {
     "@utilities/typescript-config": "workspace:*",

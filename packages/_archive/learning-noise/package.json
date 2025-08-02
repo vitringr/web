@@ -8,11 +8,11 @@
     "check": "tsc --noEmit"
   },
   "dependencies": {
+    "@utilities/data-structures": "workspace:*",
     "@utilities/mathematics": "workspace:*",
     "@utilities/canvas2d": "workspace:*",
     "@utilities/easing": "workspace:*",
     "@utilities/random": "workspace:*",
-    "@utilities/vector": "workspace:*",
     "@utilities/colors": "workspace:*",
     "@utilities/webgl": "workspace:*"
   },

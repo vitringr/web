@@ -1,5 +1,5 @@
-import { WebGL } from "@utilities/webgl";
 import { Random } from "@utilities/random";
+import { WebGL } from "@utilities/webgl";
 
 import computeVertex from "./compute-vertex.glsl";
 import computeFragment from "./compute-fragment.glsl";

@@ -1,7 +1,8 @@
+import { NoiseGLSL } from "@utilities/noise-glsl";
+import { Random } from "@utilities/random";
 import { WebGL } from "@utilities/webgl";
 import { Noise } from "@utilities/noise";
-import { Random } from "@utilities/random";
-import { NoiseGLSL } from "@utilities/noise-glsl";
+
 import { Config, defaultConfig } from "./config";
 
 import computeVertex from "./shaders/compute-vertex.glsl";

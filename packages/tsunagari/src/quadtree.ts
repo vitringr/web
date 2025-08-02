@@ -1,4 +1,3 @@
-import { Quadtree } from "@utilities/quadtree";
 import { Config } from "./config";
 import { Node } from "./node";
 

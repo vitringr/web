@@ -1,5 +1,5 @@
-import { WebGL } from "@utilities/webgl";
 import { Random } from "@utilities/random";
+import { WebGL } from "@utilities/webgl";
 
 import vertexShader from "./vertex.glsl";
 import fragmentShader from "./fragment.glsl";

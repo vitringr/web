@@ -1,4 +1,5 @@
 import { Mathematics } from "@utilities/mathematics";
+
 import { Config } from "./config";
 import { Cell } from "./cell";
 

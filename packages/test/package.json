@@ -11,12 +11,12 @@
     "printWidth": 120
   },
   "dependencies": {
+    "@utilities/data-structures": "workspace:*",
     "@utilities/mathematics": "workspace:*",
     "@utilities/collision": "workspace:*",
     "@utilities/canvas2d": "workspace:*",
     "@utilities/colors": "workspace:*",
     "@utilities/random": "workspace:*",
-    "@utilities/vector": "workspace:*",
     "@utilities/noise": "workspace:*",
     "@utilities/webgl": "workspace:*"
   },

@@ -1,5 +1,6 @@
+import { Random } from "@utilities/random";
+
 import { Config } from "./config";
-import { Random } from "./utilities/utilities";
 
 const totalCells = Config.columns ** 2;
 

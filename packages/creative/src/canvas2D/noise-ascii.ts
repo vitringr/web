@@ -1,5 +1,5 @@
-import { Noise } from "@utilities/noise";
 import { Mathematics } from "../../../../utilities/mathematics/src";
+import { Noise } from "@utilities/noise";
 
 const defaultConfig = {
   width: 600,

@@ -1,7 +1,8 @@
 import { Random } from "@utilities/random";
+import { Noise } from "@utilities/noise";
+
 import { Config } from "./config";
 import { Cell } from "./cell";
-import { Noise } from "@utilities/noise";
 
 export namespace Terrain {
   export function randomBlocks(cells: Cell[][]) {

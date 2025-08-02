@@ -1,6 +1,6 @@
-import { Vector2 } from "@utilities/vector";
 import { IPoint } from "@utilities/shapes";
 import { Random } from "@utilities/random";
+
 import { Config } from "./config";
 
 const MAX_VELOCITY_MAGNITUDE_SQUARED = Config.force.maxVelocity ** 2;

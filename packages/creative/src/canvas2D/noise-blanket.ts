@@ -1,6 +1,6 @@
 import { Mathematics } from "@utilities/mathematics";
+import { Vector2 } from "@utilities/data-structures";
 import { Noise } from "@utilities/noise";
-import { Vector2 } from "@utilities/vector";
 
 const defaultConfig = {
   width: 600,

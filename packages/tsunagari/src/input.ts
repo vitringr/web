@@ -1,7 +1,6 @@
 import { Collision } from "@utilities/collision";
 import { Rectangle } from "@utilities/shapes";
-import { Quadtree } from "@utilities/quadtree";
-import { Vector2 } from "@utilities/vector";
+
 import { Config } from "./config";
 import { Node } from "./node";
 

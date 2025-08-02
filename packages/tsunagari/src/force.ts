@@ -1,5 +1,3 @@
-import { Quadtree } from "@utilities/quadtree";
-import { Vector2 } from "@utilities/vector";
 import { Config } from "./config";
 import { Field } from "./quadtree";
 import { Node } from "./node";

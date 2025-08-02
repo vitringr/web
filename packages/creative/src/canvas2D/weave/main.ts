@@ -1,6 +1,6 @@
 import { Mathematics } from "@utilities/mathematics";
 import { Canvas2D } from "@utilities/canvas2d";
-import { Vector2 } from "@utilities/vector";
+import { Vector2 } from "@utilities/data-structures";
 
 import { type Config, defaultConfig } from "./config";
 

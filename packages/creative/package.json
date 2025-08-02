@@ -8,13 +8,13 @@
     "check": "tsc --noEmit"
   },
   "dependencies": {
+    "@utilities/data-structures": "workspace:*",
     "@utilities/mathematics": "workspace:*",
     "@utilities/canvas2d": "workspace:*",
     "@utilities/easing": "workspace:*",
     "@utilities/collision": "workspace:*",
     "@utilities/colors": "workspace:*",
     "@utilities/random": "workspace:*",
-    "@utilities/vector": "workspace:*",
     "@utilities/noise": "workspace:*",
     "@utilities/noise-glsl": "workspace:*",
     "@utilities/webgl": "workspace:*"

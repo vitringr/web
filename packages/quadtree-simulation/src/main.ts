@@ -1,5 +1,4 @@
 import { Random } from "@utilities/random";
-import { Quadtree } from "@utilities/quadtree";
 
 const config = {
   FPS: 60,

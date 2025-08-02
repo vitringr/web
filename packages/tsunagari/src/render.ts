@@ -1,6 +1,5 @@
 import { Mathematics } from "@utilities/mathematics";
-import { Quadtree } from "@utilities/quadtree";
-import { Vector2 } from "@utilities/vector";
+
 import { Config } from "./config";
 import { Node } from "./node";
 

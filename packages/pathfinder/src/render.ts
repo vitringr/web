@@ -1,6 +1,7 @@
 import { Mathematics } from "@utilities/mathematics";
 import { Canvas2D } from "@utilities/canvas2d";
 import { Easing } from "@utilities/easing";
+
 import { Config } from "./config";
 import { Cell } from "./cell";
 
