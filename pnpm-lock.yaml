@@ -59,13 +59,13 @@ importers:
         version: link:../../packages/creative
       '@solidjs/router':
         specifier: ^0.15.3
-        version: 0.15.3(solid-js@1.9.7)
+        version: 0.15.3(solid-js@1.9.8)
       '@utilities/text-shuffle':
         specifier: workspace:*
         version: link:../../utilities/text-shuffle
       solid-js:
         specifier: ^1.9.7
-        version: 1.9.7
+        version: 1.9.8
     devDependencies:
       typescript:
         specifier: latest
@@ -78,7 +78,7 @@ importers:
         version: 1.5.1(rollup@4.46.2)(vite@6.3.5)
       vite-plugin-solid:
         specifier: ^2.11.6
-        version: 2.11.8(solid-js@1.9.7)(vite@6.3.5)
+        version: 2.11.8(solid-js@1.9.8)(vite@6.3.5)
 
   packages/creative:
     dependencies:
@@ -298,6 +298,12 @@ importers:
         version: 5.9.2
 
   utilities/shapes:
+    devDependencies:
+      typescript:
+        specifier: latest
+        version: 5.9.2
+
+  utilities/sorting:
     devDependencies:
       typescript:
         specifier: latest
@@ -700,15 +706,19 @@ packages:
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
-  babel-plugin-jsx-dom-expressions@0.39.8:
-    resolution: {integrity: sha512-/MVOIIjonylDXnrWmG23ZX82m9mtKATsVHB7zYlPfDR9Vdd/NBE48if+wv27bSkBtyO7EPMUlcUc4J63QwuACQ==}
+  babel-plugin-jsx-dom-expressions@0.40.1:
+    resolution: {integrity: sha512-b4iHuirqK7RgaMzB2Lsl7MqrlDgQtVRSSazyrmx7wB3T759ggGjod5Rkok5MfHjQXhR7tRPmdwoeGPqBnW2KfA==}
     peerDependencies:
       '@babel/core': ^7.20.12
 
-  babel-preset-solid@1.9.6:
-    resolution: {integrity: sha512-HXTK9f93QxoH8dYn1M2mJdOlWgMsR88Lg/ul6QCZGkNTktjTE5HAf93YxQumHoCudLEtZrU1cFCMFOVho6GqFg==}
+  babel-preset-solid@1.9.8:
+    resolution: {integrity: sha512-Tz2ZoKCPITeV+cANGeIA6pxHBLeEtX7hwk04tEh3xSWVqHMf2FqFwVz0RBxCLlBehpKfY1scDiuijBkmyVpqrQ==}
     peerDependencies:
       '@babel/core': ^7.0.0
+      solid-js: ^1.9.8
+    peerDependenciesMeta:
+      solid-js:
+        optional: true
 
   braces@3.0.3:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
@@ -719,8 +729,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
-  caniuse-lite@1.0.30001731:
-    resolution: {integrity: sha512-lDdp2/wrOmTRWuoB5DpfNkC0rJDU8DqRa6nYL6HK6sytw70QMopt/NIc/9SM7ylItlBWfACXk0tEn37UWM/+mg==}
+  caniuse-lite@1.0.30001733:
+    resolution: {integrity: sha512-e4QKw/O2Kavj2VQTKZWrwzkt3IxOmIlU6ajRb6LP64LHpBo1J67k2Hi4Vu/TgJWsNtynurfS0uK3MaUTCPfu5Q==}
 
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
@@ -737,8 +747,8 @@ packages:
       supports-color:
         optional: true
 
-  electron-to-chromium@1.5.194:
-    resolution: {integrity: sha512-SdnWJwSUot04UR51I2oPD8kuP2VI37/CADR1OHsFOUzZIvfWJBO6q11k5P/uKNyTT3cdOsnyjkrZ+DDShqYqJA==}
+  electron-to-chromium@1.5.199:
+    resolution: {integrity: sha512-3gl0S7zQd88kCAZRO/DnxtBKuhMO4h0EaQIN3YgZfV6+pW+5+bf2AdQeHNESCoaQqo/gjGVYEf2YM4O5HJQqpQ==}
 
   entities@6.0.1:
     resolution: {integrity: sha512-aN97NXWF6AWBTahfVOIrB/NShkzi5H7F9r1s9mD3cDj4Ko5f2qhhVoYMibXF7GlLveb/D2ioWay8lxI97Ven3g==}
@@ -860,8 +870,8 @@ packages:
     resolution: {integrity: sha512-RbcPH1n5cfwKrru7v7+zrZvjLurgHhGyso3HTyGtRivGWgYjbOmGuivCQaORNELjNONoK35nj28EoWul9sb1zQ==}
     engines: {node: '>=10'}
 
-  solid-js@1.9.7:
-    resolution: {integrity: sha512-/saTKi8iWEM233n5OSi1YHCCuh66ZIQ7aK2hsToPe4tqGm7qAejU1SwNuTPivbWAYq7SjuHVVYxxuZQNRbICiw==}
+  solid-js@1.9.8:
+    resolution: {integrity: sha512-zF9Whfqk+s8wWuyDKnE7ekl+dJburjdZq54O6X1k4XChA57uZ5FOauYAa0s4I44XkBOM3CZmPrZC0DGjH9fKjQ==}
 
   solid-refresh@0.6.3:
     resolution: {integrity: sha512-F3aPsX6hVw9ttm5LYlth8Q15x6MlI/J3Dn+o3EQyRTtTxidepSTwAYdozt01/YA+7ObcciagGEyXIopGZzQtbA==}
@@ -1280,9 +1290,9 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.46.2':
     optional: true
 
-  '@solidjs/router@0.15.3(solid-js@1.9.7)':
+  '@solidjs/router@0.15.3(solid-js@1.9.8)':
     dependencies:
-      solid-js: 1.9.7
+      solid-js: 1.9.8
 
   '@types/babel__core@7.20.5':
     dependencies:
@@ -1307,7 +1317,7 @@ snapshots:
 
   '@types/estree@1.0.8': {}
 
-  babel-plugin-jsx-dom-expressions@0.39.8(@babel/core@7.28.0):
+  babel-plugin-jsx-dom-expressions@0.40.1(@babel/core@7.28.0):
     dependencies:
       '@babel/core': 7.28.0
       '@babel/helper-module-imports': 7.18.6
@@ -1317,10 +1327,12 @@ snapshots:
       parse5: 7.3.0
       validate-html-nesting: 1.2.3
 
-  babel-preset-solid@1.9.6(@babel/core@7.28.0):
+  babel-preset-solid@1.9.8(@babel/core@7.28.0)(solid-js@1.9.8):
     dependencies:
       '@babel/core': 7.28.0
-      babel-plugin-jsx-dom-expressions: 0.39.8(@babel/core@7.28.0)
+      babel-plugin-jsx-dom-expressions: 0.40.1(@babel/core@7.28.0)
+    optionalDependencies:
+      solid-js: 1.9.8
 
   braces@3.0.3:
     dependencies:
@@ -1328,12 +1340,12 @@ snapshots:
 
   browserslist@4.25.1:
     dependencies:
-      caniuse-lite: 1.0.30001731
-      electron-to-chromium: 1.5.194
+      caniuse-lite: 1.0.30001733
+      electron-to-chromium: 1.5.199
       node-releases: 2.0.19
       update-browserslist-db: 1.1.3(browserslist@4.25.1)
 
-  caniuse-lite@1.0.30001731: {}
+  caniuse-lite@1.0.30001733: {}
 
   convert-source-map@2.0.0: {}
 
@@ -1343,7 +1355,7 @@ snapshots:
     dependencies:
       ms: 2.1.3
 
-  electron-to-chromium@1.5.194: {}
+  electron-to-chromium@1.5.199: {}
 
   entities@6.0.1: {}
 
@@ -1474,18 +1486,18 @@ snapshots:
 
   seroval@1.3.2: {}
 
-  solid-js@1.9.7:
+  solid-js@1.9.8:
     dependencies:
       csstype: 3.1.3
       seroval: 1.3.2
       seroval-plugins: 1.3.2(seroval@1.3.2)
 
-  solid-refresh@0.6.3(solid-js@1.9.7):
+  solid-refresh@0.6.3(solid-js@1.9.8):
     dependencies:
       '@babel/generator': 7.28.0
       '@babel/helper-module-imports': 7.27.1
       '@babel/types': 7.28.2
-      solid-js: 1.9.7
+      solid-js: 1.9.8
     transitivePeerDependencies:
       - supports-color
 
@@ -1550,14 +1562,14 @@ snapshots:
       rollup: 4.46.2
       vite: 6.3.5
 
-  vite-plugin-solid@2.11.8(solid-js@1.9.7)(vite@6.3.5):
+  vite-plugin-solid@2.11.8(solid-js@1.9.8)(vite@6.3.5):
     dependencies:
       '@babel/core': 7.28.0
       '@types/babel__core': 7.20.5
-      babel-preset-solid: 1.9.6(@babel/core@7.28.0)
+      babel-preset-solid: 1.9.8(@babel/core@7.28.0)(solid-js@1.9.8)
       merge-anything: 5.1.7
-      solid-js: 1.9.7
-      solid-refresh: 0.6.3(solid-js@1.9.7)
+      solid-js: 1.9.8
+      solid-refresh: 0.6.3(solid-js@1.9.8)
       vite: 6.3.5
       vitefu: 1.1.1(vite@6.3.5)
     transitivePeerDependencies:
