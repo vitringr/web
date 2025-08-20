@@ -3,6 +3,7 @@ export const defaultConfig = {
   height: 900,
 
   orbDuration: 300,
+  spellDuration: 500,
 
   orbs: {
     x: 510,
@@ -25,7 +26,7 @@ export const defaultConfig = {
   colors: {
     background: "#151515",
 
-    stroke: "#AAAAAA",
+    gray: "#AAAAAA",
 
     Q: "#11AAFF",
     W: "#CC11CC",

@@ -1,5 +1,6 @@
 import { Canvas2D } from "@utilities/canvas2d";
 import { Config, defaultConfig } from "./config";
+import { Mathematics } from "@utilities/mathematics";
 
 // ----------
 // -- Data --
@@ -33,23 +34,40 @@ function renderSpells(context: CanvasRenderingContext2D) {
 
   context.fillStyle = "#606060";
 
+  // ------------
+  // -- Single --
+  // ------------
   Object.entries(spells.single).forEach(([_spell, duration], i) => {
     Canvas2D.circle(context, cfg.single.x + i * cfg.gap, cfg.single.y, cfg.radius);
 
+    // Hints
     const split = _spell.split("");
     for (const letter of split) {
       context.fillStyle = getColorLetter(letter);
       Canvas2D.circleFill(context, cfg.single.x + i * cfg.gap, cfg.single.y, cfg.radius * cfg.hintScale);
     }
 
+    // Duration
     if (duration > 0) {
-      Canvas2D.circleFill(context, cfg.single.x + i * cfg.gap, cfg.single.y, cfg.radius);
+      context.fillStyle = config.colors.gray;
+      Canvas2D.circleFill(
+        context,
+        cfg.single.x + i * cfg.gap,
+        cfg.single.y,
+        cfg.radius * Mathematics.lerp(0, 1, duration / config.spellDuration),
+      );
     }
+
+    if (--spells.single[_spell] < 0) spells.single[_spell] = 0;
   });
 
+  // ------------
+  // -- Double --
+  // ------------
   Object.entries(spells.double).forEach(([_spell, duration], i) => {
     Canvas2D.circle(context, cfg.double.x + i * cfg.gap, cfg.double.y, cfg.radius);
 
+    // Hints
     const split = _spell.split("");
     for (let k = 0; k < split.length; k++) {
       const letter = split[k];
@@ -62,14 +80,27 @@ function renderSpells(context: CanvasRenderingContext2D) {
       );
     }
 
+    // Duration
     if (duration > 0) {
-      Canvas2D.circleFill(context, cfg.double.x + i * cfg.gap, cfg.double.y, cfg.radius);
+      context.fillStyle = config.colors.gray;
+      Canvas2D.circleFill(
+        context,
+        cfg.double.x + i * cfg.gap,
+        cfg.double.y,
+        cfg.radius * Mathematics.lerp(0, 1, duration / config.spellDuration),
+      );
     }
+
+    if (--spells.double[_spell] < 0) spells.double[_spell] = 0;
   });
 
+  // ------------
+  // -- Triple --
+  // ------------
   Object.entries(spells.triple).forEach(([_spell, duration], i) => {
     Canvas2D.circle(context, cfg.triple.x + i * cfg.gap, cfg.triple.y, cfg.radius);
 
+    // Hints
     const split = _spell.split("");
     for (let k = 0; k < split.length; k++) {
       const letter = split[k];
@@ -83,8 +114,16 @@ function renderSpells(context: CanvasRenderingContext2D) {
     }
 
     if (duration > 0) {
-      Canvas2D.circleFill(context, cfg.triple.x + i * cfg.gap, cfg.triple.y, cfg.radius);
+      context.fillStyle = config.colors.gray;
+      Canvas2D.circleFill(
+        context,
+        cfg.triple.x + i * cfg.gap,
+        cfg.triple.y,
+        cfg.radius * Mathematics.lerp(0, 1, duration / config.spellDuration),
+      );
     }
+
+    if (--spells.triple[_spell] < 0) spells.triple[_spell] = 0;
   });
 }
 
@@ -102,7 +141,7 @@ function setupContext(canvas: HTMLCanvasElement) {
   Canvas2D.flipY(context, config.height);
 
   context.lineWidth = 1;
-  context.strokeStyle = config.colors.stroke;
+  context.strokeStyle = config.colors.gray;
 
   return context;
 }
@@ -166,15 +205,15 @@ function cast() {
 
   queue.length = 0;
 
-  if (spell.length === 1) spells.single[spell]++;
-  if (spell.length === 2) spells.double[spell]++;
-  if (spell.length === 3) spells.triple[spell]++;
+  if (spell.length === 1) spells.single[spell] = config.spellDuration;
+  if (spell.length === 2) spells.double[spell] = config.spellDuration;
+  if (spell.length === 3) spells.triple[spell] = config.spellDuration;
 }
 
-function decreaseDurations() {
-  for (const spell of queue) {
-    spell.duration--;
-    if (spell.duration <= 0) {
+function decreaseOrbDurations() {
+  for (const orb of queue) {
+    orb.duration--;
+    if (orb.duration <= 0) {
       queue.pop();
     }
   }
@@ -227,7 +266,7 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
   const context = setupContext(canvas);
 
   const animation = () => {
-    decreaseDurations();
+    decreaseOrbDurations();
 
     renderBackground(context);
     renderQueue(context);
