@@ -4,13 +4,13 @@ export const defaultConfig = {
 
   maxElements: 3,
 
-  duration: 3_000,
+  maxDuration: 300,
 
   queue: {
-    x: 336,
-    y: 336,
-    boxWidth: 60,
-    boxHeight: 240,
+    x: 490,
+    y: 30,
+    boxWidth: 80,
+    boxHeight: 180,
     gap: 24,
   },
 
