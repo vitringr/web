@@ -29,104 +29,6 @@ const spells = {
   triple: { QQQ: 0, WWW: 0, EEE: 0, QQW: 0, QQE: 0, QWW: 0, WWE: 0, QEE: 0, WEE: 0, QWE: 0 } as Record<string, number>,
 };
 
-function renderSpells(context: CanvasRenderingContext2D) {
-  const cfg = config.spells;
-
-  context.fillStyle = "#606060";
-
-  // ------------
-  // -- Single --
-  // ------------
-  Object.entries(spells.single).forEach(([_spell, duration], i) => {
-    Canvas2D.circle(context, cfg.single.x + i * cfg.gap, cfg.single.y, cfg.radius);
-
-    // Hints
-    const split = _spell.split("");
-    for (const letter of split) {
-      context.fillStyle = getColorLetter(letter);
-      Canvas2D.circleFill(context, cfg.single.x + i * cfg.gap, cfg.single.y, cfg.radius * cfg.hintScale);
-    }
-
-    // Duration
-    if (duration > 0) {
-      context.fillStyle = config.colors.gray;
-      Canvas2D.circleFill(
-        context,
-        cfg.single.x + i * cfg.gap,
-        cfg.single.y,
-        cfg.radius * Mathematics.lerp(0, 1, duration / config.spellDuration),
-      );
-    }
-
-    if (--spells.single[_spell] < 0) spells.single[_spell] = 0;
-  });
-
-  // ------------
-  // -- Double --
-  // ------------
-  Object.entries(spells.double).forEach(([_spell, duration], i) => {
-    Canvas2D.circle(context, cfg.double.x + i * cfg.gap, cfg.double.y, cfg.radius);
-
-    // Hints
-    const split = _spell.split("");
-    for (let k = 0; k < split.length; k++) {
-      const letter = split[k];
-      context.fillStyle = getColorLetter(letter);
-      Canvas2D.circleFill(
-        context,
-        cfg.double.x + cfg.double.hintX + i * cfg.gap + k * cfg.hintGap,
-        cfg.double.y,
-        cfg.radius * cfg.hintScale,
-      );
-    }
-
-    // Duration
-    if (duration > 0) {
-      context.fillStyle = config.colors.gray;
-      Canvas2D.circleFill(
-        context,
-        cfg.double.x + i * cfg.gap,
-        cfg.double.y,
-        cfg.radius * Mathematics.lerp(0, 1, duration / config.spellDuration),
-      );
-    }
-
-    if (--spells.double[_spell] < 0) spells.double[_spell] = 0;
-  });
-
-  // ------------
-  // -- Triple --
-  // ------------
-  Object.entries(spells.triple).forEach(([_spell, duration], i) => {
-    Canvas2D.circle(context, cfg.triple.x + i * cfg.gap, cfg.triple.y, cfg.radius);
-
-    // Hints
-    const split = _spell.split("");
-    for (let k = 0; k < split.length; k++) {
-      const letter = split[k];
-      context.fillStyle = getColorLetter(letter);
-      Canvas2D.circleFill(
-        context,
-        cfg.triple.x + cfg.triple.hintX + i * cfg.gap + k * cfg.hintGap,
-        cfg.triple.y,
-        cfg.radius * cfg.hintScale,
-      );
-    }
-
-    if (duration > 0) {
-      context.fillStyle = config.colors.gray;
-      Canvas2D.circleFill(
-        context,
-        cfg.triple.x + i * cfg.gap,
-        cfg.triple.y,
-        cfg.radius * Mathematics.lerp(0, 1, duration / config.spellDuration),
-      );
-    }
-
-    if (--spells.triple[_spell] < 0) spells.triple[_spell] = 0;
-  });
-}
-
 // -----------
 // -- Logic --
 // -----------
@@ -258,6 +160,102 @@ function renderQueue(context: CanvasRenderingContext2D) {
   }
 }
 
+function renderSpells(context: CanvasRenderingContext2D) {
+  const cfg = config.spells;
+
+  // ------------
+  // -- Single --
+  // ------------
+  Object.entries(spells.single).forEach(([_spell, duration], i) => {
+    Canvas2D.circle(context, cfg.single.x + i * cfg.gap, cfg.single.y, cfg.radius);
+
+    // Hints
+    const split = _spell.split("");
+    for (const letter of split) {
+      context.fillStyle = getColorLetter(letter);
+      Canvas2D.circleFill(context, cfg.single.x + i * cfg.gap, cfg.single.y, cfg.radius * cfg.hintScale);
+    }
+
+    // Duration
+    if (duration > 0) {
+      context.fillStyle = config.colors.gray;
+      Canvas2D.circleFill(
+        context,
+        cfg.single.x + i * cfg.gap,
+        cfg.single.y,
+        cfg.radius * Mathematics.lerp(0, 1, duration / config.spellDuration),
+      );
+    }
+
+    if (--spells.single[_spell] < 0) spells.single[_spell] = 0;
+  });
+
+  // ------------
+  // -- Double --
+  // ------------
+  Object.entries(spells.double).forEach(([_spell, duration], i) => {
+    Canvas2D.circle(context, cfg.double.x + i * cfg.gap, cfg.double.y, cfg.radius);
+
+    // Hints
+    const split = _spell.split("");
+    for (let k = 0; k < split.length; k++) {
+      const letter = split[k];
+      context.fillStyle = getColorLetter(letter);
+      Canvas2D.circleFill(
+        context,
+        cfg.double.x + cfg.double.hintX + i * cfg.gap + k * cfg.hintGap,
+        cfg.double.y,
+        cfg.radius * cfg.hintScale,
+      );
+    }
+
+    // Duration
+    if (duration > 0) {
+      context.fillStyle = config.colors.gray;
+      Canvas2D.circleFill(
+        context,
+        cfg.double.x + i * cfg.gap,
+        cfg.double.y,
+        cfg.radius * Mathematics.lerp(0, 1, duration / config.spellDuration),
+      );
+    }
+
+    if (--spells.double[_spell] < 0) spells.double[_spell] = 0;
+  });
+
+  // ------------
+  // -- Triple --
+  // ------------
+  Object.entries(spells.triple).forEach(([_spell, duration], i) => {
+    Canvas2D.circle(context, cfg.triple.x + i * cfg.gap, cfg.triple.y, cfg.radius);
+
+    // Hints
+    const split = _spell.split("");
+    for (let k = 0; k < split.length; k++) {
+      const letter = split[k];
+      context.fillStyle = getColorLetter(letter);
+      Canvas2D.circleFill(
+        context,
+        cfg.triple.x + cfg.triple.hintX + i * cfg.gap + k * cfg.hintGap,
+        cfg.triple.y,
+        cfg.radius * cfg.hintScale,
+      );
+    }
+
+    if (duration > 0) {
+      context.fillStyle = config.colors.gray;
+      Canvas2D.circleFill(
+        context,
+        cfg.triple.x + i * cfg.gap,
+        cfg.triple.y,
+        cfg.radius * Mathematics.lerp(0, 1, duration / config.spellDuration),
+      );
+    }
+
+    if (--spells.triple[_spell] < 0) spells.triple[_spell] = 0;
+  });
+}
+
 export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) {
   config = { ...defaultConfig, ...settings };
 
@@ -277,3 +275,4 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
 
   requestAnimationFrame(animation);
 }
+

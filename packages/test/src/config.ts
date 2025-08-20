@@ -3,7 +3,7 @@ export const defaultConfig = {
   height: 900,
 
   orbDuration: 300,
-  spellDuration: 500,
+  spellDuration: 800,
 
   orbs: {
     x: 510,
