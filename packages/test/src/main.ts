@@ -93,11 +93,23 @@ function addSpell(spellType: SpellType) {
 }
 
 function cast() {
-  const sorted = queue.map((spell) => spell.type).sort();
+  const sorted = queue
+    .map((spell) => spell.type)
+    .sort()
+    .map((spellType) => {
+      if (spellType === SpellType.Quas) return "Q";
+      if (spellType === SpellType.Wex) return "W";
+      if (spellType === SpellType.Exort) return "E";
+      throw new Error("Invalid type");
+    })
+    .join("");
 
+  console.log("sorted", sorted);
   queue.length = 0;
+}
 
-  
+function renderSpells() {
+  for (let i = 0; i < 3; i++) { }
 }
 
 function decreaseDurations() {
