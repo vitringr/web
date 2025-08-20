@@ -2,8 +2,6 @@ export const defaultConfig = {
   width: 900,
   height: 900,
 
-  maxElements: 3,
-
   maxDuration: 300,
 
   queue: {

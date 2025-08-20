@@ -1,17 +1,30 @@
 import { Canvas2D } from "@utilities/canvas2d";
 import { Config, defaultConfig } from "./config";
 
+// ----------
+// -- Data --
+// ----------
+
 let config: Config;
 
-enum Spell {
+enum SpellType {
   Quas,
   Wex,
   Exort,
 }
 
+type Spell = {
+  type: SpellType;
+  duration: number;
+};
+
+const ELEMENTS_COUNT = 3;
+
 const queue: Spell[] = [];
 
-let duration: number = 0;
+// -----------
+// -- Logic --
+// -----------
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = config.width;
@@ -33,15 +46,15 @@ function setupInput() {
     const key = event.key.toLowerCase();
     switch (key) {
       case "q": {
-        addSpell(Spell.Quas);
+        addSpell(SpellType.Quas);
         break;
       }
       case "w": {
-        addSpell(Spell.Wex);
+        addSpell(SpellType.Wex);
         break;
       }
       case "e": {
-        addSpell(Spell.Exort);
+        addSpell(SpellType.Exort);
         break;
       }
       case "j": {
@@ -63,51 +76,46 @@ function renderBackground(context: CanvasRenderingContext2D) {
   context.fillRect(0, 0, config.width, config.height);
 }
 
-function addSpell(spell: Spell) {
-  queue.unshift(spell);
+function addSpell(spellType: SpellType) {
+  queue.unshift({ type: spellType, duration: config.maxDuration });
 
-  if (queue.length > config.maxElements) {
+  if (queue.length > ELEMENTS_COUNT) {
     queue.pop();
   }
-
-  duration = config.maxDuration;
 }
 
-function updateResetTimer() {
-  if (--duration <= 0) {
-    duration = 0;
-    queue.length = 0;
+function decreaseDurations() {
+  for (const spell of queue) {
+    spell.duration--;
+    if (spell.duration <= 0) {
+      queue.pop();
+    }
   }
 }
 
-function getColor(spell: Spell) {
-  if (spell == Spell.Quas) return config.colors.Q;
-  if (spell == Spell.Wex) return config.colors.W;
-  if (spell == Spell.Exort) return config.colors.E;
+function getColor(spellType: SpellType) {
+  if (spellType == SpellType.Quas) return config.colors.Q;
+  if (spellType == SpellType.Wex) return config.colors.W;
+  if (spellType == SpellType.Exort) return config.colors.E;
   throw new Error("invalid color");
 }
 
 function renderQueue(context: CanvasRenderingContext2D) {
   const cfg = config.queue;
 
-  for (let i = 0; i < config.maxElements; i++) {
+  for (let i = 0; i < ELEMENTS_COUNT; i++) {
     context.strokeRect(cfg.x - i * (cfg.boxWidth + cfg.gap), cfg.y, cfg.boxWidth, cfg.boxHeight);
   }
-
-  const durationScale = 1 - duration / config.maxDuration;
 
   for (let i = 0; i < queue.length; i++) {
     const spell = queue[i];
 
-    context.fillStyle = getColor(spell) + "50";
-    context.fillRect(
-      cfg.x - i * (cfg.boxWidth + cfg.gap),
-      cfg.y,
-      cfg.boxWidth,
-      cfg.boxHeight,
-    );
+    const durationScale = 1 - spell.duration / config.maxDuration;
 
-    context.fillStyle = getColor(spell);
+    context.fillStyle = getColor(spell.type) + "50";
+    context.fillRect(cfg.x - i * (cfg.boxWidth + cfg.gap), cfg.y, cfg.boxWidth, cfg.boxHeight);
+
+    context.fillStyle = getColor(spell.type);
     context.fillRect(
       cfg.x - i * (cfg.boxWidth + cfg.gap),
       cfg.y,
@@ -125,7 +133,7 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
   const context = setupContext(canvas);
 
   const animation = () => {
-    updateResetTimer();
+    decreaseDurations();
 
     renderBackground(context);
     renderQueue(context);
