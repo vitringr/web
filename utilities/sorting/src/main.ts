@@ -1,7 +1,3 @@
-/**
- *
- * Sorts an array in ascending order.
- */
 export function bubbleSort(arr: number[]): void {
   const end = arr.length - 1;
   for (let i = 0; i < end; i++) {
@@ -18,10 +14,6 @@ export function bubbleSort(arr: number[]): void {
   }
 }
 
-/**
- *
- * Sorts an array in ascending order.
- */
 export function selectionSort(arr: number[]): void {
   for (let i = 0; i < arr.length - 1; i++) {
     let min = i;
@@ -36,10 +28,6 @@ export function selectionSort(arr: number[]): void {
   }
 }
 
-/**
- *
- * Sorts an array in ascending order.
- */
 export function insertionSort(arr: number[]): void {
   for (let i = 1; i < arr.length; i++) {
     const current = arr[i];
