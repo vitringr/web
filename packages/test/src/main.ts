@@ -1,34 +1,92 @@
 import { Canvas2D } from "@utilities/canvas2d";
 import { Config, defaultConfig } from "./config";
 
-/*
-[Q] [W] [E]
-
-[QQ] [WW] [EE] [QW] [WE] [EQ]
-
-[QWE] [QQQ] [WWW] [EEE] [QQW] [QQE] [WWQ] [WWE] [EEQ] [EEW]
-*/
-
 // ----------
 // -- Data --
 // ----------
 
 let config: Config;
 
-enum SpellType {
+enum OrbType {
   Quas,
   Wex,
   Exort,
 }
 
-type Spell = {
-  type: SpellType;
+type Orb = {
+  type: OrbType;
   duration: number;
 };
 
 const ELEMENTS_COUNT = 3;
 
-const queue: Spell[] = [];
+const queue: Orb[] = [];
+
+const spells = {
+  single: { Q: 0, W: 0, E: 0 } as Record<string, number>,
+  double: { QQ: 0, WW: 0, EE: 0, QW: 0, WE: 0, QE: 0 } as Record<string, number>,
+  triple: { QQQ: 0, WWW: 0, EEE: 0, QQW: 0, QQE: 0, QWW: 0, WWE: 0, QEE: 0, WEE: 0, QWE: 0 } as Record<string, number>,
+};
+
+function renderSpells(context: CanvasRenderingContext2D) {
+  const cfg = config.spells;
+
+  context.fillStyle = "#606060";
+
+  Object.entries(spells.single).forEach(([_spell, duration], i) => {
+    Canvas2D.circle(context, cfg.single.x + i * cfg.gap, cfg.single.y, cfg.radius);
+
+    const split = _spell.split("");
+    for (const letter of split) {
+      context.fillStyle = getColorLetter(letter);
+      Canvas2D.circleFill(context, cfg.single.x + i * cfg.gap, cfg.single.y, cfg.radius * cfg.hintScale);
+    }
+
+    if (duration > 0) {
+      Canvas2D.circleFill(context, cfg.single.x + i * cfg.gap, cfg.single.y, cfg.radius);
+    }
+  });
+
+  Object.entries(spells.double).forEach(([_spell, duration], i) => {
+    Canvas2D.circle(context, cfg.double.x + i * cfg.gap, cfg.double.y, cfg.radius);
+
+    const split = _spell.split("");
+    for (let k = 0; k < split.length; k++) {
+      const letter = split[k];
+      context.fillStyle = getColorLetter(letter);
+      Canvas2D.circleFill(
+        context,
+        cfg.double.x + cfg.double.hintX + i * cfg.gap + k * cfg.hintGap,
+        cfg.double.y,
+        cfg.radius * cfg.hintScale,
+      );
+    }
+
+    if (duration > 0) {
+      Canvas2D.circleFill(context, cfg.double.x + i * cfg.gap, cfg.double.y, cfg.radius);
+    }
+  });
+
+  Object.entries(spells.triple).forEach(([_spell, duration], i) => {
+    Canvas2D.circle(context, cfg.triple.x + i * cfg.gap, cfg.triple.y, cfg.radius);
+
+    const split = _spell.split("");
+    for (let k = 0; k < split.length; k++) {
+      const letter = split[k];
+      context.fillStyle = getColorLetter(letter);
+      Canvas2D.circleFill(
+        context,
+        cfg.triple.x + cfg.triple.hintX + i * cfg.gap + k * cfg.hintGap,
+        cfg.triple.y,
+        cfg.radius * cfg.hintScale,
+      );
+    }
+
+    if (duration > 0) {
+      Canvas2D.circleFill(context, cfg.triple.x + i * cfg.gap, cfg.triple.y, cfg.radius);
+    }
+  });
+}
 
 // -----------
 // -- Logic --
@@ -54,15 +112,15 @@ function setupInput() {
     const key = event.key.toLowerCase();
     switch (key) {
       case "q": {
-        addSpell(SpellType.Quas);
+        addOrb(OrbType.Quas);
         break;
       }
       case "w": {
-        addSpell(SpellType.Wex);
+        addOrb(OrbType.Wex);
         break;
       }
       case "e": {
-        addSpell(SpellType.Exort);
+        addOrb(OrbType.Exort);
         break;
       }
       case "j": {
@@ -70,7 +128,7 @@ function setupInput() {
         break;
       }
       case "k": {
-        console.log(key);
+        cast();
         break;
       }
       default:
@@ -84,8 +142,8 @@ function renderBackground(context: CanvasRenderingContext2D) {
   context.fillRect(0, 0, config.width, config.height);
 }
 
-function addSpell(spellType: SpellType) {
-  queue.unshift({ type: spellType, duration: config.maxDuration });
+function addOrb(orbType: OrbType) {
+  queue.unshift({ type: orbType, duration: config.orbDuration });
 
   if (queue.length > ELEMENTS_COUNT) {
     queue.pop();
@@ -93,23 +151,24 @@ function addSpell(spellType: SpellType) {
 }
 
 function cast() {
-  const sorted = queue
-    .map((spell) => spell.type)
+  if (queue.length <= 0) return;
+
+  const spell = queue
+    .map((orb) => orb.type)
     .sort()
-    .map((spellType) => {
-      if (spellType === SpellType.Quas) return "Q";
-      if (spellType === SpellType.Wex) return "W";
-      if (spellType === SpellType.Exort) return "E";
+    .map((orbType) => {
+      if (orbType === OrbType.Quas) return "Q";
+      if (orbType === OrbType.Wex) return "W";
+      if (orbType === OrbType.Exort) return "E";
       throw new Error("Invalid type");
     })
     .join("");
 
-  console.log("sorted", sorted);
   queue.length = 0;
-}
 
-function renderSpells() {
-  for (let i = 0; i < 3; i++) { }
+  if (spell.length === 1) spells.single[spell]++;
+  if (spell.length === 2) spells.double[spell]++;
+  if (spell.length === 3) spells.triple[spell]++;
 }
 
 function decreaseDurations() {
@@ -121,29 +180,36 @@ function decreaseDurations() {
   }
 }
 
-function getColor(spellType: SpellType) {
-  if (spellType == SpellType.Quas) return config.colors.Q;
-  if (spellType == SpellType.Wex) return config.colors.W;
-  if (spellType == SpellType.Exort) return config.colors.E;
+function getColor(orbType: OrbType) {
+  if (orbType == OrbType.Quas) return config.colors.Q;
+  if (orbType == OrbType.Wex) return config.colors.W;
+  if (orbType == OrbType.Exort) return config.colors.E;
+  throw new Error("invalid color");
+}
+
+function getColorLetter(letter: string) {
+  if (letter == "Q") return config.colors.Q;
+  if (letter == "W") return config.colors.W;
+  if (letter == "E") return config.colors.E;
   throw new Error("invalid color");
 }
 
 function renderQueue(context: CanvasRenderingContext2D) {
-  const cfg = config.queue;
+  const cfg = config.orbs;
 
   for (let i = 0; i < ELEMENTS_COUNT; i++) {
     context.strokeRect(cfg.x - i * (cfg.boxWidth + cfg.gap), cfg.y, cfg.boxWidth, cfg.boxHeight);
   }
 
   for (let i = 0; i < queue.length; i++) {
-    const spell = queue[i];
+    const orb = queue[i];
 
-    const durationScale = 1 - spell.duration / config.maxDuration;
+    const durationScale = 1 - orb.duration / config.orbDuration;
 
-    context.fillStyle = getColor(spell.type) + "50";
+    context.fillStyle = getColor(orb.type) + "50";
     context.fillRect(cfg.x - i * (cfg.boxWidth + cfg.gap), cfg.y, cfg.boxWidth, cfg.boxHeight);
 
-    context.fillStyle = getColor(spell.type);
+    context.fillStyle = getColor(orb.type);
     context.fillRect(
       cfg.x - i * (cfg.boxWidth + cfg.gap),
       cfg.y,
@@ -165,6 +231,7 @@ export function main(canvas: HTMLCanvasElement, settings: Partial<Config> = {}) 
 
     renderBackground(context);
     renderQueue(context);
+    renderSpells(context);
 
     requestAnimationFrame(animation);
   };
