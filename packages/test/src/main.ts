@@ -1,6 +1,14 @@
 import { Canvas2D } from "@utilities/canvas2d";
 import { Config, defaultConfig } from "./config";
 
+/*
+[Q] [W] [E]
+
+[QQ] [WW] [EE] [QW] [WE] [EQ]
+
+[QWE] [QQQ] [WWW] [EEE] [QQW] [QQE] [WWQ] [WWE] [EEQ] [EEW]
+*/
+
 // ----------
 // -- Data --
 // ----------
@@ -58,7 +66,7 @@ function setupInput() {
         break;
       }
       case "j": {
-        console.log(key);
+        cast();
         break;
       }
       case "k": {
@@ -82,6 +90,14 @@ function addSpell(spellType: SpellType) {
   if (queue.length > ELEMENTS_COUNT) {
     queue.pop();
   }
+}
+
+function cast() {
+  const sorted = queue.map((spell) => spell.type).sort();
+
+  queue.length = 0;
+
+  
 }
 
 function decreaseDurations() {
