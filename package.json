@@ -9,7 +9,7 @@
     "check": "turbo run check"
   },
   "devDependencies": {
-    "turbo": "^2.5.5",
+    "turbo": "^2.5.8",
     "typescript": "latest"
   },
   "packageManager": "pnpm@10.14.0",

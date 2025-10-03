@@ -1,3 +1,4 @@
+import { Quadtree } from "@utilities/data-structures";
 import { Config } from "./config";
 import { Node } from "./node";
 

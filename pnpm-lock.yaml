@@ -9,11 +9,11 @@ importers:
   .:
     devDependencies:
       turbo:
-        specifier: ^2.5.5
-        version: 2.5.5
+        specifier: ^2.5.8
+        version: 2.5.8
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
   apps/sandbox:
     dependencies:
@@ -41,7 +41,7 @@ importers:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
       vite:
         specifier: ^6.2.0
         version: 6.3.5
@@ -69,7 +69,7 @@ importers:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
       vite:
         specifier: ^6.3.5
         version: 6.3.5
@@ -115,7 +115,7 @@ importers:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
   packages/easing-functions:
     dependencies:
@@ -131,7 +131,7 @@ importers:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
   packages/pathfinder:
     dependencies:
@@ -156,7 +156,7 @@ importers:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
   packages/quadtree-simulation:
     dependencies:
@@ -169,7 +169,7 @@ importers:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
   packages/sandfall:
     dependencies:
@@ -182,7 +182,7 @@ importers:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
   packages/test:
     dependencies:
@@ -213,7 +213,7 @@ importers:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
   packages/tsunagari:
     dependencies:
@@ -235,91 +235,91 @@ importers:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
   utilities/canvas2d:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
   utilities/collision:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
   utilities/colors:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
   utilities/common:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
   utilities/data-structures:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
   utilities/easing:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
   utilities/mathematics:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
   utilities/noise:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
   utilities/noise-glsl:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
   utilities/random:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
   utilities/shapes:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
   utilities/sorting:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
   utilities/text-shuffle:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
   utilities/webgl:
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.9.2
+        version: 5.9.3
 
 packages:
 
@@ -890,42 +890,42 @@ packages:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
     engines: {node: '>=8.0'}
 
-  turbo-darwin-64@2.5.5:
-    resolution: {integrity: sha512-RYnTz49u4F5tDD2SUwwtlynABNBAfbyT2uU/brJcyh5k6lDLyNfYKdKmqd3K2ls4AaiALWrFKVSBsiVwhdFNzQ==}
+  turbo-darwin-64@2.5.8:
+    resolution: {integrity: sha512-Dh5bCACiHO8rUXZLpKw+m3FiHtAp2CkanSyJre+SInEvEr5kIxjGvCK/8MFX8SFRjQuhjtvpIvYYZJB4AGCxNQ==}
     cpu: [x64]
     os: [darwin]
 
-  turbo-darwin-arm64@2.5.5:
-    resolution: {integrity: sha512-Tk+ZeSNdBobZiMw9aFypQt0DlLsWSFWu1ymqsAdJLuPoAH05qCfYtRxE1pJuYHcJB5pqI+/HOxtJoQ40726Btw==}
+  turbo-darwin-arm64@2.5.8:
+    resolution: {integrity: sha512-f1H/tQC9px7+hmXn6Kx/w8Jd/FneIUnvLlcI/7RGHunxfOkKJKvsoiNzySkoHQ8uq1pJnhJ0xNGTlYM48ZaJOQ==}
     cpu: [arm64]
     os: [darwin]
 
-  turbo-linux-64@2.5.5:
-    resolution: {integrity: sha512-2/XvMGykD7VgsvWesZZYIIVXMlgBcQy+ZAryjugoTcvJv8TZzSU/B1nShcA7IAjZ0q7OsZ45uP2cOb8EgKT30w==}
+  turbo-linux-64@2.5.8:
+    resolution: {integrity: sha512-hMyvc7w7yadBlZBGl/bnR6O+dJTx3XkTeyTTH4zEjERO6ChEs0SrN8jTFj1lueNXKIHh1SnALmy6VctKMGnWfw==}
     cpu: [x64]
     os: [linux]
 
-  turbo-linux-arm64@2.5.5:
-    resolution: {integrity: sha512-DW+8CjCjybu0d7TFm9dovTTVg1VRnlkZ1rceO4zqsaLrit3DgHnN4to4uwyuf9s2V/BwS3IYcRy+HG9BL596Iw==}
+  turbo-linux-arm64@2.5.8:
+    resolution: {integrity: sha512-LQELGa7bAqV2f+3rTMRPnj5G/OHAe2U+0N9BwsZvfMvHSUbsQ3bBMWdSQaYNicok7wOZcHjz2TkESn1hYK6xIQ==}
     cpu: [arm64]
     os: [linux]
 
-  turbo-windows-64@2.5.5:
-    resolution: {integrity: sha512-q5p1BOy8ChtSZfULuF1BhFMYIx6bevXu4fJ+TE/hyNfyHJIfjl90Z6jWdqAlyaFLmn99X/uw+7d6T/Y/dr5JwQ==}
+  turbo-windows-64@2.5.8:
+    resolution: {integrity: sha512-3YdcaW34TrN1AWwqgYL9gUqmZsMT4T7g8Y5Azz+uwwEJW+4sgcJkIi9pYFyU4ZBSjBvkfuPZkGgfStir5BBDJQ==}
     cpu: [x64]
     os: [win32]
 
-  turbo-windows-arm64@2.5.5:
-    resolution: {integrity: sha512-AXbF1KmpHUq3PKQwddMGoKMYhHsy5t1YBQO8HZ04HLMR0rWv9adYlQ8kaeQJTko1Ay1anOBFTqaxfVOOsu7+1Q==}
+  turbo-windows-arm64@2.5.8:
+    resolution: {integrity: sha512-eFC5XzLmgXJfnAK3UMTmVECCwuBcORrWdewoiXBnUm934DY6QN8YowC/srhNnROMpaKaqNeRpoB5FxCww3eteQ==}
     cpu: [arm64]
     os: [win32]
 
-  turbo@2.5.5:
-    resolution: {integrity: sha512-eZ7wI6KjtT1eBqCnh2JPXWNUAxtoxxfi6VdBdZFvil0ychCOTxbm7YLRBi1JSt7U3c+u3CLxpoPxLdvr/Npr3A==}
+  turbo@2.5.8:
+    resolution: {integrity: sha512-5c9Fdsr9qfpT3hA0EyYSFRZj1dVVsb6KIWubA9JBYZ/9ZEAijgUEae0BBR/Xl/wekt4w65/lYLTFaP3JmwSO8w==}
     hasBin: true
 
-  typescript@5.9.2:
-    resolution: {integrity: sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==}
+  typescript@5.9.3:
+    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -1512,34 +1512,34 @@ snapshots:
     dependencies:
       is-number: 7.0.0
 
-  turbo-darwin-64@2.5.5:
+  turbo-darwin-64@2.5.8:
     optional: true
 
-  turbo-darwin-arm64@2.5.5:
+  turbo-darwin-arm64@2.5.8:
     optional: true
 
-  turbo-linux-64@2.5.5:
+  turbo-linux-64@2.5.8:
     optional: true
 
-  turbo-linux-arm64@2.5.5:
+  turbo-linux-arm64@2.5.8:
     optional: true
 
-  turbo-windows-64@2.5.5:
+  turbo-windows-64@2.5.8:
     optional: true
 
-  turbo-windows-arm64@2.5.5:
+  turbo-windows-arm64@2.5.8:
     optional: true
 
-  turbo@2.5.5:
+  turbo@2.5.8:
     optionalDependencies:
-      turbo-darwin-64: 2.5.5
-      turbo-darwin-arm64: 2.5.5
-      turbo-linux-64: 2.5.5
-      turbo-linux-arm64: 2.5.5
-      turbo-windows-64: 2.5.5
-      turbo-windows-arm64: 2.5.5
+      turbo-darwin-64: 2.5.8
+      turbo-darwin-arm64: 2.5.8
+      turbo-linux-64: 2.5.8
+      turbo-linux-arm64: 2.5.8
+      turbo-windows-64: 2.5.8
+      turbo-windows-arm64: 2.5.8
 
-  typescript@5.9.2: {}
+  typescript@5.9.3: {}
 
   update-browserslist-db@1.1.3(browserslist@4.25.1):
     dependencies:

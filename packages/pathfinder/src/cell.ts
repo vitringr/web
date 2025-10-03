@@ -1,3 +1,4 @@
+import { Vector2 } from "@utilities/data-structures";
 import { Config } from "./config";
 
 const halfWidth = Config.cellWidth * 0.5;

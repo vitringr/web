@@ -2,6 +2,7 @@ import { Mathematics } from "@utilities/mathematics";
 
 import { Config } from "./config";
 import { Node } from "./node";
+import { Quadtree, Vector2 } from "@utilities/data-structures";
 
 export class Renderer {
   constructor(private context: CanvasRenderingContext2D) {}

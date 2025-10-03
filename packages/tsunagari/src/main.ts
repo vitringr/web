@@ -4,6 +4,7 @@ import { Field } from "./quadtree";
 import { Force } from "./force";
 import { Input } from "./input";
 import { Node } from "./node";
+import { Quadtree } from "@utilities/data-structures";
 
 function setupContext(canvas: HTMLCanvasElement) {
   canvas.width = Config.width;
