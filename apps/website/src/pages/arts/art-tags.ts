@@ -11,6 +11,7 @@ export enum ArtTagNames {
   ASCII,
   Automata,
   Bright,
+  Education,
 }
 
 export type ArtTagFields = {
@@ -44,9 +45,15 @@ export const artTags: Record<ArtTagNames, ArtTagFields> = {
     fontColor: "#FFFFFF",
   },
 
+  [ArtTagNames.Education]: {
+    label: "Education",
+    color: "#127FDE",
+    fontColor: "#FFFFFF",
+  },
+
   [ArtTagNames.Particles]: {
     label: "Particles",
-    color: "#127FDE",
+    color: "#FF8010",
     fontColor: "#FFFFFF",
   },
 
@@ -85,7 +92,7 @@ export const artTags: Record<ArtTagNames, ArtTagFields> = {
     color: "#AA11AA",
     fontColor: "#FFFFFF",
   },
-  
+
   [ArtTagNames.Bright]: {
     label: "Bright",
     color: "#DDDDDD",

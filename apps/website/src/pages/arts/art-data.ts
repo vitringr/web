@@ -16,6 +16,7 @@ import overgrowthPNG from "./thumbnails/overgrowth.png";
 import firecrackersPNG from "./thumbnails/firecrackers.png";
 import systemShockPNG from "./thumbnails/systemShock.png";
 import regenerationPNG from "./thumbnails/regeneration.png";
+import trigonometryPNG from "./thumbnails/trigonometry.png";
 import angerPNG from "./thumbnails/anger.png";
 import wealthPNG from "./thumbnails/wealth.png";
 import starsPNG from "./thumbnails/stars.png";
@@ -159,6 +160,14 @@ export const artData: ArtData<any>[] = [
     thumbnail: regenerationPNG,
     tags: [ArtTagNames.Input, ArtTagNames.GPU, ArtTagNames.Particles],
     artMain: Creative.WebGL.Regeneration.main,
+  }),
+
+  defineArt({
+    title: "Trigonometry",
+    route: Routes.arts.trigonometry,
+    thumbnail: trigonometryPNG,
+    tags: [ArtTagNames.Education],
+    artMain: Creative.Canvas2D.Trigonometry.main,
   }),
 
   defineArt({

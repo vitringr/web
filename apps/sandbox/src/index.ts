@@ -1,7 +1,7 @@
-import { Tsunagari } from "@packages/tsunagari";
+import { Creative } from "@packages/creative";
 
 const canvasID = "mainCanvas";
 const canvas = document.getElementById(canvasID) as HTMLCanvasElement;
 if (!canvas) throw `Cannot get #${canvasID}`;
 
-Tsunagari.main(canvas);
+Creative.Canvas2D.Trigonometry.main(canvas);

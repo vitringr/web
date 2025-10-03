@@ -3,6 +3,7 @@ export * as RandomWalkers from "./random-walkers";
 export * as NoiseRainbow from "./noise-rainbow";
 export * as NoiseBlanket from "./noise-blanket";
 export * as Firecrackers from "./firecrackers";
+export * as Trigonometry from "./trigonometry";
 export * as SystemShock from "./system-shock/main";
 export * as NoiseAscii from "./noise-ascii";
 export * as Overgrowth from "./overgrowth";

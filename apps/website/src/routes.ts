@@ -36,6 +36,7 @@ export namespace Routes {
     noiseAscii: "/noise-ascii",
     noiseRainbow: "/noise-rainbow",
     regeneration: "/regeneration",
+    trigonometry: "/trigonometry",
     tenThousand: "/ten-thousand",
     layers: "/layers",
     blockCellularSand: "/block-cellular-sand",
